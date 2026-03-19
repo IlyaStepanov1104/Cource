@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Курс лекций</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="container">
+    <header>
+        <h1 class="js-course-title">Курс лекций</h1>
+        <p class="course-subtitle js-course-subtitle"></p>
+    </header>
+
+    <div class="js-lessons-container">
+        <div class="loading">Загрузка занятий…</div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        fetch('/lessons.json')
+            .then(r => { if (!r.ok) throw new Error('network'); return r.json(); })
+            .then(data => renderLessons(data))
+            .catch(() => {
+                document.querySelector('.js-lessons-container').innerHTML =
+                    '<div class="error">Не удалось загрузить данные</div>';
+            });
+    });
+
+    function renderLessons(data) {
+        const course = data.course || {};
+        document.title = course.title || 'Курс лекций';
+        document.querySelector('.js-course-title').textContent = course.title || 'Курс лекций';
+        document.querySelector('.js-course-subtitle').textContent = course.subtitle || '';
+
+        const root    = document.querySelector('.js-lessons-container');
+        const lessons = data.lessons || [];
+
+        if (lessons.length === 0) {
+            root.innerHTML = '<div class="empty-state">Занятия ещё не добавлены</div>';
+            return;
+        }
+
+        const now     = new Date();
+        const viewAll = new URLSearchParams(window.location.search).get('view_all') === 'true';
+
+        root.innerHTML = '';
+        const list = document.createElement('div');
+        list.className = 'lessons-list';
+
+        lessons
+            .slice()
+            .sort((a, b) => (a.number || 0) - (b.number || 0))
+            .forEach(lesson => {
+                const lessonDate  = lesson.date ? new Date(lesson.date) : null;
+                const isAvailable = !lessonDate || lessonDate <= now || viewAll;
+
+                const card = document.createElement('div');
+                card.className = 'lesson-card' + (isAvailable ? '' : ' coming-soon-card');
+
+                // ── Header
+                const header = document.createElement('div');
+                header.className = 'lesson-header';
+
+                const numEl = document.createElement('div');
+                numEl.className = 'lesson-number';
+                numEl.textContent = String(lesson.number ?? '?').padStart(2, '0');
+
+                const meta = document.createElement('div');
+                meta.className = 'lesson-meta';
+
+                const titleEl = document.createElement('div');
+                titleEl.className = 'lesson-title';
+                titleEl.textContent = lesson.title || 'Без названия';
+
+                if (lessonDate) {
+                    const dateEl = document.createElement('div');
+                    dateEl.className = 'lesson-date';
+                    dateEl.textContent = isAvailable
+                        ? formatDate(lessonDate)
+                        : 'Доступно с ' + formatDate(lessonDate);
+                    meta.appendChild(titleEl);
+                    meta.appendChild(dateEl);
+                } else {
+                    meta.appendChild(titleEl);
+                }
+
+                header.appendChild(numEl);
+                header.appendChild(meta);
+                card.appendChild(header);
+
+                // ── Body
+                const presentations = lesson.presentations || [];
+                const homeworks     = lesson.homeworks || [];
+                const body = document.createElement('div');
+                body.className = 'lesson-body';
+
+                // presentations list
+                const presSection = document.createElement('div');
+                presSection.className = 'resource-section';
+
+                if (presentations.length === 0) {
+                    const empty = document.createElement('span');
+                    empty.className = 'coming-soon-label';
+                    empty.textContent = 'Презентации появятся после занятия';
+                    presSection.appendChild(empty);
+                } else {
+                    const ul = document.createElement('ul');
+                    ul.className = 'resource-list';
+                    presentations
+                        .slice().sort((a, b) => (a.order || 0) - (b.order || 0))
+                        .forEach(pres => {
+                            const li = document.createElement('li');
+                            const a  = document.createElement('a');
+                            a.href = pres.link || '#';
+                            if (/^https?:\/\//.test(pres.link || '')) { a.target = '_blank'; a.rel = 'noopener'; }
+
+                            const chip = document.createElement('span');
+                            chip.className = 'chip chip-blue';
+                            chip.textContent = pres.order ?? '·';
+                            a.appendChild(chip);
+                            a.appendChild(document.createTextNode(' ' + (pres.title || 'Презентация')));
+                            li.appendChild(a);
+                            ul.appendChild(li);
+                        });
+                    presSection.appendChild(ul);
+                }
+                body.appendChild(presSection);
+
+                // homeworks spoiler
+                if (homeworks.length > 0) {
+                    const details = document.createElement('details');
+                    details.className = 'hw-spoiler';
+
+                    const summary = document.createElement('summary');
+
+                    const arrow = document.createElement('span');
+                    arrow.className = 'hw-spoiler-arrow';
+                    arrow.textContent = '▶';
+
+                    const label = document.createElement('span');
+                    label.textContent = 'Домашние задания';
+
+                    const count = document.createElement('span');
+                    count.className = 'hw-spoiler-count';
+                    count.textContent = homeworks.length;
+
+                    summary.appendChild(arrow);
+                    summary.appendChild(label);
+                    summary.appendChild(count);
+                    details.appendChild(summary);
+
+                    const spoilerBody = document.createElement('div');
+                    spoilerBody.className = 'hw-spoiler-body';
+
+                    homeworks.forEach((hw, idx) => {
+                        const row = document.createElement('div');
+                        row.className = 'hw-row';
+
+                        const chip = document.createElement('span');
+                        chip.className = 'chip chip-green';
+                        chip.textContent = (idx + 1);
+
+                        const hwInner = document.createElement('div');
+                        hwInner.className = 'hw-inner';
+
+                        const titleEl = document.createElement('span');
+                        titleEl.className = 'hw-title';
+                        titleEl.textContent = hw.title || 'Задание';
+                        hwInner.appendChild(titleEl);
+
+                        if (hw.description) {
+                            const descEl = document.createElement('span');
+                            descEl.className = 'hw-desc';
+                            descEl.textContent = hw.description;
+                            hwInner.appendChild(descEl);
+                        }
+
+                        if (hw.link) {
+                            const a = document.createElement('a');
+                            a.href = hw.link;
+                            if (/^https?:\/\//.test(hw.link)) { a.target = '_blank'; a.rel = 'noopener'; }
+                            a.appendChild(chip);
+                            a.appendChild(hwInner);
+                            row.appendChild(a);
+                        } else {
+                            const span = document.createElement('span');
+                            span.className = 'hw-row-text';
+                            span.appendChild(chip);
+                            span.appendChild(hwInner);
+                            row.appendChild(span);
+                        }
+
+                        if (hw.deadline) {
+                            const dl   = new Date(hw.deadline);
+                            const span = document.createElement('span');
+                            span.className = 'hw-deadline' + deadlineClass(dl, now);
+                            span.textContent = 'до ' + formatDate(dl);
+                            row.appendChild(span);
+                        }
+                        spoilerBody.appendChild(row);
+                    });
+
+                    details.appendChild(spoilerBody);
+                    body.appendChild(details);
+                }
+
+                card.appendChild(body);
+                list.appendChild(card);
+            });
+
+        root.appendChild(list);
+    }
+
+    function formatDate(d) {
+        return d.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' });
+    }
+
+    function deadlineClass(dl, now) {
+        const diff = (dl - now) / 864e5;
+        if (diff < 0) return ' overdue';
+        if (diff < 3)  return ' soon';
+        return '';
+    }
+</script>
+</body>
+</html>
