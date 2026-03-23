@@ -35,8 +35,17 @@
       ],
       "homeworks": [
         {
-          "title": "Добавлю после урока",
-          "description": ""
+          "title": "Valid Palindrome",
+          "description": "Палиндром с учётом только букв и цифр, без учёта регистра.
+
+Входные данные:
+
+A man, a plan, a canal: Panama
+Выходные данные:
+
+true
+<a href='https://leetcode.com/problems/valid-palindrome/' target='_blank'>https://leetcode.com/problems/valid-palindrome/</a>
+"
         }
       ]
     }
