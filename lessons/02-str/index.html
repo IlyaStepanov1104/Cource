@@ -1,0 +1,727 @@
+<!doctype html>
+<html lang="ru">
+
+<head>
+    <meta charset="utf-8">
+    <title>Занятие 2 - Вспомнить всё + Строки</title>
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+
+    <link rel="stylesheet" href="/utils/css/reveal.css">
+    <link rel="stylesheet" href="/utils/lib/css/animate.css">
+    <link rel="stylesheet" href="/utils/css/theme/night.css" id="theme">
+
+    <!-- Code syntax highlighting -->
+    <link rel="stylesheet" href="/utils/lib/css/zenburn.css">
+
+    <link rel="stylesheet" href="/utils/css/custom-base.css">
+    <link rel="stylesheet" href="css-custom/custom.css">
+
+    <script>
+        var link = document.createElement('link');
+        link.rel = 'stylesheet'; link.type = 'text/css';
+        link.href = window.location.search.match(/print-pdf/gi)
+            ? '/utils/css/print/pdf.css'
+            : '/utils/css/print/paper.css';
+        document.getElementsByTagName('head')[0].appendChild(link);
+    </script>
+</head>
+
+<body>
+    <div class="reveal">
+        <div class="slides">
+
+            <!-- 1. Заголовок -->
+            <section style="font-size: 70px; height: 100%; width: 100%">
+                <div class="fragment">
+                    <h1 class="animated" style="font-size: 1.8em;">Вспомнить всё + Строки</h1>
+                    <p style="text-align: center; font-size: 0.5em; opacity: 0.5;">Занятие 2</p>
+                </div>
+            </section>
+
+            <!-- 2. План курса -->
+            <section>
+                <h2>План курса</h2>
+                <div class="timeline">
+                    <div class="timeline-item fragment">
+                        <div class="timeline-marker">1.</div>
+                        <div class="timeline-content">
+                            <strong>Основы Python</strong>
+                            <p style="font-size: 0.7em; opacity: 0.6">Строки, функции, словари, файлы, ООП, модули</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item fragment">
+                        <div class="timeline-marker">2.</div>
+                        <div class="timeline-content">
+                            <strong>Небольшой проект</strong>
+                            <p style="font-size: 0.7em; opacity: 0.6">Применяем всё на практике - делаем небольшую программу</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item fragment">
+                        <div class="timeline-marker">3.</div>
+                        <div class="timeline-content">
+                            <strong>Алгоритмы и структуры данных</strong>
+                            <p style="font-size: 0.7em; opacity: 0.6">Сортировки, деревья, графы, Big O и другие основные знания профессионального программиста</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+
+            <!-- ===================== ЧАСТЬ 1: ОСНОВЫ ===================== -->
+
+            <!-- 3. Ввод и вывод -->
+            <section>
+                <h2>Ввод и вывод</h2>
+                <div class="code-block fragment">
+                    <pre class="python size-m"><code>print("Привет, мир!")           # вывод текста
+print("Результат:", 2 + 2)      # можно несколько значений</code></pre>
+                </div>
+                <div class="code-block fragment">
+                    <pre class="python size-m"><code>name = input("Как тебя зовут?")
+age = int(input("Сколько лет?"))  # input всегда возвращает str!</code></pre>
+                </div>
+                <div class="fragment opinion">
+                    <code>input()</code> возвращает строку - если нужно число, конвертируй: <code>int(...)</code> / <code>float(...)</code>
+                </div>
+            </section>
+
+
+            <!-- 4. Переменные -->
+            <section>
+                <h2>Переменная</h2>
+                <div class="fragment">
+                    Переменная - это <strong>коробочка</strong>, в которую можно положить любое значение и потом достать его по имени.
+                </div>
+                <div class="code-block fragment">
+                    <pre class="python size-m"><code>hp = 100        # создали переменную "hp" и положили 100
+name = "Артём"  # коробочка "name" хранит строку
+
+print(hp)       # достали значение из коробочки
+hp = 80         # положили новое значение - старое пропало</code></pre>
+                </div>
+                <div class="fragment opinion">
+                    Имя переменной - маленькими буквами, слова через подчёркивание: <code>player_name</code>, <code>max_hp</code>
+                </div>
+            </section>
+
+
+            <!-- 5. Типы данных и арифметика -->
+            <section>
+                <section>
+                    <h2>Типы данных</h2>
+                    <div class="compare">
+                        <div class="compare-block fragment">
+                            <h3>Числа</h3>
+                            <div class="code-block">
+                                <pre class="python size-m"><code>x = 42        # int
+y = 3.14      # float</code></pre>
+                            </div>
+                        </div>
+                        <div class="compare-block fragment">
+                            <h3>Текст и логический тип</h3>
+                            <div class="code-block">
+                                <pre class="python size-m"><code>s = "привет"  # str
+b = True      # bool</code></pre>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="code-block fragment">
+                        <pre class="python size-m"><code>type(42)       # &lt;class 'int'&gt;
+int("10")      # 10
+float("3.14")  # 3.14
+str(42)        # "42"</code></pre>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Арифметика</h2>
+                    <div class="code-block">
+                        <pre class="python size-m"><code>10 + 3   # 13    - сложение
+10 - 3   # 7     - вычитание
+10 * 3   # 30    - умножение
+10 / 3   # 3.333 - деление (всегда float)
+10 // 3  # 3     - целочисленное деление
+10 % 3   # 1     - остаток от деления
+10 ** 3  # 1000  - возведение в степень</code></pre>
+                    </div>
+                    <div class="fragment opinion">
+                        <code>10 / 3</code> -> всегда <code>float</code>.&nbsp;
+                        <code>10 // 3</code> -> всегда <code>int</code>.
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Составное присваивание</h2>
+                    <div class="code-block fragment">
+                        <pre class="python size-m"><code>hp = 100
+
+hp += 20   # hp = hp + 20  -> 120
+hp -= 30   # hp = hp - 30  -> 90
+hp *= 2    # hp = hp * 2   -> 180
+hp //= 3   # hp = hp // 3  -> 60
+hp %= 7    # hp = hp % 7   -> 4</code></pre>
+                    </div>
+                    <div class="fragment opinion">
+                        <code>hp += 20</code> - короткая запись вместо <code>hp = hp + 20</code>
+                    </div>
+                </section>
+            </section>
+
+
+            <!-- 5. Условия -->
+            <section>
+                <h2>Условия</h2>
+                <div class="code-block fragment">
+                    <pre class="python size-m"><code>score = 85
+
+if score >= 90:
+    print("Отлично")
+elif score >= 70:
+    print("Хорошо")
+else:
+    print("Нужно подтянуть")</code></pre>
+                </div>
+                <div class="code-block fragment">
+                    <pre class="python size-m"><code># Операторы сравнения: == != < > <= >=
+# Логические операторы: and  or  not
+
+if score >= 70 and score < 90:
+    print("Хорошо")</code></pre>
+                </div>
+            </section>
+
+
+            <!-- 6. Циклы -->
+            <section>
+                <section>
+                    <h2>Цикл for</h2>
+                    <div class="code-block fragment">
+                        <pre class="python size-m"><code>for i in range(5):          # 0, 1, 2, 3, 4
+    print(i)
+
+for i in range(1, 6):       # 1, 2, 3, 4, 5
+    print(i)
+
+for i in range(0, 10, 2):   # 0, 2, 4, 6, 8
+    print(i)</code></pre>
+                    </div>
+                    <div class="code-block fragment">
+                        <pre class="python size-m"><code>heroes = ["Маг", "Воин", "Лучник"]
+for hero in heroes:
+    print(hero)</code></pre>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Цикл while</h2>
+                    <div class="code-block fragment">
+                        <pre class="python size-m"><code>hp = 100
+
+while hp > 0:
+    damage = int(input("Урон:"))
+    hp -= damage
+    print(f"HP: {hp}")
+
+print("Персонаж погиб")</code></pre>
+                    </div>
+                    <div class="fragment opinion">
+                        <code>while</code> - когда не знаем заранее, сколько раз повторять.<br>
+                        <code>for</code> - когда знаем диапазон или список.
+                    </div>
+                </section>
+            </section>
+
+
+            <!-- 7. Списки -->
+            <section>
+                <section>
+                    <h2>Списки (list)</h2>
+                    <div class="code-block fragment">
+                        <pre class="python size-m"><code>inventory = ["меч", "щит", "зелье"]
+
+inventory[0]    # "меч"            - первый элемент
+inventory[-1]   # "зелье"          - последний
+inventory[1:3]  # ["щит", "зелье"] - срез</code></pre>
+                    </div>
+                    <div class="code-block fragment">
+                        <pre class="python size-m"><code>len(inventory)       # 3
+"меч" in inventory   # True</code></pre>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Методы списков</h2>
+                    <div class="code-block fragment">
+                        <pre class="python size-m"><code>inventory.append("лук")         # добавить в конец
+inventory.insert(1, "кинжал")   # вставить на позицию 1
+inventory.remove("щит")         # удалить по значению
+inventory.pop()                 # удалить последний
+inventory.pop(0)                # удалить по индексу</code></pre>
+                    </div>
+                    <div class="code-block fragment">
+                        <pre class="python size-m"><code>scores = [5, 3, 8, 1]
+scores.sort()             # сортировка по месту
+scores.sort(reverse=True)
+sorted(scores)            # новый отсортированный список</code></pre>
+                    </div>
+                </section>
+            </section>
+
+
+            <!-- ===================== ЧАСТЬ 2: СТРОКИ ===================== -->
+
+            <!-- 8. Переход к строкам -->
+            <section style="font-size: 70px; height: 100%; width: 100%">
+                <div class="fragment">
+                    <h1 style="font-size: 1.4em;">Строки</h1>
+                    <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">str</p>
+                </div>
+            </section>
+
+
+            <!-- 9. Что такое строка -->
+            <section>
+                <h2>Что такое строка?</h2>
+                <div class="fragment">
+                    Строка - это <strong>последовательность символов</strong>.
+                </div>
+                <div class="code-block fragment">
+                    <pre class="python size-m"><code>s = "Привет"
+#    0 1 2 3 4 5   - индексы
+#   -6-5-4-3-2-1   - отрицательные индексы</code></pre>
+                </div>
+                <div class="code-block fragment">
+                    <pre class="python size-m"><code>s = 'одинарные кавычки'
+s = "двойные кавычки"
+s = """многострочный
+текст"""</code></pre>
+                </div>
+                <div class="fragment opinion">
+                    Строка в Python <strong>неизменяема</strong> - нельзя поменять один символ. Любая операция создаёт <em>новую</em> строку.
+                </div>
+            </section>
+
+
+            <!-- 9.1 Операции со строками -->
+            <section>
+                <h2>Операции со строками</h2>
+                <div class="code-block fragment">
+                    <pre class="python size-m"><code># Сложение строк (конкатенация)
+first = "Hello"
+second = "World"
+result = first + " " + second  # "Hello World"</code></pre>
+                </div>
+                <div class="code-block fragment">
+                    <pre class="python size-m"><code># Умножение строки на число
+line = "-" * 20          # "--------------------"
+border = "=-" * 5 + "=" # "=-=-=-=-=-=-=-=-="
+
+print("=" * 30)
+print("Таблица рекордов")
+print("=" * 30)</code></pre>
+                </div>
+                <div class="fragment opinion">
+                    Умножение строки на число - удобный способ создавать разделители, рамки и паттерны.
+                </div>
+            </section>
+
+
+            <!-- 10. Индексирование и срезы -->
+            <section>
+                <section>
+                    <h2>Индексирование</h2>
+                    <div class="code-block fragment">
+                        <pre class="python size-m"><code>s = "Python"
+#    P  y  t  h  o  n
+#    0  1  2  3  4  5   - индексы слева
+#   -6 -5 -4 -3 -2 -1   - индексы справа
+
+s[0]   # "P" - первый символ
+s[2]   # "t"
+s[-1]  # "n" - последний символ
+s[-2]  # "o"</code></pre>
+                    </div>
+                    <div class="code-block fragment">
+                        <pre class="python size-m"><code>len(s)      # 6    - длина строки
+"th" in s   # True - вхождение</code></pre>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Срезы</h2>
+                    <div class="fragment">
+                        Общий вид: <code>s[start : end : step]</code>
+                    </div>
+                    <div class="code-block fragment">
+                        <pre class="python size-m"><code># Значения по умолчанию:
+# start = 0      (индекс начала среза)
+# end = len(s)   (индекс конца среза (не включительно))
+# step = 1       (инкремент индекса)</code></pre>
+                    </div>
+                    <div class="code-block fragment">
+                        <pre class="python size-m"><code>s = "Python"
+
+s[1:4]   # "yth"    - символы 1, 2, 3 (end не включается)
+s[:3]    # "Pyt"    - start по умолчанию 0
+s[3:]    # "hon"    - end по умолчанию до конца
+s[::2]   # "Pto"    - каждый второй символ - 0, 2, 4
+s[::-1]  # "nohtyP" - step=-1 идёт справа налево</code></pre>
+                    </div>
+                </section>
+            </section>
+
+
+            <!-- 11. Основные методы строк -->
+            <section>
+                <section>
+                    <h2>Методы строк - регистр и пробелы</h2>
+                    <div class="code-block fragment">
+                        <pre class="python size-m"><code>s = "  Hello, World!  "
+
+s.upper()   # "  HELLO, WORLD!  "
+s.lower()   # "  hello, world!  "
+s.strip()   # "Hello, World!"  - убрать пробелы
+s.lstrip()  # убрать слева
+s.rstrip()  # убрать справа</code></pre>
+                    </div>
+                    <div class="code-block fragment">
+                        <pre class="python size-m"><code>name = input("Имя:").strip().lower()
+# пользователь мог написать "  Иван  " или "ИВАН"</code></pre>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Методы строк - поиск и замена</h2>
+                    <div class="code-block fragment">
+                        <pre class="python size-m"><code>s = "banana"
+
+s.find("an")           # 1       - индекс первого вхождения
+s.find("xyz")          # -1      - не найдено
+s.count("an")          # 2       - сколько раз встречается
+s.replace("an", "AN")  # "bANANa"</code></pre>
+                    </div>
+                    <div class="code-block fragment">
+                        <pre class="python size-m"><code>url = "www.python.org"
+
+url.startswith("www")   # True
+url.endswith(".org")    # True</code></pre>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Методы строк - split и join</h2>
+                    <div class="code-block fragment">
+                        <pre class="python size-m"><code>s = "яблоко,груша,банан"
+fruits = s.split(",")    # ["яблоко", "груша", "банан"]
+
+line = "Hello World Python"
+words = line.split()     # по пробелу (по умолчанию)</code></pre>
+                    </div>
+                    <div class="code-block fragment">
+                        <pre class="python size-m"><code>items = ["яблоко", "груша", "банан"]
+", ".join(items)   # "яблоко, груша, банан"
+"-".join(items)    # "яблоко-груша-банан"</code></pre>
+                    </div>
+                    <div class="fragment opinion">
+                        <code>split</code> - строку в список.<br>
+                        <code>join</code> - список в строку.
+                    </div>
+                </section>
+            </section>
+
+
+            <!-- 12. f-строки -->
+            <section>
+                <section>
+                    <h2>f-строки (f-strings)</h2>
+                    <div class="compare">
+                        <div class="compare-block fragment">
+                            <h3>Раньше писали так</h3>
+                            <div class="code-block">
+                                <pre class="python size-s"><code>name = "Артём"
+hp = 75
+
+# Конкатенация - неудобно
+print("Игрок " + name + ": HP = " + str(hp))
+
+# .format() - громоздко
+print("Игрок {}: HP = {}".format(name, hp))</code></pre>
+                            </div>
+                        </div>
+                        <div class="compare-block fragment">
+                            <h3>Сейчас пишут так</h3>
+                            <div class="code-block">
+                                <pre class="python size-s"><code>name = "Артём"
+hp = 75
+
+# f-строка - просто и читаемо
+print(f"Игрок {name}: HP = {hp}")
+
+# Можно писать выражения
+print(f"Уровень: {hp // 10}")</code></pre>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="fragment opinion">
+                        f-строки читаются как обычный текст, не требуют конвертации типов и поддерживают выражения прямо внутри <code>{}</code>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Форматирование в f-строках</h2>
+                    <div class="code-block fragment">
+                        <pre class="python size-m"><code>pi = 3.14159
+score = 1234567
+
+f"{pi:.2f}"       # "3.14"    - 2 знака после точки
+f"{pi:.4f}"       # "3.1416"  - 4 знака после точки
+f"{score:,}"      # "1,234,567" - разделитель тысяч
+f"{score:_}"      # "1_234_567" - через подчёркивание</code></pre>
+                    </div>
+                    <div class="code-block fragment">
+                        <pre class="python size-m"><code>n = 42
+
+f"{n:05d}"   # "00042" - дополнить нулями до 5 символов
+f"{n:>10}"   # "        42" - выравнивание по правому краю
+f"{n:<10}"   # "42        " - по левому
+f"{n:^10}"   # "    42    " - по центру</code></pre>
+                    </div>
+                    <div class="fragment" style="margin-top: 1em; font-size: 0.7em; opacity: 0.6;">
+                        Подробнее: <a href="https://sky.pro/wiki/python/formatirovanie-strok-v-python-f-string/" target="_blank" rel="noopener">форматирование f-строк</a>
+                    </div>
+                </section>
+            </section>
+
+
+            <!-- 13. Практика -->
+            <section>
+                <section>
+                    <h2>Практика</h2>
+                    <p style="opacity: 0.6">Решаем задачи вместе</p>
+                </section>
+
+                <section>
+                    <h2>Задача 1 - Перевернуть строку</h2>
+                    <p class="fragment">Пользователь вводит строку - необходимо вывести её перевёрнутую копию</p>
+                    <div class="fragment">
+                        <p style="font-size: 0.8em; opacity: 0.7">Входные данные:</p>
+                        <div class="code-block">
+                            <pre class="python size-m"><code>Python</code></pre>
+                        </div>
+                    </div>
+                    <div class="fragment">
+                        <p style="font-size: 0.8em; opacity: 0.7">Выходные данные:</p>
+                        <div class="code-block">
+                            <pre class="python size-m"><code>nohtyP</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Задача 2 - Палиндром</h2>
+                    <p class="fragment">Пользователь вводит строку - определить, является ли она палиндромом</p>
+                    <div class="fragment" style="font-size: 0.8em; opacity: 0.7">
+                        Палиндром читается одинаково слева и справа: "radar", "level", "madam"
+                    </div>
+                    <div class="fragment">
+                        <p style="font-size: 0.8em; opacity: 0.7">Входные данные:</p>
+                        <div class="code-block">
+                            <pre class="python size-m"><code>radar</code></pre>
+                        </div>
+                    </div>
+                    <div class="fragment">
+                        <p style="font-size: 0.8em; opacity: 0.7">Выходные данные:</p>
+                        <div class="code-block">
+                            <pre class="python size-m"><code>Палиндром</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Задача 3 - Подсчёт символов</h2>
+                    <p class="fragment">Пользователь вводит строку и символ - посчитать количество вхождений символа в строку</p>
+                    <div class="fragment">
+                        <p style="font-size: 0.8em; opacity: 0.7">Входные данные:</p>
+                        <div class="code-block">
+                            <pre class="python size-m"><code>banana
+a</code></pre>
+                        </div>
+                    </div>
+                    <div class="fragment">
+                        <p style="font-size: 0.8em; opacity: 0.7">Выходные данные:</p>
+                        <div class="code-block">
+                            <pre class="python size-m"><code>3</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Задача 4 - Первое слово</h2>
+                    <p class="fragment">Пользователь вводит строку - вывести первое слово</p>
+                    <div class="fragment">
+                        <p style="font-size: 0.8em; opacity: 0.7">Входные данные:</p>
+                        <div class="code-block">
+                            <pre class="python size-m"><code>Hello World Python</code></pre>
+                        </div>
+                    </div>
+                    <div class="fragment">
+                        <p style="font-size: 0.8em; opacity: 0.7">Выходные данные:</p>
+                        <div class="code-block">
+                            <pre class="python size-m"><code>Hello</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Задача 5 - Цензура</h2>
+                    <div class="fragment">
+                        <p>Заменить незенцурное слово на ***</p>
+                        <div class="compare fragment">
+                            <div class="compare-block">
+                                <p style="font-size: 0.8em; opacity: 0.7">Входные данные:</p>
+                                <div class="code-block"><pre class="python size-s"><code>Я знаю Python и JavaScript
+JavaScript</code></pre></div>
+                            </div>
+                            <div class="compare-block">
+                                <p style="font-size: 0.8em; opacity: 0.7">Выходные данные:</p>
+                                <div class="code-block"><pre class="python size-s"><code>Я знаю Python и ***</code></pre></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="fragment">
+                        <p>Пользователь вводит нецензурные слова по одному, пока не введёт <code>0</code></p>
+                        <div class="compare">
+                            <div class="compare-block">
+                                <p style="font-size: 0.8em; opacity: 0.7">Входные данные:</p>
+                                <div class="code-block"><pre class="python size-s"><code>Я знаю Python, JavaScript и PHP
+JavaScript
+PHP
+0</code></pre></div>
+                            </div>
+                            <div class="compare-block">
+                                <p style="font-size: 0.8em; opacity: 0.7">Выходные данные:</p>
+                                <div class="code-block"><pre class="python size-s"><code>Я знаю Python, *** и ***</code></pre></div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Задача 5 - Цензура</h2>
+                    <div class="fragment">
+                        <p>Заменить на <code>*</code> по количеству символов слова</p>
+                        <div class="compare">
+                            <div class="compare-block">
+                                <p style="font-size: 0.8em; opacity: 0.7">Входные данные:</p>
+                                <div class="code-block"><pre class="python size-s"><code>Я знаю Python, JavaScript и PHP
+JavaScript
+PHP
+0</code></pre></div>
+                            </div>
+                            <div class="compare-block">
+                                <p style="font-size: 0.8em; opacity: 0.7">Выходные данные:</p>
+                                <div class="code-block"><pre class="python size-s"><code>Я знаю Python, ********** и ***</code></pre></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="fragment">
+                        <p>Оставить первую и последнюю букву</p>
+                        <div class="compare">
+                            <div class="compare-block">
+                                <p style="font-size: 0.8em; opacity: 0.7">Входные данные:</p>
+                                <div class="code-block"><pre class="python size-s"><code>Я знаю Python, JavaScript и PHP
+JavaScript
+PHP
+0</code></pre></div>
+                            </div>
+                            <div class="compare-block">
+                                <p style="font-size: 0.8em; opacity: 0.7">Выходные данные:</p>
+                                <div class="code-block"><pre class="python size-s"><code>Я знаю Python, J********t и P*P</code></pre></div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Задача 6 - Reverse Words in a String III</h2>
+                    <p class="fragment">Развернуть каждое слово в строке, сохранив порядок слов.</p>
+                    <div class="fragment">
+                        <p style="font-size: 0.8em; opacity: 0.7">Входные данные:</p>
+                        <div class="code-block">
+                            <pre class="python size-m"><code>Let's take LeetCode contest</code></pre>
+                        </div>
+                    </div>
+                    <div class="fragment">
+                        <p style="font-size: 0.8em; opacity: 0.7">Выходные данные:</p>
+                        <div class="code-block">
+                            <pre class="python size-m"><code>s'teL ekat edoCteeL tsetnoC</code></pre>
+                        </div>
+                    </div>
+                    <div class="fragment" style="margin-top: 1em; font-size: 0.7em; opacity: 0.6;">
+                        <a href="https://leetcode.com/problems/reverse-words-in-a-string-iii/" target="_blank" rel="noopener">leetcode.com - Reverse Words in a String III (#557)</a>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Задача 7 - Valid Palindrome</h2>
+                    <p class="fragment">Палиндром с учётом только букв и цифр, без учёта регистра.</p>
+                    <div class="fragment">
+                        <p style="font-size: 0.8em; opacity: 0.7">Входные данные:</p>
+                        <div class="code-block">
+                            <pre class="python size-m"><code>A man, a plan, a canal: Panama</code></pre>
+                        </div>
+                    </div>
+                    <div class="fragment">
+                        <p style="font-size: 0.8em; opacity: 0.7">Выходные данные:</p>
+                        <div class="code-block">
+                            <pre class="python size-m"><code>true</code></pre>
+                        </div>
+                    </div>
+                    <div class="fragment" style="margin-top: 1em; font-size: 0.7em; opacity: 0.6;">
+                        <a href="https://leetcode.com/problems/valid-palindrome/" target="_blank" rel="noopener">leetcode.com - Valid Palindrome (#125)</a>
+                    </div>
+                </section>
+            </section>
+
+
+            <!-- 14. Итог -->
+            <section>
+                <h2>Что запомнить о строках</h2>
+                <ul>
+                    <li class="fragment">Строка - <strong>последовательность</strong> символов, как список</li>
+                    <li class="fragment">Индексация и срезы работают <strong>так же, как в списках</strong></li>
+                    <li class="fragment">Строка <strong>неизменяема</strong> - методы возвращают новую строку</li>
+                    <li class="fragment"><code>split</code> / <code>join</code> - переключение между строкой и списком</li>
+                    <li class="fragment">f-строки для красивого вывода</li>
+                </ul>
+            </section>
+
+
+        </div>
+    </div>
+
+    <script src="/utils/lib/js/head.min.js"></script>
+    <script src="/utils/js/reveal.js"></script>
+    <script>
+        Reveal.initialize({
+            controls: true,
+            progress: true,
+            history: true,
+            center: true,
+            transition: 'fade',
+            transitionSpeed: 'fast',
+            dependencies: [
+                { src: '/utils/lib/js/classList.js', condition: function () { return !document.body.classList; } },
+                { src: '/utils/plugin/markdown/marked.js', condition: function () { return !!document.querySelector('[data-markdown]'); } },
+                { src: '/utils/plugin/markdown/markdown.js', condition: function () { return !!document.querySelector('[data-markdown]'); } },
+                { src: '/utils/plugin/highlight/highlight.js', async: true, callback: function () { hljs.initHighlightingOnLoad(); } },
+                { src: '/utils/plugin/zoom-js/zoom.js', async: true },
+                { src: '/utils/plugin/notes/notes.js', async: true }
+            ]
+        });
+        Reveal.configure({ slideNumber: 'c/t' });
+    </script>
+</body>
+
+</html>

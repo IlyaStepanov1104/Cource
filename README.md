@@ -177,6 +177,24 @@ lessons/
 | `.muted` | Серый цвет текста |
 | `pre.size-s / size-m / size-l` | Размер кода |
 
+### Типы слайдов
+
+| Тип | Шаблон |
+|---|---|
+| Раздел на фоне | `<section data-background-image="img/bg.jpg"><h1 style="text-shadow: #000 3px 2px 2px;">Текст</h1></section>` |
+| Плюсы/минусы | `<ul class="opinion"><li class="plus fragment">...</li><li class="minus fragment">...</li></ul>` |
+| Сравнение двух подходов | `.compare` > `.compare-block` (2-column grid) |
+| Простой код | `<pre class="[html\|css\|javascript] size-l code-example-one"><code>...</code></pre>` |
+| HTML + CSS вместе | `<code-example [fragment] [no-preview]><template data-type="html">...</template><template data-type="css">...</template></code-example>` |
+| Грид инструментов | `.tools-list` > `.tool-block` |
+| Временная шкала | `.timeline` > `.timeline-item` > `.timeline-label` + `.timeline-arrow` + `.timeline-desc` |
+| Схема архитектуры | `.arch-flow` > `.arch-box[.highlight]` + `.arch-arrow` |
+| Слайды в формате MD | `<section data-markdown data-separator="---"><script type="text/template">...markdown...</script></section>` |
+
+Общие компоненты доступны из `/utils/css/custom-base.css` автоматически: `.opinion`, `.compare`/`.compare-block`, `.tools-list`/`.tool-block`, `.timeline`/`.timeline-item`, `.arch-flow`/`.arch-box`, `.wrapper`, `.iframe-container`.
+
+`css-custom/custom.css` — только для стилей, уникальных для данной лекции.
+
 ## Горячие клавиши в презентации
 
 | Клавиша | Действие |
