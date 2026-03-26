@@ -1,0 +1,715 @@
+<!doctype html>
+<html lang="ru">
+
+<head>
+    <meta charset="utf-8">
+    <title>Занятие 3 - Функции и Встроенные структуры данных</title>
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+
+    <link rel="stylesheet" href="/utils/css/reveal.css">
+    <link rel="stylesheet" href="/utils/lib/css/animate.css">
+    <link rel="stylesheet" href="/utils/css/theme/night.css" id="theme">
+
+    <!-- Code syntax highlighting -->
+    <link rel="stylesheet" href="/utils/lib/css/zenburn.css">
+
+    <link rel="stylesheet" href="/utils/css/custom-base.css">
+    <link rel="stylesheet" href="css-custom/custom.css">
+
+    <script>
+        var link = document.createElement('link');
+        link.rel = 'stylesheet'; link.type = 'text/css';
+        link.href = window.location.search.match(/print-pdf/gi)
+            ? '/utils/css/print/pdf.css'
+            : '/utils/css/print/paper.css';
+        document.getElementsByTagName('head')[0].appendChild(link);
+    </script>
+</head>
+
+<body>
+    <div class="reveal">
+        <div class="slides">
+
+            <section style="font-size: 70px; height: 100%; width: 100%">
+                <div class="fragment">
+                    <h1 class="animated" style="font-size: 1.8em;">Функции и Встроенные СД</h1>
+                    <p style="text-align: center; font-size: 0.5em; opacity: 0.5;">Занятие 3</p>
+                </div>
+            </section>
+
+            <!-- ===================== ЧАСТЬ 1: ФУНКЦИИ ===================== -->
+
+            <section style="font-size: 70px; height: 100%; width: 100%">
+                <div class="fragment">
+                    <h1 style="font-size: 1.4em;">Функции</h1>
+                    <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">def</p>
+                </div>
+            </section>
+
+
+            <!-- 3. Зачем нужны функции -->
+            <section>
+                <h2>Зачем нужны функции?</h2>
+                <div class="compare">
+                    <div class="compare-block fragment">
+                        <h3>Без функции</h3>
+                        <div class="code-block">
+                            <pre class="python size-s"><code># Бой 1
+hp = 100
+damage = 30
+new_hp = hp - damage
+print(f"Было: {hp}, стало: {new_hp}")
+
+# Бой 2
+hp = 70
+damage = 45
+new_hp = hp - damage
+print(f"Было: {hp}, стало: {new_hp}")
+
+# Бой 3
+hp = 35
+damage = 20
+new_hp = hp - damage
+print(f"Было: {hp}, стало: {new_hp}")</code></pre>
+                        </div>
+                    </div>
+                    <div class="compare-block fragment">
+                        <h3>С функцией</h3>
+                        <div class="code-block">
+                            <pre class="python size-s"><code>def take_damage(hp, damage):
+    new_hp = hp - damage
+    print(f"Было: {hp}, стало: {new_hp}")
+    return new_hp
+
+
+take_damage(100, 30)
+take_damage(70, 45)
+take_damage(35, 20)</code></pre>
+                        </div>
+                    </div>
+                </div>
+                <div class="fragment opinion">
+                    Функция - это <strong>именованный блок кода</strong>, который можно вызывать сколько угодно раз
+                </div>
+            </section>
+
+
+            <!-- 4. Синтаксис функции -->
+            <section>
+                <h2>Синтаксис функции</h2>
+                <div class="code-block fragment">
+                    <pre class="python size-m"><code>def greet(name):                    # def, имя, аргументы
+    message = f"Привет, {name}!"    # тело функции (отступ!)
+    return message                  # возвращаемое значение
+
+
+result = greet("Артём")   # вызов функции
+print(result)             # Привет, Артём!</code></pre>
+                </div>
+                <div class="code-block fragment">
+                    <pre class="python size-m"><code>def add(a, b):
+    return a + b
+
+
+print(add(3, 5))    # 8
+print(add(10, 20))  # 30</code></pre>
+                </div>
+            </section>
+
+
+            <!-- 5. Функция без return -->
+            <section>
+                <h2>Функция без return</h2>
+                <div class="code-block fragment">
+                    <pre class="python size-m"><code>def show_hp(hp):
+    print(f"HP: {hp}")  # просто выводит, ничего не возвращает
+
+
+show_hp(100)  # HP: 100
+
+result = show_hp(100)
+print(result)</code></pre>
+                </div>
+                <div class="fragment opinion">
+                    Если в функции нет <code>return</code>, она возвращает <code>None</code>.<br>
+                    <code>print</code> - это функция без return, она не возвращает строку!
+                </div>
+            </section>
+
+
+            <!-- 6. Аргументы по умолчанию -->
+            <section>
+                <h2>Аргументы по умолчанию</h2>
+                <div class="code-block fragment">
+                    <pre class="python size-m"><code>def attack(damage, weapon="меч"):
+    print(f"Атака {weapon} - {damage} урона")
+
+
+attack(50)           # Атака меч - 50 урона
+attack(80, "лук")    # Атака лук - 80 урона
+attack(30, "копьё")  # Атака копьё - 30 урона</code></pre>
+                </div>
+                <div class="fragment opinion">
+                    Аргументы с дефолтным значением должны быть <strong>после</strong> обязательных аргументов
+                </div>
+            </section>
+
+
+            <!-- 7. Именованные аргументы -->
+            <section>
+                <h2>Именованные аргументы</h2>
+                <div class="code-block fragment">
+                    <pre class="python size-m"><code>def create_character(name, hp, level):
+    print(f"{name}: HP={hp}, LVL={level}")
+
+
+# Позиционные - порядок важен
+create_character("Артём", 100, 5)
+
+# Именованные - порядок не важен
+create_character(hp=100, name="Артём", level=5)</code></pre>
+                </div>
+                <div class="fragment opinion">
+                    Именованные аргументы делают вызов функции читаемее, особенно когда параметров много
+                </div>
+            </section>
+
+
+            <!-- 8. *args и **kwargs -->
+            <section>
+                <section>
+                    <h2>*args</h2>
+                    <div class="fragment">
+                        <code>*args</code> - произвольное количество позиционных аргументов
+                    </div>
+                    <div class="code-block fragment">
+                        <pre class="python size-m"><code>def total_damage(*args):
+    return sum(args)
+
+
+total_damage(10, 20, 30)     # 60
+total_damage(5, 15, 25, 35)  # 80</code></pre>
+                    </div>
+                    <div class="code-block fragment">
+                        <pre class="python size-m"><code>def show_inventory(*items):
+    for item in items:
+        print(f"- {item}")
+
+
+show_inventory("меч", "щит", "зелье")</code></pre>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>**kwargs</h2>
+                    <div class="fragment">
+                        <code>**kwargs</code> - произвольное количество именованных аргументов
+                    </div>
+                    <div class="code-block fragment">
+                        <pre class="python size-m"><code>def create_character(**kwargs):
+    for key, value in kwargs.items():
+        print(f"{key}: {value}")
+
+
+create_character(name="Артём", hp=100, level=5)
+# name: Артём
+# hp: 100
+# level: 5</code></pre>
+                    </div>
+                    <div class="fragment opinion">
+                        <code>*args</code> и <code>**kwargs</code> - это соглашение по именованию.<br>
+                        Главное - звёздочки: <code>*</code> и <code>**</code>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>А что такое kwargs?</h2>
+                    <div class="code-block fragment">
+                        <pre class="python size-m"><code>def create_character(**kwargs):
+    print(kwargs)
+
+
+create_character(name="Артём", hp=100, level=5)
+# {"name": "Артём", "hp": 100, "level": 5}</code></pre>
+                    </div>
+                    <div class="fragment opinion">
+                        Оставим на попозже
+                    </div>
+                </section>
+            </section>
+
+
+            <!-- 9. Типизация -->
+            <section>
+                <section>
+                    <h2>Типизация (type hints)</h2>
+                    <div class="compare">
+                        <div class="compare-block fragment">
+                            <h3>Без типов</h3>
+                            <div class="code-block">
+                                <pre class="python size-s"><code>def add(a, b):
+    return a + b</code></pre>
+                            </div>
+                        </div>
+                        <div class="compare-block fragment">
+                            <h3>С типами</h3>
+                            <div class="code-block">
+                                <pre class="python size-s"><code>def add(a: int, b: int) -> int:
+    return a + b</code></pre>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="code-block fragment">
+                        <pre class="python size-m"><code>def greet(name: str) -> str:
+    return f"Привет, {name}!"
+
+
+def take_damage(hp: int, damage: int) -> int:
+    return hp - damage</code></pre>
+                    </div>
+                    <div class="fragment opinion">
+                        Python не проверяет типы при выполнении - это подсказки для <strong>IDE и разработчика</strong>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Шпаргалка по типам</h2>
+                    <div class="code-block fragment">
+                        <pre class="python size-s"><code># Простые типы
+x: int = 42
+y: float = 3.14
+s: str = "привет"
+b: bool = True
+
+# Функция ничего не возвращает
+def show(name: str) -> None:
+    print(name)</code></pre>
+                    </div>
+                    <div class="code-block fragment">
+                        <pre class="python size-s"><code># Коллекции (Python 3.9+)
+scores: list[int] = [10, 20, 30]
+player: dict[str, int] = {"hp": 100, "level": 5}
+
+# Может быть None
+def find(name: str) -> str | None:
+    ...</code></pre>
+                    </div>
+                    <div class="code-block fragment">
+                        <pre class="python size-s"><code># Любой тип - когда тип неизвестен
+from typing import Any
+
+def debug(value: Any) -> None:
+    print(value)</code></pre>
+                    </div>
+                </section>
+            </section>
+
+
+            <!-- 10. Import -->
+            <section>
+                <h2>Функции из других файлов</h2>
+                <div class="compare">
+                    <div class="compare-block fragment">
+                        <h3>utils.py</h3>
+                        <div class="code-block">
+                            <pre class="python size-s"><code>def take_damage(hp, damage):
+    return hp - damage
+
+
+def heal(hp, amount):
+    return hp + amount</code></pre>
+                        </div>
+                    </div>
+                    <div class="compare-block fragment">
+                        <h3>game.py</h3>
+                        <div class="code-block">
+                            <pre class="python size-s"><code>from utils import take_damage, heal
+
+
+hp = 100
+hp = take_damage(hp, 30)  # 70
+hp = heal(hp, 20)         # 90</code></pre>
+                        </div>
+                    </div>
+                </div>
+                <div class="fragment opinion">
+                    Разбивай код на файлы по смыслу: <code>utils.py</code>, <code>game.py</code>, <code>player.py</code>
+                </div>
+            </section>
+
+
+            <!-- ===================== ЧАСТЬ 2: СТРУКТУРЫ ДАННЫХ ===================== -->
+
+            <section style="font-size: 70px; height: 100%; width: 100%">
+                <div class="fragment">
+                    <h1 style="font-size: 1.4em;">Структуры данных</h1>
+                    <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">data structures</p>
+                </div>
+            </section>
+
+
+            <!-- Что такое структуры данных -->
+            <section>
+                <h2>Что такое структура данных?</h2>
+                <div class="fragment">
+                    Структура данных - это <strong>способ организовать данные в памяти</strong>,
+                    чтобы с ними было удобно работать.
+                </div>
+                <div class="fragment" style="margin-top: 0.8em;">
+                    Ты уже знаешь одну структуру - <code>list</code>.<br>
+                    Но список подходит не для всего.
+                </div>
+                <div class="compare" style="margin-top: 0.8em;">
+                    <div class="compare-block fragment">
+                        <h3>Список игроков</h3>
+                        <div class="code-block">
+                            <pre class="python size-s"><code>players = ["Артём", "Иван", "Маша"]
+
+# Добавить, удалить, перебрать - удобно
+# Найти по имени - перебираем весь список</code></pre>
+                        </div>
+                    </div>
+                    <div class="compare-block fragment">
+                        <h3>Характеристики игрока</h3>
+                        <div class="code-block">
+                            <pre class="python size-s"><code>player = ["Артём", 100, 5, 30]
+
+# player[0] - имя? hp? уровень?
+# Приходится помнить порядок</code></pre>
+                        </div>
+                    </div>
+                </div>
+                <div class="fragment opinion">
+                    Разные задачи - разные структуры данных. Выбор правильной структуры делает код проще и быстрее
+                </div>
+            </section>
+
+
+            <!-- Встроенные структуры данных -->
+            <section>
+
+                <section>
+                    <h2>Встроенные структуры данных</h2>
+                    <div class="tools-list">
+                        <div class="tool-block fragment">
+                            <h3>list</h3>
+                            <p>Упорядоченный список</p>
+                            <p style="font-size: 0.75em; opacity: 0.7">["меч", "щит", "зелье"]</p>
+                        </div>
+                        <div class="tool-block fragment">
+                            <h3>?</h3>
+                            <p style="font-size: 0.75em; opacity: 0.7">{"name": "Артём", "hp": 100}</p>
+                            <p style="font-size: 0.7em; opacity: 0.5">видели в kwargs...</p>
+                        </div>
+                    </div>
+                </section>
+            </section>
+
+
+            <!-- 12. Словарь - определение и аналогия -->
+            <section>
+                <h2>Словарь (dict)</h2>
+                <div class="fragment">
+                    Словарь - структура <strong>ключ -> значение</strong>.
+                    Как настоящий словарь: ищешь слово и находишь определение.
+                </div>
+                <div class="compare">
+                    <div class="compare-block fragment">
+                        <h3>Список - по индексу</h3>
+                        <div class="code-block">
+                            <pre class="python size-s"><code>player = ["Артём", 100, 5]
+
+player[0]  # "Артём" - кто это?
+player[1]  # 100 - что это?
+player[2]  # 5 - и это?</code></pre>
+                        </div>
+                    </div>
+                    <div class="compare-block fragment">
+                        <h3>Словарь - по имени</h3>
+                        <div class="code-block">
+                            <pre class="python size-s"><code>player = {
+    "name": "Артём",
+    "hp": 100,
+    "level": 5,
+}
+
+player["name"]   # "Артём"
+player["hp"]     # 100</code></pre>
+                        </div>
+                    </div>
+                </div>
+                <div class="fragment opinion">
+                    Словарь читается как текст - сразу понятно, что <code>"hp"</code> это здоровье
+                </div>
+            </section>
+
+
+            <!-- 13. Синтаксис словаря -->
+            <section>
+                <section>
+                    <h2>Работа со словарём</h2>
+                    <div class="code-block fragment">
+                        <pre class="python size-m"><code>player = {
+    "name": "Артём",
+    "hp": 100,
+    "level": 5,
+    "inventory": ["меч", "щит"],
+}
+
+player["hp"]          # 100 - получить значение
+player["mana"] = 50   # добавить новый ключ
+player["hp"] = 80     # перезаписать значение</code></pre>
+                    </div>
+                    <div class="code-block fragment">
+                        <pre class="python size-m"><code>"hp" in player     # True - проверить наличие ключа
+"mana" in player   # False (если не добавляли)
+
+del player["mana"]  # удалить ключ</code></pre>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Получение значения по ключу</h2>
+                    <div class="compare">
+                        <div class="compare-block fragment">
+                            <h3>Через []</h3>
+                            <div class="code-block">
+                                <pre class="python size-s"><code>player = {"hp": 100}
+
+player["hp"]    # 100
+player["mana"]  # KeyError!</code></pre>
+                            </div>
+                        </div>
+                        <div class="compare-block fragment">
+                            <h3>Через .get()</h3>
+                            <div class="code-block">
+                                <pre class="python size-s"><code>player = {"hp": 100}
+
+player.get("hp")       # 100
+player.get("mana")     # None
+player.get("mana", 0)  # 0</code></pre>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="fragment opinion">
+                        Используй <code>.get()</code>, когда ключ может отсутствовать
+                    </div>
+                </section>
+            </section>
+
+
+            <!-- 14. Методы словаря -->
+            <section>
+                <h2>Методы словаря</h2>
+                <div class="code-block fragment">
+                    <pre class="python size-m"><code>player = {"name": "Артём", "hp": 100, "level": 5}
+
+player.keys()    # dict_keys(["name", "hp", "level"])
+player.values()  # dict_values(["Артём", 100, 5])
+player.items()   # dict_items([("name", "Артём"), ...])</code></pre>
+                </div>
+                <div class="code-block fragment">
+                    <pre class="python size-m"><code>stats = {"attack": 30, "defense": 15}
+player.update(stats)  # добавить несколько ключей сразу
+
+# player теперь содержит: name, hp, level, attack, defense</code></pre>
+                </div>
+            </section>
+
+
+            <!-- 15. Словарь в циклах -->
+            <section>
+                <h2>Словарь в циклах</h2>
+                <div class="code-block fragment">
+                    <pre class="python size-m"><code>player = {"name": "Артём", "hp": 100, "level": 5}
+
+for key in player:  # перебор ключей
+    print(key)</code></pre>
+                </div>
+                <div class="code-block fragment">
+                    <pre class="python size-m"><code>for key, value in player.items():  # ключ и значение
+    print(f"{key}: {value}")
+
+# name: Артём
+# hp: 100
+# level: 5</code></pre>
+                </div>
+                <div class="fragment opinion">
+                    Чаще всего нужен <code>.items()</code> - он даёт и ключ, и значение сразу
+                </div>
+            </section>
+
+
+            <!-- 16. Счётчик -->
+            <section>
+                <h2>Счётчик - частый паттерн</h2>
+                <div class="fragment">
+                    Посчитать, сколько раз встречается каждый элемент
+                </div>
+                <div class="code-block fragment">
+                    <pre class="python size-m"><code>words = ["кот", "пёс", "кот", "рыба", "кот", "пёс"]
+counter = {}
+
+for word in words:
+    counter[word] = counter.get(word, 0) + 1
+
+print(counter)
+# {"кот": 3, "пёс": 2, "рыба": 1}</code></pre>
+                </div>
+                <div class="fragment opinion">
+                    <code>counter.get(word, 0) + 1</code> - если ключа нет, берём 0, добавляем 1
+                </div>
+            </section>
+
+            <!-- ===================== ЧАСТЬ 3: ПРАКТИКА ===================== -->
+
+            <section>
+                <h2>Практика</h2>
+                <p style="opacity: 0.6">Решаем задачи вместе</p>
+            </section>
+
+
+            <!-- 18. Задача 1 - Декомпозиция -->
+            <section>
+                <section>
+                    <h2>Задача 1 - Декомпозиция</h2>
+                    <p class="fragment">Найди, что повторяется, и вынеси в функцию</p>
+                    <div class="code-block fragment">
+                        <pre class="python size-s"><code>name1 = "Артём"
+hp1 = 100
+score1 = 85
+print(f"--- {name1} ---")
+print(f"HP: {hp1}")
+print(f"Score: {score1}")
+print()
+
+name2 = "Иван"
+hp2 = 80
+score2 = 92
+print(f"--- {name2} ---")
+print(f"HP: {hp2}")
+print(f"Score: {score2}")
+print()</code></pre>
+                    </div>
+                </section>
+
+            </section>
+
+
+            <!-- 19. Задача 2 - Таблица рекордов -->
+            <section>
+                <section>
+                    <h2>Задача 2 - Таблица рекордов</h2>
+                    <p class="fragment">Пользователь вводит имя и счёт. Когда вводит <code>0</code> - выводим всех</p>
+                    <div class="fragment">
+                        <p style="font-size: 0.8em; opacity: 0.7">Входные данные:</p>
+                        <div class="code-block">
+                            <pre class="python size-m"><code>Артём 85
+Иван 92
+Маша 78
+0</code></pre>
+                        </div>
+                    </div>
+                    <div class="fragment">
+                        <p style="font-size: 0.8em; opacity: 0.7">Выходные данные:</p>
+                        <div class="code-block">
+                            <pre class="python size-m"><code>Артём: 85
+Иван: 92
+Маша: 78</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 20. Задача 3 - Подсчёт слов -->
+                <section>
+                    <h2>Задача 3 - Подсчёт слов</h2>
+                    <p class="fragment">Пользователь вводит строку - посчитать, сколько раз встречается каждое слово</p>
+                    <div class="fragment">
+                        <p style="font-size: 0.8em; opacity: 0.7">Входные данные:</p>
+                        <div class="code-block">
+                            <pre class="python size-m"><code>кот пёс кот рыба кот пёс</code></pre>
+                        </div>
+                    </div>
+                    <div class="fragment">
+                        <p style="font-size: 0.8em; opacity: 0.7">Выходные данные:</p>
+                        <div class="code-block">
+                            <pre class="python size-m"><code>кот: 3
+пёс: 2
+рыба: 1</code></pre>
+                        </div>
+                    </div>
+                </section>
+            </section>
+
+
+            <!-- 21. Задача - Two Sum -->
+            <section>
+                <section>
+                    <h2>Задача 4 - Two Sum</h2>
+                    <p class="fragment">Дан список чисел и цель. Найти индексы двух чисел, которые в сумме дают цель.
+                    </p>
+                    <div class="fragment">
+                        <p style="font-size: 0.8em; opacity: 0.7">Входные данные:</p>
+                        <div class="code-block">
+                            <pre class="python size-m"><code>nums = [2, 7, 11, 15]
+target = 9</code></pre>
+                        </div>
+                    </div>
+                    <div class="fragment">
+                        <p style="font-size: 0.8em; opacity: 0.7">Выходные данные:</p>
+                        <div class="code-block">
+                            <pre class="python size-m"><code>[0, 1]  # nums[0] + nums[1] = 2 + 7 = 9</code></pre>
+                        </div>
+                    </div>
+                    <div class="fragment" style="margin-top: 1em; font-size: 0.7em; opacity: 0.6;">
+                        <a href="https://leetcode.com/problems/two-sum/" target="_blank" rel="noopener">leetcode.com -
+                            Two Sum (#1)</a>
+                    </div>
+                </section>
+
+            </section>
+
+
+            <!-- 22. Итог -->
+            <section>
+                <h2>Что запомнить</h2>
+                <ul>
+                    <li class="fragment"><code>def</code> + <code>return</code> - функция принимает аргументы и
+                        возвращает результат</li>
+                    <li class="fragment">Аргументы по умолчанию и именованные аргументы делают вызов читаемее</li>
+                    <li class="fragment">Словарь - хранение данных по <strong>ключу</strong>, а не по индексу</li>
+                    <li class="fragment"><code>.get(key, default)</code> - безопасное получение значения</li>
+                    <li class="fragment"><code>.items()</code> - перебор словаря в цикле</li>
+                    <li class="fragment">Словарь-счётчик - очень частый паттерн в задачах</li>
+                </ul>
+            </section>
+
+
+        </div>
+    </div>
+
+    <script src="/utils/lib/js/head.min.js"></script>
+    <script src="/utils/js/reveal.js"></script>
+    <script>
+        Reveal.initialize({
+            controls: true,
+            progress: true,
+            history: true,
+            center: true,
+            transition: 'fade',
+            transitionSpeed: 'fast',
+            dependencies: [
+                { src: '/utils/lib/js/classList.js', condition: function () { return !document.body.classList; } },
+                { src: '/utils/plugin/markdown/marked.js', condition: function () { return !!document.querySelector('[data-markdown]'); } },
+                { src: '/utils/plugin/markdown/markdown.js', condition: function () { return !!document.querySelector('[data-markdown]'); } },
+                { src: '/utils/plugin/highlight/highlight.js', async: true, callback: function () { hljs.initHighlightingOnLoad(); } },
+                { src: '/utils/plugin/zoom-js/zoom.js', async: true },
+                { src: '/utils/plugin/notes/notes.js', async: true }
+            ]
+        });
+        Reveal.configure({ slideNumber: 'c/t' });
+    </script>
+</body>
+
+</html>

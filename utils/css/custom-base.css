@@ -284,5 +284,5 @@ div.code-block {
     padding: 5px;
     background: rgba(150, 150, 150, 0.2);
     border-radius: 10px;
-    margin-bottom: 10px;
+    margin-block: 10px;
 }

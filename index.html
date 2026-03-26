@@ -60,12 +60,19 @@
         const list = document.createElement('div');
         list.className = 'lessons-list';
 
+        let foundNext = false;
+
         lessons
             .slice()
             .sort((a, b) => (a.number || 0) - (b.number || 0))
             .forEach(lesson => {
                 const lessonDate  = lesson.date ? new Date(lesson.date) : null;
                 const isAvailable = !lessonDate || lessonDate <= now || viewAll;
+
+                if (!isAvailable && !viewAll) {
+                    if (foundNext) return;
+                    foundNext = true;
+                }
 
                 const card = document.createElement('div');
                 card.className = 'lesson-card' + (isAvailable ? '' : ' coming-soon-card');
