@@ -2,7 +2,10 @@
   "permissions": {
     "allow": [
       "WebFetch(domain:stepik.org)",
-      "WebFetch(domain:leetcode.com)"
+      "WebFetch(domain:leetcode.com)",
+      "WebFetch(domain:coderun.yandex.ru)",
+      "WebSearch",
+      "WebFetch(domain:github.com)"
     ]
   }
 }

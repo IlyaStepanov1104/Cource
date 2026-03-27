@@ -388,6 +388,31 @@ hp = heal(hp, 20)         # 90</code></pre>
 
             <!-- Встроенные структуры данных -->
             <section>
+                <section>
+                    <h2>Встроенные структуры данных</h2>
+                    <div class="tools-list">
+                        <div class="tool-block fragment">
+                            <h3>list</h3>
+                            <p>Упорядоченный список</p>
+                            <p style="font-size: 0.75em; opacity: 0.7">["меч", "щит", "зелье"]</p>
+                        </div>
+                        <div class="tool-block fragment">
+                            <h3>dict</h3>
+                            <p style="font-size: 0.75em; opacity: 0.7">{"name": "Артём", "hp": 100}</p>
+                            <p style="font-size: 0.7em; opacity: 0.5">видели в kwargs...</p>
+                        </div>
+                        <div class="tool-block fragment">
+                            <h3>set</h3>
+                            <p style="font-size: 0.75em; opacity: 0.7">???</p>
+                            <p style="font-size: 0.7em; opacity: 0.5">???</p>
+                        </div>
+                        <div class="tool-block fragment">
+                            <h3>typle</h3>
+                            <p style="font-size: 0.75em; opacity: 0.7">???</p>
+                            <p style="font-size: 0.7em; opacity: 0.5">???</p>
+                        </div>
+                    </div>
+                </section>
 
                 <section>
                     <h2>Встроенные структуры данных</h2>
@@ -401,6 +426,16 @@ hp = heal(hp, 20)         # 90</code></pre>
                             <h3>?</h3>
                             <p style="font-size: 0.75em; opacity: 0.7">{"name": "Артём", "hp": 100}</p>
                             <p style="font-size: 0.7em; opacity: 0.5">видели в kwargs...</p>
+                        </div>
+                        <div class="tool-block fragment">
+                            <h3>set</h3>
+                            <p style="font-size: 0.75em; opacity: 0.7">???</p>
+                            <p style="font-size: 0.7em; opacity: 0.5">???</p>
+                        </div>
+                        <div class="tool-block fragment">
+                            <h3>typle</h3>
+                            <p style="font-size: 0.75em; opacity: 0.7">???</p>
+                            <p style="font-size: 0.7em; opacity: 0.5">???</p>
                         </div>
                     </div>
                 </section>
@@ -540,28 +575,6 @@ for key in player:  # перебор ключей
                 </div>
             </section>
 
-
-            <!-- 16. Счётчик -->
-            <section>
-                <h2>Счётчик - частый паттерн</h2>
-                <div class="fragment">
-                    Посчитать, сколько раз встречается каждый элемент
-                </div>
-                <div class="code-block fragment">
-                    <pre class="python size-m"><code>words = ["кот", "пёс", "кот", "рыба", "кот", "пёс"]
-counter = {}
-
-for word in words:
-    counter[word] = counter.get(word, 0) + 1
-
-print(counter)
-# {"кот": 3, "пёс": 2, "рыба": 1}</code></pre>
-                </div>
-                <div class="fragment opinion">
-                    <code>counter.get(word, 0) + 1</code> - если ключа нет, берём 0, добавляем 1
-                </div>
-            </section>
-
             <!-- ===================== ЧАСТЬ 3: ПРАКТИКА ===================== -->
 
             <section>
@@ -605,9 +618,10 @@ print()</code></pre>
                     <div class="fragment">
                         <p style="font-size: 0.8em; opacity: 0.7">Входные данные:</p>
                         <div class="code-block">
-                            <pre class="python size-m"><code>Артём 85
+                            <pre class="python size-m"><code>Артём 65
 Иван 92
 Маша 78
+Артём 85
 0</code></pre>
                         </div>
                     </div>
@@ -684,8 +698,6 @@ target = 9</code></pre>
                     <li class="fragment">Словарь-счётчик - очень частый паттерн в задачах</li>
                 </ul>
             </section>
-
-
         </div>
     </div>
 
