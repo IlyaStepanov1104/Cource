@@ -55,7 +55,12 @@
           "order": 1
         }
       ],
-      "homeworks": []
+      "homeworks": [
+        {
+          "title": "Two Sum",
+          "description": "Дан список чисел и цель. Найти индексы двух чисел, которые в сумме дают цель.",
+          "link": "https://leetcode.com/problems/two-sum/"
+        }]
     },
     {
       "number": 4,
