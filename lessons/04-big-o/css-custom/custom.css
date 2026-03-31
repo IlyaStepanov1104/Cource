@@ -1,0 +1,109 @@
+/* ============================================================
+   Урок 4 — Сложность алгоритмов
+   ============================================================ */
+
+/* --- Таблица сложностей --- */
+
+.complexity-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.65em;
+    margin-top: 0.5em;
+}
+
+.complexity-table th {
+    color: #ffd54f;
+    padding: 0.4em 0.8em;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.25);
+    text-align: center;
+}
+
+.complexity-table td {
+    padding: 0.35em 0.8em;
+    text-align: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.complexity-table .label {
+    text-align: left;
+    font-weight: bold;
+    font-family: monospace;
+    color: #fff;
+}
+
+.val-best  { color: #66bb6a; }
+.val-good  { color: #9ccc65; }
+.val-ok    { color: #ffd54f; }
+.val-warn  { color: #ffa726; }
+.val-bad   { color: #ef5350; }
+.val-dead  { color: #b71c1c; font-weight: bold; }
+
+/* --- Бейджи Big O --- */
+
+.o-badge {
+    display: inline-block;
+    padding: 0.15em 0.55em;
+    border-radius: 0.3em;
+    font-family: monospace;
+    font-weight: bold;
+    font-size: 0.95em;
+}
+
+.o-1    { background: rgba(102, 187, 106, 0.2); color: #66bb6a; border: 1px solid rgba(102, 187, 106, 0.4); }
+.o-log  { background: rgba(129, 199, 132, 0.2); color: #81c784; border: 1px solid rgba(129, 199, 132, 0.4); }
+.o-n    { background: rgba(255, 213, 79, 0.2);  color: #ffd54f; border: 1px solid rgba(255, 213, 79, 0.4); }
+.o-nlog { background: rgba(255, 167, 38, 0.2);  color: #ffa726; border: 1px solid rgba(255, 167, 38, 0.4); }
+.o-n2   { background: rgba(239, 83, 80, 0.2);   color: #ef5350; border: 1px solid rgba(239, 83, 80, 0.4); }
+.o-n3   { background: rgba(206, 147, 216, 0.2);  color: #ce93d8; border: 1px solid rgba(206, 147, 216, 0.4); }
+.o-exp  { background: rgba(183, 28, 28, 0.2);   color: #e53935; border: 1px solid rgba(183, 28, 28, 0.4); }
+.o-fact { background: rgba(229, 57,  53,  0.2);  color: #e53935; border: 1px solid rgba(229, 57, 53, 0.4); }
+
+/* --- Визуализация бинарного поиска --- */
+
+.bs-array {
+    display: flex;
+    gap: 0.3em;
+    justify-content: center;
+    margin: 0.5em 0;
+}
+
+.bs-cell {
+    width: 2.1em;
+    height: 2.1em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0.3em;
+    font-size: 0.6em;
+    font-weight: bold;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.bs-cell.active {
+    border-color: rgba(255, 255, 255, 0.4);
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.bs-cell.mid {
+    border-color: #ffd54f;
+    background: rgba(255, 213, 79, 0.2);
+    color: #ffd54f;
+}
+
+.bs-cell.found {
+    border-color: #66bb6a;
+    background: rgba(102, 187, 106, 0.25);
+    color: #66bb6a;
+}
+
+.bs-cell.out {
+    opacity: 0.15;
+}
+
+.bs-label {
+    font-size: 0.6em;
+    opacity: 0.55;
+    margin-bottom: 0.2em;
+    text-align: center;
+}

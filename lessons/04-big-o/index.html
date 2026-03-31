@@ -1,0 +1,1049 @@
+<!doctype html>
+<html lang="ru">
+
+<head>
+    <meta charset="utf-8">
+    <title>Занятие 4 - Сложность алгоритмов</title>
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+
+    <link rel="stylesheet" href="/utils/css/reveal.css">
+    <link rel="stylesheet" href="/utils/lib/css/animate.css">
+    <link rel="stylesheet" href="/utils/css/theme/night.css" id="theme">
+
+    <link rel="stylesheet" href="/utils/lib/css/zenburn.css">
+
+    <link rel="stylesheet" href="/utils/css/custom-base.css">
+    <link rel="stylesheet" href="css-custom/custom.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+
+    <script>
+        var link = document.createElement('link');
+        link.rel = 'stylesheet'; link.type = 'text/css';
+        link.href = window.location.search.match(/print-pdf/gi)
+            ? '/utils/css/print/pdf.css'
+            : '/utils/css/print/paper.css';
+        document.getElementsByTagName('head')[0].appendChild(link);
+    </script>
+</head>
+
+<body>
+    <div class="reveal">
+        <div class="slides">
+
+            <!-- ===================== ТИТУЛ ===================== -->
+
+            <section style="font-size: 70px; height: 100%; width: 100%">
+                <div class="fragment">
+                    <h1 class="animated" style="font-size: 1.8em;">Сложность алгоритмов</h1>
+                    <p style="text-align: center; font-size: 0.5em; opacity: 0.5;">Занятие 4</p>
+                </div>
+            </section>
+
+
+            <!-- ===================== ЧАСТЬ 1: TWO SUM ===================== -->
+
+            <section style="font-size: 70px; height: 100%; width: 100%">
+                <h1 style="font-size: 1.4em;">Two Sum</h1>
+                <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">разбор домашнего задания</p>
+            </section>
+
+
+            <!-- Задача Two Sum -->
+            <section>
+                <h2>Задача Two Sum</h2>
+                <div class="opinion">
+                    Дан список чисел и цель. Найти индексы двух чисел, которые в сумме дают цель.
+                </div>
+                <div class="compare" style="margin-top: 0.8em;">
+                    <div class="compare-block fragment">
+                        <h3>Вход</h3>
+                        <div class="code-block">
+                            <pre class="python size-m"><code>nums = [2, 7, 11, 15]
+target = 9</code></pre>
+                        </div>
+                    </div>
+                    <div class="compare-block fragment">
+                        <h3>Выход</h3>
+                        <div class="code-block">
+                            <pre class="python size-m"><code>[0, 1]
+# nums[0] + nums[1] = 2 + 7 = 9</code></pre>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+
+            <!-- Два решения -->
+            <section>
+                <h2>Два решения</h2>
+                <div class="compare">
+                    <div class="compare-block fragment">
+                        <h3>Словарь</h3>
+                        <div class="code-block">
+                            <pre class="python size-s"><code>def two_sum_dict(nums, target):
+    seen = {}
+    for i, num in nums.items():
+        diff = target - num
+        if diff in seen:
+            return [seen[diff], i]
+        seen[num] = i
+    return []</code></pre>
+                        </div>
+                    </div>
+                    <div class="compare-block fragment">
+                        <h3>Двойной цикл</h3>
+                        <div class="code-block">
+                            <pre class="python size-s"><code>def two_sum_cycle(nums, target):
+    for i in range(len(nums)):
+        for j in range(i + 1, len(nums)):
+            if nums[i] + nums[j] == target:
+                return [i, j]
+    return []</code></pre>
+                        </div>
+                    </div>
+                </div>
+                <div class="fragment opinion" style="margin-top: 0.6em;">
+                    Оба дают правильный ответ. Какой лучше?
+                </div>
+            </section>
+
+
+            <!-- Вопрос -->
+            <section>
+                <h2>Зачем усложнять?</h2>
+                <div class="fragment" style="margin-top: 1em; font-size: 0.85em;">
+                    Двойной цикл - проще читать, проще понять.
+                </div>
+                <div class="fragment" style="margin-top: 0.8em; font-size: 0.85em;">
+                    Словарь - хитрее. Нужно помнить про <code>diff</code>, про <code>seen</code>.
+                </div>
+                <div class="fragment opinion" style="margin-top: 1em;">
+                    Есть ли реальная разница - или это просто стиль?
+                </div>
+            </section>
+
+
+            <!-- ===================== ЧАСТЬ 2: ИЗМЕРЕНИЕ ВРЕМЕНИ ===================== -->
+
+            <section style="font-size: 70px; height: 100%; width: 100%">
+                <div class="fragment">
+                    <h1 style="font-size: 1.4em;">Измерим разницу</h1>
+                </div>
+            </section>
+
+
+            <!-- time.perf_counter -->
+            <section>
+                <h2>Как измерить время выполнения</h2>
+                <div class="code-block fragment">
+                    <pre class="python size-m"><code>import time
+
+start = time.perf_counter()
+
+# ... твой код ...
+
+elapsed = time.perf_counter() - start
+print(f"Время: {elapsed:.4f} сек")</code></pre>
+                </div>
+                <div class="fragment opinion">
+                    <code>perf_counter()</code> возвращает текущее время в секундах.<br>
+                    Разница до и после - время работы кода.
+                </div>
+            </section>
+
+
+            <!-- Результаты замеров (demo_2) -->
+            <section>
+                <h2>Запускаем замер</h2>
+                <div class="code-block fragment">
+                    <pre class="size-m"><code>n        cycle (сек)      dict (сек)       %       
+---------------------------------------------------
+100      0.0004           0.000047             906%
+500      0.0108           0.000145            7461%
+1000     0.0511           0.000345           14820%
+2000     0.1710           0.000327           52266%
+5000     1.6040           0.002071           77464%
+10000    5.3629           0.003160          169733%</code></pre>
+                </div>
+                <div class="fragment opinion">
+                    При n=5000 время отличается на 77464% (в ~775 раз).
+                </div>
+                <div class="fragment opinion">
+                    При n=10000 время отличается на 169733% (в ~1700 раз).
+                </div>
+            </section>
+
+            <!-- Проблемы с замером времени -->
+            <section>
+                <h2>Проблема: время ненадёжно</h2>
+                <ul>
+                    <li class="fragment">На твоём ноутбуке одно время, на моём - другое</li>
+                    <li class="fragment">Запустить два раза - получишь два разных результата</li>
+                    <li class="fragment">Нельзя измерить до запуска - а хочется знать заранее</li>
+                </ul>
+                <div class="fragment opinion" style="margin-top: 0.8em;">
+                    Нужен способ сравнивать алгоритмы <strong>независимо от железа</strong>
+                </div>
+            </section>
+
+
+            <!-- ===================== ЧАСТЬ 3: ОПЕРАЦИИ ===================== -->
+
+            <section style="font-size: 70px; height: 100%; width: 100%">
+                <h1 style="font-size: 1.4em;">Считаем операции</h1>
+            </section>
+
+            <!-- Формулы -->
+            <section>
+                <h2>Формулы</h2>
+                <div class="fragment" style="font-size: 0.85em;">
+                    Двойной цикл: перебирает все пары <code>i, j</code> где <code>j > i</code>
+                </div>
+                <div class="code-block fragment">
+                    <pre class="size-m"><code>n = 4:   (0,1), (0,2), (0,3), (1,2), (1,3), (2,3)   = 6 пар
+n = 10:  45 пар
+n = 100: 4950 пар</code></pre>
+                </div>
+                <div class="fragment opinion">
+                    <strong>n * (n-1) / 2</strong> итераций цикла
+                </div>
+                <div class="fragment" style="margin-top: 0.6em; font-size: 0.85em;">
+                    Словарь: один проход - <strong>n</strong> итераций цикла
+                </div>
+            </section>
+
+
+            <!-- ===================== ЧАСТЬ 4: BIG O ===================== -->
+
+            <section style="font-size: 70px; height: 100%; width: 100%">
+                <div class="fragment">
+                    <h1 style="font-size: 1.6em;">Big O</h1>
+                    <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">нотация сложности</p>
+                </div>
+            </section>
+
+
+            <!-- Что такое Big O -->
+            <section>
+                <h2>Что такое Big O</h2>
+                <div class="fragment opinion">
+                    Big O описывает, <strong>как растёт число операций</strong> при увеличении n.<br>
+                    Мы берём только самое быстро растущее слагаемое и отбрасываем константы.
+                </div>
+                <div class="compare" style="margin-top: 0.8em;">
+                    <div class="compare-block fragment">
+                        <h3>Формула</h3>
+                        <div class="code-block">
+                            <pre class="size-s"><code>n² + 100n + 5</code></pre>
+                        </div>
+                    </div>
+                    <div class="compare-block fragment">
+                        <h3>Big O</h3>
+                        <div class="code-block">
+                            <pre class="size-s"><code>O(n²)</code></pre>
+                        </div>
+                    </div>
+                </div>
+                <div class="compare" style="margin-top: 0.4em;">
+                    <div class="compare-block fragment">
+                        <div class="code-block">
+                            <pre class="size-s"><code>3n + 42</code></pre>
+                        </div>
+                    </div>
+                    <div class="compare-block fragment">
+                        <div class="code-block">
+                            <pre class="size-s"><code>O(n)</code></pre>
+                        </div>
+                    </div>
+                </div>
+                <div class="fragment opinion" style="margin-top: 0.6em;">
+                    При больших n константы и мелкие слагаемые перестают иметь значение
+                </div>
+            </section>
+
+
+            <!-- O(n²) -->
+            <section>
+                <h2><span class="o-badge o-n2">O(n²)</span> - вложенный цикл</h2>
+                <div class="code-block fragment">
+                    <pre class="python size-m"><code>for i in range(n):
+    for j in range(n):
+        # n * n = n² операций
+        ...</code></pre>
+                </div>
+                <div class="fragment" style="margin-top: 0.6em; font-size: 0.8em;">
+                    n=10 &rarr; порядка 100 операций<br>
+                    n=100 &rarr; порядка 10 000 операций<br>
+                    n=1000 &rarr; порядка 1 000 000 операций
+                </div>
+                <div class="fragment opinion" style="margin-top: 0.6em;">
+                    Увеличиваем n в 10 раз - операций становится в 100 раз больше
+                </div>
+            </section>
+
+
+            <!-- O(n) -->
+            <section>
+                <h2><span class="o-badge o-n">O(n)</span> - один цикл</h2>
+                <div class="code-block fragment">
+                    <pre class="python size-m"><code>for i in range(n):
+    # n операций
+    ...</code></pre>
+                </div>
+                <div class="fragment" style="margin-top: 0.6em; font-size: 0.8em;">
+                    n=10 &rarr; порядка 10 операций<br>
+                    n=100 &rarr; порядка 100 операций<br>
+                    n=1000 &rarr; порядка 1000 операций
+                </div>
+                <div class="fragment opinion" style="margin-top: 0.6em;">
+                    Увеличиваем n в 10 раз - операций тоже в 10 раз больше
+                </div>
+            </section>
+
+
+            <!-- O(1) -->
+            <section>
+                <h2><span class="o-badge o-1">O(1)</span> - константа</h2>
+                <div class="code-block fragment">
+                    <pre class="python size-m"><code>seen = {2: 0, 7: 1, 11: 2}
+
+# Поиск в словаре - всегда одна операция
+result = seen.get(7)  # мгновенно, неважно какой размер</code></pre>
+                </div>
+                <div class="fragment opinion" style="margin-top: 0.8em;">
+                    Число операций не зависит от n.<br>
+                    Именно поэтому поиск в словаре такой быстрый.
+                </div>
+            </section>
+
+
+            <!-- O(log n) - анонс -->
+            <section>
+                <h2><span class="o-badge o-log">O(log n)</span> - логарифм</h2>
+                <div class="fragment" style="margin-top: 0.8em; font-size: 0.85em;">
+                    На каждом шаге задача уменьшается <strong>вдвое</strong>.
+                </div>
+                <div class="fragment" style="margin-top: 0.6em; font-size: 0.8em;">
+                    n=16 &rarr; 4 шага<br>
+                    n=1000 &rarr; 10 шагов<br>
+                    n=1 000 000 &rarr; 20 шагов
+                </div>
+                <div class="fragment opinion" style="margin-top: 0.8em;">
+                    Как это возможно? Посмотрим дальше
+                </div>
+            </section>
+
+            <!-- График 1: O(1) - O(n²) -->
+            <section>
+                <h2>Как растут функции</h2>
+                <div style="height: 400px; position: relative;">
+                    <canvas id="chart-bigo-1"></canvas>
+                </div>
+            </section>
+
+            <!-- Таблица 1: O(1) - O(n²) -->
+            <section>
+                <h2>В числах</h2>
+                <table class="complexity-table">
+                    <thead>
+                        <tr>
+                            <th>Сложность</th>
+                            <th>n = 10</th>
+                            <th>n = 100</th>
+                            <th>n = 1 000</th>
+                            <th>n = 1 000 000</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="label"><span class="o-badge o-1">O(1)</span></td>
+                            <td class="val-best">1</td>
+                            <td class="val-best">1</td>
+                            <td class="val-best">1</td>
+                            <td class="val-best">1</td>
+                        </tr>
+                        <tr>
+                            <td class="label"><span class="o-badge o-log">O(log n)</span></td>
+                            <td class="val-best">3</td>
+                            <td class="val-best">7</td>
+                            <td class="val-good">10</td>
+                            <td class="val-good">20</td>
+                        </tr>
+                        <tr>
+                            <td class="label"><span class="o-badge o-n">O(n)</span></td>
+                            <td class="val-good">10</td>
+                            <td class="val-ok">100</td>
+                            <td class="val-ok">1 000</td>
+                            <td class="val-warn">1 000 000</td>
+                        </tr>
+                        <tr>
+                            <td class="label"><span class="o-badge o-nlog">O(n log n)</span></td>
+                            <td class="val-ok">30</td>
+                            <td class="val-ok">700</td>
+                            <td class="val-warn">10 000</td>
+                            <td class="val-bad">20 000 000</td>
+                        </tr>
+                        <tr>
+                            <td class="label"><span class="o-badge o-n2">O(n²)</span></td>
+                            <td class="val-warn">100</td>
+                            <td class="val-bad">10 000</td>
+                            <td class="val-bad">1 000 000</td>
+                            <td class="val-dead">10¹²</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="fragment opinion" style="margin-top: 0.6em;">
+                    При n = 1 000 000: O(n²) - порядка триллиона операций.
+                    O(n) - порядка миллиона. O(log n) - порядка 20.
+                </div>
+            </section>
+
+            <!-- График 2: O(1) - O(n³) -->
+            <section>
+                <h2>Добавляем <span class="o-badge o-n3">O(n³)</span></h2>
+                <div style="height: 400px; position: relative;">
+                    <canvas id="chart-bigo-2"></canvas>
+                </div>
+            </section>
+
+            <!-- Таблица 2: O(1) - O(n³) -->
+            <section>
+                <h2>В числах</h2>
+                <table class="complexity-table">
+                    <thead>
+                        <tr>
+                            <th>Сложность</th>
+                            <th>n = 10</th>
+                            <th>n = 100</th>
+                            <th>n = 1 000</th>
+                            <th>n = 1 000 000</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="label"><span class="o-badge o-1">O(1)</span></td>
+                            <td class="val-best">1</td>
+                            <td class="val-best">1</td>
+                            <td class="val-best">1</td>
+                            <td class="val-best">1</td>
+                        </tr>
+                        <tr>
+                            <td class="label"><span class="o-badge o-log">O(log n)</span></td>
+                            <td class="val-best">3</td>
+                            <td class="val-best">7</td>
+                            <td class="val-good">10</td>
+                            <td class="val-good">20</td>
+                        </tr>
+                        <tr>
+                            <td class="label"><span class="o-badge o-n">O(n)</span></td>
+                            <td class="val-good">10</td>
+                            <td class="val-ok">100</td>
+                            <td class="val-ok">1 000</td>
+                            <td class="val-warn">1 000 000</td>
+                        </tr>
+                        <tr>
+                            <td class="label"><span class="o-badge o-nlog">O(n log n)</span></td>
+                            <td class="val-ok">30</td>
+                            <td class="val-ok">700</td>
+                            <td class="val-warn">10 000</td>
+                            <td class="val-bad">20 000 000</td>
+                        </tr>
+                        <tr>
+                            <td class="label"><span class="o-badge o-n2">O(n²)</span></td>
+                            <td class="val-warn">100</td>
+                            <td class="val-bad">10 000</td>
+                            <td class="val-bad">1 000 000</td>
+                            <td class="val-dead">10¹²</td>
+                        </tr>
+                        <tr>
+                            <td class="label"><span class="o-badge o-n3">O(n³)</span></td>
+                            <td class="val-bad">1 000</td>
+                            <td class="val-dead">1 000 000</td>
+                            <td class="val-dead">10⁹</td>
+                            <td class="val-dead">10¹⁸</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- График 3: всё включая O(n!) -->
+            <section>
+                <h2>Добавляем <span class="o-badge o-fact">O(n!)</span></h2>
+                <div style="height: 400px; position: relative;">
+                    <canvas id="chart-bigo-3"></canvas>
+                </div>
+            </section>
+
+            <!-- Таблица 3: всё включая O(n!) -->
+            <section>
+                <h2>В числах</h2>
+                <table class="complexity-table">
+                    <thead>
+                        <tr>
+                            <th>Сложность</th>
+                            <th>n = 10</th>
+                            <th>n = 100</th>
+                            <th>n = 1 000</th>
+                            <th>n = 1 000 000</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="label"><span class="o-badge o-1">O(1)</span></td>
+                            <td class="val-best">1</td>
+                            <td class="val-best">1</td>
+                            <td class="val-best">1</td>
+                            <td class="val-best">1</td>
+                        </tr>
+                        <tr>
+                            <td class="label"><span class="o-badge o-log">O(log n)</span></td>
+                            <td class="val-best">3</td>
+                            <td class="val-best">7</td>
+                            <td class="val-good">10</td>
+                            <td class="val-good">20</td>
+                        </tr>
+                        <tr>
+                            <td class="label"><span class="o-badge o-n">O(n)</span></td>
+                            <td class="val-good">10</td>
+                            <td class="val-ok">100</td>
+                            <td class="val-ok">1 000</td>
+                            <td class="val-warn">1 000 000</td>
+                        </tr>
+                        <tr>
+                            <td class="label"><span class="o-badge o-nlog">O(n log n)</span></td>
+                            <td class="val-ok">30</td>
+                            <td class="val-ok">700</td>
+                            <td class="val-warn">10 000</td>
+                            <td class="val-bad">20 000 000</td>
+                        </tr>
+                        <tr>
+                            <td class="label"><span class="o-badge o-n2">O(n²)</span></td>
+                            <td class="val-warn">100</td>
+                            <td class="val-bad">10 000</td>
+                            <td class="val-bad">1 000 000</td>
+                            <td class="val-dead">10¹²</td>
+                        </tr>
+                        <tr>
+                            <td class="label"><span class="o-badge o-n3">O(n³)</span></td>
+                            <td class="val-bad">1 000</td>
+                            <td class="val-dead">1 000 000</td>
+                            <td class="val-dead">10⁹</td>
+                            <td class="val-dead">10¹⁸</td>
+                        </tr>
+                        <tr>
+                            <td class="label"><span class="o-badge o-fact">O(n!)</span></td>
+                            <td class="val-dead">3 628 800</td>
+                            <td class="val-dead">10¹⁵⁷</td>
+                            <td class="val-dead">10²⁵⁶⁷</td>
+                            <td class="val-dead">∞</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+
+            <!-- Two Sum через Big O -->
+            <section>
+                <h2>Возвращаемся к Two Sum</h2>
+                <div class="compare">
+                    <div class="compare-block fragment">
+                        <h3>Двойной цикл</h3>
+                        <div class="code-block">
+                            <pre class="python size-s"><code>for i in range(len(nums)):
+    for j in range(i + 1, len(nums)):
+        ...</code></pre>
+                        </div>
+                        <p style="text-align: center; margin-top: 0.5em;">
+                            <span class="o-badge o-n2">O(n²)</span> по времени<br>
+                            <span class="o-badge o-1">O(1)</span> по памяти
+                        </p>
+                    </div>
+                    <div class="compare-block fragment">
+                        <h3>Словарь</h3>
+                        <div class="code-block">
+                            <pre class="python size-s"><code>seen = {}
+for i, num in enumerate(nums):
+    ...</code></pre>
+                        </div>
+                        <p style="text-align: center; margin-top: 0.5em;">
+                            <span class="o-badge o-n">O(n)</span> по времени<br>
+                            <span class="o-badge o-n">O(n)</span> по памяти
+                        </p>
+                    </div>
+                </div>
+                <div class="fragment opinion" style="margin-top: 0.6em;">
+                    Словарь быстрее по времени, но тратит больше памяти.<br>
+                    Это классический трейдофф: <strong>время vs память</strong>.
+                </div>
+            </section>
+
+
+            <!-- ===================== ЧАСТЬ 5: ПАМЯТЬ ===================== -->
+
+            <section>
+                <h2>Сложность по памяти</h2>
+                <div class="fragment opinion">
+                    Алгоритмы потребляют не только время, но и <strong>память</strong>.<br>
+                    Обозначается так же: O(1), O(n), O(n²)...
+                </div>
+                <div class="compare" style="margin-top: 0.8em;">
+                    <div class="compare-block fragment">
+                        <h3><span class="o-badge o-1">O(1)</span> памяти</h3>
+                        <p style="font-size: 0.75em;">Несколько переменных. Не растёт с n.</p>
+                        <div class="code-block">
+                            <pre class="python size-s"><code>i = 0
+j = 1
+total = 0</code></pre>
+                        </div>
+                    </div>
+                    <div class="compare-block fragment">
+                        <h3><span class="o-badge o-n">O(n)</span> памяти</h3>
+                        <p style="font-size: 0.75em;">Словарь/список растут вместе с n.</p>
+                        <div class="code-block">
+                            <pre class="python size-s"><code>seen = {}
+# размер seen растёт
+# до n элементов</code></pre>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+
+            <!-- ===================== ЧАСТЬ 6: БИНАРНЫЙ ПОИСК ===================== -->
+
+            <section style="font-size: 70px; height: 100%; width: 100%">
+                <h1 style="font-size: 1.4em;">Поиск</h1>
+            </section>
+
+
+            <!-- Задача поиска -->
+            <section>
+                <h2>Найти число в массиве</h2>
+                <div class="fragment opinion">
+                    Дан отсортированный массив. Найти индекс числа 13.
+                </div>
+                <div class="fragment" style="margin-top: 0.8em;">
+                    <div class="bs-array">
+                        <div class="bs-cell">1</div>
+                        <div class="bs-cell">2</div>
+                        <div class="bs-cell">3</div>
+                        <div class="bs-cell">4</div>
+                        <div class="bs-cell">5</div>
+                        <div class="bs-cell">6</div>
+                        <div class="bs-cell">7</div>
+                        <div class="bs-cell">8</div>
+                        <div class="bs-cell">9</div>
+                        <div class="bs-cell">10</div>
+                        <div class="bs-cell">11</div>
+                        <div class="bs-cell">12</div>
+                        <div class="bs-cell">13</div>
+                        <div class="bs-cell">14</div>
+                        <div class="bs-cell">15</div>
+                        <div class="bs-cell">16</div>
+                    </div>
+                </div>
+                <div class="compare" style="margin-top: 0.8em;">
+                    <div class="compare-block fragment">
+                        <h3>Линейный поиск</h3>
+                        <p style="font-size: 0.75em;">Проверяем по одному слева направо.<br>
+                            13 найдём на 13-м шаге.</p>
+                        <p style="text-align: center; margin-top: 0.4em;"><span class="o-badge o-n">O(n)</span></p>
+                    </div>
+                    <div class="compare-block fragment">
+                        <h3>Бинарный поиск</h3>
+                        <p style="font-size: 0.75em;">Проверяем середину и отбрасываем половину.<br>
+                            13 найдём за 4 шага.</p>
+                        <p style="text-align: center; margin-top: 0.4em;"><span class="o-badge o-log">O(log n)</span>
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+
+            <!-- Визуализация шагов -->
+            <section>
+                <section>
+                    <h2>Шаг 1</h2>
+                    <p class="bs-label">Ищем 13 в массиве [1..16]. Проверяем середину.</p>
+                    <div class="bs-array">
+                        <div class="bs-cell active">1</div>
+                        <div class="bs-cell active">2</div>
+                        <div class="bs-cell active">3</div>
+                        <div class="bs-cell active">4</div>
+                        <div class="bs-cell active">5</div>
+                        <div class="bs-cell active">6</div>
+                        <div class="bs-cell active">7</div>
+                        <div class="bs-cell mid">8</div>
+                        <div class="bs-cell active">9</div>
+                        <div class="bs-cell active">10</div>
+                        <div class="bs-cell active">11</div>
+                        <div class="bs-cell active">12</div>
+                        <div class="bs-cell active">13</div>
+                        <div class="bs-cell active">14</div>
+                        <div class="bs-cell active">15</div>
+                        <div class="bs-cell active">16</div>
+                    </div>
+                    <div class="fragment opinion">
+                        mid = 8. Нам нужно 13. 8 &lt; 13 &rarr; ищем <strong>правее</strong>.
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Шаг 2</h2>
+                    <p class="bs-label">Левая половина отброшена. Проверяем середину правой части.</p>
+                    <div class="bs-array">
+                        <div class="bs-cell out">1</div>
+                        <div class="bs-cell out">2</div>
+                        <div class="bs-cell out">3</div>
+                        <div class="bs-cell out">4</div>
+                        <div class="bs-cell out">5</div>
+                        <div class="bs-cell out">6</div>
+                        <div class="bs-cell out">7</div>
+                        <div class="bs-cell out">8</div>
+                        <div class="bs-cell active">9</div>
+                        <div class="bs-cell active">10</div>
+                        <div class="bs-cell active">11</div>
+                        <div class="bs-cell mid">12</div>
+                        <div class="bs-cell active">13</div>
+                        <div class="bs-cell active">14</div>
+                        <div class="bs-cell active">15</div>
+                        <div class="bs-cell active">16</div>
+                    </div>
+                    <div class="fragment opinion">
+                        mid = 12. 12 &lt; 13 &rarr; ищем <strong>правее</strong>.
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Шаг 3</h2>
+                    <p class="bs-label">Осталось 4 элемента. Проверяем середину.</p>
+                    <div class="bs-array">
+                        <div class="bs-cell out">1</div>
+                        <div class="bs-cell out">2</div>
+                        <div class="bs-cell out">3</div>
+                        <div class="bs-cell out">4</div>
+                        <div class="bs-cell out">5</div>
+                        <div class="bs-cell out">6</div>
+                        <div class="bs-cell out">7</div>
+                        <div class="bs-cell out">8</div>
+                        <div class="bs-cell out">9</div>
+                        <div class="bs-cell out">10</div>
+                        <div class="bs-cell out">11</div>
+                        <div class="bs-cell out">12</div>
+                        <div class="bs-cell active">13</div>
+                        <div class="bs-cell mid">14</div>
+                        <div class="bs-cell active">15</div>
+                        <div class="bs-cell active">16</div>
+                    </div>
+                    <div class="fragment opinion">
+                        mid = 14. 14 &gt; 13 &rarr; ищем <strong>левее</strong>.
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Шаг 4 - нашли!</h2>
+                    <p class="bs-label">Остался один элемент.</p>
+                    <div class="bs-array">
+                        <div class="bs-cell out">1</div>
+                        <div class="bs-cell out">2</div>
+                        <div class="bs-cell out">3</div>
+                        <div class="bs-cell out">4</div>
+                        <div class="bs-cell out">5</div>
+                        <div class="bs-cell out">6</div>
+                        <div class="bs-cell out">7</div>
+                        <div class="bs-cell out">8</div>
+                        <div class="bs-cell out">9</div>
+                        <div class="bs-cell out">10</div>
+                        <div class="bs-cell out">11</div>
+                        <div class="bs-cell out">12</div>
+                        <div class="bs-cell found">13</div>
+                        <div class="bs-cell out">14</div>
+                        <div class="bs-cell out">15</div>
+                        <div class="bs-cell out">16</div>
+                    </div>
+                    <div class="fragment opinion">
+                        16 элементов - 4 шага. log₂(16) = 4. Это и есть <span class="o-badge o-log">O(log n)</span>.
+                    </div>
+                </section>
+            </section>
+
+
+            <!-- Код бинарного поиска -->
+            <section>
+                <h2>Алгоритм бинарного поиска</h2>
+                <img src="https://neerc.ifmo.ru/wiki/images/thumb/0/06/Shcemebinsearch.png/320px-Shcemebinsearch.png"
+                    style="height: 65vh" />
+                <div class="fragment opinion">
+                    Обязательное условие: массив должен быть <strong>отсортирован</strong>
+                </div>
+            </section>
+
+
+            <!-- Сравнение demo_4 -->
+            <section>
+                <h2>Насколько быстрее?</h2>
+                <div class="code-block fragment">
+                    <pre class="size-m"><code>n                Линейный         Бинарный
+---------------  ---------------  ---------------
+10               10               4
+100              100              7
+1000             1000             10
+1 000 000        1 000 000        20
+
+Теория:
+n = 1 000 000 000      ->  бинарный: 30 шагов
+n = 1 000 000 000 000  ->  бинарный: 60 шагов</code></pre>
+                </div>
+                <div class="fragment opinion">
+                    Миллиард элементов - 30 шагов. Это сила O(log n).
+                </div>
+            </section>
+
+
+            <!-- ===================== ИТОГ ===================== -->
+
+            <section>
+                <h2>Что запомнить</h2>
+                <ul>
+                    <li class="fragment">Big O описывает рост числа операций - независимо от железа</li>
+                    <li class="fragment"><span class="o-badge o-1">O(1)</span> - константа, не зависит от n </li>
+                    <li class="fragment"><span class="o-badge o-log">O(log n)</span> - логарифм, делим пополам на каждом
+                        шаге (бинарный поиск)</li>
+                    <li class="fragment"><span class="o-badge o-n">O(n)</span> - линейный, один проход (for-цикл)</li>
+                    <li class="fragment"><span class="o-badge o-n2">O(n²)</span> - квадратичный, вложенный цикл</li>
+                    <li class="fragment">Кроме времени - ещё и <strong>память</strong></li>
+                </ul>
+            </section>
+
+            <section>
+                <h2>Домашнее задание</h2>
+                <h3 class="fragment">Binary Search</h3>
+                <p class="fragment">Реализуй бинарный поиск для отсортированного массива целых чисел</p>
+
+                <div class="fragment" style="margin-top: 1em; font-size: 0.7em; opacity: 0.6;">
+                    <a href="https://leetcode.com/problems/binary-search/" target="_blank" rel="noopener">leetcode.com -
+                        Binary Search (#704)</a>
+                </div>
+            </section>
+
+        </div>
+    </div>
+
+    <script src="/utils/lib/js/head.min.js"></script>
+    <script src="/utils/js/reveal.js"></script>
+    <script>
+        Reveal.initialize({
+            controls: true,
+            progress: true,
+            history: true,
+            center: true,
+            transition: 'fade',
+            transitionSpeed: 'fast',
+            dependencies: [
+                { src: '/utils/lib/js/classList.js', condition: function () { return !document.body.classList; } },
+                { src: '/utils/plugin/markdown/marked.js', condition: function () { return !!document.querySelector('[data-markdown]'); } },
+                { src: '/utils/plugin/markdown/markdown.js', condition: function () { return !!document.querySelector('[data-markdown]'); } },
+                { src: '/utils/plugin/highlight/highlight.js', async: true, callback: function () { hljs.initHighlightingOnLoad(); } },
+                { src: '/utils/plugin/zoom-js/zoom.js', async: true },
+                { src: '/utils/plugin/notes/notes.js', async: true }
+            ]
+        });
+        Reveal.configure({ slideNumber: 'c/t' });
+
+        // ---- Графики ----
+        (function () {
+            var gridColor = 'rgba(255,255,255,0.08)';
+            var tickColor = 'rgba(255,255,255,0.55)';
+
+            // --- График Two Sum: реальное время (логарифмическая шкала) ---
+            new Chart(document.getElementById('chart-twosum'), {
+                type: 'line',
+                data: {
+                    labels: [100, 500, 1000, 2000, 5000, 10000],
+                    datasets: [
+                        {
+                            label: 'O(n²) - двойной цикл',
+                            data: [0.0004, 0.0108, 0.0511, 0.171, 1.604, 5.363],
+                            borderColor: '#ef5350',
+                            backgroundColor: 'rgba(239,83,80,0.12)',
+                            pointRadius: 5,
+                            tension: 0.3,
+                            fill: false,
+                        },
+                        {
+                            label: 'O(n) - словарь',
+                            data: [0.000047, 0.000145, 0.000345, 0.000327, 0.00207, 0.00316],
+                            borderColor: '#ffd54f',
+                            backgroundColor: 'rgba(255,213,79,0.12)',
+                            pointRadius: 5,
+                            tension: 0.3,
+                            fill: false,
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { labels: { color: 'rgba(255,255,255,0.85)', font: { size: 14 } } }
+                    },
+                    scales: {
+                        x: {
+                            title: { display: true, text: 'n', color: tickColor },
+                            ticks: { color: tickColor },
+                            grid: { color: gridColor }
+                        },
+                        y: {
+                            type: 'logarithmic',
+                            title: { display: true, text: 'секунды', color: tickColor },
+                            ticks: { color: tickColor },
+                            grid: { color: gridColor }
+                        }
+                    }
+                }
+            });
+
+            // --- Вспомогательные функции ---
+            function fact(n) { var r = 1; for (var i = 2; i <= n; i++) r *= i; return r; }
+
+            // Гамма-функция (аппроксимация Ланцоша): Γ(n+1) = n! для целых n,
+            // но определена и для дробных - даёт гладкую кривую
+            function logGamma(z) {
+                var g = 7;
+                var p = [0.99999999999980993, 676.5203681218851, -1259.1392167224028,
+                    771.32342877765313, -176.61502916214059, 12.507343278686905,
+                    -0.13857109526572012, 9.9843695780195716e-6, 1.5056327351493116e-7];
+                z -= 1;
+                var x = p[0];
+                for (var i = 1; i < g + 2; i++) x += p[i] / (z + i);
+                var t = z + g + 0.5;
+                return 0.5 * Math.log(2 * Math.PI) + (z + 0.5) * Math.log(t) - t + Math.log(x);
+            }
+            function gammaFact(n) { return Math.exp(logGamma(n + 1)); }
+
+            function makeDatasets(ns, includeCubic, includeFactorial) {
+                var datasets = [
+                    {
+                        label: 'O(1)',
+                        data: ns.map(function () { return 1; }),
+                        borderColor: '#66bb6a',
+                        pointRadius: 0, borderWidth: 2.5, tension: 0.1,
+                    },
+                    {
+                        label: 'O(log n)',
+                        data: ns.map(function (x) { return x === 1 ? null : +Math.log2(x).toFixed(2); }),
+                        borderColor: '#81c784',
+                        pointRadius: 0, borderWidth: 2.5, tension: 0.2,
+                    },
+                    {
+                        label: 'O(n)',
+                        data: ns.slice(),
+                        borderColor: '#ffd54f',
+                        pointRadius: 0, borderWidth: 2.5, tension: 0,
+                    },
+                    {
+                        label: 'O(n log n)',
+                        data: ns.map(function (x) { return x === 1 ? null : +(x * Math.log2(x)).toFixed(1); }),
+                        borderColor: '#ffa726',
+                        pointRadius: 0, borderWidth: 2.5, tension: 0.2,
+                    },
+                    {
+                        label: 'O(n²)',
+                        data: ns.map(function (x) { return x * x; }),
+                        borderColor: '#ef5350',
+                        pointRadius: 0, borderWidth: 2.5, tension: 0,
+                    }
+                ];
+                if (includeCubic) {
+                    datasets.push({
+                        label: 'O(n³)',
+                        data: ns.map(function (x) { return x * x * x; }),
+                        borderColor: '#ce93d8',
+                        pointRadius: 0, borderWidth: 2.5, tension: 0,
+                    });
+                }
+                if (includeFactorial) {
+                    datasets.push({
+                        label: 'O(n!)',
+                        data: ns.map(function (x) { return gammaFact(x); }),
+                        borderColor: '#e53935',
+                        borderDash: [6, 3],
+                        pointRadius: 0, borderWidth: 2.5, tension: 0,
+                    });
+                }
+                return datasets;
+            }
+            function makeScales() {
+                return {
+                    x: {
+                        title: { display: true, text: 'n', color: tickColor },
+                        ticks: { color: tickColor },
+                        grid: { color: gridColor }
+                    },
+                    y: {
+                        title: { display: true, text: 'операции', color: tickColor },
+                        ticks: { color: tickColor },
+                        grid: { color: gridColor }
+                    }
+                };
+            }
+
+            // --- График 1: O(1)..O(n²), n = 1..15 ---
+            var ns1 = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
+            new Chart(document.getElementById('chart-bigo-1'), {
+                type: 'line',
+                data: { labels: ns1, datasets: makeDatasets(ns1, false, false) },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: { legend: { labels: { color: 'rgba(255,255,255,0.85)', font: { size: 12 } } } },
+                    scales: makeScales()
+                }
+            });
+
+            // --- График 2: O(1)..O(n³), n = 1..10 ---
+            var ns2 = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+            new Chart(document.getElementById('chart-bigo-2'), {
+                type: 'line',
+                data: { labels: ns2, datasets: makeDatasets(ns2, true, false) },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: { legend: { labels: { color: 'rgba(255,255,255,0.85)', font: { size: 12 } } } },
+                    scales: makeScales()
+                }
+            });
+
+            // --- График 3: всё включая O(n!), дробный шаг для гладкости ---
+            var ns3 = [];
+            for (var x = 1; x <= 8.001; x += 0.25) ns3.push(+x.toFixed(2));
+            new Chart(document.getElementById('chart-bigo-3'), {
+                type: 'line',
+                data: { labels: ns3, datasets: makeDatasets(ns3, true, true) },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: { legend: { labels: { color: 'rgba(255,255,255,0.85)', font: { size: 12 } } } },
+                    scales: {
+                        x: {
+                            title: { display: true, text: 'n', color: tickColor },
+                            ticks: {
+                                color: tickColor,
+                                callback: function (value, index) {
+                                    var n = ns3[index];
+                                    return Number.isInteger(n) ? n : '';
+                                }
+                            },
+                            grid: { color: gridColor }
+                        },
+                        y: {
+                            title: { display: true, text: 'операции', color: tickColor },
+                            ticks: { color: tickColor },
+                            grid: { color: gridColor }
+                        }
+                    }
+                }
+            });
+        })();
+    </script>
+</body>
+
+</html>

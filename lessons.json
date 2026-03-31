@@ -64,27 +64,33 @@
     },
     {
       "number": 4,
-      "title": "Встроенные структуры данных",
+      "title": "Big O + Бинарный поиск",
       "date": "2026-03-31T17:00:00",
-      "duration": 60,
-      "presentations": [
-        {
-          "title": "Презентация",
-          "link": "/lessons/04-set-tuple/",
-          "order": 1
-        }
-      ],
-      "homeworks": []
-    },
-    {
-      "number": 5,
-      "title": "Файлы и исключения",
-      "date": "2026-04-03T17:00:00",
       "duration": 90,
       "presentations": [
         {
           "title": "Презентация",
-          "link": "/lessons/05-files/",
+          "link": "/lessons/04-big-o/",
+          "order": 1
+        }
+      ],
+      "homeworks": [
+        {
+          "title": "Binary Search",
+          "description": "Реализуй бинарный поиск для отсортированного массива целых чисел",
+          "link": "https://leetcode.com/problems/binary-search/"
+        }
+      ]
+    },
+    {
+      "number": 5,
+      "title": "Встроенные структуры данных",
+      "date": "2026-04-03T17:00:00",
+      "duration": 60,
+      "presentations": [
+        {
+          "title": "Презентация",
+          "link": "/lessons/05-set-tuple/",
           "order": 1
         }
       ],
@@ -92,13 +98,13 @@
     },
     {
       "number": 6,
-      "title": "ООП: классы и объекты",
-      "date": "2026-04-07T17:00:00",
-      "duration": 60,
+      "title": "Файлы и исключения",
+      "date": "2026-04-03T17:00:00",
+      "duration": 90,
       "presentations": [
         {
           "title": "Презентация",
-          "link": "/lessons/06-oop-basics/",
+          "link": "/lessons/06-files/",
           "order": 1
         }
       ],
@@ -106,13 +112,13 @@
     },
     {
       "number": 7,
-      "title": "ООП: наследование и магические методы",
-      "date": "2026-04-10T17:00:00",
-      "duration": 90,
+      "title": "ООП: классы и объекты",
+      "date": "2026-04-07T17:00:00",
+      "duration": 60,
       "presentations": [
         {
           "title": "Презентация",
-          "link": "/lessons/07-oop-inheritance/",
+          "link": "/lessons/07-oop-basics/",
           "order": 1
         }
       ],
@@ -120,13 +126,13 @@
     },
     {
       "number": 8,
-      "title": "Модули, pip, Git",
-      "date": "2026-04-14T17:00:00",
-      "duration": 60,
+      "title": "ООП: наследование и магические методы",
+      "date": "2026-04-10T17:00:00",
+      "duration": 90,
       "presentations": [
         {
           "title": "Презентация",
-          "link": "/lessons/08-modules-git/",
+          "link": "/lessons/08-oop-inheritance/",
           "order": 1
         }
       ],
@@ -134,13 +140,13 @@
     },
     {
       "number": 9,
-      "title": "Python-проект: старт",
-      "date": "2026-04-17T17:00:00",
-      "duration": 90,
+      "title": "Модули, pip, Git",
+      "date": "2026-04-14T17:00:00",
+      "duration": 60,
       "presentations": [
         {
           "title": "Презентация",
-          "link": "/lessons/09-project-1/",
+          "link": "/lessons/09-modules-git/",
           "order": 1
         }
       ],
@@ -148,13 +154,13 @@
     },
     {
       "number": 10,
-      "title": "Python-проект: завершение",
-      "date": "2026-04-21T17:00:00",
-      "duration": 60,
+      "title": "Python-проект: старт",
+      "date": "2026-04-17T17:00:00",
+      "duration": 90,
       "presentations": [
         {
           "title": "Презентация",
-          "link": "/lessons/10-project-2/",
+          "link": "/lessons/10-project-1/",
           "order": 1
         }
       ],
@@ -162,13 +168,13 @@
     },
     {
       "number": 11,
-      "title": "Big O + Бинарный поиск",
-      "date": "2026-04-24T17:00:00",
-      "duration": 90,
+      "title": "Python-проект: завершение",
+      "date": "2026-04-21T17:00:00",
+      "duration": 60,
       "presentations": [
         {
           "title": "Презентация",
-          "link": "/lessons/11-big-o/",
+          "link": "/lessons/11-project-2/",
           "order": 1
         }
       ],
@@ -536,6 +542,14 @@
           "order": 1
         }
       ],
+      "homeworks": []
+    },
+    {
+      "number": 38,
+      "title": "Итог + выбор специализации",
+      "date": "2026-07-28T17:00:00",
+      "duration": 60,
+      "presentations": [],
       "homeworks": []
     }
   ]
