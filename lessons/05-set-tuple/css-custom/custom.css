@@ -1,0 +1,199 @@
+/* ============================================================
+   Урок 5 — Встроенные структуры данных
+   ============================================================ */
+
+/* --- Таблица операций --- */
+
+.op-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.58em;
+    margin-top: 0.5em;
+}
+
+.op-table th {
+    color: #ffd54f;
+    padding: 0.4em 0.6em;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.25);
+    text-align: center;
+}
+
+.op-table td {
+    padding: 0.35em 0.6em;
+    text-align: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    font-size: 1em;
+}
+
+/* --- Таблица сложностей --- */
+
+.complexity-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.6em;
+    margin-top: 0.5em;
+}
+
+.complexity-table th {
+    color: #ffd54f;
+    padding: 0.4em 0.8em;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.25);
+    text-align: center;
+}
+
+.complexity-table td {
+    padding: 0.35em 0.8em;
+    text-align: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.complexity-table .label {
+    text-align: left;
+    font-weight: bold;
+    color: #fff;
+}
+
+.val-bad { color: #666; }
+
+/* --- Бейджи Big O --- */
+
+.o-badge {
+    display: inline-block;
+    padding: 0.15em 0.55em;
+    border-radius: 0.3em;
+    font-family: monospace;
+    font-weight: bold;
+    font-size: 0.95em;
+}
+
+.o-1    { background: rgba(102, 187, 106, 0.2); color: #66bb6a; border: 1px solid rgba(102, 187, 106, 0.4); }
+.o-n    { background: rgba(255, 213, 79, 0.2);  color: #ffd54f; border: 1px solid rgba(255, 213, 79, 0.4); }
+.o-nlog { background: rgba(255, 167, 38, 0.2);  color: #ffa726; border: 1px solid rgba(255, 167, 38, 0.4); }
+.o-n2   { background: rgba(239, 83, 80, 0.2);   color: #ef5350; border: 1px solid rgba(239, 83, 80, 0.4); }
+
+/* --- Диаграмма памяти --- */
+
+.mem-diagram {
+    text-align: center;
+}
+
+.mem-label {
+    font-size: 0.6em;
+    opacity: 0.6;
+    margin-bottom: 0.4em;
+    font-family: monospace;
+}
+
+.mem-row {
+    display: flex;
+    gap: 0.3em;
+    justify-content: center;
+}
+
+.mem-cell {
+    width: 3em;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 0.3em;
+    background: rgba(255, 255, 255, 0.05);
+    text-align: center;
+    padding: 0.2em 0;
+}
+
+.mem-cell.mem-highlight {
+    border-color: #ffd54f;
+    background: rgba(255, 213, 79, 0.15);
+}
+
+.mem-cell.mem-new {
+    border-color: #66bb6a;
+    background: rgba(102, 187, 106, 0.2);
+}
+
+.mem-cell.mem-busy {
+    border-color: rgba(239, 83, 80, 0.5);
+    background: rgba(239, 83, 80, 0.12);
+    color: #ef5350;
+    opacity: 0.7;
+}
+
+.mem-addr {
+    font-size: 0.42em;
+    opacity: 0.45;
+    font-family: monospace;
+    padding: 0.2em 0;
+}
+
+.mem-val {
+    font-size: 0.65em;
+    font-weight: bold;
+    padding: 0.3em 0;
+}
+
+/* --- LeetCode ссылка --- */
+
+.lc-link {
+    margin-top: 1em;
+    font-size: 0.55em;
+    opacity: 0.45;
+    text-align: center;
+}
+
+.lc-link a {
+    color: inherit;
+    text-decoration: none;
+    font-family: monospace;
+}
+
+.lc-link a:hover {
+    opacity: 1;
+    text-decoration: underline;
+}
+
+/* --- Диаграмма связного списка --- */
+
+.ll-diagram {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 0;
+}
+
+.ll-node {
+    display: flex;
+    align-items: stretch;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    border-radius: 0.3em;
+    overflow: hidden;
+    font-size: 0.6em;
+}
+
+.ll-node.ll-visited {
+    border-color: #ffd54f;
+}
+
+.ll-node.ll-found {
+    border-color: #66bb6a;
+    background: rgba(102, 187, 106, 0.15);
+}
+
+.ll-node.ll-dim {
+    opacity: 0.3;
+}
+
+.ll-val {
+    padding: 0.4em 0.6em;
+    font-weight: bold;
+    background: rgba(255, 255, 255, 0.05);
+    min-width: 2em;
+    text-align: center;
+}
+
+.ll-ptr {
+    padding: 0.4em 0.5em;
+    font-family: monospace;
+    font-size: 0.85em;
+    opacity: 0.6;
+    border-left: 1px solid rgba(255, 255, 255, 0.15);
+    background: rgba(255, 255, 255, 0.02);
+}

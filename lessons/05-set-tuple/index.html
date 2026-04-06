@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Занятие 4 - set, tuple, frozenset</title>
+    <title>Занятие 5 - Встроенные структуры данных</title>
     <meta name="viewport"
         content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
 
@@ -11,7 +11,6 @@
     <link rel="stylesheet" href="/utils/lib/css/animate.css">
     <link rel="stylesheet" href="/utils/css/theme/night.css" id="theme">
 
-    <!-- Code syntax highlighting -->
     <link rel="stylesheet" href="/utils/lib/css/zenburn.css">
 
     <link rel="stylesheet" href="/utils/css/custom-base.css">
@@ -31,14 +30,1184 @@
     <div class="reveal">
         <div class="slides">
 
-            <section style="font-size: 70px; height: 100%; width: 100%">
+            <!-- ===================== ТИТУЛ ===================== -->
+
+            <section style="font-size: 70px">
                 <div class="fragment">
-                    <h1 class="animated" style="font-size: 1.8em;">set, tuple, frozenset</h1>
-                    <p style="text-align: center; font-size: 0.5em; opacity: 0.5;">Занятие 4</p>
+                    <h1 class="animated" style="font-size: 1.8em;">Структуры данных</h1>
+                    <p style="text-align: center; font-size: 0.5em; opacity: 0.5;">Занятие 5 - tuple, set, frozenset, память</p>
                 </div>
             </section>
 
-            <!-- TODO: добавить слайды -->
+
+            <!-- ===================== ЧАСТЬ 1: РАЗБОР ДЗ ===================== -->
+            <section>
+
+            <section style="font-size: 70px">
+                <h1 style="font-size: 1.4em;">Разбор ДЗ</h1>
+                <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">улучшенный бинарный поиск</p>
+            </section>
+
+            <!-- Задача -->
+            <section>
+                <h2>Задача</h2>
+                <div class="opinion fragment">
+                    Если элемент <strong>не найден</strong> - верни место вставки,<br>
+                    чтобы массив остался отсортированным.
+                </div>
+                <div class="compare" style="margin-top: 0.8em;">
+                    <div class="compare-block fragment">
+                        <h3>Пример</h3>
+                        <div class="code-block">
+                            <pre class="python size-m"><code>arr = [2, 4, 6, 8, 10]
+# ищем 9
+# ответ: 3.5  (между [3] и [4])</code></pre>
+                        </div>
+                    </div>
+                    <div class="compare-block fragment">
+                        <h3>Ещё пример</h3>
+                        <div class="code-block">
+                            <pre class="python size-m"><code>arr = [2, 4, 6, 8, 10]
+# ищем 5
+# ответ: 1.5  (между [1] и [2])</code></pre>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Решение -->
+            <section>
+                <h2>Решение</h2>
+                <div class="code-block fragment">
+                    <pre class="python size-m"><code>def binary_search(arr, target):
+    left, right = 0, len(arr) - 1
+    while left <= right:
+        mid = (left + right) // 2
+        if arr[mid] == target:
+            return mid
+        elif arr[mid] < target:
+            left = mid + 1
+        else:
+            right = mid - 1
+    return left - 0.5  # место вставки</code></pre>
+                </div>
+                <div class="fragment opinion" style="margin-top: 0.6em;">
+                    Когда цикл заканчивается без находки - <code>left</code> стоит ровно на месте вставки.<br>
+                    Возвращаем среднее между <code>left-1</code> и <code>left</code> - (left-0.5).
+                </div>
+            </section>
+
+
+            </section>
+
+            <!-- ===================== ЧАСТЬ 2: TUPLE ===================== -->
+            <section>
+
+            <section style="font-size: 70px">
+                <div class="fragment">
+                    <h1 style="font-size: 1.8em;">tuple</h1>
+                    <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">неизменяемый список</p>
+                </div>
+            </section>
+
+            <!-- Что такое tuple -->
+            <section>
+                <h2>Что такое tuple</h2>
+                <div class="compare">
+                    <div class="compare-block fragment">
+                        <h3>list</h3>
+                        <div class="code-block">
+                            <pre class="python size-m"><code>coords = [10, 20]
+coords[0] = 99   # OK
+coords.append(30)  # OK</code></pre>
+                        </div>
+                    </div>
+                    <div class="compare-block fragment">
+                        <h3>tuple</h3>
+                        <div class="code-block">
+                            <pre class="python size-m"><code>coords = (10, 20)
+coords[0] = 99   # TypeError!
+coords.append(30)  # AttributeError!</code></pre>
+                        </div>
+                    </div>
+                </div>
+                <div class="fragment opinion" style="margin-top: 0.8em;">
+                    tuple - это <strong>неизменяемый</strong> список.<br>
+                    Один раз создали - изменить нельзя.
+                </div>
+            </section>
+
+            <!-- Создание tuple -->
+            <section>
+                <h2>Создание</h2>
+                <div class="code-block fragment">
+                    <pre class="python size-m"><code>point = (3, 7)
+rgb = (255, 128, 0)
+single = (42,)         # обязательна запятая!
+empty = ()
+
+# tuple() из списка
+t = tuple([1, 2, 3])   # (1, 2, 3)</code></pre>
+                </div>
+                <div class="fragment" style="font-size: 0.8em; margin-top: 0.8em;">
+                    Индексация - как в list: <code>point[0]</code> -> <code>3</code>
+                </div>
+                <div class="fragment" style="font-size: 0.8em;">
+                    Срезы - тоже работают: <code>rgb[1:]</code> -> <code>(128, 0)</code>
+                </div>
+            </section>
+
+            <!-- Методы tuple -->
+            <section>
+                <h2>Методы tuple</h2>
+                <div class="code-block fragment">
+                    <pre class="python size-m"><code>t = (3, 1, 4, 1, 5, 9, 1)
+
+len(t)          # 7         - длина
+t[2]            # 4         - доступ по индексу
+t[1:4]          # (1, 4, 1) - срез
+t.count(1)      # 3         - сколько раз встречается 1
+t.index(5)      # 4         - индекс первого вхождения 5
+5 in t          # True      - проверка вхождения</code></pre>
+                </div>
+                <div class="code-block fragment" style="margin-top: 0.6em;">
+                    <pre class="python size-m"><code># стандартные функции тоже работают
+min(t)          # 1
+max(t)          # 9
+sum(t)          # 24
+sorted(t)       # [1, 1, 1, 3, 4, 5, 9]  ← возвращает list!</code></pre>
+                </div>
+            </section>
+
+            <!-- Распаковка -->
+            <section>
+                <h2>Распаковка (unpacking)</h2>
+                <div class="code-block fragment">
+                    <pre class="python size-m"><code>point = (3, 7)
+x, y = point
+print(x)  # 3
+print(y)  # 7</code></pre>
+                </div>
+                <div class="code-block fragment" style="margin-top: 0.8em;">
+                    <pre class="python size-m"><code># функция возвращает несколько значений
+def get_hp_and_mana():
+    return 100, 50       # на самом деле возвращает tuple
+
+hp, mana = get_hp_and_mana()
+print(hp, mana)  # 100 50</code></pre>
+                </div>
+                <div class="fragment opinion" style="margin-top: 0.6em;">
+                    Когда функция "возвращает два значения" - она возвращает tuple.
+                </div>
+            </section>
+
+            <!-- Когда tuple, когда list -->
+            <section>
+                <h2>Когда что использовать</h2>
+                <div class="compare">
+                    <div class="compare-block fragment">
+                        <h3>tuple</h3>
+                        <ul style="font-size: 0.75em;">
+                            <li>Координаты: <code>(x, y)</code></li>
+                            <li>Цвет: <code>(255, 0, 0)</code></li>
+                            <li>Дата: <code>(2026, 4, 3)</code></li>
+                            <li>Возврат нескольких значений</li>
+                            <li>Данные <mark>не должны меняться</mark></li>
+                        </ul>
+                    </div>
+                    <div class="compare-block fragment">
+                        <h3>list</h3>
+                        <ul style="font-size: 0.75em;">
+                            <li>Инвентарь игрока</li>
+                            <li>Очередь врагов</li>
+                            <li>История ходов</li>
+                            <li>Любые данные, которые <mark class="green">будут меняться</mark></li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+
+            </section>
+
+            <!-- ===================== ЧАСТЬ 3: SET ===================== -->
+            <section>
+
+            <section style="font-size: 70px">
+                <div class="fragment">
+                    <h1 style="font-size: 1.8em;">set</h1>
+                    <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">множество</p>
+                </div>
+            </section>
+
+            <!-- Что такое set -->
+            <section>
+                <h2>Что такое set</h2>
+                <div class="fragment opinion">
+                    set - это <strong>коллекция уникальных элементов без порядка</strong>.<br>
+                    Как математическое множество из алгебры.
+                </div>
+                <div class="code-block fragment" style="margin-top: 0.8em;">
+                    <pre class="python size-m"><code>items = {3, 1, 4, 1, 5, 9, 2, 6, 5, 3}
+print(items)    # {1, 2, 3, 4, 5, 6, 9}
+#                  дубликаты удалены, порядок не гарантирован</code></pre>
+                </div>
+                <div class="fragment" style="font-size: 0.8em; margin-top: 0.6em;">
+                    Порядок не определён: <code>{1, 2, 3}</code> - но не <code>set[0]</code> -> ошибка.
+                </div>
+            </section>
+
+            <!-- Создание и базовые операции -->
+            <section>
+                <h2>Создание и операции</h2>
+                <div class="code-block fragment">
+                    <pre class="python size-m"><code>s = {1, 2, 3}
+s = set([1, 2, 2, 3])  # из списка - {1, 2, 3}
+s = set()              # пустое множество (не {}!)</code></pre>
+                </div>
+                <div class="code-block fragment" style="margin-top: 0.6em;">
+                    <pre class="python size-m"><code>3 in s          # True - проверка за O(1)
+len(s)          # количество элементов</code></pre>
+                </div>
+            </section>
+
+            <!-- Методы set -->
+            <section>
+                <h2>Методы set</h2>
+                <div class="code-block fragment">
+                    <pre class="python size-s"><code>s = {1, 2, 3}
+
+s.add(4)            # {1, 2, 3, 4}   - добавить элемент
+s.remove(2)         # {1, 3, 4}      - удалить (KeyError если нет)
+s.discard(99)       # {1, 3, 4}      - удалить (без ошибки если нет)
+s.pop()             # вернёт и удалит случайный элемент
+s.clear()           # set()          - очистить</code></pre>
+                </div>
+                <div class="code-block fragment" style="margin-top: 0.5em;">
+                    <pre class="python size-s"><code>a = {1, 2, 3}
+b = {3, 4, 5}
+
+a.update(b)         # {1, 2, 3, 4, 5} - добавить все из b
+a.copy()            # новый set с теми же элементами</code></pre>
+                </div>
+                <div class="code-block fragment" style="margin-top: 0.5em;">
+                    <pre class="python size-s"><code>a = {1, 2, 3}
+b = {1, 2}
+
+b.issubset(a)       # True  - b входит в a?  (b <= a)
+a.issuperset(b)     # True  - a содержит b?  (a >= b)
+a.isdisjoint({9})   # True  - нет общих элементов?</code></pre>
+                </div>
+            </section>
+
+            <!-- Математические операции -->
+            <section>
+                <h2>Операции над множествами</h2>
+                <div class="code-block fragment">
+                    <pre class="python size-s"><code>a = {1, 2, 3, 4}
+b = {3, 4, 5, 6}</code></pre>
+                </div>
+                <table class="op-table fragment" style="margin-top: 0.5em;">
+                    <tr>
+                        <th>Операция</th>
+                        <th>Синтаксис</th>
+                        <th>Результат</th>
+                        <th>Смысл</th>
+                    </tr>
+                    <tr class="fragment">
+                        <td>Объединение</td>
+                        <td><code>a | b</code></td>
+                        <td><code>{1,2,3,4,5,6}</code></td>
+                        <td>всё из обоих</td>
+                    </tr>
+                    <tr class="fragment">
+                        <td>Пересечение</td>
+                        <td><code>a &amp; b</code></td>
+                        <td><code>{3, 4}</code></td>
+                        <td>только общие</td>
+                    </tr>
+                    <tr class="fragment">
+                        <td>Разность</td>
+                        <td><code>a - b</code></td>
+                        <td><code>{1, 2}</code></td>
+                        <td>есть в a, нет в b</td>
+                    </tr>
+                    <tr class="fragment">
+                        <td>Симм. разность</td>
+                        <td><code>a ^ b</code></td>
+                        <td><code>{1,2,5,6}</code></td>
+                        <td>не в обоих сразу</td>
+                    </tr>
+                </table>
+            </section>
+
+            <!-- Применение: уникальные элементы -->
+            <section>
+                <h2>Применение 1: убрать дубликаты</h2>
+                <div class="code-block fragment">
+                    <pre class="python size-m"><code>loot = ["меч", "щит", "меч", "зелье", "щит", "меч"]
+
+unique = list(set(loot))
+print(unique)  # ['щит', 'меч', 'зелье']
+               # порядок не сохраняется!</code></pre>
+                </div>
+            </section>
+
+            <!-- Применение: быстрый поиск -->
+            <section>
+                <h2>Применение 2: быстрый поиск</h2>
+                <div class="compare">
+                    <div class="compare-block fragment">
+                        <h3>list: O(n)</h3>
+                        <div class="code-block">
+                            <pre class="python size-s"><code>banned = ["admin", "root",
+          "test", "guest"]
+
+if "root" in banned:  # O(n)
+    print("Запрещено")</code></pre>
+                        </div>
+                    </div>
+                    <div class="compare-block fragment">
+                        <h3>set: O(1)</h3>
+                        <div class="code-block">
+                            <pre class="python size-s"><code>banned = {"admin", "root",
+          "test", "guest"}
+
+if "root" in banned:  # O(1)
+    print("Запрещено")</code></pre>
+                        </div>
+                    </div>
+                </div>
+                <div class="fragment opinion" style="margin-top: 0.8em;">
+                    При 1 000 000 элементов разница в скорости - <strong>в миллион раз</strong>.
+                </div>
+            </section>
+
+            <!-- Ограничения set -->
+            <section>
+                <h2>Что нельзя класть в set</h2>
+                <div class="code-block fragment">
+                    <pre class="python size-m"><code>s = {1, "hello", (1, 2)}   # OK - всё hashable
+
+s.add([1, 2, 3])    # TypeError: unhashable type: 'list'
+s.add({"a": 1})     # TypeError: unhashable type: 'dict'</code></pre>
+                </div>
+                <div class="fragment opinion" style="margin-top: 0.8em;">
+                    В set можно класть только <strong>неизменяемые</strong> объекты.<br>
+                    list и dict изменяемы - их нельзя.
+                </div>
+                <div class="fragment opinion" style="margin-top: 0.8em;">
+                    Грубо говоря, set - это словарь, где ключ равен значению:<br>
+                    <code>set.add(3)</code> ≈≈ <code>dict[3] = 3</code>
+                </div>
+                <div class="fragment opinion" style="margin-top: 0.8em;">
+                    Однако внутри set нет значений - только ключи. Поэтому нельзя положить list - он не может быть ключом.
+                </div>
+                <div class="fragment opinion" style="margin-top: 0.8em;">
+                    Также это позволяет экономить в памяти - не нужно хранить лишние значения
+                </div>
+            </section>
+
+
+            </section>
+
+            <!-- ===================== ЧАСТЬ 4: FROZENSET ===================== -->
+            <section>
+
+            <section style="font-size: 70px">
+                <div class="fragment">
+                    <h1 style="font-size: 1.8em;">frozenset</h1>
+                    <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">неизменяемое множество</p>
+                </div>
+            </section>
+
+            <!-- frozenset -->
+            <section>
+                <h2>frozenset - это set как tuple</h2>
+                <div class="compare">
+                    <div class="compare-block fragment">
+                        <h3>set</h3>
+                        <div class="code-block">
+                            <pre class="python size-s"><code>s = {1, 2, 3}
+s.add(4)      # OK
+s.remove(1)   # OK
+
+# В другой set - нельзя:
+ss = {s}      # TypeError!</code></pre>
+                        </div>
+                    </div>
+                    <div class="compare-block fragment">
+                        <h3>frozenset</h3>
+                        <div class="code-block">
+                            <pre class="python size-s"><code>fs = frozenset({1, 2, 3})
+fs.add(4)     # AttributeError!
+fs.remove(1)  # AttributeError!
+
+# В другой set - можно:
+ss = {fs}     # OK!</code></pre>
+                        </div>
+                    </div>
+                </div>
+                <div class="fragment opinion" style="margin-top: 0.8em;">
+                    frozenset можно использовать как <strong>ключ в dict</strong> или хранить в другом set.<br>
+                    Все операции | &amp; - ^ работают так же.
+                </div>
+            </section>
+
+
+            <!-- Методы frozenset -->
+            <section>
+                <h2>Методы frozenset</h2>
+                <div class="fragment opinion">
+                    Всё, что читает - работает. Всё, что изменяет - нет.
+                </div>
+                <div class="compare" style="margin-top: 0.6em;">
+                    <div class="compare-block fragment">
+                        <h3>Есть</h3>
+                        <div class="code-block">
+                            <pre class="python size-s"><code>fs = frozenset({1, 2, 3, 4})
+
+len(fs)         # 4
+2 in fs         # True
+fs | {5}        # frozenset({1,2,3,4,5})
+fs & {2, 3}     # frozenset({2, 3})
+fs - {1}        # frozenset({2, 3, 4})
+fs.issubset({1,2,3,4,5})  # True
+fs.copy()       # копия</code></pre>
+                        </div>
+                    </div>
+                    <div class="compare-block fragment">
+                        <h3>Нет</h3>
+                        <div class="code-block">
+                            <pre class="python size-s"><code>fs.add(5)       # AttributeError
+fs.remove(1)    # AttributeError
+fs.discard(1)   # AttributeError
+fs.pop()        # AttributeError
+fs.clear()      # AttributeError
+fs.update({5})  # AttributeError</code></pre>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+
+            </section>
+
+            <!-- ===================== ЧАСТЬ 5: ПАМЯТЬ ===================== -->
+            <section>
+
+            <section style="font-size: 70px">
+                <div class="fragment">
+                    <h1 style="font-size: 1.5em;">Память компьютера</h1>
+                    <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">как данные живут внутри</p>
+                </div>
+            </section>
+
+            <!-- Ячейки памяти -->
+            <section>
+                <h2>Память - это ячейки</h2>
+                <div class="fragment opinion">
+                    Вся оперативная память - это длинный ряд пронумерованных ячеек.<br>
+                    В каждой ячейке - одно число. По номеру (адресу) можно мгновенно прочитать значение.
+                </div>
+                <div class="mem-diagram fragment" style="margin-top: 1em;">
+                    <div class="mem-label">кусочек памяти:</div>
+                    <div class="mem-row">
+                        <div class="mem-cell">
+                            <div class="mem-addr">0x00</div>
+                            <div class="mem-val">42</div>
+                        </div>
+                        <div class="mem-cell">
+                            <div class="mem-addr">0x01</div>
+                            <div class="mem-val">17</div>
+                        </div>
+                        <div class="mem-cell">
+                            <div class="mem-addr">0x02</div>
+                            <div class="mem-val">–</div>
+                        </div>
+                        <div class="mem-cell">
+                            <div class="mem-addr">0x03</div>
+                            <div class="mem-val">–</div>
+                        </div>
+                        <div class="mem-cell">
+                            <div class="mem-addr">0x04</div>
+                            <div class="mem-val">88</div>
+                        </div>
+                        <div class="mem-cell">
+                            <div class="mem-addr">0x05</div>
+                            <div class="mem-val">–</div>
+                        </div>
+                        <div class="mem-cell">
+                            <div class="mem-addr">0x06</div>
+                            <div class="mem-val">–</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="fragment" style="font-size: 0.75em; margin-top: 0.8em;">
+                    Прочитать ячейку по адресу - O(1): адрес известен, идём прямо туда.
+                </div>
+            </section>
+
+            <!-- Массив -->
+            <section>
+                <h2>Массив (array)</h2>
+                <div class="fragment opinion">
+                    Как таковой отсутвует в Python, но есть почти во всех других языках.<br>
+                </div>
+                <div class="fragment opinion">
+                    Массив занимает <strong>соседние</strong> ячейки памяти - все подряд.
+                </div>
+                <div class="mem-diagram fragment" style="margin-top: 0.8em;">
+                    <div class="mem-label">nums = [10, 30, 50, 70, 90]  начало: 0x10</div>
+                    <div class="mem-row">
+                        <div class="mem-cell mem-highlight">
+                            <div class="mem-addr">0x10</div>
+                            <div class="mem-val">10</div>
+                        </div>
+                        <div class="mem-cell mem-highlight">
+                            <div class="mem-addr">0x11</div>
+                            <div class="mem-val">30</div>
+                        </div>
+                        <div class="mem-cell mem-highlight">
+                            <div class="mem-addr">0x12</div>
+                            <div class="mem-val">50</div>
+                        </div>
+                        <div class="mem-cell mem-highlight">
+                            <div class="mem-addr">0x13</div>
+                            <div class="mem-val">70</div>
+                        </div>
+                        <div class="mem-cell mem-highlight">
+                            <div class="mem-addr">0x14</div>
+                            <div class="mem-val">90</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="fragment" style="font-size: 0.8em; margin-top: 0.8em;">
+                    Адрес элемента <code>[i]</code> = 0x10 + i<br>
+                    Хочу <code>nums[2]</code>? Иду прямо на 0x12. Никакого перебора.
+                </div>
+                <div class="fragment opinion" style="margin-top: 0.5em;">
+                    Доступ по индексу - O(1).
+                </div>
+            </section>
+
+            <!-- Проблема массива: нужно знать размер заранее -->
+            <section>
+                <h2>Проблема массива: размер заранее</h2>
+                <div class="fragment opinion">
+                    Массив требует <strong>непрерывный</strong> блок памяти.<br>
+                    При создании нужно зарезервировать ячейки - а соседние могут быть заняты.
+                </div>
+                <div class="mem-diagram fragment" style="margin-top: 0.8em;">
+                    <div class="mem-label">создаём nums = [10, 30, 50], рядом уже что-то лежит:</div>
+                    <div class="mem-row">
+                        <div class="mem-cell mem-highlight">
+                            <div class="mem-addr">0x10</div>
+                            <div class="mem-val">10</div>
+                        </div>
+                        <div class="mem-cell mem-highlight">
+                            <div class="mem-addr">0x11</div>
+                            <div class="mem-val">30</div>
+                        </div>
+                        <div class="mem-cell mem-highlight">
+                            <div class="mem-addr">0x12</div>
+                            <div class="mem-val">50</div>
+                        </div>
+                        <div class="mem-cell mem-busy">
+                            <div class="mem-addr">0x13</div>
+                            <div class="mem-val">✗</div>
+                        </div>
+                        <div class="mem-cell mem-busy">
+                            <div class="mem-addr">0x14</div>
+                            <div class="mem-val">✗</div>
+                        </div>
+                        <div class="mem-cell">
+                            <div class="mem-addr">0x15</div>
+                            <div class="mem-val">–</div>
+                        </div>
+                        <div class="mem-cell">
+                            <div class="mem-addr">0x16</div>
+                            <div class="mem-val">–</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="fragment opinion" style="margin-top: 0.7em;">
+                    Хотим добавить <code>70</code>. Ячейка 0x13 занята - некуда расширяться.
+                </div>
+                <div class="mem-diagram fragment" style="margin-top: 0.6em;">
+                    <div class="mem-label">находим новый свободный блок из 4 ячеек и копируем всё:</div>
+                    <div class="mem-row">
+                        <div class="mem-cell mem-busy">
+                            <div class="mem-addr">0x10</div>
+                            <div class="mem-val">✗</div>
+                        </div>
+                        <div class="mem-cell mem-busy">
+                            <div class="mem-addr">0x11</div>
+                            <div class="mem-val">✗</div>
+                        </div>
+                        <div class="mem-cell mem-busy">
+                            <div class="mem-addr">0x12</div>
+                            <div class="mem-val">✗</div>
+                        </div>
+                        <div class="mem-cell mem-busy">
+                            <div class="mem-addr">0x13</div>
+                            <div class="mem-val">✗</div>
+                        </div>
+                        <div class="mem-cell mem-busy">
+                            <div class="mem-addr">0x14</div>
+                            <div class="mem-val">✗</div>
+                        </div>
+                        <div class="mem-cell mem-new">
+                            <div class="mem-addr">0x20</div>
+                            <div class="mem-val">10</div>
+                        </div>
+                        <div class="mem-cell mem-new">
+                            <div class="mem-addr">0x21</div>
+                            <div class="mem-val">30</div>
+                        </div>
+                        <div class="mem-cell mem-new">
+                            <div class="mem-addr">0x22</div>
+                            <div class="mem-val">50</div>
+                        </div>
+                        <div class="mem-cell mem-new">
+                            <div class="mem-addr">0x23</div>
+                            <div class="mem-val">70</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="fragment" style="font-size: 0.8em; margin-top: 0.5em;">
+                    Скопировали 3 старых элемента + добавили 1. При n=1000 - 1000 копирований.
+                </div>
+            </section>
+
+            <!-- Проблема массива: вставка -->
+            <section>
+                <h2>Проблема массива: вставка</h2>
+                <div class="fragment opinion">
+                    Хочу вставить <code>99</code> на позицию 2.<br>
+                    Ячейки заняты - нужно сдвинуть всё правее.
+                </div>
+                <div class="mem-diagram fragment" style="margin-top: 0.6em;">
+                    <div class="mem-label">до вставки:</div>
+                    <div class="mem-row">
+                        <div class="mem-cell"><div class="mem-val">10</div></div>
+                        <div class="mem-cell"><div class="mem-val">30</div></div>
+                        <div class="mem-cell mem-highlight"><div class="mem-val">50</div></div>
+                        <div class="mem-cell"><div class="mem-val">70</div></div>
+                        <div class="mem-cell"><div class="mem-val">90</div></div>
+                    </div>
+                </div>
+                <div class="mem-diagram fragment" style="margin-top: 0.5em;">
+                    <div class="mem-label">после вставки 99 на место [2]:</div>
+                    <div class="mem-row">
+                        <div class="mem-cell"><div class="mem-val">10</div></div>
+                        <div class="mem-cell"><div class="mem-val">30</div></div>
+                        <div class="mem-cell mem-new"><div class="mem-val">99</div></div>
+                        <div class="mem-cell mem-highlight"><div class="mem-val">50</div></div>
+                        <div class="mem-cell"><div class="mem-val">70</div></div>
+                        <div class="mem-cell"><div class="mem-val">90</div></div>
+                    </div>
+                </div>
+                <div class="fragment" style="font-size: 0.8em; margin-top: 0.5em;">
+                    Сдвинули 3 элемента. При n=1000 в худшем случае - 1000 сдвигов.
+                </div>
+                <div class="fragment opinion" style="margin-top: 0.3em;">
+                    Вставка в середину - O(n).
+                </div>
+            </section>
+
+            <!-- Связный список -->
+            <section>
+                <h2>Связный список (linked list)</h2>
+                <div class="fragment opinion">
+                    Элементы разбросаны по памяти.<br>
+                    Каждый хранит <strong>значение</strong> и <strong>адрес следующего</strong>.
+                </div>
+                <div class="ll-diagram fragment" style="margin-top: 0.8em;">
+                    <div class="ll-node">
+                        <div class="ll-val">10</div>
+                        <div class="ll-ptr">0x30 -></div>
+                    </div>
+                    <div class="ll-node" style="margin-left: 2em;">
+                        <div class="ll-val">30</div>
+                        <div class="ll-ptr">0x71 -></div>
+                    </div>
+                    <div class="ll-node" style="margin-left: 2em;">
+                        <div class="ll-val">50</div>
+                        <div class="ll-ptr">0x15 -></div>
+                    </div>
+                    <div class="ll-node" style="margin-left: 2em;">
+                        <div class="ll-val">70</div>
+                        <div class="ll-ptr">None</div>
+                    </div>
+                </div>
+                <div class="fragment" style="font-size: 0.75em; margin-top: 0.8em; opacity: 0.6;">
+                    Узлы лежат на адресах 0x10, 0x30, 0x71, 0x15 - где попало.
+                </div>
+                <div class="fragment opinion" style="margin-top: 0.5em;">
+                    Вставить элемент - просто обновить два указателя. O(1).
+                </div>
+            </section>
+
+            <!-- Доступ в связном списке -->
+            <section>
+                <h2>Цена связного списка: доступ</h2>
+                <div class="fragment opinion">
+                    Хочу <code>list[2]</code>. Прямого адреса нет - нужно идти с начала.
+                </div>
+                <div class="ll-diagram fragment" style="margin-top: 0.8em;">
+                    <div class="ll-node ll-visited">
+                        <div class="ll-val">10</div>
+                        <div class="ll-ptr">-></div>
+                    </div>
+                    <div class="ll-node ll-visited" style="margin-left: 1em;">
+                        <div class="ll-val">30</div>
+                        <div class="ll-ptr">-></div>
+                    </div>
+                    <div class="ll-node ll-found" style="margin-left: 1em;">
+                        <div class="ll-val">50</div>
+                        <div class="ll-ptr">-></div>
+                    </div>
+                    <div class="ll-node ll-dim" style="margin-left: 1em;">
+                        <div class="ll-val">70</div>
+                        <div class="ll-ptr">None</div>
+                    </div>
+                </div>
+                <div class="fragment" style="font-size: 0.8em; margin-top: 0.8em;">
+                    Для элемента с индексом 2 прошли 3 узла.<br>
+                    Для индекса n - прошли n+1 узлов.
+                </div>
+                <div class="fragment opinion" style="margin-top: 0.4em;">
+                    Доступ по индексу в связном списке - O(n).
+                </div>
+            </section>
+
+            <!-- Сравнение массив vs связный список -->
+            <section>
+                <h2>Массив vs связный список</h2>
+                <table class="complexity-table fragment">
+                    <tr>
+                        <th>Операция</th>
+                        <th>Массив</th>
+                        <th>Связный список</th>
+                    </tr>
+                    <tr class="fragment">
+                        <td class="label">Чтение [i]</td>
+                        <td><span class="o-badge o-1">O(1)</span></td>
+                        <td><span class="o-badge o-n">O(n)</span></td>
+                    </tr>
+                    <tr class="fragment">
+                        <td class="label">Поиск (x in ...)</td>
+                        <td><span class="o-badge o-n">O(n)</span></td>
+                        <td><span class="o-badge o-n">O(n)</span></td>
+                    </tr>
+                    <tr class="fragment">
+                        <td class="label">Вставка в начало / середину</td>
+                        <td><span class="o-badge o-n">O(n)</span></td>
+                        <td><span class="o-badge o-1">O(1)</span></td>
+                    </tr>
+                    <tr class="fragment">
+                        <td class="label">Добавление в конец</td>
+                        <td><span class="o-badge o-1">O(1)</span></td>
+                        <td><span class="o-badge o-1">O(1)</span></td>
+                    </tr>
+                    <tr class="fragment">
+                        <td class="label">Удаление</td>
+                        <td><span class="o-badge o-n">O(n)</span></td>
+                        <td><span class="o-badge o-1">O(1)</span></td>
+                    </tr>
+                </table>
+                <div class="fragment opinion" style="margin-top: 0.6em;">
+                    Используй массив, когда часто читаешь по индексу.<br>
+                    Связный список - когда часто вставляешь и удаляешь.
+                </div>
+            </section>
+
+            <!-- list в Python - как хранится -->
+            <section>
+                <h2>Python list: как хранится</h2>
+                <div class="fragment opinion">
+                    Python <code>list</code> - это <strong>динамический массив указателей</strong>.<br>
+                    В памяти подряд лежат не сами объекты, а <em>ссылки</em> на них.
+                </div>
+                <div class="mem-diagram fragment" style="margin-top: 0.7em;">
+                    <div class="mem-label">a = [10, "hi", True]  - массив из трёх указателей:</div>
+                    <div class="mem-row">
+                        <div class="mem-cell mem-highlight">
+                            <div class="mem-addr">ptr[0]</div>
+                            <div class="mem-val" style="font-size:0.5em;">-> 0x40</div>
+                        </div>
+                        <div class="mem-cell mem-highlight">
+                            <div class="mem-addr">ptr[1]</div>
+                            <div class="mem-val" style="font-size:0.5em;">-> 0xA1</div>
+                        </div>
+                        <div class="mem-cell mem-highlight">
+                            <div class="mem-addr">ptr[2]</div>
+                            <div class="mem-val" style="font-size:0.5em;">-> 0xF3</div>
+                        </div>
+                        <div class="mem-cell">
+                            <div class="mem-addr">-</div>
+                            <div class="mem-val" style="font-size:0.5em;">резерв</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="fragment" style="font-size: 0.75em; margin-top: 0.6em;">
+                    Когда места не хватает - Python выделяет блок <strong>вдвое больше</strong> и копирует указатели.<br>
+                    Это дорого, но случается редко - поэтому <code>append</code> остаётся O(1) в среднем.
+                </div>
+                <div class="code-block fragment" style="margin-top: 0.6em;">
+                    <pre class="python size-s"><code>import sys
+a = []
+for i in range(9):
+    a.append(i)
+    print(len(a), sys.getsizeof(a))
+# 1  88     2  88     3  88     4  88
+# 5  120  ← Python выделил больше
+# 6  120    7  120    8  120    9  184  ← снова расширился</code></pre>
+                </div>
+            </section>
+
+            <!-- list в Python - асимптотика -->
+            <section>
+                <h2>Python list: асимптотика</h2>
+                <table class="complexity-table fragment">
+                    <tr>
+                        <th>Операция</th>
+                        <th>Сложность</th>
+                        <th>Почему</th>
+                    </tr>
+                    <tr class="fragment">
+                        <td class="label"><code>lst[i]</code></td>
+                        <td><span class="o-badge o-1">O(1)</span></td>
+                        <td>прямой адрес = начало + i</td>
+                    </tr>
+                    <tr class="fragment">
+                        <td class="label"><code>len(lst)</code></td>
+                        <td><span class="o-badge o-1">O(1)</span></td>
+                        <td>длина хранится отдельно</td>
+                    </tr>
+                    <tr class="fragment">
+                        <td class="label"><code>lst.append(x)</code></td>
+                        <td><span class="o-badge o-1">O(1)*</span></td>
+                        <td>* амортизированное - иногда копирует</td>
+                    </tr>
+                    <tr class="fragment">
+                        <td class="label"><code>lst.pop()</code></td>
+                        <td><span class="o-badge o-1">O(1)</span></td>
+                        <td>просто уменьшает длину</td>
+                    </tr>
+                    <tr class="fragment">
+                        <td class="label"><code>x in lst</code></td>
+                        <td><span class="o-badge o-n">O(n)</span></td>
+                        <td>перебирает все элементы</td>
+                    </tr>
+                    <tr class="fragment">
+                        <td class="label"><code>lst.insert(i, x)</code></td>
+                        <td><span class="o-badge o-n">O(n)</span></td>
+                        <td>сдвигает все правее i</td>
+                    </tr>
+                    <tr class="fragment">
+                        <td class="label"><code>lst.pop(i)</code> / <code>del lst[i]</code></td>
+                        <td><span class="o-badge o-n">O(n)</span></td>
+                        <td>сдвигает все правее i влево</td>
+                    </tr>
+                    <tr class="fragment">
+                        <td class="label"><code>lst.sort()</code></td>
+                        <td><span class="o-badge o-nlog">O(n logn)</span></td>
+                        <td>Узнаем позже...</td>
+                    </tr>
+                </table>
+            </section>
+
+            <!-- append: почему O(1)* -->
+            <section>
+                <h2><code>append</code>: почему O(1)*</h2>
+                <div class="fragment opinion">
+                    Иногда <code>append</code> копирует весь список - это O(n).<br>
+                    Но смотрим не на одну операцию, а на <strong>среднюю стоимость</strong> по серии.
+                </div>
+                <div class="code-block fragment" style="margin-top: 0.7em;">
+                    <pre class="size-s"><code>Ёмкость:  1 -> 2 -> 4 -> 8 -> 16 -> ...
+Копий:       1   2   4   8   ...</code></pre>
+                </div>
+                <div class="fragment" style="font-size: 0.8em; margin-top: 0.7em;">
+                    После n вызовов <code>append</code> суммарно скопировано:<br>
+                    <strong>1 + 2 + 4 + ... + n/2 ≈ n</strong>
+                </div>
+                <div class="fragment opinion" style="margin-top: 0.6em;">
+                    n операций - n копирований итого.<br>
+                    <strong>1 копирование на один append в среднем</strong> -> O(1).
+                </div>
+                <div class="fragment" style="font-size: 0.75em; margin-top: 0.7em; opacity: 0.8;">
+                    Аналогия: каждый элемент при вставке кладёт в копилку 2 монеты.<br>
+                    Когда наступает переезд - платит из своей копилки. Монет всегда хватает.
+                </div>
+            </section>
+
+
+            </section>
+
+            <!-- ===================== ЧАСТЬ 6: АСИМПТОТИКА ===================== -->
+            <section>
+
+            <section style="font-size: 70px">
+                <div class="fragment">
+                    <h1 style="font-size: 1.5em;">Скорость операций</h1>
+                </div>
+            </section>
+
+            <!-- Таблица асимптотики -->
+            <section>
+                <h2>Сравнение операций</h2>
+                <table class="complexity-table fragment">
+                    <tr>
+                        <th>Операция</th>
+                        <th>list</th>
+                        <th>tuple</th>
+                        <th>set / dict</th>
+                    </tr>
+                    <tr class="fragment">
+                        <td class="label">Доступ по индексу [i]</td>
+                        <td><span class="o-badge o-1">O(1)</span></td>
+                        <td><span class="o-badge o-1">O(1)</span></td>
+                        <td><span class="val-bad">-</span></td>
+                    </tr>
+                    <tr class="fragment">
+                        <td class="label">Поиск (x in ...)</td>
+                        <td><span class="o-badge o-n">O(n)</span></td>
+                        <td><span class="o-badge o-n">O(n)</span></td>
+                        <td><span class="o-badge o-1">O(1)</span></td>
+                    </tr>
+                    <tr class="fragment">
+                        <td class="label">Добавление в конец</td>
+                        <td><span class="o-badge o-1">O(1)</span></td>
+                        <td><span class="val-bad">-</span></td>
+                        <td><span class="o-badge o-1">O(1)</span></td>
+                    </tr>
+                    <tr class="fragment">
+                        <td class="label">Вставка в середину</td>
+                        <td><span class="o-badge o-n">O(n)</span></td>
+                        <td><span class="val-bad">-</span></td>
+                        <td><span class="val-bad">-</span></td>
+                    </tr>
+                    <tr class="fragment">
+                        <td class="label">Удаление по значению</td>
+                        <td><span class="o-badge o-n">O(n)</span></td>
+                        <td><span class="val-bad">-</span></td>
+                        <td><span class="o-badge o-1">O(1)</span></td>
+                    </tr>
+                </table>
+            </section>
+
+            <!-- Итог: какую структуру выбирать -->
+            <section>
+                <h2>Когда что выбирать</h2>
+                <div class="tools-list fragment" style="margin-top: 0.5em;">
+                    <div class="tool-block">
+                        <div style="font-size: 1.3em; margin-bottom: 0.3em;">list</div>
+                        <div style="font-size: 0.7em; opacity: 0.85;">Упорядоченные данные с дублями.<br>Нужен доступ по индексу.</div>
+                    </div>
+                    <div class="tool-block">
+                        <div style="font-size: 1.3em; margin-bottom: 0.3em;">tuple</div>
+                        <div style="font-size: 0.7em; opacity: 0.85;">Неизменяемая группа значений.<br>Координаты, цвет, возврат из функции.</div>
+                    </div>
+                    <div class="tool-block">
+                        <div style="font-size: 1.3em; margin-bottom: 0.3em;">set</div>
+                        <div style="font-size: 0.7em; opacity: 0.85;">Уникальность + быстрая проверка вхождения.<br>Порядок не нужен.</div>
+                    </div>
+                    <div class="tool-block">
+                        <div style="font-size: 1.3em; margin-bottom: 0.3em;">frozenset</div>
+                        <div style="font-size: 0.7em; opacity: 0.85;">Множество, которое нужно хранить внутри другого set или dict.</div>
+                    </div>
+                </div>
+            </section>
+
+
+            </section>
+
+            <!-- ===================== ПРАКТИКА ===================== -->
+            <section>
+
+            <section style="font-size: 70px">
+                <h1 style="font-size: 1.4em;">Практика</h1>
+            </section>
+
+            <!-- Задача 1 -->
+            <section>
+                <h2>Задача 1: общие предметы</h2>
+                <div class="opinion fragment">
+                    У двух игроков есть инвентари. Найди предметы, которые есть <strong>у обоих</strong>.
+                </div>
+                <div class="code-block fragment" style="margin-top: 0.8em;">
+                    <pre class="python size-m"><code>player1 = ["меч", "щит", "зелье", "лук", "стрелы"]
+player2 = ["щит", "зелье", "броня", "меч", "факел"]
+
+# Напиши функцию common_items(p1, p2)
+# Вернуть set с общими предметами</code></pre>
+                </div>
+            </section>
+
+            <!-- Задача 2 -->
+            <section>
+                <h2>Задача 2: уникальные символы</h2>
+                <div class="opinion fragment">
+                    Дана строка. Верни количество <strong>уникальных</strong> букв (без пробелов, без учёта регистра).
+                </div>
+                <div class="code-block fragment" style="margin-top: 0.8em;">
+                    <pre class="python size-m"><code>def unique_chars(s):
+    # твой код
+    pass
+
+print(unique_chars("hello world"))  # 7 (h,e,l,o,w,r,d)
+print(unique_chars("Mississippi"))  # 4 (m,i,s,p)</code></pre>
+                </div>
+            </section>
+
+            <!-- LC 217 -->
+            <section>
+                <h2>Задача 3: Contains Duplicate</h2>
+                <div class="opinion fragment">
+                    Дан массив чисел. Вернуть <code>True</code>, если любое значение встречается <strong>хотя бы дважды</strong>.
+                </div>
+                <div class="compare fragment" style="margin-top: 0.8em;">
+                    <div class="compare-block">
+                        <h3>Вход</h3>
+                        <div class="code-block">
+                            <pre class="python size-m"><code>[1, 2, 3, 1]</code></pre>
+                        </div>
+                    </div>
+                    <div class="compare-block">
+                        <h3>Выход</h3>
+                        <div class="code-block">
+                            <pre class="python size-m"><code>True</code></pre>
+                        </div>
+                    </div>
+                </div>
+                <div class="lc-link fragment">
+                    <a href="https://leetcode.com/problems/contains-duplicate/" target="_blank">leetcode.com #217 — Easy</a>
+                </div>
+            </section>
+
+            <!-- LC 349 -->
+            <section>
+                <h2>Задача 4: Intersection of Two Arrays</h2>
+                <div class="opinion fragment">
+                    Даны два массива. Вернуть массив их <strong>общих элементов</strong> (без дублей).
+                </div>
+                <div class="compare fragment" style="margin-top: 0.8em;">
+                    <div class="compare-block">
+                        <h3>Вход</h3>
+                        <div class="code-block">
+                            <pre class="python size-m"><code>nums1 = [1, 2, 2, 1]
+nums2 = [2, 2]</code></pre>
+                        </div>
+                    </div>
+                    <div class="compare-block">
+                        <h3>Выход</h3>
+                        <div class="code-block">
+                            <pre class="python size-m"><code>[2]</code></pre>
+                        </div>
+                    </div>
+                </div>
+                <div class="lc-link fragment">
+                    <a href="https://leetcode.com/problems/intersection-of-two-arrays/" target="_blank">leetcode.com #349 — Easy</a>
+                </div>
+            </section>
+
+            <!-- LC 242 -->
+            <section>
+                <h2>Задача 5: Valid Anagram</h2>
+                <div class="opinion fragment">
+                    Даны две строки. Вернуть <code>True</code>, если одна является <strong>анаграммой</strong> другой.
+                </div>
+                <div class="compare fragment" style="margin-top: 0.8em;">
+                    <div class="compare-block">
+                        <h3>Вход</h3>
+                        <div class="code-block">
+                            <pre class="python size-m"><code>s = "anagram"
+t = "nagaram"</code></pre>
+                        </div>
+                    </div>
+                    <div class="compare-block">
+                        <h3>Выход</h3>
+                        <div class="code-block">
+                            <pre class="python size-m"><code>True</code></pre>
+                        </div>
+                    </div>
+                </div>
+                <div class="lc-link fragment">
+                    <a href="https://leetcode.com/problems/valid-anagram/" target="_blank">leetcode.com #242 — Easy</a>
+                </div>
+            </section>
+
+            <!-- LC 202 -->
+            <section>
+                <h2>Задача 6: Happy Number</h2>
+                <div class="opinion fragment">
+                    Число называется «счастливым», если, заменяя его суммой квадратов цифр снова и снова,<br>
+                    в итоге получишь <strong>1</strong>. Иначе процесс зациклится.
+                </div>
+                <div class="compare fragment" style="margin-top: 0.8em;">
+                    <div class="compare-block">
+                        <h3>Пример: 19</h3>
+                        <div class="code-block">
+                            <pre class="python size-s"><code>1² + 9² = 82
+8² + 2² = 68
+6² + 8² = 100
+1² + 0² + 0² = 1  ✓</code></pre>
+                        </div>
+                    </div>
+                    <div class="compare-block">
+                        <h3>Пример: 2</h3>
+                        <div class="code-block">
+                            <pre class="python size-s"><code>2² = 4
+4² = 16
+1² + 6² = 37
+3² + 7² = 58
+5² + 8² = 89
+8² + 9² = 145
+1² + 4² + 5² = 42
+4² + 2² = 20
+2² + 0² = 4  ...зацикливается</code></pre>
+                        </div>
+                    </div>
+                </div>
+                <div class="lc-link fragment">
+                    <a href="https://leetcode.com/problems/happy-number/" target="_blank">leetcode.com #202 — Easy</a>
+                </div>
+            </section>
+
+            <!-- LC 205 -->
+            <section>
+                <h2>Задача 7: Isomorphic Strings</h2>
+                <div class="opinion fragment">
+                    Две строки <strong>изоморфны</strong>, если символы одной можно заменить символами другой, сохранив порядок.<br>
+                    Разные символы не могут отображаться в один.
+                </div>
+                <div class="compare fragment" style="margin-top: 0.8em;">
+                    <div class="compare-block">
+                        <h3>egg → add: True</h3>
+                        <div class="code-block">
+                            <pre class="python size-s"><code>e → a
+g → d
+g → d  ✓</code></pre>
+                        </div>
+                    </div>
+                    <div class="compare-block">
+                        <h3>foo → bar: False</h3>
+                        <div class="code-block">
+                            <pre class="python size-s"><code>f → b
+o → a
+o → r  ✗ (o уже → a)</code></pre>
+                        </div>
+                    </div>
+                </div>
+                <div class="lc-link fragment">
+                    <a href="https://leetcode.com/problems/isomorphic-strings/" target="_blank">leetcode.com #205 — Medium</a>
+                </div>
+            </section>
+
+            </section>
 
         </div>
     </div>
