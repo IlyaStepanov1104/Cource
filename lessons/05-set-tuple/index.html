@@ -807,8 +807,13 @@ fs.update({5})  # AttributeError</code></pre>
                         <td><span class="o-badge o-1">O(1)</span></td>
                     </tr>
                     <tr class="fragment">
-                        <td class="label">Добавление в конец</td>
+                        <td class="label">Добавление в конец (есть место)</td>
                         <td><span class="o-badge o-1">O(1)</span></td>
+                        <td><span class="o-badge o-1">O(1)</span></td>
+                    </tr>
+                    <tr class="fragment">
+                        <td class="label">Добавление в конец (нет места)</td>
+                        <td><span class="o-badge o-n">O(n)</span> <small style="opacity:0.5">копируем всё</small></td>
                         <td><span class="o-badge o-1">O(1)</span></td>
                     </tr>
                     <tr class="fragment">

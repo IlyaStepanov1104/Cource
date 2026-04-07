@@ -84,8 +84,8 @@
     {
       "number": 5,
       "title": "Встроенные структуры данных",
-      "date": "2026-04-07T17:00:00",
-      "duration": 60,
+      "date": "2026-04-07T15:00:00",
+      "duration": 90,
       "presentations": [
         {
           "title": "Презентация",
@@ -93,7 +93,18 @@
           "order": 1
         }
       ],
-      "homeworks": []
+      "homeworks": [
+        {
+          "title": "Intersection of Two Arrays",
+          "description": "Даны два массива. Верни массив их общих элементов без дублей.",
+          "link": "https://leetcode.com/problems/intersection-of-two-arrays/"
+        },
+        {
+          "title": "Isomorphic Strings",
+          "description": "Определи, являются ли две строки изоморфными — можно ли заменить символы одной строки так, чтобы получить вторую.",
+          "link": "https://leetcode.com/problems/isomorphic-strings/"
+        }
+      ]
     },
     {
       "number": 6,

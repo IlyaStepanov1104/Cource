@@ -1,18 +1,12 @@
-class Solution:
-    def isIsomorphic(self, s: str, t: str) -> bool:
-        mapper = {}
-        t_chars = set()
-        for sc, tc in zip(s, t):
-            if sc in mapper:
-                if mapper[sc] != tc:
-                    return False
-            elif tc in t_chars:
-                return False
-            mapper[sc] = tc
-            t_chars.add(tc)
-        return True
-    
-    
-print(Solution().isIsomorphic("egg", "add"))
-print(Solution().isIsomorphic("f11", "b23"))
-print(Solution().isIsomorphic("paper", "title"))
+player1 = ["меч", "щит", "зелье", "лук", "стрелы"]
+player2 = ["щит", "зелье", "броня", "меч", "факел"]
+
+# Напиши функцию common_items(p1, p2)
+# Вернуть set с общими предметами
+
+def common_items(p1, p2):
+    set1 = set(p1)
+    set2 = set(p2)
+    return set1 & set2
+
+print(common_items(player1, player1))
