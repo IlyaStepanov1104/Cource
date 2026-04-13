@@ -286,3 +286,9 @@ div.code-block {
     border-radius: 10px;
     margin-block: 10px;
 }
+
+div.lesson-time {
+    position: absolute;
+    font-size: 0.6em;
+    opacity: 0.3;
+}

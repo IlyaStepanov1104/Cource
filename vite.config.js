@@ -4,6 +4,6 @@ export default defineConfig({
   root: '.',
   server: {
     port: 8001,
-    open: true,
+    open: '/?view_all=true',
   },
 });

@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Занятие 5 - Файлы и исключения</title>
+    <title>Занятие 6 - Файлы и исключения</title>
     <meta name="viewport"
         content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
 
@@ -31,14 +31,457 @@
     <div class="reveal">
         <div class="slides">
 
+            <!-- Титульный слайд -->
             <section style="font-size: 70px; height: 100%; width: 100%">
+                <div class="lesson-time">0</div>
                 <div class="fragment">
                     <h1 class="animated" style="font-size: 1.8em;">Файлы и исключения</h1>
-                    <p style="text-align: center; font-size: 0.5em; opacity: 0.5;">Занятие 5</p>
+                    <p style="text-align: center; font-size: 0.5em; opacity: 0.5;">Занятие 6</p>
                 </div>
             </section>
 
-            <!-- TODO: добавить слайды -->
+            <!-- ЧАСТЬ 1: ФАЙЛЫ -->
+            <section>
+                <section style="font-size: 70px; height: 100%; width: 100%">
+                    <div class="lesson-time">0</div>
+                    <div class="fragment">
+                        <h1 style="font-size: 1.4em;">Работа с файлами</h1>
+                        <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">Сохраняем и загружаем данные</p>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Что такое файл?</h2>
+                    <div class="fragment">
+                        Файл - это последовательность <strong>байтов</strong> (данные), хранящихся на диске.
+                    </div>
+                    <div class="code-block fragment">
+                        <pre><code>C:\Users\Artom\documents\data.txt    # Windows
+/home/artom/documents/data.txt       # Linux/Mac</code></pre>
+                    </div>
+                    <div class="compare fragment" style="margin-top: 1.5em;">
+                        <div class="compare-block">
+                            <h4>.txt</h4>
+                            <p style="font-size: 0.8em;">Текстовый файл</p>
+                        </div>
+                        <div class="compare-block">
+                            <h4>.json</h4>
+                            <p style="font-size: 0.8em;">Структурированные данные</p>
+                        </div>
+                        <div class="compare-block">
+                            <h4>.csv</h4>
+                            <p style="font-size: 0.8em;">Таблица (Excel)</p>
+                        </div>
+                        <div class="compare-block">
+                            <h4>.py</h4>
+                            <p style="font-size: 0.8em;">Код Python</p>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Функция open()</h2>
+                    <div class="code-block fragment">
+                        <pre class="python"><code>f = open("файл.txt", "r")  # открыть файл</code></pre>
+                    </div>
+                    <div class="fragment">
+                        <p style="margin-top: 1em; margin-bottom: 0.5em;"><strong>Режимы доступа:</strong></p>
+                        <table style="font-size: 0.8em; width: 100%;">
+                            <tr style="opacity: 0.8;">
+                                <td><code>"r"</code></td>
+                                <td>Чтение (по умолчанию)</td>
+                            </tr>
+                            <tr style="opacity: 0.8;">
+                                <td><code>"w"</code></td>
+                                <td>Запись (перезапишет файл)</td>
+                            </tr>
+                            <tr style="opacity: 0.8;">
+                                <td><code>"a"</code></td>
+                                <td>Добавление в конец файла</td>
+                            </tr>
+                            <tr style="opacity: 0.8;">
+                                <td><code>"r+"</code></td>
+                                <td>Чтение и запись (файл <strong>должен существовать</strong>)</td>
+                            </tr>
+                            <tr style="opacity: 0.8;">
+                                <td><code>"w+"</code></td>
+                                <td>Запись и чтение (<strong>создаст/перезапишет</strong> файл)</td>
+                            </tr>
+                            <tr style="opacity: 0.8;">
+                                <td><code>"a+"</code></td>
+                                <td>Добавление и чтение</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 0.8em;">
+                        <strong>r+ vs w+:</strong> r+ ждёт существующего файла, w+ создаст новый или перезапишет старый
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Открытие и закрытие файла</h2>
+                    <div class="code-block fragment">
+                        <pre class="python size-m"><code>f = open("data.txt", "r")  # открыли файл
+
+# работаем с файлом
+
+f.close()  # закрыли файл</code></pre>
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        Каждый <code>open()</code> должен иметь соответствующий <code>close()</code>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Почему закрывать файлы?</h2>
+                    <div class="timeline">
+                        <div class="timeline-item fragment">
+                            <div class="timeline-marker">1</div>
+                            <div class="timeline-content">
+                                <strong>Блокировка</strong> - другие программы не могут менять файл
+                            </div>
+                        </div>
+                        <div class="timeline-item fragment">
+                            <div class="timeline-marker">2</div>
+                            <div class="timeline-content">
+                                <strong>Потеря данных</strong> - буфер может не сбросить данные на диск
+                            </div>
+                        </div>
+                        <div class="timeline-item fragment">
+                            <div class="timeline-marker">3</div>
+                            <div class="timeline-content">
+                                <strong>Ресурсы</strong> - каждый файл занимает память
+                            </div>
+                        </div>
+                        <div class="timeline-item fragment">
+                            <div class="timeline-marker">4</div>
+                            <div class="timeline-content">
+                                <strong>"Too many open files"</strong> - ошибка при открытии 1000+ файлов
+                            </div>
+                        </div>
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        ⚠️ <strong>Всегда</strong> закрывай файл после использования!
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Context manager: with</h2>
+                    <div class="compare fragment">
+                        <div class="compare-block">
+                            <h4>❌ Плохо</h4>
+                            <div class="code-block">
+                                <pre class="python"><code>f = open("data.txt")
+data = f.read()
+f.close()  # забыл?</code></pre>
+                            </div>
+                        </div>
+                        <div class="compare-block">
+                            <h4>✅ Хорошо</h4>
+                            <div class="code-block">
+                                <pre class="python"><code>with open("data.txt") as f:
+    data = f.read()
+# файл закроется автоматически!</code></pre>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 1.5em;">
+                        <code>with</code> закроет файл <strong>всегда</strong> - даже если будет ошибка!
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Методы чтения файла</h2>
+                    <div class="code-block fragment">
+                        <pre class="python size-m"><code>with open("data.txt") as f:
+    f.read()       # весь файл строкой
+    f.readline()   # одна строка
+    f.readlines()  # все строки списком
+
+    for line in f:  # итерация по строкам
+        print(line)</code></pre>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Методы записи в файл</h2>
+                    <div class="code-block fragment">
+                        <pre class="python size-m"><code>with open("data.txt", "w") as f:
+    f.write("текст")           # записать строку
+    f.write(str(42) + "\n")    # число -> строка
+
+    lines = ["строка1\n", "строка2\n"]
+    f.writelines(lines)        # записать список строк
+
+    print("Привет", file=f)    # print в файл</code></pre>
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        <code>write()</code> не добавляет <code>\n</code> автоматически, а <code>print()</code>
+                        добавляет
+                    </div>
+                </section>
+            </section>
+
+            <!-- ЧАСТЬ 2: JSON И CSV -->
+            <section>
+                <section>
+                    <div class="lesson-time">30</div>
+                    <div class="fragment">
+                        <h1>JSON и CSV</h1>
+                        <p style="text-align: center; opacity: 0.5;">Структурированные данные</p>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Что такое JSON?</h2>
+                    <div class="fragment">
+                        <strong>JSON</strong> = JavaScript Object Notation - универсальный текстовый формат для данных.
+                    </div>
+                    <div class="code-block fragment">
+                        <pre class="json size-m"><code>{
+  "name": "Артём",
+  "level": 5,
+  "items": ["меч", "щит", "зелье"]
+}</code></pre>
+                    </div>
+                    <div class="fragment opinion">
+                        JSON работает во <strong>всех</strong> языках программирования
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Соответствие типов</h2>
+                    <table style="font-size: 0.9em; width: 100%; margin-top: 1em;">
+                        <tr style="opacity: 0.8;">
+                            <td><strong>Python</strong></td>
+                            <td><strong>JSON</strong></td>
+                        </tr>
+                        <tr class="fragment" style="opacity: 0.8;">
+                            <td><code>dict</code></td>
+                            <td><code>{}</code></td>
+                        </tr>
+                        <tr class="fragment" style="opacity: 0.8;">
+                            <td><code>list</code></td>
+                            <td><code>[]</code></td>
+                        </tr>
+                        <tr class="fragment" style="opacity: 0.8;">
+                            <td><code>str</code></td>
+                            <td><code>"string"</code></td>
+                        </tr>
+                        <tr class="fragment" style="opacity: 0.8;">
+                            <td><code>int / float</code></td>
+                            <td><code>123 / 3.14</code></td>
+                        </tr>
+                        <tr class="fragment" style="opacity: 0.8;">
+                            <td><code>True / False</code></td>
+                            <td><code>true / false</code></td>
+                        </tr>
+                        <tr class="fragment" style="opacity: 0.8;">
+                            <td><code>None</code></td>
+                            <td><code>null</code></td>
+                        </tr>
+                    </table>
+                </section>
+
+                <section>
+                    <h2>Модуль json</h2>
+                    <div class="code-block fragment">
+                        <pre class="python size-m"><code>import json
+
+# Чтение из файла
+with open("player.json") as f:
+    player = json.load(f)  # dict
+
+# Запись в файл
+with open("player.json", "w") as f:
+    json.dump(player, f, indent=2)</code></pre>
+                    </div>
+                    <div class="fragment opinion">
+                        <code>indent=2</code> делает JSON красивым и читаемым
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Что такое CSV?</h2>
+                    <div class="fragment">
+                        <strong>CSV</strong> = Comma-Separated Values - табличный формат (как Excel).
+                    </div>
+                    <div class="code-block fragment">
+                        <pre><code>name,score,level
+Иван,1500,5
+Мария,1200,4
+Петя,900,3</code></pre>
+                    </div>
+                    <div class="fragment opinion">
+                        CSV хорошо открывается в Excel и Google Sheets
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Модуль csv</h2>
+                    <div class="code-block fragment">
+                        <pre class="python size-m"><code>import csv
+
+# Запись
+with open("scores.csv", "w") as f:
+    writer = csv.writer(f)
+    writer.writerow(["name", "score"])
+    writer.writerow(["Иван", 1500])
+
+# Чтение
+with open("scores.csv") as f:
+    reader = csv.reader(f)
+    for row in reader:
+        print(row)
+        # ['name', 'score']
+        # ['Иван', '1500']</code></pre>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>JSON vs CSV - Когда использовать?</h2>
+                    <div class="compare fragment">
+                        <div class="compare-block">
+                            <h4>JSON</h4>
+                            <p style="font-size: 0.8em;">✓ Сложные структуры<br>✓ Вложенные данные<br>✓ Конфиги</p>
+                        </div>
+                        <div class="compare-block">
+                            <h4>CSV</h4>
+                            <p style="font-size: 0.8em;">✓ Таблицы<br>✓ Рекорды, логи<br>✓ Экспорт в Excel</p>
+                        </div>
+                    </div>
+                </section>
+            </section>
+
+            <!-- ЧАСТЬ 3: ИСКЛЮЧЕНИЯ -->
+            <section>
+                <section>
+                    <div class="lesson-time">45</div>
+                    <div class="fragment">
+                        <h1>Исключения</h1>
+                        <p style="text-align: center; opacity: 0.5;">Обработка ошибок</p>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Синтаксические vs Runtime ошибки</h2>
+                    <div class="compare fragment">
+                        <div class="compare-block">
+                            <h4>Синтаксис ❌</h4>
+                            <p style="font-size: 0.8em;">Python не может парсить код</p>
+                            <div class="code-block">
+                                <pre class="python"><code>if x > 5  # нет :</code></pre>
+                            </div>
+                        </div>
+                        <div class="compare-block">
+                            <h4>Runtime ❌</h4>
+                            <p style="font-size: 0.8em;">Программа падает при выполнении</p>
+                            <div class="code-block">
+                                <pre class="python"><code">int("abc")  # ValueError</code></pre>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        Синтаксические ошибки видно при запуске, а Runtime ошибки могут возникать в процессе работы
+                        программы
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Try-except</h2>
+                    <div class="code-block fragment">
+                        <pre class="python size-m"><code>try:
+    age = int(input("Возраст: "))
+    print(f"Тебе {age} лет")
+except ValueError:
+    print("Ошибка! Введи число")</code></pre>
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        Код в <code>try</code> выполняется нормально.<br>
+                        Если ошибка -> прыгаем на <code>except</code>.<br>
+                        Программа не падает!
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Типы исключений</h2>
+                    <div class="code-block fragment">
+                        <pre class="python size-m"><code>FileNotFoundError   # файл не найден
+ValueError          # неправильный формат данных
+KeyError            # ключа нет в словаре
+ZeroDivisionError   # деление на 0
+IndexError          # индекс вне границ списка
+TypeError           # неправильный тип данных</code></pre>
+                    </div>
+                    <div class="code-block fragment" style="margin-top: 1em;">
+                        <pre class="python size-m"><code>except FileNotFoundError:
+    print("Файл не существует")
+except ValueError:
+    print("Неправильный формат")</code></pre>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Ловим все ошибки</h2>
+                    <div class="code-block fragment">
+                        <pre class="python size-m"><code>try:
+    # какой-то код
+    x = int(input())
+    y = 10 / x
+except Exception:
+    print("Что-то пошло не так!")</code></pre>
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        <code>except Exception:</code> ловит <strong>все</strong> ошибки<br>
+                        Но лучше ловить конкретные ошибки!
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Finally - Очистка ресурсов</h2>
+                    <div class="code-block fragment">
+                        <pre class="python size-m"><code>try:
+    f = open("data.txt")
+    data = f.read()
+except FileNotFoundError:
+    print("Файл не найден")
+finally:
+    f.close()  # выполнится ВСЕГДА</code></pre>
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        <code>finally</code> выполняется <strong>всегда</strong> - даже если была ошибка<br>
+                        Используется для закрытия файлов, соединений с БД и тд
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Raise - Выброс исключения</h2>
+                    <div class="code-block fragment">
+                        <pre class="python size-m"><code>age = int(input("Возраст: "))
+
+if age < 0:
+    raise ValueError("Возраст не может быть отрицательным!")
+
+print(f"Тебе {age} лет")</code></pre>
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        <code>raise</code> выбрасывает исключение для валидации данных
+                    </div>
+                </section>
+            </section>
+
+            <!-- ИТОГ -->
+            <section>
+                <div class="lesson-time">60</div>
+                <h2>Что запомнить</h2>
+                <ul>
+                    <li class="fragment">Всегда использовать <code>with</code> для файлов</li>
+                    <li class="fragment">JSON для сложных структур, CSV для таблиц</li>
+                    <li class="fragment">try-except для перехвата ошибок</li>
+                    <li class="fragment">finally для очистки ресурсов</li>
+                    <li class="fragment">raise для валидации данных</li>
+                </ul>
+            </section>
 
         </div>
     </div>
