@@ -3,17 +3,14 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Занятие 6 - ООП: классы и объекты</title>
+    <title>Занятие 7 - ООП: классы и объекты</title>
     <meta name="viewport"
         content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
 
     <link rel="stylesheet" href="/utils/css/reveal.css">
     <link rel="stylesheet" href="/utils/lib/css/animate.css">
     <link rel="stylesheet" href="/utils/css/theme/night.css" id="theme">
-
-    <!-- Code syntax highlighting -->
     <link rel="stylesheet" href="/utils/lib/css/zenburn.css">
-
     <link rel="stylesheet" href="/utils/css/custom-base.css">
     <link rel="stylesheet" href="css-custom/custom.css">
 
@@ -31,14 +28,1034 @@
     <div class="reveal">
         <div class="slides">
 
+            <!-- Титульный слайд -->
             <section style="font-size: 70px; height: 100%; width: 100%">
+                <div class="lesson-time">0</div>
                 <div class="fragment">
                     <h1 class="animated" style="font-size: 1.8em;">ООП: классы и объекты</h1>
-                    <p style="text-align: center; font-size: 0.5em; opacity: 0.5;">Занятие 6</p>
+                    <p style="text-align: center; font-size: 0.5em; opacity: 0.5;">Занятие 7</p>
                 </div>
             </section>
 
-            <!-- TODO: добавить слайды -->
+            <!-- ЧАСТЬ 1: ЗАЧЕМ ООП -->
+            <section>
+                <section>
+                    <h2>Представь: игра с персонажами</h2>
+                    <div class="fragment">
+                        У каждого персонажа есть <strong>имя</strong>, <strong>здоровье</strong>, <strong>урон</strong>.
+                    </div>
+                    <div class="code-block fragment">
+                        <pre class="python size-m"><code>name1 = "Герой"
+hp1 = 100
+dmg1 = 15
+
+name2 = "Гоблин"
+hp2 = 30
+dmg2 = 5</code></pre>
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        А если персонажей <mark class="yellow">100</mark>? Переменных будет 300+
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Словари спасут?</h2>
+                    <div class="code-block fragment">
+                        <pre class="python size-m"><code>hero = {"name": "Герой", "hp": 100, "dmg": 15}
+goblin = {"name": "Гоблин", "hp": 30, "dmg": 5}
+
+def attack(attacker, target):
+    target["hp"] -= attacker["dmg"]
+
+attack(hero, goblin)</code></pre>
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        Уже лучше. Но логика (<code>attack</code>) и данные живут <mark class="yellow">отдельно</mark>
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        Тут и поможет Обьектно-ориентированное программирование (ООП)
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Что такое объект?</h2>
+                    <div class="fragment" style="margin-top: 0.5em;">
+                        <strong>Объект</strong> - это сущность, которая объединяет:
+                    </div>
+                    <div class="compare fragment" style="margin-top: 1em;">
+                        <div class="compare-block">
+                            <h4>📦 Данные</h4>
+                            <p style="font-size: 0.8em;">имя, здоровье, урон</p>
+                        </div>
+                        <div class="compare-block">
+                            <h4>⚙️ Поведение</h4>
+                            <p style="font-size: 0.8em;">атаковать, получить урон</p>
+                        </div>
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 1.5em;">
+                        💡 Данные и функции, которые с ними работают - <strong>вместе</strong>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>ООП вокруг нас</h2>
+                    <div class="timeline">
+                        <div class="timeline-item fragment">
+                            <div class="timeline-marker">📱</div>
+                            <div class="timeline-content">
+                                <strong>Кнопка</strong> - текст, цвет, обработчик клика
+                            </div>
+                        </div>
+                        <div class="timeline-item fragment">
+                            <div class="timeline-marker">🚗</div>
+                            <div class="timeline-content">
+                                <strong>Машина</strong> - скорость, топливо, методы ехать/тормозить
+                            </div>
+                        </div>
+                        <div class="timeline-item fragment">
+                            <div class="timeline-marker">🎮</div>
+                            <div class="timeline-content">
+                                <strong>Враг в игре</strong> - HP, позиция, методы ходить/стрелять
+                            </div>
+                        </div>
+                        <div class="timeline-item fragment">
+                            <div class="timeline-marker">📁</div>
+                            <div class="timeline-content">
+                                <strong>Файл</strong> - путь, данные, методы открыть/закрыть
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>В Python всё - объект</h2>
+                    <div class="code-block fragment">
+                        <pre class="python size-m"><code>text = "привет"
+text.upper()       # метод строки
+text.split(" ")    # метод строки
+
+lst = [1, 2, 3]
+lst.append(4)      # метод списка
+lst.sort()         # метод списка</code></pre>
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        Ты уже <strong>работал с объектами</strong> - теперь создадим свои
+                    </div>
+                </section>
+            </section>
+
+            <!-- ЧАСТЬ 2: КЛАССЫ И ОБЪЕКТЫ -->
+            <section>
+                <section style="font-size: 70px; height: 100%; width: 100%">
+                    <div class="lesson-time">10</div>
+                    <div class="fragment">
+                        <h1 style="font-size: 1.4em;">Классы и объекты</h1>
+                        <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">Чертёж и изделие</p>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Класс - это чертёж</h2>
+                    <div class="compare fragment" style="margin-top: 1em;">
+                        <div class="compare-block">
+                            <h4>📐 Класс</h4>
+                            <p style="font-size: 0.8em;">Чертёж машины<br>(описание)</p>
+                        </div>
+                        <div class="compare-block">
+                            <h4>🚗 Объект</h4>
+                            <p style="font-size: 0.8em;">Конкретная машина<br>(экземпляр)</p>
+                        </div>
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 1.5em;">
+                        Один класс - <mark class="green">много объектов</mark> (экземпляров)
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Создаём класс</h2>
+                    <div class="code-block fragment">
+                        <pre class="python size-m"><code>class Dog:
+    pass
+
+my_dog = Dog()       # создаём объект
+print(my_dog)
+# &lt;__main__.Dog object at 0x7f8b1c0d4a90&gt;</code></pre>
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        <code>class Dog:</code> - объявили класс<br>
+                        <code>Dog()</code> - создали объект
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        <code>pass</code> - заглушка «ничего не делать». Нужна там, где синтаксис требует блок кода, а
+                        писать пока нечего (пустой класс, функция, if).
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Соглашения именования</h2>
+                    <div class="compare fragment">
+                        <div class="compare-block">
+                            <h4>❌ Плохо</h4>
+                            <div class="code-block">
+                                <pre class="python"><code>class dog:
+    pass
+
+class my_class:
+    pass</code></pre>
+                            </div>
+                        </div>
+                        <div class="compare-block">
+                            <h4>✅ Хорошо</h4>
+                            <div class="code-block">
+                                <pre class="python"><code>class Dog:
+    pass
+
+class BankAccount:
+    pass</code></pre>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        Классы - <strong>PascalCase</strong> (каждое слово с большой буквы)
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Много объектов - один класс</h2>
+                    <div class="code-block fragment">
+                        <pre class="python size-m"><code>class Dog:
+    pass
+
+rex = Dog()
+buddy = Dog()
+charlie = Dog()
+
+print(rex is buddy)  # False - разные объекты</code></pre>
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        Каждый <code>Dog()</code> - <mark class="green">новый объект</mark> со своей памятью
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Добавим значения</h2>
+                    <div class="code-block fragment">
+                        <pre class="python size-m"><code>class Dog:
+    pass
+
+rex = Dog()
+rex.name = "Рекс"
+rex.age = 3
+
+print(rex.name)  # Рекс
+print(rex.age)   # 3</code></pre>
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        Так <strong>можно</strong>, но неудобно - данные назначаем вручную каждый раз
+                    </div>
+                    <div class="fragment">
+                        Хочется так:
+                        <div class="code-block">
+                            <pre class="python size-m"><code>rex = Dog(name="Рекс", age=3)
+print(rex.name)  # Рекс
+print(rex.age)   # 3</code></pre>
+                        </div>
+                    </div>
+                </section>
+            </section>
+
+            <!-- ЧАСТЬ 3: __init__ и self -->
+            <section>
+                <section style="font-size: 70px; height: 100%; width: 100%">
+                    <div class="lesson-time">20</div>
+                    <div class="fragment">
+                        <h1 style="font-size: 1.4em;">__init__ и self</h1>
+                        <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">Конструктор объекта</p>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Свойства и методы</h2>
+                    <div class="compare fragment" style="margin-top: 1em;">
+                        <div class="compare-block">
+                            <h4>📦 Свойство (атрибут)</h4>
+                            <p style="font-size: 0.75em;">Данные объекта</p>
+                            <div class="code-block">
+                                <pre class="python"><code>dog.name
+dog.age
+dog.hp</code></pre>
+                            </div>
+                            <div class="fragment">Переменная внутри объекта</div>
+                        </div>
+                        <div class="compare-block">
+                            <h4>⚙️ Метод</h4>
+                            <p style="font-size: 0.75em;">Действие объекта</p>
+                            <div class="code-block">
+                                <pre class="python"><code>dog.bark()
+dog.eat()
+dog.sleep()</code></pre>
+                            </div>
+                            <div class="fragment">Функция внутри объекта</div>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Конструктор</h2>
+                    <div class="fragment" style="margin-top: 0.5em;">
+                        <strong>Конструктор</strong> - это специальный метод, который Python вызывает <mark class="green">автоматически</mark> при создании нового объекта класса.
+                    </div>
+                    <div class="code-block fragment">
+                        <pre class="python size-m"><code>class Dog:
+    def __init__(self, name, age):
+        self.name = name
+        self.age = age
+
+rex = Dog("Рекс", 3)   # здесь вызывается __init__
+print(rex.name)  # Рекс
+print(rex.age)   # 3</code></pre>
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        <code>__init__</code> - это конструктор
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        В конструкторе задаём <strong>начальные свойства</strong> объекта
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Что такое self?</h2>
+                    <div class="fragment">
+                        <strong>self</strong> - это <mark class="green">сам объект</mark>, который создаётся.
+                    </div>
+                    <div class="code-block fragment">
+                        <pre class="python size-m"><code>rex = Dog("Рекс", 3)
+# Python подставляет:
+# Dog.__init__(rex, "Рекс", 3)
+#              ^^^^
+#              это self</code></pre>
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        Первым параметром метода <strong>всегда</strong> идёт <code>self</code>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>self.name = name - что это?</h2>
+                    <div class="code-block fragment">
+                        <pre class="python size-l"><code>def __init__(self, name, age):
+    self.name = name   # атрибут объекта = параметр -> rex.name = "Рекс"
+    self.age = age</code></pre>
+                    </div>
+                    <div class="fragment" style="margin-top: 1em;">
+                        <strong>Слева:</strong> <code>self.name</code> - атрибут, <em>куда</em> сохраняем
+                    </div>
+                    <div class="fragment" style="margin-top: 0.5em;">
+                        <strong>Справа:</strong> <code>name</code> - параметр, <em>что</em> сохраняем
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Пример: персонаж игры</h2>
+                    <div class="code-block fragment">
+                        <pre class="python size-m"><code>class Character:
+    def __init__(self, name, hp, damage):
+        self.name = name
+        self.hp = hp
+        self.damage = damage
+
+hero = Character("Герой", 100, 15)
+goblin = Character("Гоблин", 30, 5)
+
+print(hero.name, hero.hp)      # Герой 100
+print(goblin.name, goblin.hp)  # Гоблин 30</code></pre>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Значения по умолчанию</h2>
+                    <div class="code-block fragment">
+                        <pre class="python size-m"><code>class Character:
+    def __init__(self, name, hp=100, damage=10):
+        self.name = name
+        self.hp = hp
+        self.damage = damage
+
+hero = Character("Герой")            # hp=100, damage=10
+boss = Character("Босс", 500, 50)</code></pre>
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        Работает так же, как в обычных функциях
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Атрибуты - у каждого свои</h2>
+                    <div class="code-block fragment">
+                        <pre class="python size-m"><code>hero = Character("Герой", 100, 15)
+goblin = Character("Гоблин", 30, 5)
+
+hero.hp -= 10
+print(hero.hp)    # 90
+print(goblin.hp)  # 30 - не изменился!</code></pre>
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        Изменения одного объекта <mark class="green">не влияют</mark> на другие
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Свойства класса</h2>
+                    <div class="fragment" style="margin-top: 0.5em;">
+                        Атрибуты можно задать <mark class="green">прямо в теле класса</mark> - они будут общими значениями по умолчанию.
+                    </div>
+                    <div class="code-block fragment">
+                        <pre class="python size-m"><code>class Hero:
+    health = 1000
+    armour = 30
+
+    def __init__(self, name):
+        self.name = name
+
+h1 = Hero("Артас")
+h2 = Hero("Иллидан")
+
+print(h1.health, h1.armour)  # 1000 30
+print(h2.health, h2.armour)  # 1000 30</code></pre>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Свойства класса vs объекта</h2>
+                    <div class="code-block fragment">
+                        <pre class="python size-m"><code>class Hero:
+    health = 1000       # свойство КЛАССА
+    armour = 30
+
+    def __init__(self, name):
+        self.name = name  # свойство ОБЪЕКТА
+
+h1 = Hero("Артас")
+h1.health = 500       # перекрыли для h1
+
+h2 = Hero("Иллидан")
+print(h1.health)  # 500
+print(h2.health)  # 1000 - у класса осталось</code></pre>
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        Свойство класса - <strong>общее</strong>, пока объект не задал своё
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Когда это полезно</h2>
+                    <div class="timeline">
+                        <div class="timeline-item fragment">
+                            <div class="timeline-marker">🎯</div>
+                            <div class="timeline-content">
+                                <strong>Общие настройки</strong> - максимум HP, скорость по умолчанию
+                            </div>
+                        </div>
+                        <div class="timeline-item fragment">
+                            <div class="timeline-marker">📊</div>
+                            <div class="timeline-content">
+                                <strong>Счётчики</strong> - сколько всего объектов создано
+                            </div>
+                        </div>
+                        <div class="timeline-item fragment">
+                            <div class="timeline-marker">⚠️</div>
+                            <div class="timeline-content">
+                                <strong>Осторожно со списками</strong> - изменяемые объекты общие для всех!
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </section>
+
+            <!-- ЧАСТЬ 4: МЕТОДЫ -->
+            <section>
+                <section style="font-size: 70px; height: 100%; width: 100%">
+                    <div class="lesson-time">30</div>
+                    <div class="fragment">
+                        <h1 style="font-size: 1.4em;">Методы</h1>
+                        <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">Поведение объекта</p>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Метод = функция внутри класса</h2>
+                    <div class="code-block fragment">
+                        <pre class="python size-m"><code>class Dog:
+    def __init__(self, name):
+        self.name = name
+
+    def bark(self):
+        print(f"{self.name}: Гав!")
+
+rex = Dog("Рекс")
+rex.bark()  # Рекс: Гав!</code></pre>
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        Метод всегда получает <code>self</code> - сам объект
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Метод меняет состояние</h2>
+                    <div class="code-block fragment">
+                        <pre class="python size-m"><code>class Character:
+    def __init__(self, name, hp):
+        self.name = name
+        self.hp = hp
+
+    def take_damage(self, amount):
+        self.hp -= amount
+        print(f"{self.name}: -{amount} HP")
+
+hero = Character("Герой", 100)
+hero.take_damage(15)
+print(hero.hp)  # 85</code></pre>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Метод может возвращать значение</h2>
+                    <div class="code-block fragment">
+                        <pre class="python size-m"><code>class Character:
+    def __init__(self, name, hp):
+        self.name = name
+        self.hp = hp
+
+    def is_alive(self):
+        return self.hp &gt; 0
+
+hero = Character("Герой", 0)
+print(hero.is_alive())  # False</code></pre>
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        Методы, возвращающие bool, часто называют <code>is_*</code> или <code>has_*</code>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Методы взаимодействуют</h2>
+                    <div class="code-block fragment">
+                        <pre class="python size-m"><code>class Character:
+    def __init__(self, name, hp, damage):
+        self.name = name
+        self.hp = hp
+        self.damage = damage
+
+    def take_damage(self, amount):
+        self.hp -= amount
+
+    def attack(self, target):
+        print(f"{self.name} бьёт {target.name}")
+        target.take_damage(self.damage)</code></pre>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>В действии</h2>
+                    <div class="code-block fragment">
+                        <pre class="python size-m"><code>hero = Character("Герой", 100, 15)
+goblin = Character("Гоблин", 30, 5)
+
+hero.attack(goblin)
+# Герой бьёт Гоблин
+
+print(goblin.hp)  # 15
+goblin.attack(hero)
+print(hero.hp)    # 95</code></pre>
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        💡 Код читается почти как русский текст
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Метод vs функция</h2>
+                    <div class="compare fragment">
+                        <div class="compare-block">
+                            <h4>Функция</h4>
+                            <div class="code-block">
+                                <pre class="python"><code>attack(hero, goblin)
+take_damage(hero, 10)</code></pre>
+                            </div>
+                        </div>
+                        <div class="compare-block">
+                            <h4>Метод</h4>
+                            <div class="code-block">
+                                <pre class="python"><code>hero.attack(goblin)
+hero.take_damage(10)</code></pre>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        Метод <mark class="green">привязан</mark> к объекту - это делает код яснее
+                    </div>
+                </section>
+            </section>
+
+            <!-- ЧАСТЬ 5: ИНКАПСУЛЯЦИЯ -->
+            <section>
+                <section style="font-size: 70px; height: 100%; width: 100%">
+                    <div class="lesson-time">40</div>
+                    <div class="fragment">
+                        <h1 style="font-size: 1.4em;">Инкапсуляция</h1>
+                        <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">Что прятать от внешнего мира</p>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Проблема открытых атрибутов</h2>
+                    <div class="code-block fragment">
+                        <pre class="python size-m"><code>class BankAccount:
+    def __init__(self, balance):
+        self.balance = balance
+
+account = BankAccount(1000)
+account.balance = -50_000  # 😱
+print(account.balance)     # -50000</code></pre>
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        Любой может <mark class="yellow">сломать</mark> внутреннее состояние
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Соглашения Python</h2>
+                    <table style="font-size: 0.9em; width: 100%; margin-top: 1em;">
+                        <tr>
+                            <td><strong>Префикс</strong></td>
+                            <td><strong>Смысл</strong></td>
+                        </tr>
+                        <tr class="fragment">
+                            <td><code>name</code></td>
+                            <td>Public - используй свободно</td>
+                        </tr>
+                        <tr class="fragment">
+                            <td><code>_name</code></td>
+                            <td>Protected - «не трогай снаружи»</td>
+                        </tr>
+                        <tr class="fragment">
+                            <td><code>__name</code></td>
+                            <td>Private - Python скроет имя</td>
+                        </tr>
+                    </table>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        В Python это <strong>договорённость</strong>, а не запрет
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Как работает __</h2>
+                    <div class="code-block fragment">
+                        <pre class="python size-m"><code>class Account:
+    def __init__(self):
+        self.__password = "secret"
+
+a = Account()
+print(a.__password)
+# AttributeError: 'Account' object has no attribute '__password'</code></pre>
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        Python <strong>переименовал</strong> атрибут при компиляции
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Что сделал Python</h2>
+                    <div class="code-block fragment">
+                        <pre class="python size-m"><code>class Account:
+    def __init__(self):
+        self.__password = "secret"
+
+a = Account()
+print(a.__dict__)
+# {'_Account__password': 'secret'}
+
+print(a._Account__password)  # "secret"</code></pre>
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        <code>__password</code> превратился в <code>_Account__password</code>
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 0.5em;">
+                        Достать можно, но случайно - уже не получится
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Метод вместо прямого доступа</h2>
+                    <div class="code-block fragment">
+                        <pre class="python size-m"><code>class BankAccount:
+    def __init__(self, balance):
+        self._balance = balance
+
+    def deposit(self, amount):
+        if amount &lt;= 0:
+            raise ValueError("Сумма должна быть > 0")
+        self._balance += amount
+
+    def withdraw(self, amount):
+        if amount > self._balance:
+            raise ValueError("Недостаточно средств")
+        self._balance -= amount</code></pre>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Зачем это?</h2>
+                    <div class="timeline">
+                        <div class="timeline-item fragment">
+                            <div class="timeline-marker">✅</div>
+                            <div class="timeline-content">
+                                <strong>Валидация</strong> - баланс не уйдёт в минус
+                            </div>
+                        </div>
+                        <div class="timeline-item fragment">
+                            <div class="timeline-marker">🛡️</div>
+                            <div class="timeline-content">
+                                <strong>Защита</strong> - никто не изменит данные случайно
+                            </div>
+                        </div>
+                        <div class="timeline-item fragment">
+                            <div class="timeline-marker">🔧</div>
+                            <div class="timeline-content">
+                                <strong>Гибкость</strong> - можно поменять реализацию, не ломая чужой код
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Магические методы</h2>
+                    <div class="fragment" style="margin-top: 0.5em;">
+                        Методы с <code>__двумя__</code> подчёркиваниями - Python вызывает их <mark class="green">сам</mark> в нужный момент.
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 1.5em;">
+                        Один ты уже знаешь - <code>__init__</code> вызывается при создании объекта
+                    </div>
+                </section>
+
+                <section>
+                    <h2>__str__</h2>
+                    <div class="fragment" style="margin-top: 0.5em;">
+                        Вызывается, когда объект превращают в строку: <code>print(obj)</code> или <code>str(obj)</code>.
+                    </div>
+                    <div class="code-block fragment">
+                        <pre class="python size-m"><code>class Character:
+    def __init__(self, name, hp):
+        self.name = name
+        self.hp = hp
+
+    def __str__(self):
+        return f"{self.name} (HP: {self.hp})"
+
+hero = Character("Герой", 100)
+print(hero)  # Герой (HP: 100)</code></pre>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>__int__</h2>
+                    <div class="fragment" style="margin-top: 0.5em;">
+                        Вызывается при <code>int(obj)</code> - когда объект превращают в число.
+                    </div>
+                    <div class="code-block fragment">
+                        <pre class="python size-m"><code>class Money:
+    def __init__(self, amount):
+        self.amount = amount
+
+    def __int__(self):
+        return self.amount
+
+m = Money(1500)
+print(int(m))  # 1500</code></pre>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>__eq__</h2>
+                    <div class="fragment" style="margin-top: 0.5em;">
+                        Вызывается при <code>a == b</code>. Без него Python сравнивает <mark class="yellow">адреса в памяти</mark>.
+                    </div>
+                    <div class="code-block fragment">
+                        <pre class="python size-m"><code>class Point:
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+
+    def __eq__(self, other):
+        return self.x == other.x and self.y == other.y
+
+print(Point(1, 2) == Point(1, 2))  # True</code></pre>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>__lt__ и __gt__</h2>
+                    <div class="fragment" style="margin-top: 0.5em;">
+                        <code>a &lt; b</code>, <code>a &gt; b</code>. Достаточно реализовать один - и заработает <mark class="green">сортировка</mark>.
+                    </div>
+                    <div class="code-block fragment">
+                        <pre class="python size-m"><code>class Student:
+    def __init__(self, name, grade):
+        self.name = name
+        self.grade = grade
+
+    def __lt__(self, other):
+        return self.grade &lt; other.grade
+
+students = [Student("Иван", 4), Student("Мария", 5)]
+students.sort()  # использует __lt__</code></pre>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>__add__, __sub__, __mul__</h2>
+                    <div class="fragment" style="margin-top: 0.5em;">
+                        Арифметика: <code>a + b</code>, <code>a - b</code>, <code>a * b</code>. Можно определить для своих классов.
+                    </div>
+                    <div class="code-block fragment">
+                        <pre class="python size-m"><code>class Money:
+    def __init__(self, amount):
+        self.amount = amount
+
+    def __add__(self, other):
+        return Money(self.amount + other.amount)
+
+m1 = Money(100)
+m2 = Money(250)
+print((m1 + m2).amount)  # 350</code></pre>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>__len__ и __getitem__</h2>
+                    <div class="fragment" style="margin-top: 0.5em;">
+                        <code>__len__</code> - для <code>len(obj)</code>. <code>__getitem__</code> - для <code>obj[i]</code>.
+                    </div>
+                    <div class="code-block fragment">
+                        <pre class="python size-m"><code>class Team:
+    def __init__(self, players):
+        self.players = players
+
+    def __len__(self):
+        return len(self.players)
+
+    def __getitem__(self, i):
+        return self.players[i]
+
+team = Team(["Иван", "Мария", "Пётр"])
+print(len(team))   # 3
+print(team[0])     # Иван</code></pre>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>__contains__</h2>
+                    <div class="fragment" style="margin-top: 0.5em;">
+                        Вызывается оператором <code>in</code>: <code>x in obj</code>.
+                    </div>
+                    <div class="code-block fragment">
+                        <pre class="python size-m"><code>class Team:
+    def __init__(self, players):
+        self.players = players
+
+    def __contains__(self, name):
+        return name in self.players
+
+team = Team(["Иван", "Мария"])
+print("Иван" in team)   # True
+print("Пётр" in team)   # False</code></pre>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>__bool__</h2>
+                    <div class="fragment" style="margin-top: 0.5em;">
+                        Вызывается в <code>if obj:</code> - определяет, <mark class="green">что считать «пустым»</mark>.
+                    </div>
+                    <div class="code-block fragment">
+                        <pre class="python size-m"><code>class Inventory:
+    def __init__(self, items):
+        self.items = items
+
+    def __bool__(self):
+        return len(self.items) > 0
+
+bag = Inventory([])
+if bag:
+    print("Что-то есть")
+else:
+    print("Пусто")  # напечатает это</code></pre>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>__call__</h2>
+                    <div class="fragment" style="margin-top: 0.5em;">
+                        Вызывается при <code>obj()</code> - объект начинает <mark class="green">работать как функция</mark>.
+                    </div>
+                    <div class="code-block fragment">
+                        <pre class="python size-m"><code>class Multiplier:
+    def __init__(self, factor):
+        self.factor = factor
+
+    def __call__(self, x):
+        return x * self.factor
+
+double = Multiplier(2)
+print(double(5))   # 10
+print(double(7))   # 14</code></pre>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Шпаргалка: магические методы</h2>
+                    <table style="font-size: 0.7em; width: 100%; margin-top: 0.5em;">
+                        <tr>
+                            <td><strong>Метод</strong></td>
+                            <td><strong>Когда вызывается</strong></td>
+                        </tr>
+                        <tr class="fragment">
+                            <td><code>__init__</code></td>
+                            <td>создание объекта: <code>Hero()</code></td>
+                        </tr>
+                        <tr class="fragment">
+                            <td><code>__str__</code></td>
+                            <td><code>print(obj)</code>, <code>str(obj)</code></td>
+                        </tr>
+                        <tr class="fragment">
+                            <td><code>__int__</code></td>
+                            <td><code>int(obj)</code></td>
+                        </tr>
+                        <tr class="fragment">
+                            <td><code>__len__</code></td>
+                            <td><code>len(obj)</code></td>
+                        </tr>
+                        <tr class="fragment">
+                            <td><code>__getitem__</code></td>
+                            <td><code>obj[i]</code></td>
+                        </tr>
+                        <tr class="fragment">
+                            <td><code>__eq__</code></td>
+                            <td>сравнение <code>a == b</code></td>
+                        </tr>
+                        <tr class="fragment">
+                            <td><code>__lt__, __gt__</code></td>
+                            <td><code>a &lt; b</code>, <code>a &gt; b</code>, сортировка</td>
+                        </tr>
+                        <tr class="fragment">
+                            <td><code>__add__, __sub__, __mul__</code></td>
+                            <td><code>a + b</code>, <code>a - b</code>, <code>a * b</code></td>
+                        </tr>
+                        <tr class="fragment">
+                            <td><code>__contains__</code></td>
+                            <td><code>x in obj</code></td>
+                        </tr>
+                        <tr class="fragment">
+                            <td><code>__bool__</code></td>
+                            <td><code>if obj:</code> - что считать «пустым»</td>
+                        </tr>
+                        <tr class="fragment">
+                            <td><code>__call__</code></td>
+                            <td><code>obj()</code> - объект как функция</td>
+                        </tr>
+                    </table>
+                    <div class="fragment opinion" style="margin-top: 0.8em;">
+                        Реализуй - и твой класс ведёт себя как родной Python-объект
+                    </div>
+                </section>
+            </section>
+
+            <!-- ЧАСТЬ 6: ПРАКТИКА -->
+            <section>
+                <section style="font-size: 70px; height: 100%; width: 100%">
+                    <div class="lesson-time">50</div>
+                    <div class="fragment">
+                        <h1 style="font-size: 1.4em;">Практика</h1>
+                        <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">Собираем всё вместе</p>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Задача 1: класс Student</h2>
+                    <div class="fragment" style="margin-top: 0.5em;">
+                        Нужен класс студента с оценками и средним баллом.
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        <strong>Атрибуты:</strong> имя, список оценок<br>
+                        <strong>Методы:</strong> добавить оценку, средний балл, is_excellent - отличник ли
+                    </div>
+                    <div class="code-block fragment">
+                        <pre class="python size-m"><code>ivan = Student("Иван")
+ivan.add_grade(5)
+ivan.add_grade(4)
+ivan.add_grade(5)
+
+print(ivan.average())        # 4.666...
+print(ivan.is_excellent())   # True</code></pre>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Задача 2: Rectangle</h2>
+                    <div class="fragment" style="margin-top: 0.5em;">
+                        Класс прямоугольника со сторонами, площадью и периметром.
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        <strong>Атрибуты:</strong> width, height<br>
+                        <strong>Методы:</strong> area, perimeter, is_square<br>
+                        <strong>Магические:</strong> __str__, __eq__
+                    </div>
+                    <div class="code-block fragment">
+                        <pre class="python size-m"><code>r1 = Rectangle(4, 5)
+r2 = Rectangle(4, 5)
+
+print(r1)            # Rectangle 4x5
+print(r1.area())     # 20
+print(r1 == r2)      # True
+print(r1.is_square())  # False</code></pre>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Задача 3: BankAccount</h2>
+                    <div class="fragment" style="margin-top: 0.5em;">
+                        Счёт с защитой от ухода в минус.
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        <strong>Атрибуты:</strong> owner, _balance<br>
+                        <strong>Методы:</strong> deposit, withdraw, get_balance<br>
+                        <strong>Проверки:</strong> нельзя снять больше, чем есть
+                    </div>
+                    <div class="code-block fragment">
+                        <pre class="python size-m"><code>acc = BankAccount("Иван", 1000)
+acc.deposit(500)
+print(acc.get_balance())  # 1500
+
+acc.withdraw(2000)
+# ValueError: Недостаточно средств</code></pre>
+                    </div>
+                </section>
+
+            </section>
+
+            <!-- ИТОГ -->
+            <section>
+                <div class="lesson-time">58</div>
+                <h2>Что запомнить</h2>
+                <ul>
+                    <li class="fragment"><code>class</code> - чертёж, объект - экземпляр</li>
+                    <li class="fragment"><code>__init__</code> создаёт объект, <code>self</code> - сам объект</li>
+                    <li class="fragment">Атрибуты: <code>self.x = x</code>, у каждого объекта свои</li>
+                    <li class="fragment">Методы - функции с <code>self</code>, работают с данными объекта</li>
+                    <li class="fragment"><code>_name</code> - protected, <code>__name</code> - private</li>
+                    <li class="fragment"><code>магические методы</code> - для определения поведения объектов</li>
+                </ul>
+            </section>
 
         </div>
     </div>
