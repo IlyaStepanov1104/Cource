@@ -3,17 +3,14 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Занятие 7 - ООП: наследование и магические методы</title>
+    <title>Занятие 8 - ООП: наследование, декораторы и принципы</title>
     <meta name="viewport"
         content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
 
     <link rel="stylesheet" href="/utils/css/reveal.css">
     <link rel="stylesheet" href="/utils/lib/css/animate.css">
     <link rel="stylesheet" href="/utils/css/theme/night.css" id="theme">
-
-    <!-- Code syntax highlighting -->
     <link rel="stylesheet" href="/utils/lib/css/zenburn.css">
-
     <link rel="stylesheet" href="/utils/css/custom-base.css">
     <link rel="stylesheet" href="css-custom/custom.css">
 
@@ -31,14 +28,1262 @@
     <div class="reveal">
         <div class="slides">
 
+            <!-- Титульный слайд -->
             <section style="font-size: 70px; height: 100%; width: 100%">
+                <div class="lesson-time">0</div>
                 <div class="fragment">
-                    <h1 class="animated" style="font-size: 1.8em;">ООП: наследование и магические методы</h1>
-                    <p style="text-align: center; font-size: 0.5em; opacity: 0.5;">Занятие 7</p>
+                    <h1 class="animated" style="font-size: 1.4em;">ООП: наследование, декораторы и принципы</h1>
+                    <p style="text-align: center; font-size: 0.5em; opacity: 0.5;">Занятие 8</p>
                 </div>
             </section>
 
-            <!-- TODO: добавить слайды -->
+            <!-- ЧАСТЬ 1: ПОВТОРЕНИЕ -->
+            <section>
+                <section style="font-size: 70px; height: 100%; width: 100%">
+                    <div class="lesson-time">0</div>
+                    <div class="fragment">
+                        <h1 style="font-size: 1.4em;">Вспомним ООП</h1>
+                        <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">База с прошлого раза</p>
+                    </div>
+                </section>
+
+                <!-- Блиц: класс, объект, self, методы -->
+                <section>
+                    <h2>Блиц-вопросы</h2>
+                    <div class="timeline">
+                        <div class="timeline-item fragment">
+                            <div class="timeline-marker">1</div>
+                            <div class="timeline-content">Что такое <strong>класс</strong>? <span class="fragment">- чертёж</span></div>
+                        </div>
+                        <div class="timeline-item fragment">
+                            <div class="timeline-marker">2</div>
+                            <div class="timeline-content">Что такое <strong>объект</strong>? <span class="fragment">- изделие по чертежу</span></div>
+                        </div>
+                        <div class="timeline-item fragment">
+                            <div class="timeline-marker">3</div>
+                            <div class="timeline-content">Что такое <code>self</code>? <span class="fragment">- сам объект</span></div>
+                        </div>
+                        <div class="timeline-item fragment">
+                            <div class="timeline-marker">4</div>
+                            <div class="timeline-content">Что делает <code>__init__</code>? <span class="fragment">- задаёт стартовые свойства</span></div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Быстрый пример: класс Character -->
+                <section>
+                    <h2>Быстрый пример</h2>
+                    <div class="code-block fragment">
+                        <pre class="python size-m"><code>class Character:
+    def __init__(self, name, hp):
+        self.name = name
+        self.hp = hp
+
+    def take_damage(self, amount):
+        self.hp -= amount
+
+hero = Character("Герой", 100)
+hero.take_damage(20)
+print(hero.hp)  # 80</code></pre>
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        Атрибуты + методы + <code>self</code> = объект
+                    </div>
+                </section>
+
+                <!-- План сегодня -->
+                <section>
+                    <h2>Сегодня</h2>
+                    <div class="timeline">
+                        <div class="timeline-item fragment">
+                            <div class="timeline-marker">1</div>
+                            <div class="timeline-content"><strong>Наследование</strong> - как переиспользовать код</div>
+                        </div>
+                        <div class="timeline-item fragment">
+                            <div class="timeline-marker">2</div>
+                            <div class="timeline-content"><strong>Полиморфизм</strong> - разные классы с одним интерфейсом</div>
+                        </div>
+                        <div class="timeline-item fragment">
+                            <div class="timeline-marker">3</div>
+                            <div class="timeline-content"><strong>Декораторы</strong> - @property, @classmethod, @staticmethod</div>
+                        </div>
+                        <div class="timeline-item fragment">
+                            <div class="timeline-marker">4</div>
+                            <div class="timeline-content"><strong>SOLID</strong> - принципы хорошего дизайна</div>
+                        </div>
+                    </div>
+                </section>
+            </section>
+
+            <!-- ЧАСТЬ 2: НАСЛЕДОВАНИЕ -->
+            <section>
+                <section style="font-size: 70px; height: 100%; width: 100%">
+                    <div class="lesson-time">7</div>
+                    <div class="fragment">
+                        <h1 style="font-size: 1.4em;">Наследование</h1>
+                        <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">Переиспользуй, а не копируй</p>
+                    </div>
+                </section>
+
+                <!-- Проблема: дублирование в похожих классах -->
+                <section>
+                    <h2>Проблема: три похожих класса</h2>
+                    <div class="code-block fragment">
+                        <pre class="python size-s"><code>class Dog:
+    def __init__(self, name, age):
+        self.name = name
+        self.age = age
+    def sleep(self):
+        print(f"{self.name} спит")
+
+class Cat:
+    def __init__(self, name, age):
+        self.name = name
+        self.age = age
+    def sleep(self):
+        print(f"{self.name} спит")
+
+class Bird:
+    def __init__(self, name, age):
+        self.name = name
+        self.age = age
+    def sleep(self):
+        print(f"{self.name} спит")</code></pre>
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        Код <mark class="yellow">дублируется</mark> - одинаковые <code>__init__</code> и <code>sleep</code>
+                    </div>
+                </section>
+
+                <!-- Идея: вынести общее в родителя -->
+                <section>
+                    <h2>Идея: общий класс-родитель</h2>
+                    <div class="fragment" style="margin-top: 0.5em;">
+                        Что общего у собаки, кошки и птицы? <mark class="green">Они все - животные</mark>.
+                    </div>
+                    <div class="fragment" style="margin-top: 1em;">
+                        Общее вынесем в класс <code>Animal</code>, остальное - в наследники.
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 1.5em;">
+                        <strong>Наследование</strong> - способ создать новый класс на базе существующего
+                    </div>
+                </section>
+
+                <!-- Синтаксис class Child(Parent) -->
+                <section>
+                    <h2>Синтаксис</h2>
+                    <div class="code-block fragment">
+                        <pre class="python size-m"><code>class Animal:
+    def __init__(self, name, age):
+        self.name = name
+        self.age = age
+
+    def sleep(self):
+        print(f"{self.name} спит")
+
+
+class Dog(Animal):  # Dog наследуется от Animal
+    pass</code></pre>
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        <code>class Dog(Animal):</code> - в скобках <strong>родительский класс</strong>
+                    </div>
+                </section>
+
+                <!-- Что наследуется -->
+                <section>
+                    <h2>Что получил наследник</h2>
+                    <div class="code-block fragment">
+                        <pre class="python size-m"><code>class Animal:
+    def __init__(self, name, age):
+        self.name = name
+        self.age = age
+    def sleep(self):
+        print(f"{self.name} спит")
+
+class Dog(Animal):
+    pass
+
+rex = Dog("Рекс", 3)   # __init__ от Animal
+rex.sleep()            # sleep от Animal - "Рекс спит"
+print(rex.name)        # "Рекс"</code></pre>
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        Наследник получает <mark class="green">все атрибуты и методы</mark> родителя бесплатно
+                    </div>
+                </section>
+
+                <!-- Наследник добавляет своё -->
+                <section>
+                    <h2>Наследник добавляет своё</h2>
+                    <div class="code-block fragment">
+                        <pre class="python size-m"><code>class Animal:
+    def __init__(self, name, age):
+        self.name = name
+        self.age = age
+
+class Dog(Animal):
+    def bark(self):
+        print(f"{self.name}: Гав!")
+
+class Cat(Animal):
+    def purr(self):
+        print(f"{self.name}: Мрррр")
+
+Dog("Рекс", 3).bark()   # Рекс: Гав!
+Cat("Мурка", 2).purr()  # Мурка: Мрррр</code></pre>
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        Общее - в родителе, уникальное - в наследниках
+                    </div>
+                </section>
+
+                <!-- Терминология -->
+                <section>
+                    <h2>Терминология</h2>
+                    <table style="font-size: 0.85em; width: 100%; margin-top: 0.5em;">
+                        <tr>
+                            <td><strong>Animal</strong></td>
+                            <td><strong>Dog</strong></td>
+                        </tr>
+                        <tr class="fragment">
+                            <td>родитель</td>
+                            <td>потомок</td>
+                        </tr>
+                        <tr class="fragment">
+                            <td>базовый класс</td>
+                            <td>производный класс</td>
+                        </tr>
+                        <tr class="fragment">
+                            <td>superclass</td>
+                            <td>subclass</td>
+                        </tr>
+                        <tr class="fragment">
+                            <td>parent</td>
+                            <td>child</td>
+                        </tr>
+                    </table>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        Все эти пары означают одно и то же
+                    </div>
+                </section>
+
+                <!-- "is-a" отношение -->
+                <section>
+                    <h2>Когда применять: отношение "is-a"</h2>
+                    <div class="compare fragment" style="margin-top: 1em;">
+                        <div class="compare-block">
+                            <h4>✅ Собака <strong>есть</strong> животное</h4>
+                            <p style="font-size: 0.8em;"><code>class Dog(Animal)</code></p>
+                        </div>
+                        <div class="compare-block">
+                            <h4>✅ Машина <strong>есть</strong> транспорт</h4>
+                            <p style="font-size: 0.8em;"><code>class Car(Vehicle)</code></p>
+                        </div>
+                    </div>
+                    <div class="compare fragment" style="margin-top: 1em;">
+                        <div class="compare-block">
+                            <h4>❌ Двигатель <strong>не есть</strong> машина</h4>
+                            <p style="font-size: 0.8em;">Двигатель - часть машины, не наследник</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- isinstance / issubclass -->
+                <section>
+                    <h2>isinstance и issubclass</h2>
+                    <div class="code-block fragment">
+                        <pre class="python size-m"><code>class Animal: pass
+class Dog(Animal): pass
+
+rex = Dog("Рекс", 3)
+
+isinstance(rex, Dog)       # True
+isinstance(rex, Animal)    # True - собака тоже животное!
+isinstance(rex, str)       # False
+
+issubclass(Dog, Animal)    # True
+issubclass(Animal, Dog)    # False</code></pre>
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        <code>isinstance</code> учитывает наследование - собака проходит проверку на животное
+                    </div>
+                </section>
+
+                <!-- Все классы от object -->
+                <section>
+                    <h2>Корень всего - object</h2>
+                    <div class="code-block fragment">
+                        <pre class="python size-m"><code>class Dog:
+    pass
+
+# Это то же самое, что:
+class Dog(object):
+    pass
+
+isinstance(Dog(), object)  # True</code></pre>
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        В Python <strong>все</strong> классы наследуются от <code>object</code> - даже если скобки пустые
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 0.5em;">
+                        Поэтому у любого объекта уже есть <code>__init__</code>, <code>__str__</code> и т.д.
+                    </div>
+                </section>
+            </section>
+
+            <!-- ЧАСТЬ 3: super() И ПЕРЕОПРЕДЕЛЕНИЕ -->
+            <section>
+                <section style="font-size: 70px; height: 100%; width: 100%">
+                    <div class="lesson-time">22</div>
+                    <div class="fragment">
+                        <h1 style="font-size: 1.4em;">super() и переопределение</h1>
+                        <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">Меняем и расширяем родителя</p>
+                    </div>
+                </section>
+
+                <!-- Переопределение метода -->
+                <section>
+                    <h2>Переопределение метода</h2>
+                    <div class="code-block fragment">
+                        <pre class="python size-m"><code>class Animal:
+    def speak(self):
+        print("Какой-то звук")
+
+class Dog(Animal):
+    def speak(self):              # перекрыли метод родителя
+        print("Гав!")
+
+Animal().speak()   # "Какой-то звук"
+Dog().speak()      # "Гав!"</code></pre>
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        Наследник может <mark class="green">заменить</mark> метод родителя своим
+                    </div>
+                </section>
+
+                <!-- Проблема: потеряли логику родителя -->
+                <section>
+                    <h2>Проблема: потеряли родителя</h2>
+                    <div class="code-block fragment">
+                        <pre class="python size-m"><code>class Animal:
+    def __init__(self, name, age):
+        self.name = name
+        self.age = age
+
+class Dog(Animal):
+    def __init__(self, name, age, breed):
+        self.breed = breed        # только breed
+        # name и age не задали!
+
+rex = Dog("Рекс", 3, "Хаски")
+print(rex.breed)   # "Хаски"
+print(rex.name)    # AttributeError!</code></pre>
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        Переопределили <code>__init__</code> - и забыли про <code>name</code> и <code>age</code>
+                    </div>
+                </section>
+
+                <!-- super() -->
+                <section>
+                    <h2>super() - ссылка на родителя</h2>
+                    <div class="code-block fragment">
+                        <pre class="python size-m"><code>class Animal:
+    def __init__(self, name, age):
+        self.name = name
+        self.age = age
+
+class Dog(Animal):
+    def __init__(self, name, age, breed):
+        super().__init__(name, age)  # вызов __init__ родителя
+        self.breed = breed
+
+rex = Dog("Рекс", 3, "Хаски")
+print(rex.name, rex.age, rex.breed)
+# Рекс 3 Хаски</code></pre>
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        <code>super().method()</code> - вызов метода родителя без дублирования кода
+                    </div>
+                </section>
+
+                <!-- super() в обычных методах -->
+                <section>
+                    <h2>super() в любом методе</h2>
+                    <div class="code-block fragment">
+                        <pre class="python size-m"><code>class Animal:
+    def describe(self):
+        return f"Животное по имени {self.name}"
+
+class Dog(Animal):
+    def describe(self):
+        parent = super().describe()   # родительское описание
+        return f"{parent}, порода {self.breed}"
+
+rex = Dog("Рекс", 3, "Хаски")
+print(rex.describe())
+# Животное по имени Рекс, порода Хаски</code></pre>
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        Берём результат родителя и <strong>дополняем</strong> его своим
+                    </div>
+                </section>
+
+                <!-- Пример: Vehicle -> Car -->
+                <section>
+                    <h2>Пример: транспорт</h2>
+                    <div class="code-block fragment">
+                        <pre class="python size-s"><code>class Vehicle:
+    def __init__(self, brand, max_speed):
+        self.brand = brand
+        self.max_speed = max_speed
+    def info(self):
+        return f"{self.brand}, до {self.max_speed} км/ч"
+
+class Car(Vehicle):
+    def __init__(self, brand, max_speed, seats):
+        super().__init__(brand, max_speed)
+        self.seats = seats
+    def info(self):
+        return f"{super().info()}, {self.seats} мест"
+
+print(Car("Toyota", 200, 5).info())
+# Toyota, до 200 км/ч, 5 мест</code></pre>
+                    </div>
+                </section>
+
+                <!-- Множественное наследование -->
+                <section>
+                    <h2>Множественное наследование</h2>
+                    <div class="code-block fragment">
+                        <pre class="python size-m"><code>class Swimmer:
+    def swim(self):
+        print("Плыву")
+
+class Flyer:
+    def fly(self):
+        print("Лечу")
+
+class Duck(Swimmer, Flyer):   # несколько родителей
+    pass
+
+d = Duck()
+d.swim()  # Плыву
+d.fly()   # Лечу</code></pre>
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        Класс может наследоваться сразу от <strong>нескольких</strong> классов
+                    </div>
+                </section>
+
+                <!-- MRO -->
+                <section>
+                    <h2>MRO - порядок поиска метода</h2>
+                    <div class="fragment" style="margin-top: 0.5em;">
+                        Если метод есть у нескольких родителей - Python ищет слева направо.
+                    </div>
+                    <div class="code-block fragment">
+                        <pre class="python size-m"><code>class A:
+    def hi(self): print("A")
+
+class B:
+    def hi(self): print("B")
+
+class C(A, B):  # сначала A, потом B
+    pass
+
+C().hi()               # "A"
+print(C.__mro__)       # порядок поиска</code></pre>
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        Множественное наследование - штука сложная. Обычно хватает одного родителя
+                    </div>
+                </section>
+            </section>
+
+            <!-- ЧАСТЬ 4: ПОЛИМОРФИЗМ -->
+            <section>
+                <section style="font-size: 70px; height: 100%; width: 100%">
+                    <div class="lesson-time">35</div>
+                    <div class="fragment">
+                        <h1 style="font-size: 1.4em;">Полиморфизм</h1>
+                        <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">Разные объекты - один интерфейс</p>
+                    </div>
+                </section>
+
+                <!-- Что такое полиморфизм -->
+                <section>
+                    <h2>Полиморфизм</h2>
+                    <div class="fragment" style="margin-top: 0.5em;">
+                        <strong>Poly</strong> (много) + <strong>morph</strong> (форма) = "много форм".
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        Один и тот же <mark class="green">вызов</mark> работает с разными классами по-разному
+                    </div>
+                </section>
+
+                <!-- Пример: цикл по разным животным -->
+                <section>
+                    <h2>Пример: ферма</h2>
+                    <div class="code-block fragment">
+                        <pre class="python size-m"><code>class Dog:
+    def speak(self): print("Гав!")
+
+class Cat:
+    def speak(self): print("Мяу")
+
+class Cow:
+    def speak(self): print("Муу")
+
+farm = [Dog(), Cat(), Cow()]
+
+for animal in farm:
+    animal.speak()       # у каждого свой speak</code></pre>
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        Один код - разные реализации. Это и есть <strong>полиморфизм</strong>
+                    </div>
+                </section>
+
+                <!-- Duck typing -->
+                <section>
+                    <h2>Duck typing</h2>
+                    <div class="fragment" style="margin-top: 0.5em;">
+                        <em>"Если крякает как утка и ходит как утка - это утка"</em>
+                    </div>
+                    <div class="fragment" style="margin-top: 1em;">
+                        Python <strong>не проверяет тип</strong> - проверяет наличие метода.
+                    </div>
+                    <div class="code-block fragment">
+                        <pre class="python size-m"><code>def make_sound(thing):
+    thing.speak()    # главное, чтобы был .speak()
+
+make_sound(Dog())     # работает
+make_sound(Cat())     # работает
+make_sound(Robot())   # тоже работает, если есть speak</code></pre>
+                    </div>
+                </section>
+
+                <!-- Преимущество расширения -->
+                <section>
+                    <h2>Преимущество: легко расширять</h2>
+                    <div class="code-block fragment">
+                        <pre class="python size-m"><code>class Duck:
+    def speak(self): print("Кря!")
+
+farm = [Dog(), Cat(), Cow(), Duck()]  # добавили утку
+
+for animal in farm:
+    animal.speak()    # код цикла не поменялся!</code></pre>
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        Добавил новый класс - старый код работает <mark class="green">без изменений</mark>
+                    </div>
+                </section>
+
+                <!-- ABC и @abstractmethod -->
+                <section>
+                    <h2>Абстрактные классы</h2>
+                    <div class="fragment" style="margin-top: 0.5em;">
+                        Хотим <mark class="yellow">заставить</mark> наследников реализовать метод - используем <code>ABC</code>.
+                    </div>
+                    <div class="code-block fragment">
+                        <pre class="python size-m"><code>from abc import ABC, abstractmethod
+
+class Animal(ABC):
+    @abstractmethod
+    def speak(self):
+        pass                  # реализации нет!
+
+class Dog(Animal):
+    def speak(self):
+        print("Гав!")
+
+Animal()   # TypeError - нельзя создать абстрактный
+Dog()      # OK</code></pre>
+                    </div>
+                </section>
+
+                <!-- Зачем ABC -->
+                <section>
+                    <h2>Зачем абстрактные классы</h2>
+                    <div class="timeline">
+                        <div class="timeline-item fragment">
+                            <div class="timeline-marker">📋</div>
+                            <div class="timeline-content">
+                                <strong>Контракт</strong> - "каждый наследник обязан реализовать speak"
+                            </div>
+                        </div>
+                        <div class="timeline-item fragment">
+                            <div class="timeline-marker">🛡️</div>
+                            <div class="timeline-content">
+                                <strong>Защита</strong> - забыл метод = ошибка на старте, а не в рантайме
+                            </div>
+                        </div>
+                        <div class="timeline-item fragment">
+                            <div class="timeline-marker">📚</div>
+                            <div class="timeline-content">
+                                <strong>Документация</strong> - видно, что должен делать наследник
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </section>
+
+            <!-- ЧАСТЬ 5: ДЕКОРАТОРЫ -->
+            <section>
+                <section style="font-size: 70px; height: 100%; width: 100%">
+                    <div class="lesson-time">48</div>
+                    <div class="fragment">
+                        <h1 style="font-size: 1.4em;">Декораторы в ООП</h1>
+                        <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">@property, @classmethod, @staticmethod</p>
+                    </div>
+                </section>
+
+                <!-- Что такое декоратор -->
+                <section>
+                    <h2>Что такое декоратор</h2>
+                    <div class="fragment" style="margin-top: 0.5em;">
+                        <strong>Декоратор</strong> - это надстройка над методом. Пишется через <code>@</code> над <code>def</code>.
+                    </div>
+                    <div class="code-block fragment">
+                        <pre class="python size-m"><code>class Dog:
+    @staticmethod       # &lt;-- декоратор
+    def bark():
+        print("Гав!")</code></pre>
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        Декоратор <strong>меняет поведение</strong> метода. Разберём три главных для ООП
+                    </div>
+                </section>
+
+                <!-- @staticmethod -->
+                <section>
+                    <h2>@staticmethod - без self</h2>
+                    <div class="code-block fragment">
+                        <pre class="python size-m"><code>class MathUtils:
+    @staticmethod
+    def is_even(n):
+        return n % 2 == 0
+
+MathUtils.is_even(4)   # True
+MathUtils.is_even(7)   # False</code></pre>
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        Обычная функция, живущая <strong>внутри класса</strong> для организации
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 0.5em;">
+                        Не нужен ни объект, ни <code>self</code>
+                    </div>
+                </section>
+
+                <!-- Когда @staticmethod -->
+                <section>
+                    <h2>Когда нужен @staticmethod</h2>
+                    <div class="code-block fragment">
+                        <pre class="python size-m"><code>class Temperature:
+    def __init__(self, celsius):
+        self.celsius = celsius
+
+    @staticmethod
+    def c_to_f(c):
+        return c * 9/5 + 32
+
+# Утилита, не зависящая от конкретного объекта
+print(Temperature.c_to_f(25))   # 77.0</code></pre>
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        Когда метод <mark class="green">связан с классом по смыслу</mark>, но не работает с объектом
+                    </div>
+                </section>
+
+                <!-- @classmethod -->
+                <section>
+                    <h2>@classmethod - cls вместо self</h2>
+                    <div class="code-block fragment">
+                        <pre class="python size-m"><code>class Dog:
+    count = 0
+
+    def __init__(self, name):
+        self.name = name
+        Dog.count += 1
+
+    @classmethod
+    def total(cls):        # cls - сам класс
+        return cls.count
+
+Dog("Рекс"); Dog("Шарик"); Dog("Бим")
+print(Dog.total())   # 3</code></pre>
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        <code>cls</code> - это сам <strong>класс</strong>, не объект
+                    </div>
+                </section>
+
+                <!-- Альтернативный конструктор -->
+                <section>
+                    <h2>Альтернативный конструктор</h2>
+                    <div class="code-block fragment">
+                        <pre class="python size-m"><code>class Date:
+    def __init__(self, day, month, year):
+        self.day = day
+        self.month = month
+        self.year = year
+
+    @classmethod
+    def from_string(cls, text):
+        d, m, y = text.split("-")
+        return cls(int(d), int(m), int(y))
+
+d = Date.from_string("21-04-2026")
+print(d.year)   # 2026</code></pre>
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        Классический паттерн: <code>from_string</code>, <code>from_dict</code>, <code>from_file</code>
+                    </div>
+                </section>
+
+                <!-- Три типа методов -->
+                <section>
+                    <h2>Три типа методов</h2>
+                    <table style="font-size: 0.85em; width: 100%; margin-top: 0.5em;">
+                        <tr>
+                            <td><strong>Тип</strong></td>
+                            <td><strong>Первый параметр</strong></td>
+                            <td><strong>Видит</strong></td>
+                        </tr>
+                        <tr class="fragment">
+                            <td>обычный</td>
+                            <td><code>self</code></td>
+                            <td>объект и класс</td>
+                        </tr>
+                        <tr class="fragment">
+                            <td><code>@classmethod</code></td>
+                            <td><code>cls</code></td>
+                            <td>только класс</td>
+                        </tr>
+                        <tr class="fragment">
+                            <td><code>@staticmethod</code></td>
+                            <td>нет</td>
+                            <td>ничего</td>
+                        </tr>
+                    </table>
+                </section>
+
+                <!-- @property -->
+                <section>
+                    <h2>@property - метод как атрибут</h2>
+                    <div class="code-block fragment">
+                        <pre class="python size-m"><code>class Rectangle:
+    def __init__(self, w, h):
+        self.w = w
+        self.h = h
+
+    @property
+    def area(self):
+        return self.w * self.h
+
+r = Rectangle(4, 5)
+print(r.area)     # 20  - БЕЗ скобок!</code></pre>
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        Было <code>r.area()</code>, стало <code>r.area</code> - читается как атрибут, но вычисляется
+                    </div>
+                </section>
+
+                <!-- Зачем @property -->
+                <section>
+                    <h2>Зачем @property</h2>
+                    <div class="compare fragment">
+                        <div class="compare-block">
+                            <h4>Без property</h4>
+                            <div class="code-block">
+                                <pre class="python"><code>r.get_area()
+user.get_full_name()</code></pre>
+                            </div>
+                        </div>
+                        <div class="compare-block">
+                            <h4>С property</h4>
+                            <div class="code-block">
+                                <pre class="python"><code>r.area
+user.full_name</code></pre>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        Код выглядит как работа с данными, а не с функциями
+                    </div>
+                </section>
+
+                <!-- @property.setter -->
+                <section>
+                    <h2>Setter - присваивание с проверкой</h2>
+                    <div class="code-block fragment">
+                        <pre class="python size-m"><code>class Person:
+    def __init__(self, age):
+        self._age = age
+
+    @property
+    def age(self):
+        return self._age
+
+    @age.setter
+    def age(self, value):
+        if value &lt; 0:
+            raise ValueError("Возраст не может быть отрицательным")
+        self._age = value
+
+p = Person(20)
+p.age = 25       # OK, прошло setter
+p.age = -5       # ValueError</code></pre>
+                    </div>
+                </section>
+
+                <!-- Пример: температура -->
+                <section>
+                    <h2>Пример: температура</h2>
+                    <div class="code-block fragment">
+                        <pre class="python size-m"><code>class Temperature:
+    def __init__(self, c):
+        self.celsius = c
+
+    @property
+    def celsius(self):
+        return self._c
+
+    @celsius.setter
+    def celsius(self, value):
+        if value &lt; -273.15:
+            raise ValueError("Ниже абсолютного нуля нельзя")
+        self._c = value
+
+t = Temperature(25)
+t.celsius = -500   # ValueError</code></pre>
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        <code>@property</code> + setter = защита от неправильных значений
+                    </div>
+                </section>
+
+                <!-- @dataclass -->
+                <section>
+                    <h2>@dataclass - автогенерация</h2>
+                    <div class="code-block fragment">
+                        <pre class="python size-m"><code>from dataclasses import dataclass
+
+@dataclass
+class Point:
+    x: int
+    y: int
+
+p1 = Point(1, 2)
+p2 = Point(1, 2)
+
+print(p1)          # Point(x=1, y=2) - __repr__
+print(p1 == p2)    # True - __eq__</code></pre>
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        <code>@dataclass</code> сам генерирует <code>__init__</code>, <code>__eq__</code>, <code>__repr__</code>
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 0.5em;">
+                        Удобно для простых "контейнеров с данными"
+                    </div>
+                </section>
+
+                <!-- Шпаргалка декораторов -->
+                <section>
+                    <h2>Шпаргалка: декораторы ООП</h2>
+                    <table style="font-size: 0.75em; width: 100%; margin-top: 0.5em;">
+                        <tr>
+                            <td><strong>Декоратор</strong></td>
+                            <td><strong>Что делает</strong></td>
+                        </tr>
+                        <tr class="fragment">
+                            <td><code>@staticmethod</code></td>
+                            <td>метод без self - просто функция в классе</td>
+                        </tr>
+                        <tr class="fragment">
+                            <td><code>@classmethod</code></td>
+                            <td>метод с cls (сам класс) - альтернативные конструкторы</td>
+                        </tr>
+                        <tr class="fragment">
+                            <td><code>@property</code></td>
+                            <td>метод читается как атрибут: <code>obj.area</code></td>
+                        </tr>
+                        <tr class="fragment">
+                            <td><code>@x.setter</code></td>
+                            <td>валидация при <code>obj.x = value</code></td>
+                        </tr>
+                        <tr class="fragment">
+                            <td><code>@dataclass</code></td>
+                            <td>автоматически <code>__init__</code>, <code>__eq__</code>, <code>__repr__</code></td>
+                        </tr>
+                    </table>
+                </section>
+            </section>
+
+            <!-- ЧАСТЬ 6: SOLID -->
+            <section>
+                <section style="font-size: 70px; height: 100%; width: 100%">
+                    <div class="lesson-time">65</div>
+                    <div class="fragment">
+                        <h1 style="font-size: 1.4em;">SOLID</h1>
+                        <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">5 принципов хорошего дизайна</p>
+                    </div>
+                </section>
+
+                <!-- Зачем принципы -->
+                <section>
+                    <h2>Зачем эти принципы</h2>
+                    <div class="timeline">
+                        <div class="timeline-item fragment">
+                            <div class="timeline-marker">🔧</div>
+                            <div class="timeline-content">Код легко <strong>изменять</strong></div>
+                        </div>
+                        <div class="timeline-item fragment">
+                            <div class="timeline-marker">📖</div>
+                            <div class="timeline-content">Код легко <strong>читать</strong></div>
+                        </div>
+                        <div class="timeline-item fragment">
+                            <div class="timeline-marker">🧪</div>
+                            <div class="timeline-content">Код легко <strong>тестировать</strong></div>
+                        </div>
+                        <div class="timeline-item fragment">
+                            <div class="timeline-marker">♻️</div>
+                            <div class="timeline-content">Код легко <strong>переиспользовать</strong></div>
+                        </div>
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        SOLID - 5 первых букв пяти правил
+                    </div>
+                </section>
+
+                <!-- S - Single Responsibility -->
+                <section>
+                    <h2>S - Single Responsibility</h2>
+                    <p style="text-align: center; font-size: 0.6em; opacity: 0.6; margin-top: -0.5em;">Принцип единственной ответственности</p>
+                    <div class="fragment" style="margin-top: 0.5em;">
+                        <strong>Один класс - одна ответственность.</strong>
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        Причина изменить класс должна быть только <mark class="green">одна</mark>
+                    </div>
+                </section>
+
+                <!-- SRP пример -->
+                <section>
+                    <h2>SRP: плохо и хорошо</h2>
+                    <div class="compare fragment">
+                        <div class="compare-block">
+                            <h4>❌ Всё в одном</h4>
+                            <div class="code-block">
+                                <pre class="python"><code>class User:
+    def save_to_db(self):
+        ...
+    def send_email(self):
+        ...
+    def render_html(self):
+        ...</code></pre>
+                            </div>
+                        </div>
+                        <div class="compare-block">
+                            <h4>✅ Разнесли</h4>
+                            <div class="code-block">
+                                <pre class="python"><code>class User: ...
+class UserRepo:      # БД
+    def save(u): ...
+class Mailer:        # почта
+    def send(u): ...</code></pre>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        Поменялась БД - правим только <code>UserRepo</code>
+                    </div>
+                </section>
+
+                <!-- O - Open/Closed -->
+                <section>
+                    <h2>O - Open / Closed</h2>
+                    <p style="text-align: center; font-size: 0.6em; opacity: 0.6; margin-top: -0.5em;">Принцип открытости/закрытости</p>
+                    <div class="fragment" style="margin-top: 0.5em;">
+                        <strong>Открыт для расширения, закрыт для изменения.</strong>
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        Добавляем новое поведение <mark class="green">наследником</mark>, не трогая старый код
+                    </div>
+                </section>
+
+                <!-- OCP пример -->
+                <section>
+                    <h2>OCP: оплата</h2>
+                    <div class="compare fragment">
+                        <div class="compare-block">
+                            <h4>❌ if/else на каждый тип</h4>
+                            <div class="code-block">
+                                <pre class="python"><code>def pay(kind, amount):
+    if kind == "card":
+        ...
+    elif kind == "cash":
+        ...
+    # новый тип - правим функцию</code></pre>
+                            </div>
+                        </div>
+                        <div class="compare-block">
+                            <h4>✅ Наследники</h4>
+                            <div class="code-block">
+                                <pre class="python"><code>class Payment:
+    def pay(self): ...
+
+class Card(Payment): ...
+class Cash(Payment): ...
+class Crypto(Payment): ...
+# новый тип = новый класс</code></pre>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- L - Liskov -->
+                <section>
+                    <h2>L - Liskov Substitution</h2>
+                    <p style="text-align: center; font-size: 0.6em; opacity: 0.6; margin-top: -0.5em;">Принцип подстановки Барбары Лисков</p>
+                    <div class="fragment" style="margin-top: 0.5em;">
+                        <strong>Наследник должен полностью заменять родителя.</strong>
+                    </div>
+                    <div class="fragment" style="margin-top: 1em;">
+                        Если код работал с <code>Animal</code> - он должен работать с любым наследником без сюрпризов.
+                    </div>
+                </section>
+
+                <!-- LSP: квадрат-прямоугольник -->
+                <section>
+                    <h2>LSP: классический контрпример</h2>
+                    <div class="code-block fragment">
+                        <pre class="python size-m"><code>class Rectangle:
+    def set_width(self, w): self.w = w
+    def set_height(self, h): self.h = h
+
+class Square(Rectangle):   # квадрат = прямоугольник?
+    def set_width(self, w):
+        self.w = w
+        self.h = w         # изменили ОБЕ стороны
+
+r = Square()
+r.set_width(5)
+r.set_height(10)
+# у Square ширина != 5, это сюрприз!</code></pre>
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        Наследование не всегда совпадает с <mark class="yellow">математикой</mark>
+                    </div>
+                </section>
+
+                <!-- I - Interface Segregation -->
+                <section>
+                    <h2>I - Interface Segregation</h2>
+                    <p style="text-align: center; font-size: 0.6em; opacity: 0.6; margin-top: -0.5em;">Принцип разделения интерфейса</p>
+                    <div class="fragment" style="margin-top: 0.5em;">
+                        <strong>Много маленьких интерфейсов лучше одного большого.</strong>
+                    </div>
+                    <div class="code-block fragment">
+                        <pre class="python size-m"><code># ❌ толстый базовый класс
+class Device:
+    def print(): ...
+    def scan(): ...
+    def fax(): ...      # старый факс, никому не нужен
+
+# ✅ разделили
+class Printer:  def print(): ...
+class Scanner: def scan(): ...
+class Fax:     def fax(): ...</code></pre>
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        Принтер без сканера не должен реализовывать <code>scan()</code>
+                    </div>
+                </section>
+
+                <!-- D - Dependency Inversion -->
+                <section>
+                    <h2>D - Dependency Inversion</h2>
+                    <p style="text-align: center; font-size: 0.6em; opacity: 0.6; margin-top: -0.5em;">Принцип инверсии зависимостей</p>
+                    <div class="fragment" style="margin-top: 0.5em;">
+                        <strong>Зависим от абстракций, не от конкретных классов.</strong>
+                    </div>
+                    <div class="code-block fragment">
+                        <pre class="python size-m"><code># ❌ жёсткая зависимость
+class App:
+    def __init__(self):
+        self.log = FileLogger()   # только в файл
+
+# ✅ передаём любой логгер
+class App:
+    def __init__(self, logger):
+        self.log = logger
+
+app = App(FileLogger())
+app = App(ConsoleLogger())   # легко заменить</code></pre>
+                    </div>
+                </section>
+
+                <!-- Итог SOLID -->
+                <section>
+                    <h2>Памятка SOLID</h2>
+                    <table style="font-size: 0.8em; width: 100%; margin-top: 0.5em;">
+                        <tr class="fragment">
+                            <td><strong>S</strong></td>
+                            <td>Single Responsibility</td>
+                            <td>один класс = одна задача</td>
+                        </tr>
+                        <tr class="fragment">
+                            <td><strong>O</strong></td>
+                            <td>Open / Closed</td>
+                            <td>расширять, не менять</td>
+                        </tr>
+                        <tr class="fragment">
+                            <td><strong>L</strong></td>
+                            <td>Liskov</td>
+                            <td>наследник заменяет родителя</td>
+                        </tr>
+                        <tr class="fragment">
+                            <td><strong>I</strong></td>
+                            <td>Interface Segregation</td>
+                            <td>маленькие интерфейсы</td>
+                        </tr>
+                        <tr class="fragment">
+                            <td><strong>D</strong></td>
+                            <td>Dependency Inversion</td>
+                            <td>зависеть от абстракций</td>
+                        </tr>
+                    </table>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        Не учить наизусть. Главное - знать, что такие правила есть
+                    </div>
+                </section>
+            </section>
+
+            <!-- ЧАСТЬ 7: ПРАКТИКА -->
+            <section>
+                <section style="font-size: 70px; height: 100%; width: 100%">
+                    <div class="lesson-time">78</div>
+                    <div class="fragment">
+                        <h1 style="font-size: 1.4em;">Практика</h1>
+                        <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">Собираем всё вместе</p>
+                    </div>
+                </section>
+
+                <!-- Задача 1: Shape -->
+                <section>
+                    <h2>Задача 1: фигуры</h2>
+                    <div class="fragment" style="margin-top: 0.5em;">
+                        Базовый класс <code>Shape</code> и наследники.
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        <strong>Shape:</strong> абстрактный метод <code>area()</code><br>
+                        <strong>Circle:</strong> радиус, своя <code>area</code><br>
+                        <strong>Rectangle:</strong> ширина, высота, своя <code>area</code>
+                    </div>
+                    <div class="code-block fragment">
+                        <pre class="python size-m"><code>shapes = [Circle(5), Rectangle(3, 4)]
+for s in shapes:
+    print(s.area())
+# 78.5
+# 12</code></pre>
+                    </div>
+                </section>
+
+                <!-- Задача 2: Employee с @property -->
+                <section>
+                    <h2>Задача 2: Employee</h2>
+                    <div class="fragment" style="margin-top: 0.5em;">
+                        Класс сотрудника с защитой зарплаты.
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        <strong>Атрибуты:</strong> name, _salary<br>
+                        <strong>@property:</strong> salary - только чтение<br>
+                        <strong>@salary.setter:</strong> нельзя задать меньше 0
+                    </div>
+                    <div class="code-block fragment">
+                        <pre class="python size-m"><code>e = Employee("Иван", 50000)
+print(e.salary)   # 50000
+e.salary = 60000  # OK
+e.salary = -100   # ValueError</code></pre>
+                    </div>
+                </section>
+
+                <!-- Задача 3: Zoo -->
+                <section>
+                    <h2>Задача 3: зоопарк</h2>
+                    <div class="fragment" style="margin-top: 0.5em;">
+                        Абстрактный <code>Animal.feed()</code>, наследники - свои реализации.
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        <strong>Animal (ABC):</strong> метод <code>feed()</code><br>
+                        <strong>Lion, Rabbit, Parrot:</strong> каждый ест своё<br>
+                        <strong>Zoo:</strong> список animals, метод <code>feed_all()</code>
+                    </div>
+                    <div class="code-block fragment">
+                        <pre class="python size-m"><code>zoo = Zoo([Lion(), Rabbit(), Parrot()])
+zoo.feed_all()
+# Лев ест мясо
+# Кролик ест морковку
+# Попугай ест зерно</code></pre>
+                    </div>
+                </section>
+
+                <!-- Задача 4: Temperature с @classmethod -->
+                <section>
+                    <h2>Задача 4: температура</h2>
+                    <div class="fragment" style="margin-top: 0.5em;">
+                        Альтернативные конструкторы через <code>@classmethod</code>.
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        <strong>Temperature:</strong> хранит celsius<br>
+                        <strong>@classmethod from_fahrenheit(f):</strong> строит объект из градусов F<br>
+                        <strong>@classmethod from_kelvin(k):</strong> строит из кельвинов
+                    </div>
+                    <div class="code-block fragment">
+                        <pre class="python size-m"><code>t1 = Temperature(25)
+t2 = Temperature.from_fahrenheit(77)   # 25°C
+t3 = Temperature.from_kelvin(300)      # 26.85°C
+
+print(t1.celsius, t2.celsius, t3.celsius)</code></pre>
+                    </div>
+                </section>
+
+                <!-- Задача 5: Transport с super() -->
+                <section>
+                    <h2>Задача 5: транспорт</h2>
+                    <div class="fragment" style="margin-top: 0.5em;">
+                        Наследование с расширением через <code>super()</code>.
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        <strong>Vehicle:</strong> brand, max_speed, метод <code>info()</code><br>
+                        <strong>Car(Vehicle):</strong> +seats, info() через super()<br>
+                        <strong>ElectricCar(Car):</strong> +battery, info() через super()
+                    </div>
+                    <div class="code-block fragment">
+                        <pre class="python size-m"><code>tesla = ElectricCar("Tesla", 250, 5, 100)
+print(tesla.info())
+# Tesla, до 250 км/ч, 5 мест, батарея 100 кВт·ч</code></pre>
+                    </div>
+                </section>
+            </section>
+
+            <!-- ИТОГ -->
+            <section>
+                <div class="lesson-time">88</div>
+                <h2>Что запомнить</h2>
+                <ul>
+                    <li class="fragment"><code>class Child(Parent)</code> - наследник получает всё от родителя</li>
+                    <li class="fragment"><code>super().__init__()</code> - вызов родителя в переопределённом методе</li>
+                    <li class="fragment">Полиморфизм - один интерфейс, разные реализации</li>
+                    <li class="fragment"><code>@staticmethod</code> - метод без self, <code>@classmethod</code> - с cls</li>
+                    <li class="fragment"><code>@property</code> + setter - атрибут с валидацией</li>
+                    <li class="fragment">SOLID - 5 правил: SRP, OCP, LSP, ISP, DIP</li>
+                </ul>
+            </section>
 
         </div>
     </div>
