@@ -1,0 +1,919 @@
+<!doctype html>
+<html lang="ru">
+
+<head>
+    <meta charset="utf-8">
+    <title>Занятие 8.5 - ООП: повторение и практика</title>
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+
+    <link rel="stylesheet" href="/utils/css/reveal.css">
+    <link rel="stylesheet" href="/utils/lib/css/animate.css">
+    <link rel="stylesheet" href="/utils/css/theme/night.css" id="theme">
+    <link rel="stylesheet" href="/utils/lib/css/zenburn.css">
+    <link rel="stylesheet" href="/utils/css/custom-base.css">
+    <link rel="stylesheet" href="css-custom/custom.css">
+
+    <script>
+        var link = document.createElement('link');
+        link.rel = 'stylesheet'; link.type = 'text/css';
+        link.href = window.location.search.match(/print-pdf/gi)
+            ? '/utils/css/print/pdf.css'
+            : '/utils/css/print/paper.css';
+        document.getElementsByTagName('head')[0].appendChild(link);
+    </script>
+</head>
+
+<body>
+    <div class="reveal">
+        <div class="slides">
+
+            <!-- Титульный слайд -->
+            <section style="font-size: 70px; height: 100%; width: 100%">
+                <div class="lesson-time">0</div>
+                <div class="fragment">
+                    <h1 class="animated" style="font-size: 1.4em;">ООП: повторение и практика</h1>
+                    <p style="text-align: center; font-size: 0.5em; opacity: 0.5;">Занятие 8.5</p>
+                </div>
+            </section>
+
+            <!-- ЧАСТЬ 1: БЛИЦ-ПОВТОР -->
+            <section>
+                <section style="font-size: 70px; height: 100%; width: 100%">
+                    <div class="lesson-time">3</div>
+                    <div class="fragment">
+                        <h1 style="font-size: 1.4em;">Блиц-повтор</h1>
+                        <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">Что должно остаться в голове</p>
+                    </div>
+                </section>
+
+                <!-- Блиц-вопросы по ООП -->
+                <section>
+                    <h2>Вспоминаем</h2>
+                    <div class="timeline" style="font-size: 0.9em;">
+                        <div class="timeline-item fragment">
+                            <div class="timeline-marker">1</div>
+                            <div class="timeline-content">Класс vs объект? <span class="fragment">- чертёж vs изделие</span></div>
+                        </div>
+                        <div class="timeline-item fragment">
+                            <div class="timeline-marker">2</div>
+                            <div class="timeline-content">Что такое <code>self</code>? <span class="fragment">- сам объект</span></div>
+                        </div>
+                        <div class="timeline-item fragment">
+                            <div class="timeline-marker">3</div>
+                            <div class="timeline-content">Зачем наследование? <span class="fragment">- переиспользование</span></div>
+                        </div>
+                        <div class="timeline-item fragment">
+                            <div class="timeline-marker">4</div>
+                            <div class="timeline-content">Что делает <code>super()</code>? <span class="fragment">- возвращает родителя</span></div>
+                        </div>
+                        <div class="timeline-item fragment">
+                            <div class="timeline-marker">5</div>
+                            <div class="timeline-content">Полиморфизм - это? <span class="fragment">- один вызов, разные реализации</span></div>
+                        </div>
+                        <div class="timeline-item fragment">
+                            <div class="timeline-marker">6</div>
+                            <div class="timeline-content">Зачем <code>ABC</code>? <span class="fragment">- обязать наследников</span></div>
+                        </div>
+                        <div class="timeline-item fragment">
+                            <div class="timeline-marker">7</div>
+                            <div class="timeline-content">Что даёт <code>@property</code>? <span class="fragment">- метод читается как атрибут</span></div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Класс + объект + self -->
+                <section>
+                    <h2>1. Класс, объект, self</h2>
+                    <div class="code-block fragment">
+                        <pre class="python size-m"><code>class Dog:
+    def __init__(self, name, age):
+        self.name = name          # атрибут
+        self.age = age
+
+    def bark(self):               # метод
+        print(f"{self.name}: Гав!")
+
+rex = Dog("Рекс", 3)              # создали объект
+rex.bark()                        # Рекс: Гав!</code></pre>
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        <code>__init__</code> задаёт стартовые атрибуты, <code>self</code> - сам объект
+                    </div>
+                </section>
+
+                <!-- Наследование + super -->
+                <section>
+                    <h2>2. Наследование + super()</h2>
+                    <div class="code-block fragment">
+                        <pre class="python size-s"><code>class Animal:
+    def __init__(self, name):
+        self.name = name
+
+class Dog(Animal):
+    def __init__(self, name, breed):
+        super().__init__(name)    # зовём родителя
+        self.breed = breed
+
+rex = Dog("Рекс", "Хаски")
+print(rex.name, rex.breed)        # Рекс Хаски</code></pre>
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        Переопределил <code>__init__</code> - обязательно зови <code>super().__init__()</code>
+                    </div>
+                </section>
+
+                <!-- Полиморфизм + ABC -->
+                <section>
+                    <h2>3. Полиморфизм + ABC</h2>
+                    <div class="code-block fragment">
+                        <pre class="python size-s"><code>from abc import ABC, abstractmethod
+
+class Animal(ABC):
+    @abstractmethod
+    def speak(self): pass
+
+class Dog(Animal):
+    def speak(self): print("Гав!")
+class Cat(Animal):
+    def speak(self): print("Мяу")
+
+for a in [Dog(), Cat()]:
+    a.speak()                     # один вызов, разный звук</code></pre>
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        <code>ABC</code> - заставит наследника реализовать <code>speak</code>
+                    </div>
+                </section>
+
+                <!-- @property + setter -->
+                <section>
+                    <h2>4. @property + setter</h2>
+                    <div class="code-block fragment">
+                        <pre class="python size-s"><code>class Person:
+    def __init__(self, age):
+        self._age = age
+
+    @property
+    def age(self):
+        return self._age
+
+    @age.setter
+    def age(self, value):
+        if value &lt; 0:
+            raise ValueError("нельзя отрицательный")
+        self._age = value
+
+p = Person(20)
+p.age = 25        # OK
+p.age = -5        # ValueError</code></pre>
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        Атрибут с валидацией - это и есть <code>@property</code> + setter
+                    </div>
+                </section>
+
+                <!-- @classmethod + @staticmethod -->
+                <section>
+                    <h2>5. @classmethod + @staticmethod</h2>
+                    <div class="code-block fragment">
+                        <pre class="python size-s"><code>class Date:
+    def __init__(self, d, m, y):
+        self.d, self.m, self.y = d, m, y
+
+    @classmethod
+    def from_string(cls, s):          # альтернативный конструктор
+        d, m, y = s.split("-")
+        return cls(int(d), int(m), int(y))
+
+    @staticmethod
+    def is_leap(year):                # просто утилита
+        return year % 4 == 0
+
+Date.from_string("21-04-2026")
+Date.is_leap(2024)                    # True</code></pre>
+                    </div>
+                </section>
+
+                <!-- Шпаргалка -->
+                <section>
+                    <h2>Шпаргалка декораторов</h2>
+                    <table style="font-size: 0.75em; width: 100%; margin-top: 0.5em;">
+                        <tr>
+                            <td><strong>Декоратор</strong></td>
+                            <td><strong>Первый параметр</strong></td>
+                            <td><strong>Когда применять</strong></td>
+                        </tr>
+                        <tr class="fragment">
+                            <td>обычный метод</td>
+                            <td><code>self</code></td>
+                            <td>работа с конкретным объектом</td>
+                        </tr>
+                        <tr class="fragment">
+                            <td><code>@classmethod</code></td>
+                            <td><code>cls</code></td>
+                            <td>альтернативные конструкторы</td>
+                        </tr>
+                        <tr class="fragment">
+                            <td><code>@staticmethod</code></td>
+                            <td>нет</td>
+                            <td>утилита в пространстве класса</td>
+                        </tr>
+                        <tr class="fragment">
+                            <td><code>@property</code></td>
+                            <td><code>self</code></td>
+                            <td>метод читается как атрибут</td>
+                        </tr>
+                        <tr class="fragment">
+                            <td><code>@x.setter</code></td>
+                            <td><code>self, value</code></td>
+                            <td>валидация при присваивании</td>
+                        </tr>
+                    </table>
+                </section>
+            </section>
+
+            <!-- ЧАСТЬ 2: SOLID -->
+            <section>
+                <section style="font-size: 70px; height: 100%; width: 100%">
+                    <div class="lesson-time">15</div>
+                    <div class="fragment">
+                        <h1 style="font-size: 1.4em;">SOLID</h1>
+                        <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">5 правил хорошего дизайна</p>
+                    </div>
+                </section>
+
+                <!-- Проблема без SOLID -->
+                <section>
+                    <h2>Представь</h2>
+                    <div class="fragment" style="margin-top: 0.5em;">
+                        Ты пишешь программу - 100 строк. Всё понятно.
+                    </div>
+                    <div class="fragment" style="margin-top: 0.5em;">
+                        Проходит месяц - уже 1000 строк. Надо поменять одну вещь.
+                    </div>
+                    <div class="fragment" style="margin-top: 0.5em;">
+                        Меняешь в одном месте - ломается в трёх других.
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        <mark class="yellow">Знакомо?</mark> Это называется <strong>технический долг</strong>
+                    </div>
+                </section>
+
+                <!-- Зачем -->
+                <section>
+                    <h2>Зачем SOLID</h2>
+                    <div class="fragment" style="margin-top: 0.5em;">
+                        Код на ООП - это не просто «классы есть, значит хорошо».
+                    </div>
+                    <div class="timeline" style="margin-top: 1em;">
+                        <div class="timeline-item fragment">
+                            <div class="timeline-marker">1</div>
+                            <div class="timeline-content">Код легко <strong>менять</strong> - правка в одном месте, а не в десяти</div>
+                        </div>
+                        <div class="timeline-item fragment">
+                            <div class="timeline-marker">2</div>
+                            <div class="timeline-content">Код легко <strong>тестировать</strong> - можно проверять по кусочкам</div>
+                        </div>
+                        <div class="timeline-item fragment">
+                            <div class="timeline-marker">3</div>
+                            <div class="timeline-content">Код легко <strong>расширять</strong> - новая фича без ломки старого</div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- История -->
+                <section>
+                    <h2>Откуда взялся SOLID</h2>
+                    <div class="fragment" style="margin-top: 0.5em;">
+                        <strong>Роберт Мартин</strong> (Uncle Bob) - в 2000-х сформулировал 5 принципов хорошего ООП-дизайна.
+                    </div>
+                    <div class="fragment" style="margin-top: 1em;">
+                        Позже Майкл Фезерс придумал акроним <strong>SOLID</strong> - по первым буквам этих принципов.
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        Это не магия, а <mark class="green">собранный опыт</mark> того, какой код дольше живёт
+                    </div>
+                </section>
+
+                <!-- Что будем разбирать -->
+                <section>
+                    <h2>5 букв</h2>
+                    <table style="font-size: 0.9em; width: 100%; margin-top: 0.5em;">
+                        <tr class="fragment">
+                            <td><strong>S</strong></td>
+                            <td>Single Responsibility</td>
+                            <td>один класс - одна задача</td>
+                        </tr>
+                        <tr class="fragment">
+                            <td><strong>O</strong></td>
+                            <td>Open / Closed</td>
+                            <td>расширяй, не меняй</td>
+                        </tr>
+                        <tr class="fragment">
+                            <td><strong>L</strong></td>
+                            <td>Liskov</td>
+                            <td>наследник заменяет родителя</td>
+                        </tr>
+                        <tr class="fragment">
+                            <td><strong>I</strong></td>
+                            <td>Interface Segregation</td>
+                            <td>много мелких интерфейсов</td>
+                        </tr>
+                        <tr class="fragment">
+                            <td><strong>D</strong></td>
+                            <td>Dependency Inversion</td>
+                            <td>зависим от абстракций</td>
+                        </tr>
+                    </table>
+                </section>
+
+                <!-- ======== S: SRP ======== -->
+                <section>
+                    <h2 style="color: #ffd54f;">S - Single Responsibility</h2>
+                    <p style="text-align: center; font-size: 0.6em; opacity: 0.6; margin-top: -0.5em;">Принцип единственной ответственности</p>
+                    <div class="fragment" style="margin-top: 1em;">
+                        <strong>Один класс должен иметь только одну причину для изменения.</strong>
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        Если в описании класса есть слово «и» - скорее всего, он делает слишком много
+                    </div>
+                    <div class="fragment" style="margin-top: 0.5em;">
+                        Пример: класс <code>User</code> который умеет <mark class="yellow">хранить данные и сохранять в БД и отправлять почту</mark>
+                    </div>
+                </section>
+
+                <!-- SRP: плохой пример развёрнуто -->
+                <section>
+                    <h2>SRP: плохо</h2>
+                    <div class="code-block fragment">
+                        <pre class="python size-s"><code>class Report:
+    def __init__(self, data):
+        self.data = data
+
+    def calculate_total(self):         # расчёт
+        return sum(self.data)
+
+    def format_html(self):             # отображение
+        return f"&lt;h1&gt;Итог: {self.calculate_total()}&lt;/h1&gt;"
+
+    def save_to_file(self, path):      # работа с файлами
+        with open(path, "w") as f:
+            f.write(self.format_html())
+
+    def send_email(self, to):          # работа с почтой
+        smtp.send(to, self.format_html())</code></pre>
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 0.5em;">
+                        Четыре причины менять этот класс: расчёт, HTML, файлы, почта
+                    </div>
+                </section>
+
+                <!-- SRP: хорошо -->
+                <section>
+                    <h2>SRP: хорошо</h2>
+                    <div class="code-block fragment">
+                        <pre class="python size-s"><code>class Report:                    # только данные
+    def __init__(self, data):
+        self.total = sum(data)
+
+class ReportFormatter:           # только форматирование
+    def to_html(self, report):
+        return f"&lt;h1&gt;Итог: {report.total}&lt;/h1&gt;"
+
+class FileSaver:                 # только файлы
+    def save(self, content, path):
+        with open(path, "w") as f:
+            f.write(content)
+
+class EmailSender:               # только почта
+    def send(self, to, content):
+        smtp.send(to, content)</code></pre>
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 0.5em;">
+                        Поменялся формат HTML? Правим только <code>ReportFormatter</code>
+                    </div>
+                </section>
+
+                <!-- SRP: как понять -->
+                <section>
+                    <h2>SRP: как понять, что нарушил</h2>
+                    <ul>
+                        <li class="fragment">В описании класса встречается «<strong>и</strong>» - «считает и сохраняет»</li>
+                        <li class="fragment">Класс больше ~200 строк</li>
+                        <li class="fragment">В одном файле перемешаны <mark class="yellow">разные темы</mark>: бизнес-логика и работа с БД</li>
+                        <li class="fragment">Меняешь одно - ломается другое</li>
+                        <li class="fragment">Тестировать сложно: чтобы проверить расчёт, нужна настоящая БД</li>
+                    </ul>
+                </section>
+
+                <!-- ======== O: OCP ======== -->
+                <section>
+                    <h2 style="color: #ffd54f;">O - Open / Closed</h2>
+                    <p style="text-align: center; font-size: 0.6em; opacity: 0.6; margin-top: -0.5em;">Принцип открытости / закрытости</p>
+                    <div class="fragment" style="margin-top: 1em;">
+                        <strong>Открыт для расширения, закрыт для изменения.</strong>
+                    </div>
+                    <div class="fragment" style="margin-top: 1em;">
+                        Добавляй новое - <mark class="green">пиши новый класс</mark>. Не трогай старые.
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        Если каждая новая фича требует переписать старую функцию - ты нарушаешь OCP
+                    </div>
+                </section>
+
+                <!-- OCP: плохо -->
+                <section>
+                    <h2>OCP: плохо</h2>
+                    <div class="code-block fragment">
+                        <pre class="python size-s"><code>def pay(kind, amount):
+    if kind == "card":
+        charge_card(amount)
+    elif kind == "cash":
+        give_receipt(amount)
+    elif kind == "crypto":
+        send_btc(amount)
+    # Добавили Apple Pay - снова правим функцию
+    # Добавили СБП - снова правим функцию
+    # Добавили PayPal - снова правим функцию</code></pre>
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 0.5em;">
+                        Каждый новый способ оплаты = <mark class="yellow">правка той же функции</mark>. Риск сломать старое
+                    </div>
+                </section>
+
+                <!-- OCP: хорошо -->
+                <section>
+                    <h2>OCP: хорошо</h2>
+                    <div class="code-block fragment">
+                        <pre class="python size-s"><code>class Payment(ABC):
+    @abstractmethod
+    def pay(self, amount): pass
+
+class CardPayment(Payment):
+    def pay(self, amount): charge_card(amount)
+
+class CashPayment(Payment):
+    def pay(self, amount): give_receipt(amount)
+
+class CryptoPayment(Payment):
+    def pay(self, amount): send_btc(amount)
+
+# Новый тип - новый класс. Старые не трогаем
+class ApplePayPayment(Payment):
+    def pay(self, amount): apple_charge(amount)</code></pre>
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 0.5em;">
+                        Код, использующий <code>Payment</code>, <strong>не меняется</strong> - работает с любым наследником
+                    </div>
+                </section>
+
+                <!-- OCP: инструменты -->
+                <section>
+                    <h2>OCP: как достигается</h2>
+                    <ul>
+                        <li class="fragment"><strong>Наследование</strong> + полиморфизм - новый тип = новый класс</li>
+                        <li class="fragment"><strong>Абстрактные классы</strong> - контракт для наследников</li>
+                        <li class="fragment"><strong>Функции как аргументы</strong> - передаём поведение снаружи</li>
+                    </ul>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        Если ловишь себя на цепочке <code>if type == ...</code> - это сигнал подумать об OCP
+                    </div>
+                </section>
+
+                <!-- ======== L: LSP ======== -->
+                <section>
+                    <h2 style="color: #ffd54f;">L - Liskov Substitution</h2>
+                    <p style="text-align: center; font-size: 0.6em; opacity: 0.6; margin-top: -0.5em;">Принцип подстановки Барбары Лисков</p>
+                    <div class="fragment" style="margin-top: 1em;">
+                        <strong>Наследник должен вести себя как родитель - без сюрпризов.</strong>
+                    </div>
+                    <div class="fragment" style="margin-top: 1em;">
+                        Код, написанный для <code>Animal</code>, должен работать с любым его наследником.
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        Автор - Барбара Лисков, лауреат премии Тьюринга, 2008
+                    </div>
+                </section>
+
+                <!-- LSP: пингвин -->
+                <section>
+                    <h2>LSP: пингвин не летает</h2>
+                    <div class="code-block fragment">
+                        <pre class="python size-s"><code>class Bird:
+    def fly(self):
+        print("лечу")
+
+class Penguin(Bird):
+    def fly(self):
+        raise NotImplementedError("пингвины не летают!")
+
+def travel(birds):
+    for b in birds:
+        b.fly()                    # ожидаем, что все полетят
+
+travel([Eagle(), Sparrow()])       # OK
+travel([Eagle(), Penguin()])       # БАХ</code></pre>
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 0.5em;">
+                        <code>Penguin</code> наследует <code>Bird</code>, но <mark class="yellow">ломает контракт</mark>: fly() не работает
+                    </div>
+                </section>
+
+                <!-- LSP: как исправить -->
+                <section>
+                    <h2>LSP: как исправить пингвина</h2>
+                    <div class="code-block fragment">
+                        <pre class="python size-s"><code>class Bird:                       # общие свойства всех птиц
+    def eat(self): ...
+
+class FlyingBird(Bird):           # отдельный класс для летающих
+    def fly(self): ...
+
+class Eagle(FlyingBird): ...
+class Sparrow(FlyingBird): ...
+class Penguin(Bird): ...          # не наследует fly
+
+def travel(birds: list[FlyingBird]):
+    for b in birds:
+        b.fly()                   # гарантия, что полетит</code></pre>
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 0.5em;">
+                        Разделили иерархию - пингвин больше не обещает то, чего не умеет
+                    </div>
+                </section>
+
+                <!-- LSP: симптомы -->
+                <section>
+                    <h2>LSP: признаки нарушения</h2>
+                    <ul>
+                        <li class="fragment">Наследник кидает <code>NotImplementedError</code> в методе родителя</li>
+                        <li class="fragment">В коде проверяется <code>isinstance(obj, Penguin)</code> перед вызовом</li>
+                        <li class="fragment">У наследника <mark class="yellow">более строгие</mark> требования к аргументам</li>
+                        <li class="fragment">Наследник возвращает принципиально другой тип</li>
+                    </ul>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        Наследование по принципу «мне тут удобно взять готовое» - частая причина нарушения LSP
+                    </div>
+                </section>
+
+                <!-- ======== I: ISP ======== -->
+                <section>
+                    <h2 style="color: #ffd54f;">I - Interface Segregation</h2>
+                    <p style="text-align: center; font-size: 0.6em; opacity: 0.6; margin-top: -0.5em;">Принцип разделения интерфейса</p>
+                    <div class="fragment" style="margin-top: 1em;">
+                        <strong>Много маленьких интерфейсов лучше одного большого.</strong>
+                    </div>
+                    <div class="fragment" style="margin-top: 1em;">
+                        Не заставляй класс реализовывать то, что <mark class="yellow">ему не нужно</mark>.
+                    </div>
+                </section>
+
+                <!-- ISP: плохо -->
+                <section>
+                    <h2>ISP: плохо</h2>
+                    <div class="code-block fragment">
+                        <pre class="python size-s"><code>class Device(ABC):
+    @abstractmethod
+    def print(self, doc): pass
+    @abstractmethod
+    def scan(self): pass
+    @abstractmethod
+    def fax(self): pass
+
+class SimplePrinter(Device):
+    def print(self, doc): print_real(doc)
+    def scan(self):
+        raise NotImplementedError   # нет сканера
+    def fax(self):
+        raise NotImplementedError   # факса тоже нет</code></pre>
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 0.5em;">
+                        Принтер <strong>обязан</strong> реализовать scan и fax, хотя не умеет
+                    </div>
+                </section>
+
+                <!-- ISP: хорошо -->
+                <section>
+                    <h2>ISP: хорошо</h2>
+                    <div class="code-block fragment">
+                        <pre class="python size-s"><code>class Printer(ABC):
+    @abstractmethod
+    def print(self, doc): pass
+
+class Scanner(ABC):
+    @abstractmethod
+    def scan(self): pass
+
+class Fax(ABC):
+    @abstractmethod
+    def fax(self): pass
+
+class SimplePrinter(Printer):        # только печать
+    def print(self, doc): ...
+
+class MFU(Printer, Scanner, Fax):    # принтер+сканер+факс
+    def print(self, doc): ...
+    def scan(self): ...
+    def fax(self): ...</code></pre>
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 0.5em;">
+                        Каждый класс реализует <strong>только то, что умеет</strong>
+                    </div>
+                </section>
+
+                <!-- ISP в Python -->
+                <section>
+                    <h2>ISP в Python</h2>
+                    <div class="fragment" style="margin-top: 0.5em;">
+                        В Python нет «интерфейсов» как в Java. Что использовать:
+                    </div>
+                    <ul>
+                        <li class="fragment">Маленькие <code>ABC</code> с 1-2 методами</li>
+                        <li class="fragment"><strong>Duck typing</strong> - важен не тип, а наличие метода</li>
+                        <li class="fragment"><code>Protocol</code> из <code>typing</code> - «всё, что имеет <code>.print()</code>»</li>
+                    </ul>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        Главная идея: <mark class="green">не навязывать методы</mark>, которые классу не нужны
+                    </div>
+                </section>
+
+                <!-- ======== D: DIP ======== -->
+                <section>
+                    <h2 style="color: #ffd54f;">D - Dependency Inversion</h2>
+                    <p style="text-align: center; font-size: 0.6em; opacity: 0.6; margin-top: -0.5em;">Принцип инверсии зависимостей</p>
+                    <div class="fragment" style="margin-top: 1em;">
+                        <strong>Зависим от абстракций, а не от конкретных классов.</strong>
+                    </div>
+                    <div class="fragment" style="margin-top: 1em;">
+                        Аналогия: розетка. Её стандарт не зависит от того, какая именно лампа будет подключена.
+                    </div>
+                </section>
+
+                <!-- DIP: плохо -->
+                <section>
+                    <h2>DIP: плохо</h2>
+                    <div class="code-block fragment">
+                        <pre class="python size-s"><code>class FileLogger:
+    def log(self, msg):
+        with open("app.log", "a") as f:
+            f.write(msg + "\n")
+
+class App:
+    def __init__(self):
+        self.logger = FileLogger()       # жёстко прибили
+
+    def run(self):
+        self.logger.log("старт")
+
+# Захотели в консоль? Меняем App
+# Захотели отключить логи в тестах? Меняем App</code></pre>
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 0.5em;">
+                        <code>App</code> <mark class="yellow">намертво связан</mark> с <code>FileLogger</code>
+                    </div>
+                </section>
+
+                <!-- DIP: хорошо -->
+                <section>
+                    <h2>DIP: хорошо</h2>
+                    <div class="code-block fragment">
+                        <pre class="python size-s"><code>class Logger(ABC):                   # абстракция
+    @abstractmethod
+    def log(self, msg): pass
+
+class FileLogger(Logger): ...
+class ConsoleLogger(Logger): ...
+class SilentLogger(Logger):          # для тестов
+    def log(self, msg): pass
+
+class App:
+    def __init__(self, logger: Logger):
+        self.logger = logger          # получаем снаружи
+
+    def run(self):
+        self.logger.log("старт")
+
+app = App(FileLogger())
+test_app = App(SilentLogger())        # легко подменили</code></pre>
+                    </div>
+                </section>
+
+                <!-- DIP: зачем -->
+                <section>
+                    <h2>DIP: что даёт</h2>
+                    <ul>
+                        <li class="fragment"><strong>Тестируемость</strong> - подставляем fake-объект вместо реальной БД</li>
+                        <li class="fragment"><strong>Гибкость</strong> - меняем реализацию без переписывания App</li>
+                        <li class="fragment"><strong>Независимые слои</strong> - бизнес-логика не знает про SQL или HTTP</li>
+                    </ul>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        Передавай зависимости <strong>через конструктор</strong>, а не создавай внутри
+                    </div>
+                </section>
+
+                <!-- Памятка -->
+                <section>
+                    <h2>Памятка SOLID</h2>
+                    <table style="font-size: 0.75em; width: 100%; margin-top: 0.5em;">
+                        <tr>
+                            <td><strong>Буква</strong></td>
+                            <td><strong>Правило</strong></td>
+                            <td><strong>Ключевая мысль</strong></td>
+                        </tr>
+                        <tr class="fragment">
+                            <td><strong>S</strong></td>
+                            <td>Single Responsibility</td>
+                            <td>одна причина для изменения</td>
+                        </tr>
+                        <tr class="fragment">
+                            <td><strong>O</strong></td>
+                            <td>Open / Closed</td>
+                            <td>расширяй новым классом</td>
+                        </tr>
+                        <tr class="fragment">
+                            <td><strong>L</strong></td>
+                            <td>Liskov</td>
+                            <td>наследник без сюрпризов</td>
+                        </tr>
+                        <tr class="fragment">
+                            <td><strong>I</strong></td>
+                            <td>Interface Segregation</td>
+                            <td>маленькие интерфейсы</td>
+                        </tr>
+                        <tr class="fragment">
+                            <td><strong>D</strong></td>
+                            <td>Dependency Inversion</td>
+                            <td>зависим от абстракций</td>
+                        </tr>
+                    </table>
+                </section>
+
+                <!-- Важное -->
+                <section>
+                    <h2>Важное про SOLID</h2>
+                    <ul>
+                        <li class="fragment">Это <mark class="green">ориентир</mark>, а не догма</li>
+                        <li class="fragment">В скрипте на 50 строк SOLID не нужен - будет только хуже</li>
+                        <li class="fragment">SOLID включаешь, когда проект <strong>растёт</strong> и менять становится больно</li>
+                        <li class="fragment">Нарушил? Не страшно. Главное - понимать, зачем</li>
+                    </ul>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        SOLID - это про то, как сделать код <mark class="green">дружелюбным к изменениям</mark>
+                    </div>
+                </section>
+            </section>
+
+            <!-- ЧАСТЬ 3: ПРАКТИКА -->
+            <section>
+                <section style="font-size: 70px; height: 100%; width: 100%">
+                    <div class="lesson-time">38</div>
+                    <div class="fragment">
+                        <h1 style="font-size: 1.4em;">Практика</h1>
+                        <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">4 задачи + бонус</p>
+                    </div>
+                </section>
+
+                <!-- Задача 1: Employee -->
+                <section>
+                    <h2>Задача 1: Employee</h2>
+                    <p style="font-size: 0.6em; opacity: 0.6; margin-top: -0.3em;">Класс с защитой зарплаты</p>
+                    <div class="fragment opinion" style="margin-top: 0.5em;">
+                        <strong>Атрибуты:</strong> name, _salary<br>
+                        <strong>@property salary:</strong> только чтение<br>
+                        <strong>@salary.setter:</strong> нельзя задать меньше 0
+                    </div>
+                    <div class="code-block fragment">
+                        <pre class="python size-s"><code>e = Employee("Иван", 50000)
+print(e.salary)   # 50000
+e.salary = 60000  # OK
+e.salary = -100   # ValueError</code></pre>
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 0.5em;">
+                        Открой <code>practice/08b-oop-practice/1.py</code>
+                    </div>
+                </section>
+
+                <!-- Задача 2: Zoo -->
+                <section>
+                    <h2>Задача 2: Зоопарк</h2>
+                    <p style="font-size: 0.6em; opacity: 0.6; margin-top: -0.3em;">ABC + полиморфизм</p>
+                    <div class="fragment opinion" style="margin-top: 0.5em;">
+                        <strong>Animal (ABC):</strong> абстрактный <code>feed()</code><br>
+                        <strong>Lion, Rabbit, Parrot:</strong> каждый ест своё<br>
+                        <strong>Zoo:</strong> список animals + <code>feed_all()</code>
+                    </div>
+                    <div class="code-block fragment">
+                        <pre class="python size-s"><code>zoo = Zoo([Lion(), Rabbit(), Parrot()])
+zoo.feed_all()
+# Лев ест мясо
+# Кролик ест морковку
+# Попугай ест зерно</code></pre>
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 0.5em;">
+                        Подумай: какой SOLID-принцип тут применяешь?
+                    </div>
+                </section>
+
+                <!-- Задача 3: Temperature -->
+                <section>
+                    <h2>Задача 3: Температура</h2>
+                    <p style="font-size: 0.6em; opacity: 0.6; margin-top: -0.3em;">Альтернативные конструкторы</p>
+                    <div class="fragment opinion" style="margin-top: 0.5em;">
+                        <strong>Temperature:</strong> хранит celsius<br>
+                        <strong>@classmethod from_fahrenheit(f):</strong> из градусов F<br>
+                        <strong>@classmethod from_kelvin(k):</strong> из кельвинов
+                    </div>
+                    <div class="code-block fragment">
+                        <pre class="python size-s"><code>t1 = Temperature(25)
+t2 = Temperature.from_fahrenheit(77)   # 25
+t3 = Temperature.from_kelvin(300)      # 26.85
+
+print(t1.celsius, t2.celsius, t3.celsius)</code></pre>
+                    </div>
+                </section>
+
+                <!-- Задача 4: Transport -->
+                <section>
+                    <h2>Задача 4: Транспорт</h2>
+                    <p style="font-size: 0.6em; opacity: 0.6; margin-top: -0.3em;">Цепочка super()</p>
+                    <div class="fragment opinion" style="margin-top: 0.5em;">
+                        <strong>Vehicle:</strong> brand, max_speed, <code>info()</code><br>
+                        <strong>Car(Vehicle):</strong> +seats, info() через super()<br>
+                        <strong>ElectricCar(Car):</strong> +battery, info() через super()
+                    </div>
+                    <div class="code-block fragment">
+                        <pre class="python size-s"><code>tesla = ElectricCar("Tesla", 250, 5, 100)
+print(tesla.info())
+# Tesla, до 250 км/ч, 5 мест, батарея 100 кВт</code></pre>
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 0.5em;">
+                        Каждый наследник добавляет своё к результату родителя
+                    </div>
+                </section>
+
+                <!-- Бонус: Shape + SOLID -->
+                <section>
+                    <h2>Бонус: Shape по SOLID</h2>
+                    <p style="font-size: 0.6em; opacity: 0.6; margin-top: -0.3em;">Улучшаем код с прошлого занятия</p>
+                    <div class="fragment" style="margin-top: 0.5em;">
+                        У тебя уже есть <code>Shape</code>, <code>Circle</code>, <code>Rectangle</code>...
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        <strong>Задача:</strong> добавь функцию
+                        <code>print_areas(shapes)</code>, которая принимает <mark class="green">любой</mark> список фигур
+                        и печатает площади.
+                    </div>
+                    <div class="fragment" style="margin-top: 1em;">
+                        Подумай:
+                    </div>
+                    <ul>
+                        <li class="fragment">Какой принцип SOLID это иллюстрирует?</li>
+                        <li class="fragment">Что произойдёт, если добавить новый <code>Hexagon</code>?</li>
+                    </ul>
+                </section>
+            </section>
+
+            <!-- ИТОГ -->
+            <section>
+                <div class="lesson-time">58</div>
+                <h2>Что закрепили</h2>
+                <ul>
+                    <li class="fragment">Классы, <code>self</code>, <code>__init__</code> - всё ещё база</li>
+                    <li class="fragment">Наследование + <code>super()</code> - переиспользование кода</li>
+                    <li class="fragment">ABC + полиморфизм - один интерфейс, разные реализации</li>
+                    <li class="fragment"><code>@property</code>, <code>@classmethod</code>, <code>@staticmethod</code> - три способа украсить метод</li>
+                    <li class="fragment">SOLID - 5 правил, к которым возвращаемся всю карьеру</li>
+                </ul>
+                <div class="fragment opinion" style="margin-top: 1em;">
+                    ДЗ: взять старый код и переписать по SOLID
+                </div>
+            </section>
+
+        </div>
+    </div>
+
+    <script src="/utils/lib/js/head.min.js"></script>
+    <script src="/utils/js/reveal.js"></script>
+    <script>
+        Reveal.initialize({
+            controls: true,
+            progress: true,
+            history: true,
+            center: true,
+            transition: 'fade',
+            transitionSpeed: 'fast',
+            dependencies: [
+                { src: '/utils/lib/js/classList.js', condition: function () { return !document.body.classList; } },
+                { src: '/utils/plugin/markdown/marked.js', condition: function () { return !!document.querySelector('[data-markdown]'); } },
+                { src: '/utils/plugin/markdown/markdown.js', condition: function () { return !!document.querySelector('[data-markdown]'); } },
+                { src: '/utils/plugin/highlight/highlight.js', async: true, callback: function () { hljs.initHighlightingOnLoad(); } },
+                { src: '/utils/plugin/zoom-js/zoom.js', async: true },
+                { src: '/utils/plugin/notes/notes.js', async: true }
+            ]
+        });
+        Reveal.configure({ slideNumber: 'c/t' });
+    </script>
+</body>
+
+</html>

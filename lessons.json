@@ -164,9 +164,28 @@
       ]
     },
     {
+      "number": 8.5,
+      "title": "ООП: повторение и практика",
+      "date": "2026-04-23T17:00:00",
+      "duration": 60,
+      "presentations": [
+        {
+          "title": "Презентация",
+          "link": "/lessons/08b-oop-practice/",
+          "order": 1
+        }
+      ],
+      "homeworks": [
+        {
+          "title": "Рефакторинг: применяем SOLID",
+          "description": "Доделать ДЗ прошлого урока."
+        }
+      ]
+    },
+    {
       "number": 9,
       "title": "Модули, pip, Git",
-      "date": "2026-04-23T19:00:00",
+      "date": "2026-04-24T19:00:00",
       "duration": 60,
       "presentations": [
         {
