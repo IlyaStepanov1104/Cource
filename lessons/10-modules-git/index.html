@@ -1,0 +1,1287 @@
+<!doctype html>
+<html lang="ru">
+
+<head>
+    <meta charset="utf-8">
+    <title>Занятие 10 - Модули, pip, Git</title>
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+
+    <link rel="stylesheet" href="/utils/css/reveal.css">
+    <link rel="stylesheet" href="/utils/lib/css/animate.css">
+    <link rel="stylesheet" href="/utils/css/theme/night.css" id="theme">
+    <link rel="stylesheet" href="/utils/lib/css/zenburn.css">
+    <link rel="stylesheet" href="/utils/css/custom-base.css">
+    <link rel="stylesheet" href="css-custom/custom.css">
+
+    <script>
+        var link = document.createElement('link');
+        link.rel = 'stylesheet'; link.type = 'text/css';
+        link.href = window.location.search.match(/print-pdf/gi)
+            ? '/utils/css/print/pdf.css'
+            : '/utils/css/print/paper.css';
+        document.getElementsByTagName('head')[0].appendChild(link);
+    </script>
+</head>
+
+<body>
+    <div class="reveal">
+        <div class="slides">
+
+            <!-- ТИТУЛЬНЫЙ СЛАЙД -->
+            <section style="font-size: 70px; height: 100%; width: 100%">
+                <div class="lesson-time">0</div>
+                <div class="fragment">
+                    <h1 class="animated" style="font-size: 1.6em;">Модули, pip, Git</h1>
+                    <p style="text-align: center; font-size: 0.5em; opacity: 0.5;">Занятие 10</p>
+                </div>
+            </section>
+
+            <!-- ===================================================== -->
+            <!-- ЧАСТЬ 1: МОДУЛИ                                         -->
+            <!-- ===================================================== -->
+            <section>
+                <section style="font-size: 70px; height: 100%; width: 100%">
+                    <div class="lesson-time">2</div>
+                    <div class="fragment">
+                        <h1 style="font-size: 1.4em;">Модули</h1>
+                        <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">Разбиваем код на файлы</p>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Проблема</h2>
+                    <p class="fragment">Игра на 500 строк в одном <code>main.py</code></p>
+                    <ul>
+                        <li class="fragment">найти нужное - сложно</li>
+                        <li class="fragment">переиспользовать класс в другом проекте - невозможно</li>
+                        <li class="fragment">работать вдвоём - конфликты на каждой строке</li>
+                    </ul>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        Решение: разбить на несколько <mark>.py</mark> файлов
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Модуль = файл .py</h2>
+                    <p class="fragment">Любой <code>.py</code> уже является модулем</p>
+                    <div class="code-block fragment">
+                        <pre class="bash size-m"><code>project/
+  main.py
+  hero.py       # модуль "hero"
+  enemy.py      # модуль "enemy"
+  utils.py      # модуль "utils"</code></pre>
+                    </div>
+                    <p class="fragment">Имя модуля = имя файла без <code>.py</code></p>
+                </section>
+
+                <section>
+                    <h2>import</h2>
+                    <div class="code-block fragment">
+                        <pre class="python size-m"><code># hero.py
+class Hero:
+    def __init__(self, name):
+        self.name = name
+
+def greet(hero):
+    print(f"Привет, {hero.name}!")</code></pre>
+                    </div>
+                    <div class="code-block fragment">
+                        <pre class="python size-m"><code># main.py
+import hero
+
+h = hero.Hero("Артур")
+hero.greet(h)</code></pre>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Три формы импорта</h2>
+                    <div class="compare fragment">
+                        <div class="compare-block">
+                            <h4>import модуль</h4>
+                            <div class="code-block">
+                                <pre class="python"><code>import hero
+h = hero.Hero("A")</code></pre>
+                            </div>
+                            <p style="font-size: 0.7em;">доступ через <code>hero.X</code></p>
+                        </div>
+                        <div class="compare-block">
+                            <h4>from ... import ...</h4>
+                            <div class="code-block">
+                                <pre class="python"><code>from hero import Hero
+h = Hero("A")</code></pre>
+                            </div>
+                            <p style="font-size: 0.7em;">берём только нужное</p>
+                        </div>
+                        <div class="compare-block">
+                            <h4>import ... as ...</h4>
+                            <div class="code-block">
+                                <pre class="python"><code>import numpy as np
+np.array([1,2,3])</code></pre>
+                            </div>
+                            <p style="font-size: 0.7em;">короткое имя-алиас</p>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Опасный вариант</h2>
+                    <div class="code-block fragment">
+                        <pre class="python size-m"><code>from hero import *   # тащит ВСЁ</code></pre>
+                    </div>
+                    <ul>
+                        <li class="fragment">не видно, что именно пришло</li>
+                        <li class="fragment">имена могут перезаписать твои</li>
+                    </ul>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        <mark class="yellow">Не используй <code>import *</code></mark> в своих проектах
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Пример: разбиваем ДЗ про RPG</h2>
+                    <div class="code-block fragment">
+                        <pre class="bash size-m"><code>rpg/
+  main.py       # запуск боя
+  character.py  # Character + Warrior/Mage/Archer
+  team.py       # класс Team</code></pre>
+                    </div>
+                    <div class="code-block fragment">
+                        <pre class="python size-m"><code># main.py
+from character import Warrior, Mage, Archer
+from team import Team
+
+team = Team([Warrior("Арагорн"), Mage("Гэндальф")])
+team.attack_enemy(Archer("Леголас"))</code></pre>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Стандартная библиотека</h2>
+                    <p class="fragment">Python уже идёт с кучей модулей</p>
+                    <table style="font-size: 0.85em; width: 100%; margin-top: 1em;" class="fragment">
+                        <tr>
+                            <td><strong>Модуль</strong></td>
+                            <td><strong>Зачем</strong></td>
+                        </tr>
+                        <tr class="fragment">
+                            <td><code>math</code></td>
+                            <td>sqrt, sin, pi</td>
+                        </tr>
+                        <tr class="fragment">
+                            <td><code>random</code></td>
+                            <td>случайные числа</td>
+                        </tr>
+                        <tr class="fragment">
+                            <td><code>os</code></td>
+                            <td>файлы, пути, переменные окружения</td>
+                        </tr>
+                        <tr class="fragment">
+                            <td><code>json</code></td>
+                            <td>читать/писать JSON</td>
+                        </tr>
+                        <tr class="fragment">
+                            <td><code>datetime</code></td>
+                            <td>даты и время</td>
+                        </tr>
+                    </table>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        Всё это не надо ставить - просто <code>import</code>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Живой пример в REPL</h2>
+                    <div class="code-block fragment">
+                        <pre class="bash size-m"><code>$ python
+&gt;&gt;&gt; import random
+&gt;&gt;&gt; random.randint(1, 10)
+7
+&gt;&gt;&gt; random.choice(["орёл", "решка"])
+'орёл'
+&gt;&gt;&gt; from math import sqrt, pi
+&gt;&gt;&gt; sqrt(16)
+4.0
+&gt;&gt;&gt; pi
+3.141592653589793
+&gt;&gt;&gt; exit()</code></pre>
+                    </div>
+                </section>
+            </section>
+
+            <!-- ===================================================== -->
+            <!-- ЧАСТЬ 2: PIP И PYPI                                     -->
+            <!-- ===================================================== -->
+            <section>
+                <section style="font-size: 70px; height: 100%; width: 100%">
+                    <div class="lesson-time">17</div>
+                    <div class="fragment">
+                        <h1 style="font-size: 1.4em;">pip и PyPI</h1>
+                        <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">Чужой код в одну команду</p>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Экосистема</h2>
+                    <div class="tools-list">
+                        <div class="tool-block fragment">
+                            <h4>PyPI</h4>
+                            <p style="font-size: 0.7em;">склад пакетов (pypi.org)</p>
+                        </div>
+                        <div class="tool-block fragment">
+                            <h4>пакет</h4>
+                            <p style="font-size: 0.7em;">набор модулей + метаданные</p>
+                        </div>
+                        <div class="tool-block fragment">
+                            <h4>pip</h4>
+                            <p style="font-size: 0.7em;">менеджер: скачивает и ставит</p>
+                        </div>
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        600 000+ пакетов: requests, numpy, pygame, pytest...
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Ставим пакет</h2>
+                    <div class="code-block fragment">
+                        <pre class="bash size-m"><code>pip install requests</code></pre>
+                    </div>
+                    <div class="code-block fragment">
+                        <pre class="python size-m"><code>import requests
+
+r = requests.get("https://api.github.com")
+print(r.status_code)      # 200
+print(r.json()["current_user_url"])</code></pre>
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        3 секунды - и у тебя чужой HTTP-клиент
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Популярные пакеты</h2>
+                    <table style="font-size: 0.85em; width: 100%;">
+                        <tr>
+                            <td><strong>Пакет</strong></td>
+                            <td><strong>Для чего</strong></td>
+                        </tr>
+                        <tr class="fragment">
+                            <td><code>requests</code></td>
+                            <td>HTTP-запросы к API</td>
+                        </tr>
+                        <tr class="fragment">
+                            <td><code>rich</code></td>
+                            <td>красивый вывод в консоль</td>
+                        </tr>
+                        <tr class="fragment">
+                            <td><code>pygame</code></td>
+                            <td>игры и графика</td>
+                        </tr>
+                        <tr class="fragment">
+                            <td><code>numpy</code></td>
+                            <td>матрицы, числа</td>
+                        </tr>
+                        <tr class="fragment">
+                            <td><code>pandas</code></td>
+                            <td>таблицы, данные</td>
+                        </tr>
+                        <tr class="fragment">
+                            <td><code>pytest</code></td>
+                            <td>тесты</td>
+                        </tr>
+                        <tr class="fragment">
+                            <td><code>flask</code></td>
+                            <td>веб-сервер</td>
+                        </tr>
+                    </table>
+                </section>
+
+                <section>
+                    <h2>Команды pip</h2>
+                    <table style="font-size: 0.9em; width: 100%;">
+                        <tr class="fragment">
+                            <td><code>pip install X</code></td>
+                            <td>поставить</td>
+                        </tr>
+                        <tr class="fragment">
+                            <td><code>pip install X==1.2.3</code></td>
+                            <td>конкретную версию</td>
+                        </tr>
+                        <tr class="fragment">
+                            <td><code>pip uninstall X</code></td>
+                            <td>удалить</td>
+                        </tr>
+                        <tr class="fragment">
+                            <td><code>pip list</code></td>
+                            <td>что стоит</td>
+                        </tr>
+                        <tr class="fragment">
+                            <td><code>pip show X</code></td>
+                            <td>инфо о пакете</td>
+                        </tr>
+                        <tr class="fragment">
+                            <td><code>pip freeze</code></td>
+                            <td>список с версиями</td>
+                        </tr>
+                    </table>
+                </section>
+
+                <section>
+                    <h2>requirements.txt</h2>
+                    <p class="fragment">Как передать зависимости проекта другому человеку?</p>
+                    <div class="code-block fragment">
+                        <pre class="bash size-m"><code>pip freeze &gt; requirements.txt</code></pre>
+                    </div>
+                    <div class="code-block fragment">
+                        <pre class="bash size-m"><code># requirements.txt
+requests==2.31.0
+rich==13.7.0
+pygame==2.5.2</code></pre>
+                    </div>
+                    <div class="code-block fragment">
+                        <pre class="bash size-m"><code># у товарища - одна команда
+pip install -r requirements.txt</code></pre>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Проблема</h2>
+                    <p class="fragment">Проект A требует <code>requests==2.25</code></p>
+                    <p class="fragment">Проект B требует <code>requests==2.31</code></p>
+                    <p class="fragment">Оба ставят глобально - <mark class="yellow">конфликт</mark></p>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        Нужна изоляция пакетов по проектам
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Виртуальное окружение</h2>
+                    <div class="code-block fragment">
+                        <pre class="bash size-m"><code># создать venv в папке проекта
+python -m venv .venv
+
+# активировать (Windows)
+.venv\Scripts\activate
+
+# активировать (Linux/Mac)
+source .venv/bin/activate
+
+# теперь pip install ставит только в этот venv
+pip install requests</code></pre>
+                    </div>
+                    <p class="fragment" style="font-size: 0.8em; margin-top: 0.5em;">
+                        <code>.venv</code> - обычная папка внутри проекта, её добавляют в <code>.gitignore</code>
+                    </p>
+                </section>
+
+                <section>
+                    <h2>Правило</h2>
+                    <div class="timeline">
+                        <div class="timeline-item fragment">
+                            <div class="timeline-marker">1</div>
+                            <div class="timeline-content">Новый проект -&gt; сразу <code>python -m venv .venv</code>
+                            </div>
+                        </div>
+                        <div class="timeline-item fragment">
+                            <div class="timeline-marker">2</div>
+                            <div class="timeline-content">Активировать venv</div>
+                        </div>
+                        <div class="timeline-item fragment">
+                            <div class="timeline-marker">3</div>
+                            <div class="timeline-content">Ставить пакеты через <code>pip install</code></div>
+                        </div>
+                        <div class="timeline-item fragment">
+                            <div class="timeline-marker">4</div>
+                            <div class="timeline-content">Перед коммитом <code>pip freeze &gt; requirements.txt</code>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Полный цикл: новый проект</h2>
+                    <div class="code-block fragment">
+                        <pre class="bash size-m"><code>mkdir game &amp;&amp; cd game
+
+python -m venv .venv
+.venv\Scripts\activate          # Windows
+# source .venv/bin/activate     # Linux/Mac
+
+pip install pygame rich
+
+# пишем код...
+
+pip freeze &gt; requirements.txt
+echo ".venv/" &gt; .gitignore</code></pre>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Частая ошибка</h2>
+                    <div class="code-block fragment">
+                        <pre class="bash size-m"><code>$ pip install requests
+Requirement already satisfied: requests in C:\Python311\...
+
+$ python main.py
+ModuleNotFoundError: No module named 'requests'</code></pre>
+                    </div>
+                    <p class="fragment" style="font-size: 0.9em;">Забыл активировать venv - pip поставил в глобальный
+                        Python, а скрипт запускается из venv (или наоборот)</p>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        Проверяй: в начале строки терминала должна быть <code>(.venv)</code>
+                    </div>
+                </section>
+            </section>
+
+            <!-- ===================================================== -->
+            <!-- ЧАСТЬ 3: GIT                                            -->
+            <!-- ===================================================== -->
+            <section>
+                <section style="font-size: 70px; height: 100%; width: 100%">
+                    <div class="lesson-time">32</div>
+                    <div class="fragment">
+                        <h1 style="font-size: 1.4em;">Git</h1>
+                        <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">Машина времени для кода</p>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Зачем VCS</h2>
+                    <ul>
+                        <li class="fragment">откатить изменения, если сломал</li>
+                        <li class="fragment">видеть, что и когда менял</li>
+                        <li class="fragment">работать параллельно с другими</li>
+                        <li class="fragment">иметь копию в облаке</li>
+                    </ul>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        Без Git серьёзный проект не делают <mark>нигде</mark>
+                    </div>
+                </section>
+                <section>
+                    <h2>Git vs GitHub</h2>
+
+                    <div class="fragment">
+                        <p style="font-size: 0.9em;">
+                            <mark class="green">Git</mark> — это инструмент (программа), который хранит историю кода
+                        </p>
+                        <p style="font-size: 0.9em;">
+                            <mark class="yellow">GitHub</mark> — это сайт, где лежат Git-репозитории
+                        </p>
+                    </div>
+
+                    <div class="compare fragment">
+                        <div class="compare-block">
+                            <h4>Git</h4>
+                            <ul style="font-size: 0.8em; text-align: left;">
+                                <li>работает у тебя на компьютере</li>
+                                <li>хранит историю</li>
+                                <li>коммиты, ветки, merge</li>
+                                <li>можно без интернета</li>
+                            </ul>
+                        </div>
+
+                        <div class="compare-block">
+                            <h4>GitHub</h4>
+                            <ul style="font-size: 0.8em; text-align: left;">
+                                <li>хостинг для Git-репозиториев</li>
+                                <li>хранит код в облаке</li>
+                                <li>нужен для совместной работы</li>
+                                <li>PR, Issues, CI</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        GitHub — это не Git, это сервис поверх Git
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Git хранит снимки</h2>
+                    <p class="fragment">Коммит - это <mark class="green">снимок</mark> всего проекта в момент времени
+                    </p>
+                    <div class="fragment" style="margin-top: 1em;">
+                        <svg viewBox="0 0 700 140" style="width: 100%; max-width: 700px; height: auto;">
+                            <line x1="80" y1="70" x2="620" y2="70" stroke="#888" stroke-width="2" />
+                            <circle cx="100" cy="70" r="28" fill="#f7b500" stroke="#fff" stroke-width="2" />
+                            <text x="100" y="76" text-anchor="middle" fill="#111" font-size="14"
+                                font-weight="bold">C1</text>
+                            <circle cx="230" cy="70" r="28" fill="#f7b500" stroke="#fff" stroke-width="2" />
+                            <text x="230" y="76" text-anchor="middle" fill="#111" font-size="14"
+                                font-weight="bold">C2</text>
+                            <circle cx="360" cy="70" r="28" fill="#f7b500" stroke="#fff" stroke-width="2" />
+                            <text x="360" y="76" text-anchor="middle" fill="#111" font-size="14"
+                                font-weight="bold">C3</text>
+                            <circle cx="490" cy="70" r="28" fill="#f7b500" stroke="#fff" stroke-width="2" />
+                            <text x="490" y="76" text-anchor="middle" fill="#111" font-size="14"
+                                font-weight="bold">C4</text>
+                            <circle cx="610" cy="70" r="30" fill="#4a9eff" stroke="#fff" stroke-width="2" />
+                            <text x="610" y="76" text-anchor="middle" fill="#fff" font-size="13"
+                                font-weight="bold">HEAD</text>
+                            <text x="100" y="120" text-anchor="middle" fill="#aaa" font-size="11">init</text>
+                            <text x="230" y="120" text-anchor="middle" fill="#aaa" font-size="11">add hero</text>
+                            <text x="360" y="120" text-anchor="middle" fill="#aaa" font-size="11">fix bug</text>
+                            <text x="490" y="120" text-anchor="middle" fill="#aaa" font-size="11">add team</text>
+                            <text x="610" y="120" text-anchor="middle" fill="#aaa" font-size="11">readme</text>
+                        </svg>
+                    </div>
+                    <p class="fragment" style="font-size: 0.8em;">Каждый коммит знает родителя -&gt; получается цепочка
+                    </p>
+                </section>
+
+                <section>
+                    <h2>Три области Git</h2>
+                    <div class="fragment">
+                        <svg viewBox="0 0 720 220" style="width: 100%; max-width: 720px; height: auto;">
+                            <defs>
+                                <marker id="arr" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="5" markerHeight="5"
+                                    orient="auto">
+                                    <path d="M 0 0 L 10 5 L 0 10 z" fill="#aaa" />
+                                </marker>
+                            </defs>
+                            <rect x="20" y="40" width="200" height="140" fill="#2a3a5c" stroke="#4a9eff"
+                                stroke-width="2" rx="8" />
+                            <text x="120" y="30" text-anchor="middle" fill="#4a9eff" font-size="14"
+                                font-weight="bold">Working Directory</text>
+                            <text x="120" y="115" text-anchor="middle" fill="#fff" font-size="12">твои файлы</text>
+                            <text x="120" y="135" text-anchor="middle" fill="#bbb" font-size="11">то, что видишь в
+                                IDE</text>
+
+                            <rect x="260" y="40" width="200" height="140" fill="#4a3a2a" stroke="#f7b500"
+                                stroke-width="2" rx="8" />
+                            <text x="360" y="30" text-anchor="middle" fill="#f7b500" font-size="14"
+                                font-weight="bold">Staging (index)</text>
+                            <text x="360" y="115" text-anchor="middle" fill="#fff" font-size="12">что пойдёт</text>
+                            <text x="360" y="135" text-anchor="middle" fill="#bbb" font-size="11">в следующий
+                                коммит</text>
+
+                            <rect x="500" y="40" width="200" height="140" fill="#2a4a2a" stroke="#4ac07e"
+                                stroke-width="2" rx="8" />
+                            <text x="600" y="30" text-anchor="middle" fill="#4ac07e" font-size="14"
+                                font-weight="bold">Repository</text>
+                            <text x="600" y="115" text-anchor="middle" fill="#fff" font-size="12">история
+                                коммитов</text>
+                            <text x="600" y="135" text-anchor="middle" fill="#bbb" font-size="11">папка .git</text>
+
+                            <path d="M 225 110 L 255 110" stroke="#aaa" stroke-width="2" marker-end="url(#arr)" />
+                            <path d="M 465 110 L 495 110" stroke="#aaa" stroke-width="2" marker-end="url(#arr)" />
+                            <text x="240" y="100" text-anchor="middle" fill="#aaa" font-size="11">add</text>
+                            <text x="480" y="100" text-anchor="middle" fill="#aaa" font-size="11">commit</text>
+                        </svg>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Первая настройка</h2>
+                    <p class="fragment" style="font-size: 0.85em;">Один раз на весь комп - сказать Git, кто ты</p>
+                    <div class="code-block fragment">
+                        <pre class="bash size-m"><code>git config --global user.name "Ilya Stepanov"
+git config --global user.email "ilya@example.com"
+
+git config --global init.defaultBranch main
+
+# проверить
+git config --list</code></pre>
+                    </div>
+                    <p class="fragment" style="font-size: 0.8em;">Имя и почта попадают в каждый твой коммит</p>
+                </section>
+
+                <section>
+                    <h2>Создаём репозиторий</h2>
+                    <div class="code-block fragment">
+                        <pre class="bash size-m"><code>cd my-project
+git init
+# Initialized empty Git repository in ./.git/</code></pre>
+                    </div>
+                    <p class="fragment" style="font-size: 0.85em;">Появилась скрытая папка <code>.git/</code> - там
+                        живёт вся история</p>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        Удалишь <code>.git/</code> - удалишь всю историю проекта
+                    </div>
+                </section>
+
+                <section>
+                    <h2>status и add</h2>
+                    <div class="code-block fragment">
+                        <pre class="bash size-m"><code>git status
+# Untracked files:
+#   hero.py
+#   main.py</code></pre>
+                    </div>
+                    <div class="code-block fragment">
+                        <pre class="bash size-m"><code>git add hero.py main.py
+# или всё разом:
+git add .</code></pre>
+                    </div>
+                    <div class="code-block fragment">
+                        <pre class="bash size-m"><code>git status
+# Changes to be committed:
+#   new file: hero.py
+#   new file: main.py</code></pre>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Первый коммит</h2>
+                    <div class="code-block fragment">
+                        <pre class="bash size-m"><code>git commit -m "add Hero class"
+# [main (root-commit) 7d32786] add Hero class
+#  2 files changed, 25 insertions(+)</code></pre>
+                    </div>
+                    <div class="fragment" style="margin-top: 1em;">
+                        <svg viewBox="0 0 500 100" style="width: 100%; max-width: 500px; height: auto;">
+                            <circle cx="80" cy="50" r="28" fill="#f7b500" stroke="#fff" stroke-width="2" />
+                            <text x="80" y="56" text-anchor="middle" fill="#111" font-size="13"
+                                font-weight="bold">C1</text>
+                            <text x="80" y="92" text-anchor="middle" fill="#aaa" font-size="11">add Hero</text>
+                            <rect x="180" y="30" width="280" height="40" fill="#2a4a2a" stroke="#4ac07e"
+                                stroke-width="1" rx="6" />
+                            <text x="320" y="55" text-anchor="middle" fill="#4ac07e" font-size="13">main -&gt; C1
+                                (HEAD)</text>
+                        </svg>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Ещё коммиты</h2>
+                    <div class="code-block fragment">
+                        <pre class="bash size-m"><code># правим hero.py
+git add hero.py
+git commit -m "add greet method"
+
+# правим main.py
+git add main.py
+git commit -m "print hero greeting"</code></pre>
+                    </div>
+                    <div class="fragment" style="margin-top: 1em;">
+                        <svg viewBox="0 0 600 100" style="width: 100%; max-width: 600px; height: auto;">
+                            <line x1="80" y1="50" x2="480" y2="50" stroke="#888" stroke-width="2" />
+                            <circle cx="80" cy="50" r="26" fill="#f7b500" stroke="#fff" stroke-width="2" />
+                            <text x="80" y="56" text-anchor="middle" fill="#111" font-size="12"
+                                font-weight="bold">C1</text>
+                            <circle cx="230" cy="50" r="26" fill="#f7b500" stroke="#fff" stroke-width="2" />
+                            <text x="230" y="56" text-anchor="middle" fill="#111" font-size="12"
+                                font-weight="bold">C2</text>
+                            <circle cx="380" cy="50" r="26" fill="#f7b500" stroke="#fff" stroke-width="2" />
+                            <text x="380" y="56" text-anchor="middle" fill="#111" font-size="12"
+                                font-weight="bold">C3</text>
+                            <rect x="440" y="30" width="140" height="40" fill="#2a4a2a" stroke="#4ac07e"
+                                stroke-width="1" rx="6" />
+                            <text x="510" y="55" text-anchor="middle" fill="#4ac07e" font-size="12">main (HEAD)</text>
+                        </svg>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Что именно поменялось: git diff</h2>
+                    <div class="code-block fragment">
+                        <pre class="bash size-m"><code>$ git diff
+diff --git a/hero.py b/hero.py
+- hp = 100
++ hp = 150</code></pre>
+                    </div>
+                    <p class="fragment" style="font-size: 0.85em;"><mark>-</mark> удалили, <mark class="green">+</mark>
+                        добавили</p>
+                    <div class="code-block fragment">
+                        <pre class="bash size-m"><code>git diff            # рабочая папка vs staging
+git diff --staged   # staging vs последний коммит
+git diff HEAD~1     # последний коммит vs предыдущий</code></pre>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>.gitignore</h2>
+                    <p class="fragment">Не всё надо коммитить</p>
+                    <div class="code-block fragment">
+                        <pre class="bash size-m"><code># .gitignore
+.venv/
+__pycache__/
+*.pyc
+.idea/
+.vscode/
+.env
+*.log</code></pre>
+                    </div>
+                    <p class="fragment" style="font-size: 0.85em;">Git игнорирует эти пути - не показывает в
+                        <code>status</code>
+                    </p>
+                </section>
+
+                <section>
+                    <h2>История: git log</h2>
+                    <div class="code-block fragment">
+                        <pre class="bash size-m"><code>git log --oneline
+# 7d32786 print hero greeting
+# 75cb468 add greet method
+# 431060d add Hero class</code></pre>
+                    </div>
+                    <p class="fragment" style="font-size: 0.85em;">Каждый коммит имеет хэш - уникальный отпечаток</p>
+                </section>
+
+                <section>
+                    <h2>git log с графом</h2>
+                    <div class="code-block fragment">
+                        <pre class="bash size-m"><code>git log --oneline --graph --all
+* 9f2c1a4 (HEAD -&gt; main) merge feature-sword
+|\
+| * b7e3d02 (feature-sword) hero wields sword
+| * 4a1f6b8 add Sword class
+|/
+* 7d32786 print hero greeting
+* 75cb468 add greet method
+* 431060d add Hero class</code></pre>
+                    </div>
+                    <p class="fragment" style="font-size: 0.8em;">Видна вся структура веток прямо в терминале</p>
+                </section>
+
+                <section>
+                    <h2>Откатить изменения</h2>
+                    <div class="code-block fragment">
+                        <pre class="bash size-m"><code># испортил файл, ещё не делал add
+git restore hero.py        # вернуть как в последнем коммите
+
+# уже сделал add, но передумал
+git restore --staged hero.py   # убрать из staging
+
+# вообще хочу откатиться на 1 коммит назад
+git reset --hard HEAD~1    # ОСТОРОЖНО: потеряешь изменения</code></pre>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Откатить опубликованный коммит</h2>
+                    <p class="fragment" style="font-size: 0.85em;">Коммит уже ушёл на GitHub, <code>reset</code>
+                        использовать нельзя</p>
+                    <div class="code-block fragment">
+                        <pre class="bash size-m"><code>git revert 7d32786
+# создаёт новый коммит, который отменяет указанный</code></pre>
+                    </div>
+                    <div class="fragment" style="margin-top: 1em;">
+                        <svg viewBox="0 0 600 100" style="width: 100%; max-width: 600px; height: auto;">
+                            <line x1="60" y1="50" x2="520" y2="50" stroke="#888" stroke-width="2" />
+                            <circle cx="80" cy="50" r="22" fill="#f7b500" />
+                            <text x="80" y="55" text-anchor="middle" fill="#111" font-size="11"
+                                font-weight="bold">C1</text>
+                            <circle cx="200" cy="50" r="22" fill="#f7b500" />
+                            <text x="200" y="55" text-anchor="middle" fill="#111" font-size="11"
+                                font-weight="bold">C2</text>
+                            <circle cx="320" cy="50" r="22" fill="#ff6b6b" />
+                            <text x="320" y="55" text-anchor="middle" fill="#fff" font-size="11"
+                                font-weight="bold">bad</text>
+                            <circle cx="440" cy="50" r="22" fill="#f7b500" />
+                            <text x="440" y="55" text-anchor="middle" fill="#111" font-size="11"
+                                font-weight="bold">C4</text>
+                            <circle cx="540" cy="50" r="22" fill="#4ac07e" />
+                            <text x="540" y="55" text-anchor="middle" fill="#111" font-size="10"
+                                font-weight="bold">rev</text>
+                        </svg>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Зачем ветки</h2>
+                    <p class="fragment">Хочу пробовать новую фичу <mark class="yellow">и</mark> не сломать рабочий код
+                    </p>
+                    <p class="fragment">-&gt; создаю ветку, экспериментирую там</p>
+                    <p class="fragment">-&gt; если получилось - вливаю в <code>main</code></p>
+                    <p class="fragment">-&gt; если не получилось - удаляю ветку</p>
+                </section>
+
+                <section>
+                    <h2>Команды для веток</h2>
+                    <table style="font-size: 0.9em; width: 100%;">
+                        <tr class="fragment">
+                            <td><code>git branch</code></td>
+                            <td>список веток</td>
+                        </tr>
+                        <tr class="fragment">
+                            <td><code>git branch feature</code></td>
+                            <td>создать ветку</td>
+                        </tr>
+                        <tr class="fragment">
+                            <td><code>git checkout feature</code></td>
+                            <td>переключиться на ветку</td>
+                        </tr>
+                        <tr class="fragment">
+                            <td><code>git checkout -b feature</code></td>
+                            <td>создать и переключиться</td>
+                        </tr>
+                        <tr class="fragment">
+                            <td><code>git branch -d feature</code></td>
+                            <td>удалить (если влили)</td>
+                        </tr>
+                        <tr class="fragment">
+                            <td><code>git branch -D feature</code></td>
+                            <td>удалить силой</td>
+                        </tr>
+                    </table>
+                </section>
+
+                <section>
+                    <h2>Создаём ветку</h2>
+                    <div class="code-block fragment">
+                        <pre class="bash size-m"><code>git checkout -b feature-sword
+# переключились на новую ветку feature-sword</code></pre>
+                    </div>
+                    <div class="fragment" style="margin-top: 1em;">
+                        <svg viewBox="0 0 600 140" style="width: 100%; max-width: 600px; height: auto;">
+                            <line x1="80" y1="50" x2="440" y2="50" stroke="#888" stroke-width="2" />
+                            <circle cx="80" cy="50" r="24" fill="#f7b500" stroke="#fff" stroke-width="2" />
+                            <text x="80" y="56" text-anchor="middle" fill="#111" font-size="12"
+                                font-weight="bold">C1</text>
+                            <circle cx="220" cy="50" r="24" fill="#f7b500" stroke="#fff" stroke-width="2" />
+                            <text x="220" y="56" text-anchor="middle" fill="#111" font-size="12"
+                                font-weight="bold">C2</text>
+                            <circle cx="360" cy="50" r="24" fill="#f7b500" stroke="#fff" stroke-width="2" />
+                            <text x="360" y="56" text-anchor="middle" fill="#111" font-size="12"
+                                font-weight="bold">C3</text>
+                            <rect x="410" y="30" width="140" height="40" fill="#2a4a2a" stroke="#4ac07e"
+                                stroke-width="1" rx="6" />
+                            <text x="480" y="55" text-anchor="middle" fill="#4ac07e" font-size="12">main</text>
+                            <rect x="260" y="95" width="200" height="36" fill="#4a2a4a" stroke="#c07ec0"
+                                stroke-width="1" rx="6" />
+                            <text x="360" y="118" text-anchor="middle" fill="#c07ec0" font-size="12">feature-sword
+                                (HEAD)</text>
+                            <line x1="360" y1="74" x2="360" y2="95" stroke="#c07ec0" stroke-width="1"
+                                stroke-dasharray="3,2" />
+                        </svg>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Коммитим в ветку</h2>
+                    <div class="code-block fragment">
+                        <pre class="bash size-m"><code># пишем код, коммитим
+git commit -am "add Sword class"
+git commit -am "hero wields sword"</code></pre>
+                    </div>
+                    <div class="fragment" style="margin-top: 1em;">
+                        <svg viewBox="0 0 700 180" style="width: 100%; max-width: 700px; height: auto;">
+                            <line x1="60" y1="50" x2="320" y2="50" stroke="#888" stroke-width="2" />
+                            <circle cx="60" cy="50" r="22" fill="#f7b500" stroke="#fff" stroke-width="2" />
+                            <text x="60" y="55" text-anchor="middle" fill="#111" font-size="11"
+                                font-weight="bold">C1</text>
+                            <circle cx="180" cy="50" r="22" fill="#f7b500" stroke="#fff" stroke-width="2" />
+                            <text x="180" y="55" text-anchor="middle" fill="#111" font-size="11"
+                                font-weight="bold">C2</text>
+                            <circle cx="300" cy="50" r="22" fill="#f7b500" stroke="#fff" stroke-width="2" />
+                            <text x="300" y="55" text-anchor="middle" fill="#111" font-size="11"
+                                font-weight="bold">C3</text>
+                            <rect x="340" y="32" width="80" height="36" fill="#2a4a2a" stroke="#4ac07e" stroke-width="1"
+                                rx="6" />
+                            <text x="380" y="55" text-anchor="middle" fill="#4ac07e" font-size="11">main</text>
+                            <line x1="300" y1="72" x2="440" y2="120" stroke="#888" stroke-width="2" />
+                            <line x1="440" y1="120" x2="620" y2="120" stroke="#888" stroke-width="2" />
+                            <circle cx="440" cy="120" r="22" fill="#c07ec0" stroke="#fff" stroke-width="2" />
+                            <text x="440" y="125" text-anchor="middle" fill="#111" font-size="11"
+                                font-weight="bold">S1</text>
+                            <circle cx="560" cy="120" r="22" fill="#c07ec0" stroke="#fff" stroke-width="2" />
+                            <text x="560" y="125" text-anchor="middle" fill="#111" font-size="11"
+                                font-weight="bold">S2</text>
+                            <rect x="580" y="148" width="120" height="26" fill="#4a2a4a" stroke="#c07ec0"
+                                stroke-width="1" rx="4" />
+                            <text x="640" y="166" text-anchor="middle" fill="#c07ec0"
+                                font-size="11">feature-sword</text>
+                        </svg>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Полная работа с веткой</h2>
+                    <div class="code-block fragment">
+                        <pre class="bash size-m"><code>git checkout main
+git checkout -b feature-sword
+
+# правим файлы...
+git add .
+git commit -m "add Sword class"
+
+# правим ещё...
+git commit -am "hero wields sword"
+
+git checkout main
+git merge feature-sword
+git branch -d feature-sword       # больше не нужна
+git push</code></pre>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Вливаем ветку: merge</h2>
+                    <div class="code-block fragment">
+                        <pre class="bash size-m"><code>git checkout main
+git merge feature-sword</code></pre>
+                    </div>
+                    <div class="fragment" style="margin-top: 1em;">
+                        <svg viewBox="0 0 720 180" style="width: 100%; max-width: 720px; height: auto;">
+                            <line x1="60" y1="50" x2="580" y2="50" stroke="#888" stroke-width="2" />
+                            <circle cx="60" cy="50" r="20" fill="#f7b500" stroke="#fff" stroke-width="2" />
+                            <text x="60" y="55" text-anchor="middle" fill="#111" font-size="10"
+                                font-weight="bold">C1</text>
+                            <circle cx="180" cy="50" r="20" fill="#f7b500" stroke="#fff" stroke-width="2" />
+                            <text x="180" y="55" text-anchor="middle" fill="#111" font-size="10"
+                                font-weight="bold">C2</text>
+                            <circle cx="300" cy="50" r="20" fill="#f7b500" stroke="#fff" stroke-width="2" />
+                            <text x="300" y="55" text-anchor="middle" fill="#111" font-size="10"
+                                font-weight="bold">C3</text>
+                            <line x1="300" y1="70" x2="420" y2="120" stroke="#888" stroke-width="2" />
+                            <circle cx="420" cy="120" r="20" fill="#c07ec0" stroke="#fff" stroke-width="2" />
+                            <text x="420" y="125" text-anchor="middle" fill="#111" font-size="10"
+                                font-weight="bold">S1</text>
+                            <line x1="420" y1="120" x2="500" y2="120" stroke="#888" stroke-width="2" />
+                            <circle cx="500" cy="120" r="20" fill="#c07ec0" stroke="#fff" stroke-width="2" />
+                            <text x="500" y="125" text-anchor="middle" fill="#111" font-size="10"
+                                font-weight="bold">S2</text>
+                            <line x1="500" y1="120" x2="580" y2="70" stroke="#888" stroke-width="2" />
+                            <circle cx="580" cy="50" r="22" fill="#4ac07e" stroke="#fff" stroke-width="2" />
+                            <text x="580" y="55" text-anchor="middle" fill="#111" font-size="10"
+                                font-weight="bold">M</text>
+                            <rect x="600" y="30" width="110" height="38" fill="#2a4a2a" stroke="#4ac07e"
+                                stroke-width="1" rx="6" />
+                            <text x="655" y="54" text-anchor="middle" fill="#4ac07e" font-size="11">main (HEAD)</text>
+                        </svg>
+                    </div>
+                    <p class="fragment" style="font-size: 0.8em;">M - merge-коммит с <mark class="green">двумя
+                            родителями</mark></p>
+                </section>
+
+                <section>
+                    <h2>Rebase: переписать историю</h2>
+                    <div class="code-block fragment">
+                        <pre class="bash size-m"><code>git checkout feature-sword
+git rebase main</code></pre>
+                    </div>
+                    <p class="fragment" style="font-size: 0.85em;">Rebase берёт коммиты ветки и <mark
+                            class="yellow">заново</mark> накладывает поверх main</p>
+                </section>
+
+                <section>
+                    <h2>Merge vs Rebase</h2>
+                    <div class="compare">
+                        <div class="compare-block fragment">
+                            <h4>Merge</h4>
+                            <svg viewBox="0 0 320 180" style="width: 100%;">
+                                <line x1="20" y1="50" x2="220" y2="50" stroke="#888" stroke-width="2" />
+                                <circle cx="40" cy="50" r="14" fill="#f7b500" />
+                                <circle cx="110" cy="50" r="14" fill="#f7b500" />
+                                <circle cx="180" cy="50" r="14" fill="#f7b500" />
+                                <line x1="180" y1="64" x2="220" y2="110" stroke="#888" stroke-width="2" />
+                                <circle cx="220" cy="110" r="14" fill="#c07ec0" />
+                                <line x1="220" y1="110" x2="260" y2="110" stroke="#888" stroke-width="2" />
+                                <circle cx="260" cy="110" r="14" fill="#c07ec0" />
+                                <line x1="260" y1="110" x2="300" y2="50" stroke="#888" stroke-width="2" />
+                                <circle cx="300" cy="50" r="15" fill="#4ac07e" />
+                                <text x="300" y="54" text-anchor="middle" fill="#111" font-size="10"
+                                    font-weight="bold">M</text>
+                            </svg>
+                            <p style="font-size: 0.7em;">История ветвится, виден факт слияния</p>
+                        </div>
+                        <div class="compare-block fragment">
+                            <h4>Rebase</h4>
+                            <svg viewBox="0 0 320 180" style="width: 100%;">
+                                <line x1="20" y1="50" x2="300" y2="50" stroke="#888" stroke-width="2" />
+                                <circle cx="40" cy="50" r="14" fill="#f7b500" />
+                                <circle cx="100" cy="50" r="14" fill="#f7b500" />
+                                <circle cx="160" cy="50" r="14" fill="#f7b500" />
+                                <circle cx="220" cy="50" r="14" fill="#c07ec0" />
+                                <text x="220" y="54" text-anchor="middle" fill="#111" font-size="10"
+                                    font-weight="bold">S1'</text>
+                                <circle cx="280" cy="50" r="14" fill="#c07ec0" />
+                                <text x="280" y="54" text-anchor="middle" fill="#111" font-size="10"
+                                    font-weight="bold">S2'</text>
+                            </svg>
+                            <p style="font-size: 0.7em;">История линейная, хэши пересоздаются</p>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Когда что</h2>
+                    <div class="compare">
+                        <div class="compare-block fragment">
+                            <h4>Merge</h4>
+                            <ul style="font-size: 0.75em; text-align: left;">
+                                <li>коммит уже видели другие</li>
+                                <li>хочешь сохранить "историю как было"</li>
+                                <li>main -&gt; feature</li>
+                            </ul>
+                        </div>
+                        <div class="compare-block fragment">
+                            <h4>Rebase</h4>
+                            <ul style="font-size: 0.75em; text-align: left;">
+                                <li>только <mark class="yellow">локальная</mark> ветка</li>
+                                <li>хочешь линейную историю</li>
+                                <li>feature -&gt; актуальный main</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 1em; font-size: 0.8em;">
+                        Золотое правило: не ребазь то, что уже запушил и увидели другие
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Конфликты</h2>
+                    <p class="fragment">Обе ветки поменяли одну и ту же строку</p>
+                    <div class="code-block fragment">
+                        <pre class="bash size-m"><code>&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD
+damage = 10
+=======
+damage = 15
+&gt;&gt;&gt;&gt;&gt;&gt;&gt; feature-sword</code></pre>
+                    </div>
+                    <div class="timeline" style="margin-top: 1em;">
+                        <div class="timeline-item fragment">
+                            <div class="timeline-marker">1</div>
+                            <div class="timeline-content">открыть файл, выбрать правильную версию</div>
+                        </div>
+                        <div class="timeline-item fragment">
+                            <div class="timeline-marker">2</div>
+                            <div class="timeline-content"><code>git add файл</code></div>
+                        </div>
+                        <div class="timeline-item fragment">
+                            <div class="timeline-marker">3</div>
+                            <div class="timeline-content"><code>git commit</code> (или
+                                <code>git rebase --continue</code>)
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Если всё плохо</h2>
+                    <div class="code-block fragment">
+                        <pre class="bash size-m"><code>git merge --abort     # отменить начатый merge
+git rebase --abort    # отменить начатый rebase
+
+# всё вернётся к состоянию до команды</code></pre>
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        Запутался в конфликтах - abort и попробуй снова
+                    </div>
+                </section>
+
+                <section>
+                    <h2>git stash: отложить изменения</h2>
+                    <p class="fragment" style="font-size: 0.85em;">Надо срочно переключиться на другую ветку, но код не
+                        готов коммитить</p>
+                    <div class="code-block fragment">
+                        <pre class="bash size-m"><code>git stash              # спрятал всё незакоммиченное
+git checkout main        # переключился
+# ...сделал срочное дело, закоммитил...
+
+git checkout feature
+git stash pop          # вернул отложенные изменения
+
+git stash list         # посмотреть все заначки</code></pre>
+                    </div>
+                </section>
+            </section>
+
+            <!-- ===================================================== -->
+            <!-- ЧАСТЬ 4: GITHUB                                         -->
+            <!-- ===================================================== -->
+            <section>
+                <section style="font-size: 70px; height: 100%; width: 100%">
+                    <div class="lesson-time">77</div>
+                    <div class="fragment">
+                        <h1 style="font-size: 1.4em;">GitHub</h1>
+                        <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">Код в облаке</p>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Remote: удалённая копия</h2>
+                    <div class="fragment">
+                        <svg viewBox="0 0 720 200" style="width: 100%; max-width: 720px; height: auto;">
+                            <defs>
+                                <marker id="arr2" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="5"
+                                    markerHeight="5" orient="auto">
+                                    <path d="M 0 0 L 10 5 L 0 10 z" fill="#aaa" />
+                                </marker>
+                            </defs>
+                            <rect x="40" y="60" width="240" height="100" fill="#2a3a5c" stroke="#4a9eff"
+                                stroke-width="2" rx="8" />
+                            <text x="160" y="50" text-anchor="middle" fill="#4a9eff" font-size="14"
+                                font-weight="bold">Локально</text>
+                            <text x="160" y="105" text-anchor="middle" fill="#fff" font-size="12">.git/ на твоём
+                                компе</text>
+                            <text x="160" y="130" text-anchor="middle" fill="#bbb" font-size="11">commit, branch</text>
+
+                            <rect x="440" y="60" width="240" height="100" fill="#4a2a2a" stroke="#ff6b6b"
+                                stroke-width="2" rx="8" />
+                            <text x="560" y="50" text-anchor="middle" fill="#ff6b6b" font-size="14"
+                                font-weight="bold">GitHub (origin)</text>
+                            <text x="560" y="105" text-anchor="middle" fill="#fff" font-size="12">копия на сайте</text>
+                            <text x="560" y="130" text-anchor="middle" fill="#bbb" font-size="11">видна другим</text>
+
+                            <path d="M 290 95 L 430 95" stroke="#aaa" stroke-width="2" marker-end="url(#arr2)" />
+                            <text x="360" y="85" text-anchor="middle" fill="#aaa" font-size="12">push</text>
+                            <path d="M 430 135 L 290 135" stroke="#aaa" stroke-width="2" marker-end="url(#arr2)" />
+                            <text x="360" y="152" text-anchor="middle" fill="#aaa" font-size="12">pull</text>
+                        </svg>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Удалённый репозиторий (remote)</h2>
+
+                    <p class="fragment">Это копия проекта в интернете</p>
+
+                    <div class="code-block fragment">
+                        <pre
+                            class="bash size-m"><code>git remote add origin https://github.com/user/repo.git</code></pre>
+                    </div>
+
+                    <div class="fragment" style="font-size: 0.85em;">
+                        origin — это просто имя удалённого репозитория
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Связываем локальный репо с GitHub</h2>
+                    <div class="code-block fragment">
+                        <pre class="bash size-m"><code># создать репо на github.com -&gt; получить URL
+git remote add origin https://github.com/user/my-project.git
+git push -u origin main</code></pre>
+                    </div>
+                    <p class="fragment" style="font-size: 0.8em;">Флаг <code>-u</code> запоминает связь: дальше просто
+                        <code>git push</code>
+                    </p>
+                </section>
+
+                <section>
+                    <h2>С нуля: проект на GitHub</h2>
+                    <div class="code-block fragment">
+                        <pre class="bash size-m"><code>mkdir my-game &amp;&amp; cd my-game
+
+# 1. Python
+python -m venv .venv
+.venv\Scripts\activate
+echo ".venv/" &gt; .gitignore
+
+# 2. Git локально
+git init
+git add .
+git commit -m "initial commit"
+
+# 3. GitHub (после создания пустого репо на сайте)
+git remote add origin https://github.com/user/my-game.git
+git push -u origin main</code></pre>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>push и pull</h2>
+                    <div class="compare">
+                        <div class="compare-block fragment">
+                            <h4>push</h4>
+                            <div class="code-block">
+                                <pre class="bash"><code>git push</code></pre>
+                            </div>
+                            <p style="font-size: 0.75em;">отправить локальные коммиты на GitHub</p>
+                        </div>
+                        <div class="compare-block fragment">
+                            <h4>pull</h4>
+                            <div class="code-block">
+                                <pre class="bash"><code>git pull</code></pre>
+                            </div>
+                            <p style="font-size: 0.75em;">забрать новые коммиты с GitHub</p>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>clone: взять чужой проект</h2>
+                    <div class="code-block fragment">
+                        <pre class="bash size-m"><code>git clone https://github.com/user/some-repo.git
+cd some-repo
+# всё готово: код, история, remote уже настроен</code></pre>
+                    </div>
+                    <p class="fragment" style="font-size: 0.85em;">Так ты скачиваешь любой open-source проект с GitHub
+                    </p>
+                </section>
+
+                <section>
+                    <h2>Pull Request</h2>
+                    <p class="fragment" style="font-size: 0.85em;">Запрос на слияние: "посмотрите мой код и влейте в
+                        main"</p>
+                    <div class="code-block fragment">
+                        <pre class="bash size-m"><code>git checkout -b fix-bug
+# правим, коммитим
+git push -u origin fix-bug
+
+# идём на github.com -&gt; Compare &amp; pull request
+# кто-то ревьюит -&gt; merge -&gt; ветка вливается в main</code></pre>
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        Так работают все open-source проекты и команды
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Типичный день в команде</h2>
+                    <div class="code-block fragment">
+                        <pre class="bash size-m"><code>git checkout main
+git pull                         # забрать свежее
+
+git checkout -b feature-login      # новая ветка
+# пишем код...
+git add .
+git commit -m "add login form"
+
+git push -u origin feature-login # залить на GitHub
+# создать Pull Request на сайте
+# ревью -&gt; merge -&gt; удалить ветку</code></pre>
+                    </div>
+                </section>
+            </section>
+
+            <!-- ИТОГ -->
+            <section>
+                <div class="lesson-time">87</div>
+                <h2>Что запомнить</h2>
+                <ul>
+                    <li class="fragment">Модуль - это <mark>.py файл</mark>, который импортируют</li>
+                    <li class="fragment"><code>pip install</code> + <code>venv</code> + <code>requirements.txt</code>
+                    </li>
+                    <li class="fragment">Коммит - <mark class="green">снимок</mark> проекта; цепочка = история</li>
+                    <li class="fragment">Ветки дают безопасный эксперимент</li>
+                    <li class="fragment">Merge сохраняет историю; rebase делает её <mark class="yellow">линейной</mark>
+                    </li>
+                    <li class="fragment">GitHub - удалённая копия, push/pull/clone</li>
+                </ul>
+                <div class="fragment opinion" style="margin-top: 1em;">
+                    Следующий урок - стартуем проект: сразу venv + git init + первый push
+                </div>
+            </section>
+
+        </div>
+    </div>
+
+    <script src="/utils/lib/js/head.min.js"></script>
+    <script src="/utils/js/reveal.js"></script>
+    <script>
+        Reveal.initialize({
+            controls: true,
+            progress: true,
+            history: true,
+            center: true,
+            transition: 'fade',
+            transitionSpeed: 'fast',
+            dependencies: [
+                { src: '/utils/lib/js/classList.js', condition: function () { return !document.body.classList; } },
+                { src: '/utils/plugin/markdown/marked.js', condition: function () { return !!document.querySelector('[data-markdown]'); } },
+                { src: '/utils/plugin/markdown/markdown.js', condition: function () { return !!document.querySelector('[data-markdown]'); } },
+                { src: '/utils/plugin/highlight/highlight.js', async: true, callback: function () { hljs.initHighlightingOnLoad(); } },
+                { src: '/utils/plugin/zoom-js/zoom.js', async: true },
+                { src: '/utils/plugin/notes/notes.js', async: true }
+            ]
+        });
+        Reveal.configure({ slideNumber: 'c/t' });
+    </script>
+</body>
+
+</html>
