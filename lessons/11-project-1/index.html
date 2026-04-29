@@ -3,17 +3,14 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Занятие 11 - Python-проект: старт</title>
+    <title>Занятие 11 - RPG-арена: старт проекта</title>
     <meta name="viewport"
         content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
 
     <link rel="stylesheet" href="/utils/css/reveal.css">
     <link rel="stylesheet" href="/utils/lib/css/animate.css">
     <link rel="stylesheet" href="/utils/css/theme/night.css" id="theme">
-
-    <!-- Code syntax highlighting -->
     <link rel="stylesheet" href="/utils/lib/css/zenburn.css">
-
     <link rel="stylesheet" href="/utils/css/custom-base.css">
     <link rel="stylesheet" href="css-custom/custom.css">
 
@@ -31,14 +28,493 @@
     <div class="reveal">
         <div class="slides">
 
+            <!-- ТИТУЛЬНЫЙ СЛАЙД -->
             <section style="font-size: 70px; height: 100%; width: 100%">
+                <div class="lesson-time">0</div>
                 <div class="fragment">
-                    <h1 class="animated" style="font-size: 1.8em;">Python-проект: старт</h1>
-                    <p style="text-align: center; font-size: 0.5em; opacity: 0.5;">Занятие 11</p>
+                    <h1 class="animated" style="font-size: 1.6em;">RPG-арена</h1>
+                    <p style="text-align: center; font-size: 0.5em; opacity: 0.7;">Старт проекта</p>
+                    <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">Занятие 11</p>
                 </div>
             </section>
 
-            <!-- TODO: добавить слайды -->
+            <!-- ===================================================== -->
+            <!-- ЧАСТЬ 0: ПРОЕКТ                                         -->
+            <!-- ===================================================== -->
+            <section>
+                <section style="font-size: 70px; height: 100%; width: 100%">
+                    <div class="lesson-time">0</div>
+                    <div class="fragment">
+                        <h1 style="font-size: 1.4em;">Что строим</h1>
+                        <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">Проект на 4 занятия</p>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Идея</h2>
+                    <p class="fragment">Консольная RPG-арена</p>
+                    <ul>
+                        <li class="fragment">герои трёх классов: Warrior, Mage, Archer</li>
+                        <li class="fragment">пошаговый бой</li>
+                        <li class="fragment">инвентарь и зелья</li>
+                        <li class="fragment">прокачка и таверна-магазин</li>
+                        <li class="fragment">сохранение героя в файл</li>
+                        <li class="fragment">босс-бой в финале</li>
+                    </ul>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        Развиваем твоё ДЗ из 8-го урока в нормальную игру
+                    </div>
+                </section>
+
+                <section>
+                    <h2>План на 4 занятия</h2>
+                    <div class="timeline">
+                        <div class="timeline-item fragment">
+                            <div class="timeline-marker">11</div>
+                            <div class="timeline-content"><strong>Сегодня.</strong> Каркас боя: Character, герои, цикл боя, лог</div>
+                        </div>
+                        <div class="timeline-item fragment">
+                            <div class="timeline-marker">12</div>
+                            <div class="timeline-content">Item, Inventory, зелья в бою, дроп</div>
+                        </div>
+                        <div class="timeline-item fragment">
+                            <div class="timeline-marker">13</div>
+                            <div class="timeline-content">Таверна, опыт и уровни, сохранение в JSON</div>
+                        </div>
+                        <div class="timeline-item fragment">
+                            <div class="timeline-marker">14</div>
+                            <div class="timeline-content">Босс-бой, командный режим, баланс</div>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Как работаем</h2>
+                    <div class="tools-list">
+                        <div class="tool-block fragment">
+                            <h4>PyCharm</h4>
+                            <p style="font-size: 0.7em;">пишем код в нормальной IDE</p>
+                        </div>
+                        <div class="tool-block fragment">
+                            <h4>Code With Me</h4>
+                            <p style="font-size: 0.7em;">сидим в одном проекте вдвоём</p>
+                        </div>
+                        <div class="tool-block fragment">
+                            <h4>GitHub</h4>
+                            <p style="font-size: 0.7em;">история коммитов и бэкап</p>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Цель сегодняшнего занятия</h2>
+                    <ul>
+                        <li class="fragment">рабочий <code>main.py</code></li>
+                        <li class="fragment">бой Warrior против Mage идёт до победы</li>
+                        <li class="fragment">в консоли видны все удары и HP</li>
+                        <li class="fragment">всё закоммичено и лежит на GitHub</li>
+                    </ul>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        К концу урока запустим <code>python main.py</code> и увидим бой
+                    </div>
+                </section>
+            </section>
+
+            <!-- ===================================================== -->
+            <!-- ЧАСТЬ 1: CHARACTER                                      -->
+            <!-- ===================================================== -->
+            <section>
+                <section style="font-size: 70px; height: 100%; width: 100%">
+                    <div class="lesson-time">7</div>
+                    <div class="fragment">
+                        <h1 style="font-size: 1.4em;">Класс Character</h1>
+                        <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">База для всех героев</p>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Что было в ДЗ</h2>
+                    <ul>
+                        <li class="fragment">абстрактный класс <code>Character(ABC)</code></li>
+                        <li class="fragment">атрибуты <code>name</code>, <code>hp</code></li>
+                        <li class="fragment">абстрактный метод <code>attack(target)</code></li>
+                    </ul>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        Этого мало для проекта. Что добавим?
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Что добавим в Character</h2>
+                    <ul>
+                        <li class="fragment"><code>max_hp</code> - "потолок" для лечения зельем</li>
+                        <li class="fragment"><code>damage</code> - базовый урон в атрибуте, не зашит в коде</li>
+                        <li class="fragment"><code>property</code> на <code>hp</code> с защитой от отрицательного и от превышения <code>max_hp</code></li>
+                        <li class="fragment"><code>take_damage(amount)</code> - получить урон</li>
+                        <li class="fragment"><code>is_alive()</code> - живой ли</li>
+                        <li class="fragment"><code>__str__</code> - "Warrior 'Артур' [HP 100/120]"</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h2>Зачем property для hp</h2>
+                    <ul>
+                        <li class="fragment">валидация в одном месте</li>
+                        <li class="fragment">не уйдёт в минус случайно</li>
+                        <li class="fragment">не вылечится выше <code>max_hp</code></li>
+                    </ul>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        Любой код, меняющий hp, автоматически проходит проверку
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Почему abstract</h2>
+                    <p class="fragment">Нельзя создать "просто персонажа"</p>
+                    <ul>
+                        <li class="fragment">у каждого реального героя <mark class="green">своя</mark> механика атаки</li>
+                        <li class="fragment">ABC заставляет наследников реализовать <code>attack</code></li>
+                        <li class="fragment">забыл реализовать - упадёт при создании объекта, а не позже</li>
+                    </ul>
+                </section>
+            </section>
+
+            <!-- ===================================================== -->
+            <!-- ЧАСТЬ 2: ГЕРОИ                                          -->
+            <!-- ===================================================== -->
+            <section>
+                <section style="font-size: 70px; height: 100%; width: 100%">
+                    <div class="lesson-time">17</div>
+                    <div class="fragment">
+                        <h1 style="font-size: 1.4em;">Три класса героев</h1>
+                        <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">Warrior, Mage, Archer</p>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Параметры героев</h2>
+                    <table style="font-size: 0.9em; width: 100%;">
+                        <tr>
+                            <td><strong>Класс</strong></td>
+                            <td><strong>HP</strong></td>
+                            <td><strong>Урон</strong></td>
+                            <td><strong>Особенность</strong></td>
+                        </tr>
+                        <tr class="fragment">
+                            <td>Warrior</td>
+                            <td>120</td>
+                            <td>20</td>
+                            <td>броня - снижает урон на 5</td>
+                        </tr>
+                        <tr class="fragment">
+                            <td>Mage</td>
+                            <td>70</td>
+                            <td>30</td>
+                            <td>каждая 3-я атака - крит x2</td>
+                        </tr>
+                        <tr class="fragment">
+                            <td>Archer</td>
+                            <td>90</td>
+                            <td>15</td>
+                            <td>50% шанс на двойной выстрел</td>
+                        </tr>
+                    </table>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        Параметры - просто числа. Их легко крутить ради баланса
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Warrior</h2>
+                    <ul>
+                        <li class="fragment">наследник <code>Character</code></li>
+                        <li class="fragment">фиксированный урон 20</li>
+                        <li class="fragment"><mark class="green">переопределяет</mark> <code>take_damage</code> - отнимает броню перед уроном</li>
+                        <li class="fragment">самый живучий</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h2>Mage</h2>
+                    <ul>
+                        <li class="fragment">наследник <code>Character</code></li>
+                        <li class="fragment">высокий базовый урон 30</li>
+                        <li class="fragment">внутри объекта - счётчик ударов</li>
+                        <li class="fragment">каждая 3-я атака бьёт двойным уроном</li>
+                        <li class="fragment">хрупкий: 70 HP</li>
+                    </ul>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        Состояние "сколько раз ударил" живёт <mark>внутри</mark> объекта - идеальный кейс для класса
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Archer</h2>
+                    <ul>
+                        <li class="fragment">наследник <code>Character</code></li>
+                        <li class="fragment">средний урон 15</li>
+                        <li class="fragment">первый рандом в проекте: 50% шанс на двойной выстрел</li>
+                        <li class="fragment">средняя живучесть: 90 HP</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h2>Что каждый делает</h2>
+                    <div class="compare">
+                        <div class="compare-block fragment">
+                            <h4>Warrior</h4>
+                            <ul style="font-size: 0.75em; text-align: left;">
+                                <li>фикс. урон</li>
+                                <li>броня в <code>take_damage</code></li>
+                                <li>живучий</li>
+                            </ul>
+                        </div>
+                        <div class="compare-block fragment">
+                            <h4>Mage</h4>
+                            <ul style="font-size: 0.75em; text-align: left;">
+                                <li>большой базовый урон</li>
+                                <li>счётчик ударов</li>
+                                <li>хрупкий</li>
+                            </ul>
+                        </div>
+                        <div class="compare-block fragment">
+                            <h4>Archer</h4>
+                            <ul style="font-size: 0.75em; text-align: left;">
+                                <li>средний урон</li>
+                                <li>рандом x2</li>
+                                <li>средняя живучесть</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        Все три - <mark class="green">Character</mark>: одинаковый интерфейс, разная механика
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Зачем общий интерфейс</h2>
+                    <ul>
+                        <li class="fragment">цикл боя не знает, кто перед ним</li>
+                        <li class="fragment">любой герой умеет <code>attack</code>, <code>take_damage</code>, <code>is_alive</code></li>
+                        <li class="fragment">добавим Paladin или Necromancer - бой не поменяется</li>
+                    </ul>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        Это и есть полиморфизм: один интерфейс, много реализаций
+                    </div>
+                </section>
+            </section>
+
+            <!-- ===================================================== -->
+            <!-- ЧАСТЬ 3: ЦИКЛ БОЯ                                       -->
+            <!-- ===================================================== -->
+            <section>
+                <section style="font-size: 70px; height: 100%; width: 100%">
+                    <div class="lesson-time">30</div>
+                    <div class="fragment">
+                        <h1 style="font-size: 1.4em;">Цикл боя</h1>
+                        <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">1 на 1 до победы</p>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Алгоритм</h2>
+                    <div class="timeline">
+                        <div class="timeline-item fragment">
+                            <div class="timeline-marker">1</div>
+                            <div class="timeline-content">оба живы?</div>
+                        </div>
+                        <div class="timeline-item fragment">
+                            <div class="timeline-marker">2</div>
+                            <div class="timeline-content">герой A атакует героя B</div>
+                        </div>
+                        <div class="timeline-item fragment">
+                            <div class="timeline-marker">3</div>
+                            <div class="timeline-content">B жив? Если нет - A победил</div>
+                        </div>
+                        <div class="timeline-item fragment">
+                            <div class="timeline-marker">4</div>
+                            <div class="timeline-content">B атакует A</div>
+                        </div>
+                        <div class="timeline-item fragment">
+                            <div class="timeline-marker">5</div>
+                            <div class="timeline-content">A жив? Если нет - B победил. Иначе шаг 1</div>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Реализуем функцию fight</h2>
+                    <ul>
+                        <li class="fragment">принимает двух героев</li>
+                        <li class="fragment">внутри - <code>while</code> до тех пор, пока оба живы</li>
+                        <li class="fragment">меняет местами атакующего и защищающегося</li>
+                        <li class="fragment">возвращает победителя</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h2>Кто ходит первым</h2>
+                    <div class="compare">
+                        <div class="compare-block fragment">
+                            <h4>Просто</h4>
+                            <p style="font-size: 0.85em;">всегда A первый</p>
+                            <p style="font-size: 0.75em; opacity: 0.7;">несправедливо</p>
+                        </div>
+                        <div class="compare-block fragment">
+                            <h4>Лучше</h4>
+                            <p style="font-size: 0.85em;">монетка через <code>random</code></p>
+                            <p style="font-size: 0.75em; opacity: 0.7;">справедливо и просто</p>
+                        </div>
+                        <div class="compare-block fragment">
+                            <h4>По-взрослому</h4>
+                            <p style="font-size: 0.85em;">атрибут <code>speed</code></p>
+                            <p style="font-size: 0.75em; opacity: 0.7;">первый - у кого больше</p>
+                        </div>
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        Сегодня - монетка. Speed добавим, когда введём прокачку
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Меняем местами в одну строку</h2>
+                    <ul>
+                        <li class="fragment">после хода атакующий и защищающийся меняются ролями</li>
+                        <li class="fragment">в Python это пишется одной строкой через распаковку кортежа</li>
+                        <li class="fragment">никаких временных переменных не нужно</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h2>Защита от вечного боя</h2>
+                    <p class="fragment">Если оба еле бьют - бой может длиться бесконечно</p>
+                    <ul>
+                        <li class="fragment">вводим лимит: например 100 ходов</li>
+                        <li class="fragment">меняем <code>while</code> на <code>for</code> по диапазону</li>
+                        <li class="fragment">внутри - проверка "оба ещё живы"</li>
+                    </ul>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        Любой <code>while True</code> - повод подумать про лимит
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Запускаем main.py</h2>
+                    <ul>
+                        <li class="fragment">импортируем <code>Warrior</code>, <code>Mage</code> из <code>character</code></li>
+                        <li class="fragment">импортируем <code>fight</code> из <code>battle</code></li>
+                        <li class="fragment">создаём двух героев</li>
+                        <li class="fragment">запускаем бой и печатаем победителя</li>
+                    </ul>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        Первый рабочий запуск проекта
+                    </div>
+                </section>
+            </section>
+
+            <!-- ===================================================== -->
+            <!-- ЧАСТЬ 4: ЛОГ БОЯ                                        -->
+            <!-- ===================================================== -->
+            <section>
+                <section style="font-size: 70px; height: 100%; width: 100%">
+                    <div class="lesson-time">45</div>
+                    <div class="fragment">
+                        <h1 style="font-size: 1.4em;">Лог боя</h1>
+                        <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">Видеть, что происходит</p>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Что хотим видеть</h2>
+                    <div class="code-block fragment">
+                        <pre class="bash size-m"><code>=== БОЙ ===
+Warrior 'Артур' [HP 120/120]
+Mage   'Мерлин' [HP 70/70]
+
+Артур атакует Мерлина за 20. Мерлин: 50/70
+Мерлин атакует Артура за 30. Артур: 95/120
+...
+Артур атакует Мерлина за 20. Мерлин: 0/70
+Победил: Артур (HP 60/120)</code></pre>
+                    </div>
+                </section>
+
+                <!-- <section>
+                    <h2>Где печатать</h2>
+                    <div class="compare">
+                        <div class="compare-block fragment">
+                            <h4>Внутри attack()</h4>
+                            <ul style="font-size: 0.75em; text-align: left;">
+                                <li>удобно: знаем урон</li>
+                                <li>но герой "знает про вывод"</li>
+                                <li>не получится тестировать</li>
+                            </ul>
+                        </div>
+                        <div class="compare-block fragment">
+                            <h4>Внутри fight()</h4>
+                            <ul style="font-size: 0.75em; text-align: left;">
+                                <li>герой остаётся чистым</li>
+                                <li>вывод в одном месте</li>
+                                <li>легко поменять формат</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        Класс героя <mark class="green">не должен</mark> знать про <code>print</code>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Как доносим урон до лога</h2>
+                    <ul>
+                        <li class="fragment"><code>attack</code> теперь <mark class="green">возвращает</mark> число - сколько ударил</li>
+                        <li class="fragment">цикл боя получает это число</li>
+                        <li class="fragment">сам решает, как показать игроку</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h2>Отдельный модуль log.py</h2>
+                    <ul>
+                        <li class="fragment">функция <code>log_attack(attacker, defender, damage)</code></li>
+                        <li class="fragment">функция <code>log_winner(winner)</code></li>
+                        <li class="fragment">в <code>battle.py</code> просто <code>from log import ...</code></li>
+                    </ul>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        Захотим цвет, эмодзи или вывод в файл - правим только <code>log.py</code>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Бонус: пауза между ходами</h2>
+                    <ul>
+                        <li class="fragment">модуль <code>time</code>, функция <code>sleep</code></li>
+                        <li class="fragment">полсекунды между атаками</li>
+                        <li class="fragment">бой перестаёт мелькать</li>
+                    </ul>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        Мелочь, но играть приятнее
+                    </div>
+                </section> -->
+            </section>
+
+            <!-- ===================================================== -->
+            <!-- ИТОГ                                                    -->
+            <!-- ===================================================== -->
+            <section>
+                <div class="lesson-time">58</div>
+                <h2>Что сделали</h2>
+                <ul>
+                    <li class="fragment">Завели проект в PyCharm, venv, GitHub-репо</li>
+                    <li class="fragment"><code>Character</code> с <mark class="green">property</mark>, <code>take_damage</code>, <code>is_alive</code></li>
+                    <li class="fragment">Три героя с разной механикой атаки</li>
+                    <li class="fragment">Цикл боя с очередью и лимитом ходов</li>
+                    <!-- <li class="fragment">Отдельный модуль <code>log.py</code></li> -->
+                </ul>
+                <div class="fragment opinion" style="margin-top: 1em;">
+                    На следующем занятии - предметы и инвентарь
+                </div>
+            </section>
 
         </div>
     </div>

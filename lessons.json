@@ -206,7 +206,7 @@
       "number": 11,
       "title": "Python-проект: старт",
       "date": "2026-04-28T17:00:00",
-      "duration": 90,
+      "duration": 60,
       "presentations": [
         {
           "title": "Презентация",
@@ -220,7 +220,7 @@
       "number": 12,
       "title": "Python-проект: завершение",
       "date": "2026-05-01T17:00:00",
-      "duration": 60,
+      "duration": 90,
       "presentations": [
         {
           "title": "Презентация",
@@ -233,7 +233,7 @@
     {
       "number": 13,
       "title": "Массивы и связные списки",
-      "date": "2026-05-01T17:00:00",
+      "date": "2026-05-05T17:00:00",
       "duration": 60,
       "presentations": [
         {
@@ -247,7 +247,7 @@
     {
       "number": 14,
       "title": "Рекурсия",
-      "date": "2026-05-05T17:00:00",
+      "date": "2026-05-08T17:00:00",
       "duration": 90,
       "presentations": [
         {
@@ -261,7 +261,7 @@
     {
       "number": 15,
       "title": "Pygame: основы",
-      "date": "2026-05-08T17:00:00",
+      "date": "2026-05-12T17:00:00",
       "duration": 60,
       "presentations": [
         {
@@ -275,7 +275,7 @@
     {
       "number": 16,
       "title": "Pygame: мини-игра",
-      "date": "2026-05-08T17:00:00",
+      "date": "2026-05-15T17:00:00",
       "duration": 90,
       "presentations": [
         {
