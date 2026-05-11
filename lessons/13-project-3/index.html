@@ -1,0 +1,471 @@
+<!doctype html>
+<html lang="ru">
+
+<head>
+    <meta charset="utf-8">
+    <title>Занятие 13 - RPG-арена: gold, таверна, опыт, JSON</title>
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+
+    <link rel="stylesheet" href="/utils/css/reveal.css">
+    <link rel="stylesheet" href="/utils/lib/css/animate.css">
+    <link rel="stylesheet" href="/utils/css/theme/night.css" id="theme">
+    <link rel="stylesheet" href="/utils/lib/css/zenburn.css">
+    <link rel="stylesheet" href="/utils/css/custom-base.css">
+    <link rel="stylesheet" href="css-custom/custom.css">
+
+    <script>
+        var link = document.createElement('link');
+        link.rel = 'stylesheet'; link.type = 'text/css';
+        link.href = window.location.search.match(/print-pdf/gi)
+            ? '/utils/css/print/pdf.css'
+            : '/utils/css/print/paper.css';
+        document.getElementsByTagName('head')[0].appendChild(link);
+    </script>
+</head>
+
+<body>
+    <div class="reveal">
+        <div class="slides">
+
+            <!-- ТИТУЛЬНЫЙ СЛАЙД -->
+            <section style="font-size: 70px; height: 100%; width: 100%">
+                <div class="lesson-time">0</div>
+                <div class="fragment">
+                    <h1 class="animated" style="font-size: 1.6em;">RPG-арена</h1>
+                    <p style="text-align: center; font-size: 0.5em; opacity: 0.7;">Gold, таверна, опыт, JSON</p>
+                    <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">Занятие 13</p>
+                </div>
+            </section>
+
+            <!-- ===================================================== -->
+            <!-- ЧАСТЬ 0: ГДЕ СТОИМ                                     -->
+            <!-- ===================================================== -->
+            <section>
+                <section style="font-size: 70px; height: 100%; width: 100%">
+                    <div class="lesson-time">0</div>
+                    <div class="fragment">
+                        <h1 style="font-size: 1.4em;">Где стоим</h1>
+                        <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">Что написали</p>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Файлы проекта</h2>
+                    <div class="tools-list">
+                        <div class="tool-block fragment">
+                            <h4>characters.py</h4>
+                            <p style="font-size: 0.7em;">Character, Warior, Mage, Archer</p>
+                        </div>
+                        <div class="tool-block fragment">
+                            <h4>item.py + items.py</h4>
+                            <p style="font-size: 0.7em;">Item, 4 готовых предмета</p>
+                        </div>
+                        <div class="tool-block fragment">
+                            <h4>inventory.py</h4>
+                            <p style="font-size: 0.7em;">add_item, use_item с pop</p>
+                        </div>
+                        <div class="tool-block fragment">
+                            <h4>logger.py</h4>
+                            <p style="font-size: 0.7em;">Logger с colorama + sleep</p>
+                        </div>
+                        <div class="tool-block fragment">
+                            <h4>fight.py</h4>
+                            <p style="font-size: 0.7em;">player_turn, fight - интерактивный бой</p>
+                        </div>
+                    </div>
+                </section>
+            </section>
+
+            <!-- ===================================================== -->
+            <!-- ЧАСТЬ 1: ДОДЕЛКИ                                        -->
+            <!-- ===================================================== -->
+            <section>
+                <section style="font-size: 70px; height: 100%; width: 100%">
+                    <div class="lesson-time">10</div>
+                    <div class="fragment">
+                        <h1 style="font-size: 1.4em;">Доделки</h1>
+                        <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">Чиним и дожигаем</p>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Баг с max_hp</h2>
+                    <ul>
+                        <li class="fragment">все субклассы наследуют <code>max_hp = 150</code> от <code>Character</code></li>
+                        <li class="fragment">Warior стартует с 120 HP, но лечиться может до 150 - это баг</li>
+                        <li class="fragment">добавляем <code>max_hp = 120</code> прямо в <code>Warior</code></li>
+                        <li class="fragment">то же для <code>Mage</code> и <code>Archer</code></li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h2>Яд - кидаем во врага</h2>
+                    <ul>
+                        <li class="fragment">в <code>player_turn</code> сейчас всегда применяем предмет к себе</li>
+                        <li class="fragment">проверяем <code>item.style</code> перед вызовом</li>
+                        <li class="fragment">"heal" - передаём <code>hero</code> как цель</li>
+                        <li class="fragment">"damage" - передаём <code>enemy</code> как цель</li>
+                    </ul>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        <code>use_item(index, target)</code> уже принимает цель - просто передаём нужного
+                    </div>
+                </section>
+
+                <section>
+                    <h2>generate_drop</h2>
+                    <div class="code-block fragment">
+                        <pre class="python size-m"><code>import random
+from items import HEALTH_POTION, BIG_HEALTH_POTION
+
+DROPS = [HEALTH_POTION, BIG_HEALTH_POTION]
+
+def generate_drop():
+    if random.random() &lt; 0.7:   # float в [0, 1)
+        return random.choice(DROPS)
+    return None</code></pre>
+                    </div>
+                    <ul>
+                        <li class="fragment"><code>random.random()</code> - случайный float от 0 до 1</li>
+                        <li class="fragment">70% шанс - что-то выпало, 30% - ничего</li>
+                        <li class="fragment">победитель получает дроп через <code>add_item</code></li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h2>Сбежать с боя</h2>
+                    <ul>
+                        <li class="fragment">добавляем "[3] Сбежать" в меню <code>player_turn</code></li>
+                        <li class="fragment"><code>player_turn</code> возвращает флаг - "сбежал или нет"</li>
+                        <li class="fragment"><code>fight()</code> проверяет флаг и возвращает <code>None</code></li>
+                        <li class="fragment"><code>main.py</code> обрабатывает <code>None</code> отдельно</li>
+                    </ul>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        <code>None</code> - честный способ сказать "победителя нет"
+                    </div>
+                </section>
+            </section>
+
+            <!-- ===================================================== -->
+            <!-- ЧАСТЬ 2: GOLD И ТАВЕРНА                                 -->
+            <!-- ===================================================== -->
+            <section>
+                <section style="font-size: 70px; height: 100%; width: 100%">
+                    <div class="lesson-time">25</div>
+                    <div class="fragment">
+                        <h1 style="font-size: 1.4em;">Gold и таверна</h1>
+                        <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">Экономика игры</p>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Gold в Character</h2>
+                    <ul>
+                        <li class="fragment"><code>gold = 0</code> - новый атрибут в <code>__init__</code></li>
+                        <li class="fragment">за победу в бою - прибавляем фиксированную сумму</li>
+                        <li class="fragment">в таверне - тратим на предметы</li>
+                    </ul>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        Золото - ресурс, который связывает бой и магазин
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Сколько золота за победу</h2>
+                    <div class="compare">
+                        <div class="compare-block fragment">
+                            <h4>Фиксированно</h4>
+                            <p style="font-size: 0.8em;">всегда 50 gold</p>
+                            <p style="font-size: 0.7em; opacity: 0.7;">просто, но скучно</p>
+                        </div>
+                        <div class="compare-block fragment">
+                            <h4>Зависит от врага</h4>
+                            <p style="font-size: 0.8em;">Mage даёт больше, чем Warior</p>
+                            <p style="font-size: 0.7em; opacity: 0.7;">интереснее, сложнее балансировать</p>
+                        </div>
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        Начнём с фиксированного - потом покрутим
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Таверна: что это</h2>
+                    <ul>
+                        <li class="fragment">список товаров с ценами</li>
+                        <li class="fragment">герой заходит между боями</li>
+                        <li class="fragment">выбирает предмет через <code>input()</code></li>
+                        <li class="fragment">списывается <code>gold</code>, предмет попадает в инвентарь</li>
+                    </ul>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        Таверна - это просто функция <code>tavern(hero)</code>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Алгоритм таверны</h2>
+                    <div class="timeline">
+                        <div class="timeline-item fragment">
+                            <div class="timeline-marker">1</div>
+                            <div class="timeline-content">Показываем список: название, цена, сколько gold у героя</div>
+                        </div>
+                        <div class="timeline-item fragment">
+                            <div class="timeline-marker">2</div>
+                            <div class="timeline-content">Читаем <code>input()</code> - номер товара или выход</div>
+                        </div>
+                        <div class="timeline-item fragment">
+                            <div class="timeline-marker">3</div>
+                            <div class="timeline-content">Проверяем: хватает ли gold</div>
+                        </div>
+                        <div class="timeline-item fragment">
+                            <div class="timeline-marker">4</div>
+                            <div class="timeline-content">Списываем gold, добавляем предмет в инвентарь</div>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Товары в таверне</h2>
+                    <ul>
+                        <li class="fragment">список кортежей: <code>(item, price)</code></li>
+                        <li class="fragment">или отдельный атрибут <code>price</code> в классе <code>Item</code></li>
+                    </ul>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        Кортеж проще - не трогаем уже написанный <code>Item</code>
+                    </div>
+                </section>
+            </section>
+
+            <!-- ===================================================== -->
+            <!-- ЧАСТЬ 3: ОПЫТ И УРОВНИ                                  -->
+            <!-- ===================================================== -->
+            <section>
+                <section style="font-size: 70px; height: 100%; width: 100%">
+                    <div class="lesson-time">45</div>
+                    <div class="fragment">
+                        <h1 style="font-size: 1.4em;">Опыт и уровни</h1>
+                        <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">Прогрессия героя</p>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Зачем уровни</h2>
+                    <ul>
+                        <li class="fragment">ощущение роста - победы дают что-то</li>
+                        <li class="fragment">баланс: герой становится сильнее вместе с врагами</li>
+                        <li class="fragment">мотивация продолжать играть</li>
+                    </ul>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        Три новых атрибута: <code>level</code>, <code>xp</code>, <code>xp_threshold</code>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Атрибуты в Character</h2>
+                    <ul>
+                        <li class="fragment"><code>level = 1</code> - текущий уровень</li>
+                        <li class="fragment"><code>xp = 0</code> - накопленный опыт</li>
+                        <li class="fragment"><code>xp_threshold = 100</code> - сколько нужно до следующего уровня</li>
+                    </ul>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        <code>xp_threshold</code> растёт с каждым уровнем - дойти до следующего всё тяжелее
+                    </div>
+                </section>
+
+                <section>
+                    <h2>gain_xp и level_up</h2>
+                    <ul>
+                        <li class="fragment"><code>gain_xp(amount)</code> - прибавляем xp, проверяем порог</li>
+                        <li class="fragment">если <code>xp >= xp_threshold</code> - вызываем <code>level_up()</code></li>
+                        <li class="fragment"><code>level_up</code>: level+1, max_hp+20, damage+5</li>
+                        <li class="fragment">новый порог умножаем на 1.5 - каждый уровень тяжелее</li>
+                        <li class="fragment">при level up - полное лечение</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h2>Сколько XP за победу</h2>
+                    <div class="compare">
+                        <div class="compare-block fragment">
+                            <h4>Фиксированно</h4>
+                            <p style="font-size: 0.8em;">всегда 50 XP</p>
+                            <p style="font-size: 0.7em; opacity: 0.7;">просто</p>
+                        </div>
+                        <div class="compare-block fragment">
+                            <h4>От врага</h4>
+                            <p style="font-size: 0.8em;">зависит от уровня врага</p>
+                            <p style="font-size: 0.7em; opacity: 0.7;">честно, но нужен уровень у врага</p>
+                        </div>
+                        <div class="compare-block fragment">
+                            <h4>От хода боя</h4>
+                            <p style="font-size: 0.8em;">больше XP за быструю победу</p>
+                            <p style="font-size: 0.7em; opacity: 0.7;">интересно - потом</p>
+                        </div>
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        Начнём с фиксированного - цифры подберём во время игры
+                    </div>
+                </section>
+            </section>
+
+            <!-- ===================================================== -->
+            <!-- ЧАСТЬ 4: СОХРАНЕНИЕ В JSON                              -->
+            <!-- ===================================================== -->
+            <section>
+                <section style="font-size: 70px; height: 100%; width: 100%">
+                    <div class="lesson-time">65</div>
+                    <div class="fragment">
+                        <h1 style="font-size: 1.4em;">Сохранение в JSON</h1>
+                        <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">Прогресс между сессиями</p>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Зачем сохранять</h2>
+                    <ul>
+                        <li class="fragment">закрыл игру - герой не пропал</li>
+                        <li class="fragment">level, xp, gold, инвентарь - всё восстанавливается</li>
+                    </ul>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        Объект в памяти живёт пока запущена программа. JSON - это объект на диске
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Как выглядит save.json</h2>
+                    <div class="code-block fragment">
+                        <pre class="json size-m"><code>{
+    "class": "Warior",
+    "name": "Артур",
+    "level": 2,
+    "xp": 150,
+    "xp_threshold": 150,
+    "gold": 80,
+    "hp": 95
+}</code></pre>
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        Это просто текстовый файл - его можно открыть и прочитать
+                    </div>
+                </section>
+
+                <section>
+                    <h2>to_dict()</h2>
+                    <div class="code-block fragment">
+                        <pre class="python size-m"><code>def to_dict(self):
+    return {
+        "class":         self.__class__.__name__,
+        "name":          self.name,
+        "level":         self.level,
+        "xp":            self.xp,
+        "xp_threshold":  self.xp_threshold,
+        "gold":          self.gold,
+        "hp":            self.hp,
+    }</code></pre>
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        <code>__class__.__name__</code> даёт строку "Warior" - знаем, какой класс восстанавливать
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Сохранить и загрузить</h2>
+                    <div class="code-block fragment">
+                        <pre class="python size-m"><code>import json
+
+def save_hero(hero, path="save.json"):
+    with open(path, "w", encoding="utf-8") as f:
+        json.dump(hero.to_dict(), f, ensure_ascii=False)
+
+def load_hero(path="save.json"):
+    with open(path, encoding="utf-8") as f:
+        data = json.load(f)
+    return data  # пока словарь - дальше разберём</code></pre>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>from_dict()</h2>
+                    <div class="code-block fragment">
+                        <pre class="python size-m"><code>@classmethod
+def from_dict(cls, data):
+    hero = cls(data["name"])
+    hero.level         = data["level"]
+    hero.xp            = data["xp"]
+    hero.xp_threshold  = data["xp_threshold"]
+    hero.gold          = data["gold"]
+    hero.hp            = data["hp"]
+    return hero</code></pre>
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        <code>@classmethod</code> - вызываем через класс: <code>Warior.from_dict(data)</code>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Выбор класса при загрузке</h2>
+                    <div class="code-block fragment">
+                        <pre class="python size-m"><code>from characters import Warior, Mage, Archer
+
+CLASSES = {
+    "Warior": Warior,
+    "Mage":   Mage,
+    "Archer": Archer,
+}
+
+def load_hero(path="save.json"):
+    with open(path, encoding="utf-8") as f:
+        data = json.load(f)
+    cls = CLASSES[data["class"]]
+    return cls.from_dict(data)</code></pre>
+                    </div>
+                </section>
+            </section>
+
+            <!-- ===================================================== -->
+            <!-- ИТОГ                                                   -->
+            <!-- ===================================================== -->
+            <section>
+                <div class="lesson-time">83</div>
+                <h2>Что сделали</h2>
+                <ul>
+                    <li class="fragment">Пофиксили <code>max_hp</code> у всех субклассов</li>
+                    <li class="fragment">Яд летит во врага, зелье пьём сами</li>
+                    <li class="fragment"><code>generate_drop</code> - дроп с 70% шансом</li>
+                    <li class="fragment">Сбежать - <code>fight()</code> возвращает <code>None</code></li>
+                    <li class="fragment"><code>gold</code> - за победу, тратим в таверне</li>
+                    <li class="fragment"><code>xp</code>, <code>level</code>, <code>level_up()</code> - прогрессия героя</li>
+                    <li class="fragment">JSON: <code>to_dict</code>, <code>from_dict</code>, save/load</li>
+                </ul>
+                <div class="fragment opinion" style="margin-top: 1em;">
+                    На следующем занятии - босс-бой, командный режим, финальный баланс
+                </div>
+            </section>
+
+        </div>
+    </div>
+
+    <script src="/utils/lib/js/head.min.js"></script>
+    <script src="/utils/js/reveal.js"></script>
+    <script>
+        Reveal.initialize({
+            controls: true,
+            progress: true,
+            history: true,
+            center: true,
+            transition: 'fade',
+            transitionSpeed: 'fast',
+            dependencies: [
+                { src: '/utils/lib/js/classList.js', condition: function () { return !document.body.classList; } },
+                { src: '/utils/plugin/markdown/marked.js', condition: function () { return !!document.querySelector('[data-markdown]'); } },
+                { src: '/utils/plugin/markdown/markdown.js', condition: function () { return !!document.querySelector('[data-markdown]'); } },
+                { src: '/utils/plugin/highlight/highlight.js', async: true, callback: function () { hljs.initHighlightingOnLoad(); } },
+                { src: '/utils/plugin/zoom-js/zoom.js', async: true },
+                { src: '/utils/plugin/notes/notes.js', async: true }
+            ]
+        });
+        Reveal.configure({ slideNumber: 'c/t' });
+    </script>
+</body>
+
+</html>
