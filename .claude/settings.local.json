@@ -5,7 +5,8 @@
       "WebFetch(domain:leetcode.com)",
       "WebFetch(domain:coderun.yandex.ru)",
       "WebSearch",
-      "WebFetch(domain:github.com)"
+      "WebFetch(domain:github.com)",
+      "Read(//d/Projects/python-rpg/**)"
     ]
   }
 }

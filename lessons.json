@@ -252,7 +252,8 @@
         {
           "title": "Выбор персонажа",
           "description": "Реализовать возможность выбора класса персонажа при начале игры и ввод его имени"
-        }]
+        }
+      ]
     },
     {
       "number": 14,
@@ -270,13 +271,13 @@
     },
     {
       "number": 15,
-      "title": "Массивы и связные списки",
+      "title": "Сортировки O(n²)",
       "date": "2026-05-15T17:00:00",
       "duration": 60,
       "presentations": [
         {
           "title": "Презентация",
-          "link": "/lessons/13-arrays/",
+          "link": "/lessons/15-sorting-n2/",
           "order": 1
         }
       ],
@@ -284,13 +285,13 @@
     },
     {
       "number": 16,
-      "title": "Рекурсия",
-      "date": "2026-05-19T17:00:00",
-      "duration": 90,
+      "title": "Стек и очередь",
+      "date": "2026-05-16T17:00:00",
+      "duration": 60,
       "presentations": [
         {
           "title": "Презентация",
-          "link": "/lessons/14-recursion/",
+          "link": "/lessons/16-stack-queue/",
           "order": 1
         }
       ],
@@ -298,13 +299,13 @@
     },
     {
       "number": 17,
-      "title": "Pygame: основы",
-      "date": "2026-05-22T17:00:00",
+      "title": "Рекурсия",
+      "date": "2026-05-19T17:00:00",
       "duration": 60,
       "presentations": [
         {
           "title": "Презентация",
-          "link": "/lessons/15-pygame-1/",
+          "link": "/lessons/17-recursion/",
           "order": 1
         }
       ],
@@ -312,13 +313,13 @@
     },
     {
       "number": 18,
-      "title": "Pygame: мини-игра",
-      "date": "2026-05-16T17:00:00",
+      "title": "Merge sort",
+      "date": "2026-05-22T17:00:00",
       "duration": 90,
       "presentations": [
         {
           "title": "Презентация",
-          "link": "/lessons/16-pygame-2/",
+          "link": "/lessons/18-merge-sort/",
           "order": 1
         }
       ],
@@ -326,13 +327,13 @@
     },
     {
       "number": 19,
-      "title": "Стек и очередь",
+      "title": "Quicksort",
       "date": "2026-05-29T17:00:00",
-      "duration": 60,
+      "duration": 90,
       "presentations": [
         {
           "title": "Презентация",
-          "link": "/lessons/17-stack-queue/",
+          "link": "/lessons/19-quicksort/",
           "order": 1
         }
       ],
@@ -340,13 +341,13 @@
     },
     {
       "number": 20,
-      "title": "Хеш-таблицы: идея и применение",
+      "title": "Хеш-таблицы: идея",
       "date": "2026-06-05T17:00:00",
-      "duration": 90,
+      "duration": 60,
       "presentations": [
         {
           "title": "Презентация",
-          "link": "/lessons/18-hash-1/",
+          "link": "/lessons/20-hash-1/",
           "order": 1
         }
       ],
@@ -354,13 +355,13 @@
     },
     {
       "number": 21,
-      "title": "Хеш-таблицы: коллизии и реализация",
+      "title": "Хеш-таблицы: реализация",
       "date": "2026-06-09T17:00:00",
-      "duration": 60,
+      "duration": 90,
       "presentations": [
         {
           "title": "Презентация",
-          "link": "/lessons/19-hash-2/",
+          "link": "/lessons/21-hash-2/",
           "order": 1
         }
       ],
@@ -368,13 +369,13 @@
     },
     {
       "number": 22,
-      "title": "SQL: введение в БД",
+      "title": "Pygame: основы",
       "date": "2026-06-12T17:00:00",
-      "duration": 90,
+      "duration": 60,
       "presentations": [
         {
           "title": "Презентация",
-          "link": "/lessons/20-sql-1/",
+          "link": "/lessons/22-pygame-1/",
           "order": 1
         }
       ],
@@ -382,13 +383,13 @@
     },
     {
       "number": 23,
-      "title": "SQL: JOIN и агрегации",
+      "title": "Pygame: мини-игра",
       "date": "2026-06-16T17:00:00",
-      "duration": 60,
+      "duration": 90,
       "presentations": [
         {
           "title": "Презентация",
-          "link": "/lessons/21-sql-2/",
+          "link": "/lessons/23-pygame-2/",
           "order": 1
         }
       ],
@@ -396,13 +397,13 @@
     },
     {
       "number": 24,
-      "title": "Проект: игра с таблицей рекордов",
+      "title": "Деревья + BST",
       "date": "2026-06-19T17:00:00",
       "duration": 90,
       "presentations": [
         {
           "title": "Презентация",
-          "link": "/lessons/22-project-sql/",
+          "link": "/lessons/24-trees-bst/",
           "order": 1
         }
       ],
@@ -410,13 +411,13 @@
     },
     {
       "number": 25,
-      "title": "Сортировки O(n²)",
+      "title": "API: requests",
       "date": "2026-06-23T17:00:00",
       "duration": 60,
       "presentations": [
         {
           "title": "Презентация",
-          "link": "/lessons/23-sorting-n2/",
+          "link": "/lessons/25-api-1/",
           "order": 1
         }
       ],
@@ -424,13 +425,13 @@
     },
     {
       "number": 26,
-      "title": "Divide and Conquer",
+      "title": "API: парсинг JSON",
       "date": "2026-06-26T17:00:00",
       "duration": 90,
       "presentations": [
         {
           "title": "Презентация",
-          "link": "/lessons/24-divide-conquer/",
+          "link": "/lessons/26-api-2/",
           "order": 1
         }
       ],
@@ -438,13 +439,13 @@
     },
     {
       "number": 27,
-      "title": "Merge sort",
+      "title": "Графы + BFS",
       "date": "2026-06-30T17:00:00",
       "duration": 60,
       "presentations": [
         {
           "title": "Презентация",
-          "link": "/lessons/25-merge-sort/",
+          "link": "/lessons/27-graphs-bfs/",
           "order": 1
         }
       ],
@@ -452,13 +453,13 @@
     },
     {
       "number": 28,
-      "title": "Quicksort",
+      "title": "DFS",
       "date": "2026-07-03T17:00:00",
-      "duration": 90,
+      "duration": 60,
       "presentations": [
         {
           "title": "Презентация",
-          "link": "/lessons/26-quicksort/",
+          "link": "/lessons/28-dfs/",
           "order": 1
         }
       ],
@@ -466,13 +467,13 @@
     },
     {
       "number": 29,
-      "title": "API: requests",
+      "title": "Дейкстра",
       "date": "2026-07-07T17:00:00",
-      "duration": 60,
+      "duration": 90,
       "presentations": [
         {
           "title": "Презентация",
-          "link": "/lessons/27-api-1/",
+          "link": "/lessons/29-dijkstra/",
           "order": 1
         }
       ],
@@ -480,13 +481,13 @@
     },
     {
       "number": 30,
-      "title": "API: парсинг JSON",
+      "title": "Жадные алгоритмы",
       "date": "2026-07-10T17:00:00",
-      "duration": 90,
+      "duration": 60,
       "presentations": [
         {
           "title": "Презентация",
-          "link": "/lessons/28-api-2/",
+          "link": "/lessons/30-greedy/",
           "order": 1
         }
       ],
@@ -494,13 +495,13 @@
     },
     {
       "number": 31,
-      "title": "Деревья: понятие и обходы",
+      "title": "SQL: введение",
       "date": "2026-07-14T17:00:00",
       "duration": 60,
       "presentations": [
         {
           "title": "Презентация",
-          "link": "/lessons/29-trees/",
+          "link": "/lessons/31-sql-1/",
           "order": 1
         }
       ],
@@ -508,13 +509,13 @@
     },
     {
       "number": 32,
-      "title": "BST",
+      "title": "SQL: JOIN и агрегации",
       "date": "2026-07-17T17:00:00",
       "duration": 90,
       "presentations": [
         {
           "title": "Презентация",
-          "link": "/lessons/30-bst/",
+          "link": "/lessons/32-sql-2/",
           "order": 1
         }
       ],
@@ -522,13 +523,13 @@
     },
     {
       "number": 33,
-      "title": "Графы: введение и представление",
+      "title": "Проект: таблица рекордов",
       "date": "2026-07-21T17:00:00",
-      "duration": 60,
+      "duration": 90,
       "presentations": [
         {
           "title": "Презентация",
-          "link": "/lessons/31-graphs/",
+          "link": "/lessons/33-project-sql/",
           "order": 1
         }
       ],
@@ -536,13 +537,13 @@
     },
     {
       "number": 34,
-      "title": "BFS",
+      "title": "DP: введение",
       "date": "2026-07-24T17:00:00",
-      "duration": 90,
+      "duration": 60,
       "presentations": [
         {
           "title": "Презентация",
-          "link": "/lessons/32-bfs/",
+          "link": "/lessons/34-dp-1/",
           "order": 1
         }
       ],
@@ -550,13 +551,13 @@
     },
     {
       "number": 35,
-      "title": "DFS",
+      "title": "DP: задачи",
       "date": "2026-07-28T17:00:00",
-      "duration": 60,
+      "duration": 90,
       "presentations": [
         {
           "title": "Презентация",
-          "link": "/lessons/33-dfs/",
+          "link": "/lessons/35-dp-2/",
           "order": 1
         }
       ],
@@ -564,78 +565,8 @@
     },
     {
       "number": 36,
-      "title": "Топологическая сортировка",
-      "date": "2026-07-31T17:00:00",
-      "duration": 90,
-      "presentations": [
-        {
-          "title": "Презентация",
-          "link": "/lessons/34-topo-sort/",
-          "order": 1
-        }
-      ],
-      "homeworks": []
-    },
-    {
-      "number": 37,
-      "title": "Дейкстра",
-      "date": "2026-08-04T17:00:00",
-      "duration": 60,
-      "presentations": [
-        {
-          "title": "Презентация",
-          "link": "/lessons/35-dijkstra/",
-          "order": 1
-        }
-      ],
-      "homeworks": []
-    },
-    {
-      "number": 38,
-      "title": "Жадные алгоритмы",
-      "date": "2026-08-07T17:00:00",
-      "duration": 90,
-      "presentations": [
-        {
-          "title": "Презентация",
-          "link": "/lessons/36-greedy/",
-          "order": 1
-        }
-      ],
-      "homeworks": []
-    },
-    {
-      "number": 39,
-      "title": "DP: введение",
-      "date": "2026-08-11T17:00:00",
-      "duration": 60,
-      "presentations": [
-        {
-          "title": "Презентация",
-          "link": "/lessons/37-dp-1/",
-          "order": 1
-        }
-      ],
-      "homeworks": []
-    },
-    {
-      "number": 40,
-      "title": "DP: задачи",
-      "date": "2026-08-14T17:00:00",
-      "duration": 90,
-      "presentations": [
-        {
-          "title": "Презентация",
-          "link": "/lessons/38-dp-2/",
-          "order": 1
-        }
-      ],
-      "homeworks": []
-    },
-    {
-      "number": 41,
       "title": "Итог + выбор специализации",
-      "date": "2026-08-25T17:00:00",
+      "date": "2026-07-31T17:00:00",
       "duration": 60,
       "presentations": [],
       "homeworks": []

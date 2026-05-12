@@ -1,0 +1,360 @@
+<!doctype html>
+<html lang="ru">
+
+<head>
+    <meta charset="utf-8">
+    <title>Занятие 14 - RPG-арена: финал</title>
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+
+    <link rel="stylesheet" href="/utils/css/reveal.css">
+    <link rel="stylesheet" href="/utils/lib/css/animate.css">
+    <link rel="stylesheet" href="/utils/css/theme/night.css" id="theme">
+    <link rel="stylesheet" href="/utils/lib/css/zenburn.css">
+    <link rel="stylesheet" href="/utils/css/custom-base.css">
+    <link rel="stylesheet" href="css-custom/custom.css">
+
+    <script>
+        var link = document.createElement('link');
+        link.rel = 'stylesheet'; link.type = 'text/css';
+        link.href = window.location.search.match(/print-pdf/gi)
+            ? '/utils/css/print/pdf.css'
+            : '/utils/css/print/paper.css';
+        document.getElementsByTagName('head')[0].appendChild(link);
+    </script>
+</head>
+
+<body>
+    <div class="reveal">
+        <div class="slides">
+
+            <!-- ТИТУЛЬНЫЙ СЛАЙД -->
+            <section style="font-size: 70px; height: 100%; width: 100%">
+                <div class="lesson-time">0</div>
+                <div class="fragment">
+                    <h1 class="animated" style="font-size: 1.6em;">RPG-арена: финал</h1>
+                    <p style="text-align: center; font-size: 0.5em; opacity: 0.7;">Снаряжение, арена, босс</p>
+                    <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">Занятие 14</p>
+                </div>
+            </section>
+
+            <!-- ===================================================== -->
+            <!-- ЧАСТЬ 0: ГДЕ СТОИМ                                     -->
+            <!-- ===================================================== -->
+            <section>
+                <section style="font-size: 70px; height: 100%; width: 100%">
+                    <div class="lesson-time">0</div>
+                    <div class="fragment">
+                        <h1 style="font-size: 1.4em;">Где стоим</h1>
+                        <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">Что написали</p>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Файлы проекта</h2>
+                    <div class="tools-list">
+                        <div class="tool-block fragment">
+                            <h4>characters.py</h4>
+                            <p style="font-size: 0.7em;">Character, Warior, Mage, Archer + gold, xp, level</p>
+                        </div>
+                        <div class="tool-block fragment">
+                            <h4>item.py + items.py</h4>
+                            <p style="font-size: 0.7em;">Item, зелья, яд</p>
+                        </div>
+                        <div class="tool-block fragment">
+                            <h4>inventory.py</h4>
+                            <p style="font-size: 0.7em;">add_item, use_item</p>
+                        </div>
+                        <div class="tool-block fragment">
+                            <h4>fight.py</h4>
+                            <p style="font-size: 0.7em;">player_turn, fight, generate_drop</p>
+                        </div>
+                        <div class="tool-block fragment">
+                            <h4>tavern.py</h4>
+                            <p style="font-size: 0.7em;">Магазин зелий</p>
+                        </div>
+                        <div class="tool-block fragment">
+                            <h4>save.py</h4>
+                            <p style="font-size: 0.7em;">save_hero, load_hero, JSON</p>
+                        </div>
+                    </div>
+                </section>
+            </section>
+
+            <!-- ===================================================== -->
+            <!-- ЧАСТЬ 1: ВЫБОР ГЕРОЯ                                   -->
+            <!-- ===================================================== -->
+            <section>
+                <section style="font-size: 70px; height: 100%; width: 100%">
+                    <div class="lesson-time">5</div>
+                    <div class="fragment">
+                        <h1 style="font-size: 1.4em;">Выбор героя</h1>
+                        <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">Имя и класс через input()</p>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Проблема</h2>
+                    <ul>
+                        <li class="fragment">сейчас класс и имя захардкожены в <code>get_hero()</code></li>
+                        <li class="fragment">разные прохождения неотличимы</li>
+                        <li class="fragment">нужно спросить имя и класс через <code>input()</code></li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h2>Класс как значение словаря</h2>
+                    <div class="code-block fragment">
+                        <pre class="python size-m"><code>CLASSES = {
+    "1": Warior,
+    "2": Mage,
+    "3": Archer,
+}
+
+cls = CLASSES.get(input("Класс: ").strip(), Warior)</code></pre>
+                    </div>
+                    <ul>
+                        <li class="fragment">в словаре хранятся сами классы, не строки</li>
+                        <li class="fragment"><code>.get(key, default)</code> - нажал не то -> Warior, без ошибки</li>
+                        <li class="fragment">потом <code>cls(name)</code> - создаём объект нужного класса</li>
+                    </ul>
+                </section>
+            </section>
+
+            <!-- ===================================================== -->
+            <!-- ЧАСТЬ 2: СНАРЯЖЕНИЕ                                    -->
+            <!-- ===================================================== -->
+            <section>
+                <section style="font-size: 70px; height: 100%; width: 100%">
+                    <div class="lesson-time">15</div>
+                    <div class="fragment">
+                        <h1 style="font-size: 1.4em;">Снаряжение</h1>
+                        <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">Оружие и броня</p>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Зелья vs снаряжение</h2>
+                    <div class="compare">
+                        <div class="compare-block fragment">
+                            <h4>Зелья</h4>
+                            <p style="font-size: 0.8em;">расходуются при использовании</p>
+                            <p style="font-size: 0.7em; opacity: 0.7;">style = "heal" / "damage"</p>
+                        </div>
+                        <div class="compare-block fragment">
+                            <h4>Снаряжение</h4>
+                            <p style="font-size: 0.8em;">надевается один раз, работает постоянно</p>
+                            <p style="font-size: 0.7em; opacity: 0.7;">меняет базовые характеристики</p>
+                        </div>
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        Equipment - подкласс Item с дополнительными атрибутами
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Класс Equipment</h2>
+                    <ul>
+                        <li class="fragment">подкласс <code>Item</code> - не переписываем существующее</li>
+                        <li class="fragment">два новых атрибута: <code>bonus_damage</code> и <code>bonus_armor</code></li>
+                        <li class="fragment"><code>style = "equip"</code> - отличаем от зелий в инвентаре</li>
+                        <li class="fragment">оба бонуса по умолчанию 0 - можно только меч или только броню</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h2>Готовые предметы</h2>
+                    <table style="font-size: 0.85em; width: 100%; margin-top: 0.5em;">
+                        <tr><td><strong>Предмет</strong></td><td><strong>Урон</strong></td><td><strong>Броня</strong></td><td><strong>Цена</strong></td></tr>
+                        <tr class="fragment"><td>Деревянный меч</td><td><mark class="green">+5</mark></td><td>-</td><td>40g</td></tr>
+                        <tr class="fragment"><td>Кольчуга</td><td>-</td><td><mark class="green">+3</mark></td><td>50g</td></tr>
+                        <tr class="fragment"><td>Стальной меч</td><td><mark class="green">+10</mark></td><td>-</td><td>80g</td></tr>
+                        <tr class="fragment"><td>Щит</td><td>-</td><td><mark class="green">+5</mark></td><td>70g</td></tr>
+                    </table>
+                </section>
+
+                <section>
+                    <h2>Слоты и equip()</h2>
+                    <ul>
+                        <li class="fragment"><code>weapon = None</code>, <code>armor = None</code> - два слота в <code>__init__</code></li>
+                        <li class="fragment"><code>equip(item)</code> просто сохраняет предмет в нужный слот</li>
+                        <li class="fragment">бонус считается в <code>attack()</code> и <code>take_damage()</code> в момент удара</li>
+                    </ul>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        Смена снаряжения не требует "снять старое" - нет накапливающихся бонусов
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Снаряжение в таверне и сохранении</h2>
+                    <ul>
+                        <li class="fragment">таверна: второй раздел <code>SHOP_EQUIPMENT</code>, при покупке - <code>hero.equip(item)</code></li>
+                        <li class="fragment">показываем текущее снаряжение в шапке таверны</li>
+                        <li class="fragment">сохранение: та же идея что с инвентарём - пишем имя, восстанавливаем через реестр</li>
+                    </ul>
+                </section>
+            </section>
+
+            <!-- ===================================================== -->
+            <!-- ЧАСТЬ 3: АРЕНА                                         -->
+            <!-- ===================================================== -->
+            <section>
+                <section style="font-size: 70px; height: 100%; width: 100%">
+                    <div class="lesson-time">40</div>
+                    <div class="fragment">
+                        <h1 style="font-size: 1.4em;">Арена</h1>
+                        <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">Последовательность боёв</p>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Идея</h2>
+                    <ul>
+                        <li class="fragment">вместо одного врага - список в порядке сложности</li>
+                        <li class="fragment">после каждого боя: таверна, отдых, следующий противник</li>
+                        <li class="fragment">последний - всегда босс</li>
+                    </ul>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        ARENA - просто список кортежей: (класс, имя, уровень)
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Список противников</h2>
+                    <div class="code-block fragment">
+                        <pre class="python size-m"><code>ARENA = [
+    (Archer, "Скай",   1),
+    (Mage,   "Торин",  2),
+    (Warior, "Кратос", 3),
+    (Boss,   "Игниус", 5),  # финальный босс
+]</code></pre>
+                    </div>
+                    <ul>
+                        <li class="fragment">уровень определяет силу врага</li>
+                        <li class="fragment">легко добавить или переставить бойца</li>
+                        <li class="fragment">хочешь длиннее - добавь строку</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h2>Масштабирование врага</h2>
+                    <ul>
+                        <li class="fragment"><code>scale_enemy(cls, name, level)</code> - создаём врага и вызываем <code>level_up()</code> нужное число раз</li>
+                        <li class="fragment">переиспользуем готовую логику - не дублируем прибавку урона и HP</li>
+                    </ul>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        Цикл по ARENA: таверна -> создать врага -> бой -> отдых (+30 HP) -> сохранить
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Награда от уровня врага</h2>
+                    <table style="font-size: 0.8em; width: 100%; margin-top: 0.8em;">
+                        <tr><td><strong>Уровень врага</strong></td><td><strong>Gold</strong></td><td><strong>XP</strong></td></tr>
+                        <tr class="fragment"><td>1 (Скай)</td><td>30g</td><td>40</td></tr>
+                        <tr class="fragment"><td>2 (Торин)</td><td>60g</td><td>80</td></tr>
+                        <tr class="fragment"><td>3 (Кратос)</td><td>90g</td><td>120</td></tr>
+                        <tr class="fragment"><td>5 (Босс)</td><td>150g</td><td>200</td></tr>
+                    </table>
+                </section>
+            </section>
+
+            <!-- ===================================================== -->
+            <!-- ЧАСТЬ 4: БОСС                                          -->
+            <!-- ===================================================== -->
+            <section>
+                <section style="font-size: 70px; height: 100%; width: 100%">
+                    <div class="lesson-time">60</div>
+                    <div class="fragment">
+                        <h1 style="font-size: 1.4em;">Босс</h1>
+                        <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">Финальный противник</p>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Класс Boss</h2>
+                    <ul>
+                        <li class="fragment">300 HP, урон 45 - бой долгий, нужны тактические решения</li>
+                        <li class="fragment">добавляем <code>self.counter = 0</code> в <code>__init__</code></li>
+                        <li class="fragment">каждый третий ход - лечение вместо атаки</li>
+                    </ul>
+                    <div class="code-block fragment" style="margin-top: 1em;">
+                        <pre class="python size-m"><code>self.counter += 1
+if self.counter % 3 == 0:
+    # лечение вместо удара
+else:
+    target.take_damage(self.damage)</code></pre>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Почему это интересно</h2>
+                    <ul>
+                        <li class="fragment">паттерн предсказуем - игрок учится его читать</li>
+                        <li class="fragment">на ходу 3 лучше применить яд или уйти в инвентарь</li>
+                        <li class="fragment">хил делает бой длиннее - нужен запас зелий</li>
+                    </ul>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        Хороший босс - не просто большие цифры, а другое поведение
+                    </div>
+                </section>
+            </section>
+
+            <!-- ===================================================== -->
+            <!-- ИТОГ                                                   -->
+            <!-- ===================================================== -->
+            <section>
+                <div class="lesson-time">80</div>
+                <h2>Что добавили</h2>
+                <ul>
+                    <li class="fragment">Выбор имени и класса при старте</li>
+                    <li class="fragment">Equipment: weapon/armor слоты, equip()</li>
+                    <li class="fragment">Снаряжение в таверне и в JSON-сохранении</li>
+                    <li class="fragment">ARENA - список боёв с нарастающей сложностью</li>
+                    <li class="fragment">scale_enemy() - враг нужного уровня через level_up()</li>
+                    <li class="fragment">Награда зависит от уровня врага</li>
+                    <li class="fragment">Boss с паттерном лечения каждые 3 хода</li>
+                </ul>
+            </section>
+
+            <section>
+                <div class="lesson-time">85</div>
+                <h2>Идеи для самостоятельного развития</h2>
+                <ul>
+                    <li class="fragment"><mark>Критический удар</mark> - <code>random.random() &lt; 0.2</code> -> двойной урон</li>
+                    <li class="fragment"><mark>HP-бар</mark> - <code>"█" * hp // 10 + "░" * (10 - hp // 10)</code></li>
+                    <li class="fragment"><mark>Случайный порядок</mark> - <code>random.shuffle(ARENA[:-1])</code> (босс всегда последний)</li>
+                    <li class="fragment"><mark>Кулдаун</mark> - способность с N ходами перезарядки</li>
+                </ul>
+                <div class="fragment opinion" style="margin-top: 1em;">
+                    Проект готов - дальше только фантазия
+                </div>
+            </section>
+
+        </div>
+    </div>
+
+    <script src="/utils/lib/js/head.min.js"></script>
+    <script src="/utils/js/reveal.js"></script>
+    <script>
+        Reveal.initialize({
+            controls: true,
+            progress: true,
+            history: true,
+            center: true,
+            transition: 'fade',
+            transitionSpeed: 'fast',
+            dependencies: [
+                { src: '/utils/lib/js/classList.js', condition: function () { return !document.body.classList; } },
+                { src: '/utils/plugin/markdown/marked.js', condition: function () { return !!document.querySelector('[data-markdown]'); } },
+                { src: '/utils/plugin/markdown/markdown.js', condition: function () { return !!document.querySelector('[data-markdown]'); } },
+                { src: '/utils/plugin/highlight/highlight.js', async: true, callback: function () { hljs.initHighlightingOnLoad(); } },
+                { src: '/utils/plugin/zoom-js/zoom.js', async: true },
+                { src: '/utils/plugin/notes/notes.js', async: true }
+            ]
+        });
+        Reveal.configure({ slideNumber: 'c/t' });
+    </script>
+</body>
+
+</html>
