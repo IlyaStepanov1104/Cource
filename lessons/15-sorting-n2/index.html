@@ -1,0 +1,605 @@
+<!doctype html>
+<html lang="ru">
+
+<head>
+    <meta charset="utf-8">
+    <title>Занятие 15 - Квадратичные сортировки</title>
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+
+    <link rel="stylesheet" href="/utils/css/reveal.css">
+    <link rel="stylesheet" href="/utils/lib/css/animate.css">
+    <link rel="stylesheet" href="/utils/css/theme/night.css" id="theme">
+    <link rel="stylesheet" href="/utils/lib/css/zenburn.css">
+    <link rel="stylesheet" href="/utils/css/custom-base.css">
+    <link rel="stylesheet" href="css-custom/custom.css">
+
+    <script>
+        var link = document.createElement('link');
+        link.rel = 'stylesheet'; link.type = 'text/css';
+        link.href = window.location.search.match(/print-pdf/gi)
+            ? '/utils/css/print/pdf.css'
+            : '/utils/css/print/paper.css';
+        document.getElementsByTagName('head')[0].appendChild(link);
+    </script>
+</head>
+
+<body>
+    <div class="reveal">
+        <div class="slides">
+
+            <!-- ТИТУЛЬНЫЙ СЛАЙД -->
+            <section style="font-size: 70px; height: 100%; width: 100%">
+                <div class="lesson-time">0</div>
+                <div class="fragment">
+                    <h1 class="animated" style="font-size: 1.6em;">Квадратичные сортировки</h1>
+                    <p style="text-align: center; font-size: 0.5em; opacity: 0.7;">Bogosort, пузырёк, выбор, вставка</p>
+                    <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">Занятие 15</p>
+                </div>
+            </section>
+
+            <!-- ===================================================== -->
+            <!-- ВВЕДЕНИЕ                                              -->
+            <!-- ===================================================== -->
+            <section>
+
+                <section style="font-size: 70px; height: 100%; width: 100%">
+                    <div class="lesson-time">0</div>
+                    <div class="fragment">
+                        <h1 style="font-size: 1.4em;">Зачем изучать сортировки?</h1>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Задача</h2>
+                    <ul>
+                        <li class="fragment">есть список из 1000 чисел в случайном порядке</li>
+                        <li class="fragment">нужно расставить их от меньшего к большему</li>
+                        <li class="fragment">как ты это сделаешь?</li>
+                    </ul>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        существует больше 10 разных алгоритмов - и скорость отличается в миллионы раз
+                    </div>
+                </section>
+
+                <section>
+                    <h2>У нас есть sorted()</h2>
+                    <div class="code-block fragment">
+                        <pre class="python size-m"><code>nums = [5, 3, 8, 1]
+
+sorted(nums)   # новый список: [1, 3, 5, 8]
+nums.sort()    # на месте</code></pre>
+                    </div>
+                    <ul>
+                        <li class="fragment">встроенная сортировка быстрее любой твоей реализации</li>
+                        <li class="fragment">зачем тогда изучать алгоритмы?</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h2>Аналогия с машиной</h2>
+                    <div class="compare">
+                        <div class="compare-block fragment">
+                            <h4>Водитель</h4>
+                            <p style="font-size: 0.85em;">не знает устройство двигателя</p>
+                            <p style="font-size: 0.75em; opacity: 0.7;">просто едет из А в Б</p>
+                        </div>
+                        <div class="compare-block fragment">
+                            <h4>Инженер</h4>
+                            <p style="font-size: 0.85em;">знает, как устроен двигатель</p>
+                            <p style="font-size: 0.75em; opacity: 0.7;">может создавать и улучшать машины</p>
+                        </div>
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        мы хотим не просто <mark>использовать</mark> программы - а <mark class="green">создавать и
+                            улучшать</mark> их
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Две группы</h2>
+                    <div class="compare">
+                        <div class="compare-block fragment">
+                            <h4>Медленные (квадратичные)</h4>
+                            <p><mark>O(n²)</mark></p>
+                            <p style="font-size: 0.8em; opacity: 0.8;">Bubble, Selection, Insertion</p>
+                            <p style="font-size: 0.7em; opacity: 0.5;">сегодня</p>
+                        </div>
+                        <div class="compare-block fragment">
+                            <h4>Быстрые (логарифмические)</h4>
+                            <p><mark class="green">O(n log n)</mark></p>
+                            <p style="font-size: 0.8em; opacity: 0.8;">Merge Sort, Quick Sort</p>
+                            <p style="font-size: 0.7em; opacity: 0.5;">через пару уроков</p>
+                        </div>
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        выйти за O(n²) можно только через рекурсию
+                    </div>
+                </section>
+            </section>
+
+            <!-- ===================================================== -->
+            <!-- ЧАСТЬ 0: ХУЖЕ КВАДРАТИЧНЫХ                            -->
+            <!-- ===================================================== -->
+            <section>
+
+                <section style="font-size: 70px; height: 100%; width: 100%">
+                    <div class="lesson-time">0</div>
+                    <div class="fragment">
+                        <h1 style="font-size: 1.4em;">Хуже квадратичных</h1>
+                        <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">Как сортировать совсем плохо</p>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Мысленный эксперимент</h2>
+                    <ul>
+                        <li class="fragment">есть неотсортированный массив</li>
+                        <li class="fragment">что если просто перемешивать его случайно?</li>
+                        <li class="fragment">рано или поздно нужный порядок выпадет</li>
+                    </ul>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        звучит безумно - но это настоящий алгоритм с названием
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Bogosort: идея</h2>
+                    <div class="timeline">
+                        <div class="timeline-item fragment">
+                            <div class="timeline-marker">1</div>
+                            <div class="timeline-content"><strong>Проверь</strong> - отсортирован ли массив?</div>
+                        </div>
+                        <div class="timeline-item fragment">
+                            <div class="timeline-marker">2</div>
+                            <div class="timeline-content"><strong>Если нет</strong> - перемешай случайно</div>
+                        </div>
+                        <div class="timeline-item fragment">
+                            <div class="timeline-marker">3</div>
+                            <div class="timeline-content"><strong>Повтори</strong> с шага 1</div>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Bogosort: код</h2>
+                    <div class="code-block fragment">
+                        <pre class="python size-m"><code>import random
+def is_sorted(arr):
+    for i in range(len(arr) - 1):
+        if arr[i] > arr[i + 1]:
+            return False
+    return True
+
+def bogosort(arr):
+    while not is_sorted(arr):
+        random.shuffle(arr)</code></pre>
+                    </div>
+                    <ul>
+                        <li class="fragment">самый короткий код сортировки</li>
+                        <li class="fragment"><code>arr != sorted(arr)</code> - проверяем, есть ли нужный порядок</li>
+                        <li class="fragment"><code>shuffle</code> - полная случайная перестановка</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h2>Bogosort: сложность</h2>
+                    <ul>
+                        <li class="fragment">n элементов имеют <mark>n!</mark> возможных порядков</li>
+                        <li class="fragment">в среднем нужно n! попыток, каждая стоит O(n)</li>
+                        <li class="fragment">итого: <mark>O(n * n!)</mark></li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h2>Bogosort в числах</h2>
+                    <table style="font-size: 0.82em; width: 100%; margin-top: 0.5em;">
+                        <tr>
+                            <td><strong>n</strong></td>
+                            <td><strong>n * n! операций</strong></td>
+                            <td><strong>n² операций</strong></td>
+                        </tr>
+                        <tr class="fragment">
+                            <td>5</td>
+                            <td>600</td>
+                            <td>25</td>
+                        </tr>
+                        <tr class="fragment">
+                            <td>10</td>
+                            <td>36 288 000</td>
+                            <td>100</td>
+                        </tr>
+                        <tr class="fragment">
+                            <td>19</td>
+                            <td>23 * 10^17</td>
+                            <td>361</td>
+                        </tr>
+                    </table>
+                    <div class="fragment opinion" style="margin-top: 0.8em;">
+                        возраст вселенной - ~4 * 10^17 секунд
+                    </div>
+                </section>
+            </section>
+
+            <!-- ===================================================== -->
+            <!-- ЧАСТЬ 1: BUBBLE SORT                                   -->
+            <!-- ===================================================== -->
+            <section>
+
+                <section style="font-size: 70px; height: 100%; width: 100%">
+                    <div class="lesson-time">10</div>
+                    <div class="fragment">
+                        <h1 style="font-size: 1.4em;">Bubble Sort</h1>
+                        <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">Пузырьковая сортировка</p>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Идея</h2>
+                    <ul>
+                        <li class="fragment">идём по массиву слева направо</li>
+                        <li class="fragment">сравниваем каждых двух соседей</li>
+                        <li class="fragment">если левый больше правого - меняем местами</li>
+                    </ul>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        после каждого прохода <mark>наибольший элемент</mark> оказывается в конце
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Bubble Sort в действии</h2>
+                    <img src="https://habrastorage.org/getpro/habr/post_images/187/5a3/929/1875a3929dd14c8ea5ff4ccc3d0db9bd.gif"
+                        style="max-height: 55vh; margin-top: 0.5em;">
+                </section>
+
+
+                <section>
+                    <h2>Разберем на примере: [5, 3, 8, 1]</h2>
+                </section>
+
+                <section>
+                    <h2>Шаги прохода 1</h2>
+                    <ul>
+                        <li class="fragment"><code>[<mark>5, 3</mark>, 8, 1]</code> - 5 > 3, своп →
+                            <code>[3, 5, 8, 1]</code>
+                        </li>
+                        <li class="fragment"><code>[3, <mark>5, 8</mark>, 1]</code> - 5 &lt; 8, нет свопа</li>
+                        <li class="fragment"><code>[3, 5, <mark>8, 1</mark>]</code> - 8 > 1, своп →
+                            <code>[3, 5, 1, 8]</code>
+                        </li>
+                    </ul>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        8 "всплыл" на своё место - как пузырёк
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Шаги прохода 2</h2>
+                    <ul>
+                        <li class="fragment"><code>[<mark>3, 5</mark>, 1, 8]</code> - 3 &lt; 5, нет свопа
+                        </li>
+                        <li class="fragment"><code>[3, <mark>5, 1</mark>, 8]</code> - 5 > 1, своп →
+                            <code>[3, 1, 5, 8]</code>
+                        </li>
+                    </ul>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        5 "всплыл" на своё место - как пузырёк
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Шаги прохода 2</h2>
+                    <ul>
+                        <li class="fragment"><code>[<mark>3, 1</mark>, 5, 8]</code> - 3 > 1, своп →
+                            <code>[1, 3, 5, 8]</code>
+                        </li>
+                    </ul>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        1 и 3 "всплыли" на своё место - сортировка закончилась
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Сложность Bubble Sort</h2>
+                    <div class="compare">
+                        <div class="compare-block fragment">
+                            <h4>Время</h4>
+                            <p><mark>O(n²)</mark> обычно</p>
+                            <p style="font-size: 0.75em; opacity: 0.7;"><mark class="green">O(n)</mark> с флагом, если
+                                уже отсортирован</p>
+                        </div>
+                        <div class="compare-block fragment">
+                            <h4>Память</h4>
+                            <p><mark class="green">O(1)</mark></p>
+                            <p style="font-size: 0.75em; opacity: 0.7;">сортируем на месте, доп. памяти нет</p>
+                        </div>
+                    </div>
+                </section>
+
+            </section>
+
+            <!-- ===================================================== -->
+            <!-- ЧАСТЬ 2: SELECTION SORT                                -->
+            <!-- ===================================================== -->
+            <section>
+
+                <section style="font-size: 70px; height: 100%; width: 100%">
+                    <div class="lesson-time">25</div>
+                    <div class="fragment">
+                        <h1 style="font-size: 1.4em;">Selection Sort</h1>
+                        <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">Сортировка выбором</p>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Идея</h2>
+                    <ul>
+                        <li class="fragment">делим массив на два куска: <mark class="green">отсортированный</mark> слева
+                            и <mark>остаток</mark> справа</li>
+                        <li class="fragment">ищем минимум в неотсортированной части</li>
+                        <li class="fragment">ставим его на первое место неотсортированной части</li>
+                        <li class="fragment">граница сдвигается на один вправо</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h2>Selection Sort в действии</h2>
+                    <img src="https://habrastorage.org/webt/hu/j_/u2/huj_u2r8s_xio_nupbtsqx1vgte.gif"
+                        style="max-height: 55vh; margin-top: 0.5em;">
+                </section>
+
+                <section>
+                    <h2>Пример: [5, 3, 8, 1]</h2>
+                    <ul>
+                        <li class="fragment">мин в [5,3,8,1] = 1, своп 5↔1:
+                            <code>[<mark class="green">1</mark>, 3, 8, 5]</code>
+                        </li>
+                        <li class="fragment">мин в [3,8,5] = 3, уже стоит:
+                            <code>[1, <mark class="green">3</mark>, 8, 5]</code>
+                        </li>
+                        <li class="fragment">мин в [8,5] = 5, своп 8↔5:
+                            <code>[1, 3, <mark class="green">5</mark>, 8]</code>
+                        </li>
+                        <li class="fragment">один элемент остался - готово</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h2>Главная особенность</h2>
+                    <div class="compare">
+                        <div class="compare-block fragment">
+                            <h4>Bubble Sort</h4>
+                            <p style="font-size: 0.85em;">до <mark>O(n²)</mark> свопов</p>
+                            <p style="font-size: 0.75em; opacity: 0.7;">свопает при каждом сравнении</p>
+                        </div>
+                        <div class="compare-block fragment">
+                            <h4>Selection Sort</h4>
+                            <p style="font-size: 0.85em;">ровно <mark class="green">O(n)</mark> свопов</p>
+                            <p style="font-size: 0.75em; opacity: 0.7;">один своп в конце каждого прохода</p>
+                        </div>
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        важно, когда своп дорогой - например, запись на диск или SSD
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Сложность Selection Sort</h2>
+                    <div class="compare">
+                        <div class="compare-block fragment">
+                            <h4>Время</h4>
+                            <p><mark>O(n²)</mark> всегда</p>
+                            <p style="font-size: 0.75em; opacity: 0.7;">нет оптимизации для уже отсортированного</p>
+                        </div>
+                        <div class="compare-block fragment">
+                            <h4>Свопов</h4>
+                            <p><mark class="green">O(n)</mark></p>
+                            <p style="font-size: 0.75em; opacity: 0.7;">лучший результат среди трёх алгоритмов</p>
+                        </div>
+                    </div>
+                </section>
+
+            </section>
+
+            <!-- ===================================================== -->
+            <!-- ЧАСТЬ 3: INSERTION SORT                                -->
+            <!-- ===================================================== -->
+            <section>
+
+                <section style="font-size: 70px; height: 100%; width: 100%">
+                    <div class="lesson-time">40</div>
+                    <div class="fragment">
+                        <h1 style="font-size: 1.4em;">Insertion Sort</h1>
+                        <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">Сортировка вставками</p>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Идея</h2>
+                    <ul>
+                        <li class="fragment">как раскладываем карты в руке</li>
+                        <li class="fragment">берём следующую карту из колоды</li>
+                        <li class="fragment">сдвигаем большие карты вправо, пока не найдём место</li>
+                        <li class="fragment">вставляем карту на нужное место</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h2>Insertion Sort в действии</h2>
+                    <img src="https://camo.githubusercontent.com/f0695924fbeef3a30a18a47bb2afa959571dbeed754b4cc2e5f8f60e3fe7a10c/68747470733a2f2f6d61726b626f776d616e2e6f72672f4c43432f536f7274496e73657274696f6e2e676966"
+                        style="max-height: 55vh; margin-top: 0.5em;">
+                </section>
+
+                <section>
+                    <h2>Пример: [5, 3, 8, 1]</h2>
+                    <ul>
+                        <li class="fragment">берём 3: сдвигаем 5 → <code>[<mark class="green">3, 5</mark>, 8, 1]</code>
+                        </li>
+                        <li class="fragment">берём 8: 5 &lt; 8, не сдвигаем →
+                            <code>[3, 5, <mark class="green">8</mark>, 1]</code>
+                        </li>
+                        <li class="fragment">берём 1: сдвигаем 8, 5, 3 →
+                            <code>[<mark class="green">1</mark>, 3, 5, 8]</code>
+                        </li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h2>Лучший случай: O(n)</h2>
+                    <ul>
+                        <li class="fragment">если массив уже отсортирован - сдвигать ничего не нужно</li>
+                        <li class="fragment">внутренний цикл не выполняется ни разу</li>
+                        <li class="fragment">n элементов проверили, 0 сдвигов - O(n)</li>
+                    </ul>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        лучший выбор, когда данные добавляются по одному в почти отсортированный список
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Сложность Insertion Sort</h2>
+                    <div class="compare">
+                        <div class="compare-block fragment">
+                            <h4>Худший случай</h4>
+                            <p><mark>O(n²)</mark></p>
+                            <p style="font-size: 0.75em; opacity: 0.7;">массив отсортирован в обратном порядке</p>
+                        </div>
+                        <div class="compare-block fragment">
+                            <h4>Лучший случай</h4>
+                            <p><mark class="green">O(n)</mark></p>
+                            <p style="font-size: 0.75em; opacity: 0.7;">массив уже отсортирован</p>
+                        </div>
+                    </div>
+                </section>
+
+            </section>
+
+            <!-- ===================================================== -->
+            <!-- ЧАСТЬ 4: СРАВНЕНИЕ                                     -->
+            <!-- ===================================================== -->
+            <section>
+
+                <section style="font-size: 70px; height: 100%; width: 100%">
+                    <div class="lesson-time">52</div>
+                    <div class="fragment">
+                        <h1 style="font-size: 1.4em;">Сравнение</h1>
+                        <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">Когда что выбирать</p>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Три алгоритма рядом</h2>
+                    <table style="font-size: 0.8em; width: 100%; margin-top: 0.5em;">
+                        <tr>
+                            <td><strong>Алгоритм</strong></td>
+                            <td><strong>Время (худший)</strong></td>
+                            <td><strong>Время (лучший)</strong></td>
+                            <td><strong>Свопов</strong></td>
+                        </tr>
+                        <tr class="fragment">
+                            <td>Bubble Sort</td>
+                            <td>O(n²)</td>
+                            <td><mark class="green">O(n)</mark> с флагом</td>
+                            <td>O(n²)</td>
+                        </tr>
+                        <tr class="fragment">
+                            <td>Selection Sort</td>
+                            <td>O(n²)</td>
+                            <td>O(n²)</td>
+                            <td><mark class="green">O(n)</mark></td>
+                        </tr>
+                        <tr class="fragment">
+                            <td>Insertion Sort</td>
+                            <td>O(n²)</td>
+                            <td><mark class="green">O(n)</mark></td>
+                            <td>O(n²)</td>
+                        </tr>
+                    </table>
+                </section>
+
+                <section>
+                    <h2>Когда что использовать</h2>
+                    <ul>
+                        <li class="fragment"><mark>Insertion Sort</mark> - данные почти отсортированы или приходят по
+                            одному</li>
+                        <li class="fragment"><mark>Selection Sort</mark> - минимум записей на диск (swap дорогой)</li>
+                        <li class="fragment"><mark>Bubble Sort</mark> - учебные цели, самый наглядный алгоритм</li>
+                    </ul>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        в рабочем коде - всегда <code>list.sort()</code> или <code>sorted()</code>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Почему все три - O(n²)?</h2>
+                    <ul>
+                        <li class="fragment">для n элементов нужно ~n операций сравнения</li>
+                        <li class="fragment">каждое сравнение само по себе требует обойти ~n элементов</li>
+                        <li class="fragment">n * n = <mark>n²</mark></li>
+                        <li class="fragment">выйти за O(n²) можно только через <mark class="green">разделяй и
+                                властвуй</mark></li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h2>Следующий шаг</h2>
+                    <div class="compare">
+                        <div class="compare-block fragment">
+                            <h4>O(n²) сортировки</h4>
+                            <p style="font-size: 0.85em;">один большой массив<br>обрабатываем целиком</p>
+                        </div>
+                        <div class="compare-block fragment">
+                            <h4>O(n log n) сортировки</h4>
+                            <p style="font-size: 0.85em;">делим пополам рекурсивно<br>Merge Sort, Quick Sort</p>
+                        </div>
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        Merge Sort - занятие 18, Quick Sort - занятие 19
+                    </div>
+                </section>
+
+            </section>
+
+            <!-- ===================================================== -->
+            <!-- ИТОГ                                                   -->
+            <!-- ===================================================== -->
+            <section>
+                <div class="lesson-time">58</div>
+                <h2>Что запомнить</h2>
+                <ul>
+                    <li class="fragment"><mark>Bubble Sort</mark> - сравниваем соседей, большие всплывают вверх</li>
+                    <li class="fragment"><mark>Selection Sort</mark> - ищем минимум, ставим на место; O(n) свопов</li>
+                    <li class="fragment"><mark>Insertion Sort</mark> - вставляем как карту в руку; O(n) на почти
+                        отсортированном</li>
+                    <li class="fragment">все три - <mark>O(n²)</mark> в худшем случае из-за двух вложенных циклов</li>
+                    <li class="fragment">в реальном коде - <code>sorted()</code></li>
+                </ul>
+            </section>
+
+        </div>
+    </div>
+
+    <script src="/utils/lib/js/head.min.js"></script>
+    <script src="/utils/js/reveal.js"></script>
+    <script>
+        Reveal.initialize({
+            controls: true,
+            progress: true,
+            history: true,
+            center: true,
+            transition: 'fade',
+            transitionSpeed: 'fast',
+            dependencies: [
+                { src: '/utils/lib/js/classList.js', condition: function () { return !document.body.classList; } },
+                { src: '/utils/plugin/markdown/marked.js', condition: function () { return !!document.querySelector('[data-markdown]'); } },
+                { src: '/utils/plugin/markdown/markdown.js', condition: function () { return !!document.querySelector('[data-markdown]'); } },
+                { src: '/utils/plugin/highlight/highlight.js', async: true, callback: function () { hljs.initHighlightingOnLoad(); } },
+                { src: '/utils/plugin/zoom-js/zoom.js', async: true },
+                { src: '/utils/plugin/notes/notes.js', async: true }
+            ]
+        });
+        Reveal.configure({ slideNumber: 'c/t' });
+    </script>
+</body>
+
+</html>

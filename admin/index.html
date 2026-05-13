@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Админка — Уроки</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script>
+  <style>
+    :root {
+      --bg: #0f1117;
+      --surface: #1a1d27;
+      --border: #2a2d3a;
+      --text: #e8eaf0;
+      --muted: #6b7280;
+      --accent: #6366f1;
+      --green: #10b981;
+      --red: #ef4444;
+      --hw-bg: #13151f;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-size: 14px;
+      min-height: 100vh;
+    }
+
+    /* ── HEADER ── */
+    header {
+      position: sticky; top: 0; z-index: 100;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 12px 20px;
+      display: flex; align-items: center; gap: 12px;
+    }
+    header h1 { font-size: 16px; font-weight: 600; flex: 1; }
+    #status {
+      font-size: 13px; color: var(--muted);
+      transition: color 0.3s;
+    }
+    #status.ok { color: var(--green); }
+    #status.err { color: var(--red); }
+
+    #save-btn {
+      background: var(--green); color: #fff;
+      border: none; border-radius: 6px;
+      padding: 7px 18px; cursor: pointer;
+      font-size: 13px; font-weight: 500;
+      transition: opacity 0.15s;
+    }
+    #save-btn:disabled { opacity: 0.5; cursor: default; }
+    #save-btn:not(:disabled):hover { opacity: 0.88; }
+
+    /* ── LIST ── */
+    #list {
+      padding: 14px 20px;
+      display: flex; flex-direction: column; gap: 6px;
+      max-width: 900px; margin: 0 auto;
+    }
+
+    /* ── CARD ── */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+      transition: border-color 0.15s;
+    }
+    .card:focus-within { border-color: #3b3f52; }
+    .sortable-ghost { opacity: 0.35; }
+
+    .card-row {
+      display: flex; align-items: center; gap: 8px;
+      padding: 9px 10px;
+    }
+
+    .handle {
+      cursor: grab; color: var(--muted);
+      font-size: 16px; user-select: none;
+      padding: 0 4px; flex-shrink: 0;
+    }
+    .handle:active { cursor: grabbing; }
+
+    .num {
+      min-width: 22px; text-align: center;
+      color: var(--muted); font-size: 11px;
+      font-weight: 700; flex-shrink: 0;
+    }
+
+    /* ── INPUTS ── */
+    input, textarea {
+      background: transparent;
+      border: 1px solid transparent;
+      color: var(--text);
+      border-radius: 5px;
+      padding: 4px 7px;
+      font-size: 13px;
+      font-family: inherit;
+      transition: border-color 0.15s, background 0.15s;
+      resize: none;
+    }
+    input:hover, textarea:hover { border-color: var(--border); }
+    input:focus, textarea:focus {
+      outline: none;
+      border-color: var(--accent);
+      background: rgba(99, 102, 241, 0.06);
+    }
+
+    .f-title { flex: 1; min-width: 0; font-size: 14px; }
+    .f-date  { width: 172px; flex-shrink: 0; }
+
+    .dur-toggle {
+      flex-shrink: 0;
+      display: flex; border: 1px solid var(--border); border-radius: 5px; overflow: hidden;
+    }
+    .dur-toggle button {
+      background: none; border: none; color: var(--muted);
+      cursor: pointer; padding: 4px 10px; font-size: 13px;
+      transition: background 0.12s, color 0.12s;
+    }
+    .dur-toggle button + button { border-left: 1px solid var(--border); }
+    .dur-toggle button.active {
+      background: var(--accent); color: #fff;
+    }
+    .dur-toggle button:not(.active):hover { background: rgba(255,255,255,0.05); color: var(--text); }
+
+    .expand-btn {
+      background: none; border: none; color: var(--muted);
+      cursor: pointer; padding: 4px 7px; border-radius: 4px;
+      font-size: 11px; flex-shrink: 0;
+      transition: color 0.15s, background 0.15s;
+      width: 60px;
+      display: flex;
+      justify-content: end;
+    }
+    .expand-btn:hover { color: var(--text); background: rgba(255,255,255,0.05); }
+
+    /* ── CARD BODY (homework) ── */
+    .card-body {
+      padding: 0 12px 12px 44px;
+      border-top: 1px solid var(--border);
+    }
+    .card-body.hidden { display: none; }
+
+    .hw-label {
+      font-size: 11px; font-weight: 600; color: var(--muted);
+      text-transform: uppercase; letter-spacing: 0.06em;
+      padding: 10px 0 6px;
+    }
+
+    .hw-list { display: flex; flex-direction: column; gap: 6px; }
+
+    .hw-item {
+      display: flex; gap: 8px; align-items: flex-start;
+      background: var(--hw-bg);
+      border: 1px solid var(--border);
+      border-radius: 6px; padding: 8px;
+    }
+    .hw-fields { flex: 1; display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+    .hw-fields input, .hw-fields textarea { width: 100%; }
+    .hw-fields textarea { min-height: 44px; line-height: 1.4; }
+    .hw-title { font-weight: 500; }
+    .hw-link  { font-size: 12px; color: var(--muted); }
+    .hw-link::placeholder { font-size: 12px; }
+
+    .del-hw {
+      background: none; border: none; color: var(--muted);
+      cursor: pointer; font-size: 18px; line-height: 1;
+      padding: 2px 5px; border-radius: 4px; flex-shrink: 0;
+      margin-top: 1px;
+      transition: color 0.15s, background 0.15s;
+    }
+    .del-hw:hover { color: var(--red); background: rgba(239, 68, 68, 0.08); }
+
+    /* ── BUTTONS ── */
+    .add-hw-btn {
+      margin-top: 8px;
+      width: 100%;
+      background: none;
+      border: 1px dashed var(--border);
+      color: var(--muted);
+      cursor: pointer;
+      padding: 6px 0;
+      border-radius: 5px;
+      font-size: 13px;
+      transition: border-color 0.15s, color 0.15s;
+    }
+    .add-hw-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+    .add-lesson-wrap {
+      padding: 6px 20px 28px;
+      max-width: 900px; margin: 0 auto;
+    }
+    .add-lesson-btn {
+      width: 100%;
+      background: none;
+      border: 1px dashed var(--border);
+      color: var(--muted);
+      cursor: pointer;
+      padding: 10px 0;
+      border-radius: 8px;
+      font-size: 13px;
+      transition: border-color 0.15s, color 0.15s;
+    }
+    .add-lesson-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+    /* ── FOLDER ROW ── */
+    .folder-row {
+      display: flex; align-items: center; gap: 6px;
+      padding: 4px 10px 8px 44px;
+    }
+    .folder-icon { color: var(--muted); font-size: 13px; flex-shrink: 0; }
+    .folder-input {
+      flex: 1; min-width: 0;
+      font-family: 'Consolas', 'Monaco', monospace; font-size: 12px;
+      color: #9ca3af;
+    }
+    .folder-input:focus { color: var(--text); }
+    .folder-status {
+      font-size: 12px; flex-shrink: 0; min-width: 14px; text-align: center;
+    }
+    .folder-status.ok   { color: var(--green); }
+    .folder-status.warn { color: #f59e0b; }
+    .folder-action-btn {
+      background: none; border: 1px solid var(--border); color: var(--muted);
+      border-radius: 5px; padding: 3px 10px; cursor: pointer; font-size: 12px;
+      flex-shrink: 0; transition: border-color 0.15s, color 0.15s;
+    }
+    .folder-action-btn:hover { border-color: var(--accent); color: var(--accent); }
+    .folder-open-btn {
+      color: var(--muted); text-decoration: none; font-size: 14px;
+      padding: 2px 5px; border-radius: 4px; flex-shrink: 0;
+      transition: color 0.15s;
+    }
+    .folder-open-btn:hover { color: var(--text); }
+
+    /* ── OLD LESSONS GROUP ── */
+    #old-container {
+      max-width: 900px; margin: 14px auto 0; padding: 0 20px;
+    }
+    .old-toggle {
+      width: 100%; background: none;
+      border: 1px solid var(--border); border-radius: 8px;
+      color: var(--muted); cursor: pointer;
+      padding: 8px 14px; font-size: 13px;
+      display: flex; align-items: center; justify-content: space-between;
+      transition: border-color 0.15s, color 0.15s;
+    }
+    .old-toggle:hover { border-color: #4b5563; color: var(--text); }
+    .old-list { display: flex; flex-direction: column; gap: 6px; margin-top: 6px; }
+    .old-list.hidden { display: none; }
+    .old-card { opacity: 0.6; }
+    .old-card:focus-within, .old-card:hover { opacity: 1; }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Уроки</h1>
+  <span id="status"></span>
+  <button id="save-btn" onclick="save()">Сохранить</button>
+</header>
+
+<div id="old-container"></div>
+<div id="list"></div>
+
+<div class="add-lesson-wrap">
+  <button class="add-lesson-btn" onclick="addLesson()">+ Добавить урок</button>
+</div>
+
+<script>
+  let data = {};
+  let oldLessons = [];
+  let recentLessons = [];
+
+  // ── LOAD ──────────────────────────────────────────────────────
+  async function load() {
+    const res = await fetch('/lessons.json');
+    data = await res.json();
+    render();
+  }
+
+  // ── RENDER ────────────────────────────────────────────────────
+  function render() {
+    const weekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+    oldLessons    = data.lessons.filter(l => new Date(l.date) < weekAgo);
+    recentLessons = data.lessons.filter(l => new Date(l.date) >= weekAgo);
+
+    // Old lessons group
+    const oldContainer = document.getElementById('old-container');
+    oldContainer.innerHTML = '';
+    if (oldLessons.length) {
+      const toggle = document.createElement('button');
+      toggle.className = 'old-toggle';
+      const oldList = document.createElement('div');
+      oldList.className = 'old-list hidden';
+
+      const update = () => {
+        const open = !oldList.classList.contains('hidden');
+        toggle.innerHTML = `<span>Прошедшие уроки (${oldLessons.length})</span><span>${open ? '▴' : '▾'}</span>`;
+      };
+      toggle.addEventListener('click', () => { oldList.classList.toggle('hidden'); update(); });
+      update();
+
+      oldLessons.forEach(lesson => {
+        const card = makeCard(lesson, data.lessons.indexOf(lesson));
+        card.classList.add('old-card');
+        oldList.appendChild(card);
+      });
+      oldContainer.append(toggle, oldList);
+    }
+
+    // Recent / future lessons
+    const list = document.getElementById('list');
+    list.innerHTML = '';
+    recentLessons.forEach(lesson => list.appendChild(makeCard(lesson, data.lessons.indexOf(lesson))));
+    initSortable();
+  }
+
+  function makeCard(lesson, i) {
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.dataset.i = i;
+
+    // Main row
+    const row = document.createElement('div');
+    row.className = 'card-row';
+    row.innerHTML = `
+      <span class="handle" title="Перетащить">⠿</span>
+      <span class="num">${lesson.number}</span>
+      <input class="f-title" value="${esc(lesson.title)}" placeholder="Название">
+      <input class="f-date" type="datetime-local" value="${toLocal(lesson.date)}">
+      <div class="dur-toggle">
+        <button data-val="60" class="${(lesson.duration ?? 60) === 60 ? 'active' : ''}">60</button>
+        <button data-val="90" class="${(lesson.duration ?? 60) === 90 ? 'active' : ''}">90</button>
+      </div>
+      <button class="expand-btn">ДЗ ${lesson.homeworks.length ? `(${lesson.homeworks.length})` : ''} ▾</button>
+    `;
+
+    row.querySelector('.f-title').addEventListener('input', e => { lesson.title = e.target.value; });
+    row.querySelector('.f-date').addEventListener('input', e => { lesson.date = fromLocal(e.target.value); });
+    row.querySelector('.dur-toggle').addEventListener('click', e => {
+      const btn = e.target.closest('button[data-val]');
+      if (!btn) return;
+      lesson.duration = parseInt(btn.dataset.val);
+      row.querySelectorAll('.dur-toggle button').forEach(b => b.classList.toggle('active', b === btn));
+    });
+
+    // Folder row (always visible)
+    card.append(row, makeFolderRow(lesson));
+
+    // Homework body
+    const body = document.createElement('div');
+    body.className = 'card-body hidden';
+
+    const hwLabel = document.createElement('div');
+    hwLabel.className = 'hw-label';
+    hwLabel.textContent = 'Домашние задания';
+
+    const hwList = document.createElement('div');
+    hwList.className = 'hw-list';
+
+    const addHwBtn = document.createElement('button');
+    addHwBtn.className = 'add-hw-btn';
+    addHwBtn.textContent = '+ Добавить ДЗ';
+    addHwBtn.onclick = () => {
+      lesson.homeworks.push({ title: '', description: '' });
+      renderHW(hwList, lesson, row);
+    };
+
+    body.append(hwLabel, hwList, addHwBtn);
+    renderHW(hwList, lesson, row);
+
+    // Toggle
+    const expandBtn = row.querySelector('.expand-btn');
+    expandBtn.addEventListener('click', () => {
+      const open = body.classList.toggle('hidden') === false;
+      expandBtn.innerHTML = `ДЗ ${lesson.homeworks.length ? `(${lesson.homeworks.length})` : ''} ${open ? '▴' : '▾'}`;
+    });
+
+    card.append(body);
+    return card;
+  }
+
+  // ── FOLDER ROW ────────────────────────────────────────────────
+  function makeFolderRow(lesson) {
+    const wrap = document.createElement('div');
+    wrap.className = 'folder-row';
+
+    const icon = document.createElement('span');
+    icon.className = 'folder-icon';
+    icon.textContent = '📁';
+
+    const input = document.createElement('input');
+    input.className = 'folder-input';
+    input.placeholder = '/lessons/NN-slug/';
+
+    const statusEl = document.createElement('span');
+    statusEl.className = 'folder-status';
+
+    const actionBtn = document.createElement('button');
+    actionBtn.className = 'folder-action-btn';
+    actionBtn.style.display = 'none';
+
+    const openBtn = document.createElement('a');
+    openBtn.className = 'folder-open-btn';
+    openBtn.textContent = '↗';
+    openBtn.title = 'Открыть';
+    openBtn.target = '_blank';
+
+    const pres = lesson.presentations && lesson.presentations[0];
+    let diskLink = pres ? pres.link : ''; // what's currently on disk
+    input.value = diskLink;
+    if (diskLink) openBtn.href = diskLink;
+
+    async function refresh() {
+      const link = input.value.trim();
+      if (!link) { statusEl.textContent = ''; actionBtn.style.display = 'none'; return; }
+
+      openBtn.href = link;
+      const dirPath = link.replace(/^\/|\/$/g, '');
+      const { exists } = await apiCheckDir(dirPath);
+
+      if (exists) {
+        statusEl.className = 'folder-status ok';
+        statusEl.textContent = '✓';
+        if (diskLink && link !== diskLink) {
+          actionBtn.textContent = 'Переименовать';
+          actionBtn.style.display = '';
+          actionBtn.onclick = async () => {
+            const from = diskLink.replace(/^\/|\/$/g, '');
+            const to = dirPath;
+            const r = await apiRenameDir(from, to);
+            if (r.ok) { diskLink = link; await refresh(); }
+            else alert('Ошибка: ' + r.error);
+          };
+        } else {
+          actionBtn.style.display = 'none';
+        }
+      } else {
+        statusEl.className = 'folder-status warn';
+        statusEl.textContent = '⚠';
+        actionBtn.textContent = 'Создать';
+        actionBtn.style.display = '';
+        actionBtn.onclick = async () => {
+          const r = await apiCreateDir(dirPath, lesson.number, lesson.title);
+          if (r.ok) { diskLink = link; await refresh(); }
+          else alert('Ошибка: ' + r.error);
+        };
+      }
+    }
+
+    input.addEventListener('input', e => {
+      const newLink = e.target.value.trim();
+      if (!lesson.presentations) lesson.presentations = [];
+      if (lesson.presentations[0]) lesson.presentations[0].link = newLink;
+      else lesson.presentations.push({ title: 'Презентация', link: newLink, order: 1 });
+    });
+    input.addEventListener('blur', refresh);
+
+    wrap.append(icon, input, statusEl, actionBtn, openBtn);
+    if (diskLink) refresh();
+    return wrap;
+  }
+
+  function renderHW(hwList, lesson, row) {
+    hwList.innerHTML = '';
+    lesson.homeworks.forEach((hw, hi) => {
+      const item = document.createElement('div');
+      item.className = 'hw-item';
+
+      const fields = document.createElement('div');
+      fields.className = 'hw-fields';
+
+      const titleIn = document.createElement('input');
+      titleIn.className = 'hw-title';
+      titleIn.placeholder = 'Название задания';
+      titleIn.value = hw.title || '';
+      titleIn.addEventListener('input', e => { hw.title = e.target.value; updateExpandBtn(row, lesson); });
+
+      const descIn = document.createElement('textarea');
+      descIn.className = 'hw-desc';
+      descIn.placeholder = 'Описание';
+      descIn.value = hw.description || '';
+      descIn.rows = 2;
+      descIn.addEventListener('input', e => { hw.description = e.target.value; });
+
+      const linkIn = document.createElement('input');
+      linkIn.className = 'hw-link';
+      linkIn.placeholder = 'Ссылка (необязательно)';
+      linkIn.value = hw.link || '';
+      linkIn.addEventListener('input', e => {
+        if (e.target.value) hw.link = e.target.value;
+        else delete hw.link;
+      });
+
+      fields.append(titleIn, descIn, linkIn);
+
+      const del = document.createElement('button');
+      del.className = 'del-hw';
+      del.textContent = '×';
+      del.title = 'Удалить';
+      del.onclick = () => {
+        lesson.homeworks.splice(hi, 1);
+        renderHW(hwList, lesson, row);
+        updateExpandBtn(row, lesson);
+      };
+
+      item.append(fields, del);
+      hwList.appendChild(item);
+    });
+  }
+
+  function updateExpandBtn(row, lesson) {
+    const btn = row.querySelector('.expand-btn');
+    const open = !row.nextElementSibling.classList.contains('hidden');
+    btn.innerHTML = `ДЗ ${lesson.homeworks.length ? `(${lesson.homeworks.length})` : ''} ${open ? '▴' : '▾'}`;
+  }
+
+  // ── SORTABLE ──────────────────────────────────────────────────
+  function initSortable() {
+    Sortable.create(document.getElementById('list'), {
+      handle: '.handle',
+      animation: 150,
+      ghostClass: 'sortable-ghost',
+      onEnd(evt) {
+        const [moved] = recentLessons.splice(evt.oldIndex, 1);
+        recentLessons.splice(evt.newIndex, 0, moved);
+        data.lessons = [...oldLessons, ...recentLessons];
+        data.lessons.forEach((l, i) => { l.number = i + 1; });
+        render();
+      },
+    });
+  }
+
+  // ── ADD LESSON ────────────────────────────────────────────────
+  function addLesson() {
+    const n = data.lessons.length + 1;
+    data.lessons.push({
+      number: n,
+      title: '',
+      date: new Date().toISOString().slice(0, 16) + ':00',
+      duration: 60,
+      presentations: [],
+      homeworks: [],
+    });
+    render();
+    // scroll to new card and focus its title
+    setTimeout(() => {
+      const cards = document.querySelectorAll('.card');
+      const last = cards[cards.length - 1];
+      last.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      last.querySelector('.f-title').focus();
+    }, 50);
+  }
+
+  // ── SAVE ──────────────────────────────────────────────────────
+  async function save() {
+    const btn = document.getElementById('save-btn');
+    const status = document.getElementById('status');
+    btn.disabled = true;
+    btn.textContent = 'Сохраняю...';
+    status.className = '';
+    status.textContent = '';
+    try {
+      const res = await fetch('/api/save-lessons', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data, null, 2),
+      });
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      status.className = 'ok';
+      status.textContent = 'Сохранено ✓';
+      btn.textContent = 'Сохранить';
+      setTimeout(() => { status.textContent = ''; status.className = ''; }, 3000);
+    } catch (e) {
+      status.className = 'err';
+      status.textContent = 'Ошибка: ' + e.message;
+      btn.textContent = 'Сохранить';
+    } finally {
+      btn.disabled = false;
+    }
+  }
+
+  // ── FOLDER API ────────────────────────────────────────────────
+  async function apiCheckDir(dirPath) {
+    const res = await fetch(`/api/check-dir?path=${encodeURIComponent(dirPath)}`);
+    return res.json();
+  }
+  async function apiRenameDir(from, to) {
+    const res = await fetch('/api/rename-dir', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ from, to }),
+    });
+    return res.json();
+  }
+  async function apiCreateDir(dirPath, number, title) {
+    const res = await fetch('/api/create-dir', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ dirPath, number, title }),
+    });
+    return res.json();
+  }
+
+  // ── UTILS ─────────────────────────────────────────────────────
+  function toLocal(iso) { return iso ? iso.slice(0, 16) : ''; }
+  function fromLocal(val) { return val ? val + ':00' : ''; }
+  function esc(str) {
+    return (str ?? '').replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+
+  // ── KEYBOARD SHORTCUT ─────────────────────────────────────────
+  document.addEventListener('keydown', e => {
+    if ((e.ctrlKey || e.metaKey) && e.key === 's') { e.preventDefault(); save(); }
+  });
+
+  load();
+</script>
+</body>
+</html>
