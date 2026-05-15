@@ -1,43 +1,501 @@
 <!doctype html>
 <html lang="ru">
+
 <head>
     <meta charset="utf-8">
-    <title>Занятие 16 - Стек и очередь</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+    <title>Занятие 16 — Стек и очередь</title>
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+
     <link rel="stylesheet" href="/utils/css/reveal.css">
     <link rel="stylesheet" href="/utils/lib/css/animate.css">
     <link rel="stylesheet" href="/utils/css/theme/night.css" id="theme">
     <link rel="stylesheet" href="/utils/lib/css/zenburn.css">
     <link rel="stylesheet" href="/utils/css/custom-base.css">
     <link rel="stylesheet" href="css-custom/custom.css">
+
     <script>
         var link = document.createElement('link');
         link.rel = 'stylesheet'; link.type = 'text/css';
-        link.href = window.location.search.match(/print-pdf/gi) ? '/utils/css/print/pdf.css' : '/utils/css/print/paper.css';
+        link.href = window.location.search.match(/print-pdf/gi)
+            ? '/utils/css/print/pdf.css'
+            : '/utils/css/print/paper.css';
         document.getElementsByTagName('head')[0].appendChild(link);
     </script>
 </head>
+
 <body>
     <div class="reveal">
         <div class="slides">
+
+            <!-- Титульный слайд -->
             <section style="font-size: 70px; height: 100%; width: 100%">
                 <div class="lesson-time">0</div>
                 <div class="fragment">
-                    <h1 class="animated" style="font-size: 1.6em;">Стек и очередь</h1>
-                    <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">Занятие 16</p>
+                    <h1 class="animated" style="font-size: 1.8em;">Стек и очередь</h1>
+                    <p style="text-align: center; font-size: 0.5em; opacity: 0.5;">Занятие 16</p>
                 </div>
             </section>
+
+            <!-- ЧАСТЬ 1: Очередь -->
+            <section>
+
+                <section style="font-size: 70px; height: 100%; width: 100%">
+                    <div class="lesson-time">0</div>
+                    <div class="fragment">
+                        <h1 style="font-size: 1.4em;">Очередь</h1>
+                        <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">Queue</p>
+                    </div>
+                </section>
+
+                <!-- что мы уже знаем: список и связный список -->
+                <section>
+                    <h2>Что мы уже знаем</h2>
+                    <div class="compare">
+                        <div class="compare-block fragment">
+                            <h3>Массив (list)</h3>
+                            <ul>
+                                <li>Элементы рядом в памяти</li>
+                                <li>Чтение по индексу — O(1)</li>
+                                <li>Удаление из начала — O(n)</li>
+                            </ul>
+                        </div>
+                        <div class="compare-block fragment">
+                            <h3>Связный список</h3>
+                            <ul>
+                                <li>Элементы разбросаны в памяти</li>
+                                <li>Чтение по индексу — O(n)</li>
+                                <li>Вставка в начало — O(1)</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="fragment opinion">
+                        💡 Выбор структуры данных зависит от задачи
+                    </div>
+                </section>
+
+                <!-- аналогия очереди: люди в кассу -->
+                <section>
+                    <h2>Очередь в кассу</h2>
+                    <div class="timeline">
+                        <div class="timeline-item fragment">
+                            <div class="timeline-label">Пришёл первым</div>
+                            <div class="timeline-arrow">-></div>
+                            <div class="timeline-desc">стоишь в начале очереди</div>
+                        </div>
+                        <div class="timeline-item fragment">
+                            <div class="timeline-label">Уходишь первым</div>
+                            <div class="timeline-arrow">-></div>
+                            <div class="timeline-desc">кассир обслуживает строго по порядку</div>
+                        </div>
+                        <div class="timeline-item fragment">
+                            <div class="timeline-label">Нельзя</div>
+                            <div class="timeline-arrow">-></div>
+                            <div class="timeline-desc">пролезть без очереди или выйти из середины</div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- FIFO: first in, first out -->
+                <section>
+                    <h2>FIFO</h2>
+                    <p class="fragment" style="font-size: 1em;">
+                        <mark>F</mark>irst <mark>I</mark>n, <mark>F</mark>irst <mark>O</mark>ut
+                    </p>
+                    <p class="fragment" style="font-size: 0.75em; opacity: 0.7;">первым вошёл - первым вышел</p>
+                    <div class="fragment" style="display: flex; align-items: center; justify-content: center; gap: 1em; margin-top: 1.2em;">
+                        <span style="font-size: 0.55em; opacity: 0.5;">&lt;- dequeue</span>
+                        <div style="display: flex; gap: 0.4em;">
+                            <div style="border: 2px solid #4caf50; border-radius: 0.3em; padding: 0.3em 0.9em; font-weight: bold; color: #4caf50;">A</div>
+                            <div style="border: 2px solid #ffd54f; border-radius: 0.3em; padding: 0.3em 0.9em; font-weight: bold;">B</div>
+                            <div style="border: 2px solid #ffd54f; border-radius: 0.3em; padding: 0.3em 0.9em; font-weight: bold;">C</div>
+                        </div>
+                        <span style="font-size: 0.55em; opacity: 0.5;"><- enqueue</span>
+                    </div>
+                    <div class="fragment opinion">A добавили первым - A уйдёт первым</div>
+                </section>
+
+                <!-- операции очереди: интерфейс -->
+                <section>
+                    <h2>Интерфейс очереди</h2>
+                    <table style="font-size: 0.8em; width: 100%; margin-top: 0.5em;">
+                        <tr>
+                            <td><strong>Метод</strong></td>
+                            <td><strong>Что делает</strong></td>
+                            <td><strong>O</strong></td>
+                        </tr>
+                        <tr class="fragment"><td><code>enqueue(item)</code></td><td>добавить в конец</td><td>O(1)</td></tr>
+                        <tr class="fragment"><td><code>dequeue()</code></td><td>забрать из начала</td><td>O(1)</td></tr>
+                        <tr class="fragment"><td><code>peek()</code></td><td>посмотреть первый, не убирая</td><td>O(1)</td></tr>
+                        <tr class="fragment"><td><code>is_empty()</code></td><td>пустая ли очередь</td><td>O(1)</td></tr>
+                        <tr class="fragment"><td><code>size()</code></td><td>количество элементов</td><td>O(1)</td></tr>
+                    </table>
+                    <div class="fragment opinion">Этот интерфейс будем реализовывать сами</div>
+                </section>
+
+                <!-- анимация очереди -->
+                <section>
+                    <h2>Очередь в действии</h2>
+                    <div style="display: flex; justify-content: space-between; font-size: 0.55em; opacity: 0.5; margin-bottom: 0.4em; padding: 0 3em;">
+                        <span>&lt;- dequeue</span>
+                        <span><- enqueue</span>
+                    </div>
+                    <div class="ds-container" style="height: 4em;">
+                        <div class="fragment current-visible ds-state" data-fragment-index="1">
+                            <div class="ds-cell">A</div>
+                        </div>
+                        <div class="fragment current-visible ds-state" data-fragment-index="2">
+                            <div class="ds-cell">A</div>
+                            <div class="ds-cell">B</div>
+                        </div>
+                        <div class="fragment current-visible ds-state" data-fragment-index="3">
+                            <div class="ds-cell">A</div>
+                            <div class="ds-cell">B</div>
+                            <div class="ds-cell">C</div>
+                        </div>
+                        <div class="fragment current-visible ds-state" data-fragment-index="4">
+                            <div class="ds-cell">B</div>
+                            <div class="ds-cell">C</div>
+                        </div>
+                        <div class="fragment ds-state" data-fragment-index="5">
+                            <div class="ds-cell">C</div>
+                        </div>
+                    </div>
+                    <div style="min-height: 1.8em; font-size: 0.65em; text-align: center; margin-top: 0.5em;">
+                        <div class="fragment current-visible" data-fragment-index="1">enqueue(<mark>"A"</mark>)</div>
+                        <div class="fragment current-visible" data-fragment-index="2">enqueue(<mark>"B"</mark>)</div>
+                        <div class="fragment current-visible" data-fragment-index="3">enqueue(<mark>"C"</mark>)</div>
+                        <div class="fragment current-visible" data-fragment-index="4">dequeue() -> <mark class="green">"A"</mark></div>
+                        <div class="fragment" data-fragment-index="5">dequeue() -> <mark class="green">"B"</mark></div>
+                    </div>
+                </section>
+
+                <!-- почему list плохая основа для очереди -->
+                <section>
+                    <h2>Почему <code>list</code> не подходит?</h2>
+                    <p class="fragment" style="font-size: 0.8em;">Удалить последний элемент - легко:</p>
+                    <div class="code-block fragment">
+                        <pre class="python size-m"><code>items.pop()    # O(1) - быстро</code></pre>
+                    </div>
+                    <p class="fragment" style="font-size: 0.8em;">Но очередь отдаёт <mark>первый</mark>:</p>
+                    <div class="code-block fragment">
+                        <pre class="python size-m"><code>items.pop(0)   # O(n) - сдвигает все элементы!</code></pre>
+                    </div>
+                    <div class="fragment opinion">
+                        💡 В массиве элементы лежат подряд в памяти - при удалении с начала всё сдвигается
+                    </div>
+                </section>
+
+                <!-- решение: collections.deque -->
+                <section>
+                    <h2>Решение: <code>collections.deque</code></h2>
+                    <p class="fragment" style="font-size: 0.8em;">Двусторонняя очередь - O(1) с обоих концов</p>
+                    <div class="code-block fragment">
+                        <pre class="python size-m"><code>from collections import deque
+
+q = deque()
+q.append("A")      # добавить справа - O(1)
+q.popleft()        # забрать слева  - O(1)</code></pre>
+                    </div>
+                    <div class="fragment opinion">
+                        Под капотом <code>deque</code> - связный список: нет сдвигов при работе с концами
+                    </div>
+                </section>
+
+            </section>
+
+            <!-- ЧАСТЬ 2: Стек -->
+            <section>
+
+                <section style="font-size: 70px; height: 100%; width: 100%">
+                    <div class="lesson-time">20</div>
+                    <div class="fragment">
+                        <h1 style="font-size: 1.4em;">Стек</h1>
+                        <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">Stack</p>
+                    </div>
+                </section>
+
+                <!-- аналогия стека: стопка тарелок -->
+                <section>
+                    <h2>Стопка тарелок</h2>
+                    <div class="timeline">
+                        <div class="timeline-item fragment">
+                            <div class="timeline-label">Кладёшь</div>
+                            <div class="timeline-arrow">-></div>
+                            <div class="timeline-desc">только сверху</div>
+                        </div>
+                        <div class="timeline-item fragment">
+                            <div class="timeline-label">Берёшь</div>
+                            <div class="timeline-arrow">-></div>
+                            <div class="timeline-desc">тоже только сверху</div>
+                        </div>
+                        <div class="timeline-item fragment">
+                            <div class="timeline-label">Снизу</div>
+                            <div class="timeline-arrow">-></div>
+                            <div class="timeline-desc">взять нельзя - вся стопка рухнет</div>
+                        </div>
+                    </div>
+                    <div class="fragment opinion">Доступ только к верхнему элементу</div>
+                </section>
+
+                <!-- LIFO: last in, first out -->
+                <section>
+                    <h2>LIFO</h2>
+                    <p class="fragment" style="font-size: 1em;">
+                        <mark>L</mark>ast <mark>I</mark>n, <mark>F</mark>irst <mark>O</mark>ut
+                    </p>
+                    <p class="fragment" style="font-size: 0.75em; opacity: 0.7;">последним вошёл - первым вышел</p>
+                    <div class="fragment" style="display: flex; flex-direction: column; align-items: center; gap: 0.3em; margin-top: 1em;">
+                        <span style="font-size: 0.55em; opacity: 0.5;">^ push / pop</span>
+                        <div style="border: 2px solid #4caf50; border-radius: 0.3em; padding: 0.3em 3em; text-align: center; color: #4caf50; font-weight: bold;">C</div>
+                        <div style="border: 2px solid #ffd54f; border-radius: 0.3em; padding: 0.3em 3em; text-align: center; font-weight: bold;">B</div>
+                        <div style="border: 2px solid #ffd54f; border-radius: 0.3em; padding: 0.3em 3em; text-align: center; font-weight: bold;">A</div>
+                    </div>
+                    <div class="fragment opinion">C добавили последним - C уйдёт первым</div>
+                </section>
+
+                <!-- операции стека: интерфейс -->
+                <section>
+                    <h2>Интерфейс стека</h2>
+                    <table style="font-size: 0.8em; width: 100%; margin-top: 0.5em;">
+                        <tr>
+                            <td><strong>Метод</strong></td>
+                            <td><strong>Что делает</strong></td>
+                            <td><strong>O</strong></td>
+                        </tr>
+                        <tr class="fragment"><td><code>push(item)</code></td><td>положить сверху</td><td>O(1)</td></tr>
+                        <tr class="fragment"><td><code>pop()</code></td><td>забрать верхний</td><td>O(1)</td></tr>
+                        <tr class="fragment"><td><code>peek()</code></td><td>посмотреть верхний, не убирая</td><td>O(1)</td></tr>
+                        <tr class="fragment"><td><code>is_empty()</code></td><td>пустой ли стек</td><td>O(1)</td></tr>
+                        <tr class="fragment"><td><code>size()</code></td><td>количество элементов</td><td>O(1)</td></tr>
+                    </table>
+                    <div class="fragment opinion">
+                        Стек удобно реализовать на обычном <code>list</code> - <code>pop()</code> без индекса это O(1)
+                    </div>
+                </section>
+
+                <!-- анимация стека -->
+                <section>
+                    <h2>Стек в действии</h2>
+                    <div style="font-size: 0.55em; opacity: 0.5; text-align: center; margin-bottom: 0.4em;">^ push / pop</div>
+                    <div class="ds-container" style="height: 7em;">
+                        <div class="fragment current-visible ds-state ds-state--stack" data-fragment-index="1">
+                            <div class="ds-cell">A</div>
+                        </div>
+                        <div class="fragment current-visible ds-state ds-state--stack" data-fragment-index="2">
+                            <div class="ds-cell">B</div>
+                            <div class="ds-cell">A</div>
+                        </div>
+                        <div class="fragment current-visible ds-state ds-state--stack" data-fragment-index="3">
+                            <div class="ds-cell">C</div>
+                            <div class="ds-cell">B</div>
+                            <div class="ds-cell">A</div>
+                        </div>
+                        <div class="fragment current-visible ds-state ds-state--stack" data-fragment-index="4">
+                            <div class="ds-cell">B</div>
+                            <div class="ds-cell">A</div>
+                        </div>
+                        <div class="fragment ds-state ds-state--stack" data-fragment-index="5">
+                            <div class="ds-cell">A</div>
+                        </div>
+                    </div>
+                    <div style="min-height: 1.8em; font-size: 0.65em; text-align: center; margin-top: 0.5em;">
+                        <div class="fragment current-visible" data-fragment-index="1">push(<mark>"A"</mark>)</div>
+                        <div class="fragment current-visible" data-fragment-index="2">push(<mark>"B"</mark>)</div>
+                        <div class="fragment current-visible" data-fragment-index="3">push(<mark>"C"</mark>)</div>
+                        <div class="fragment current-visible" data-fragment-index="4">pop() -> <mark class="green">"C"</mark></div>
+                        <div class="fragment" data-fragment-index="5">pop() -> <mark class="green">"B"</mark></div>
+                    </div>
+                </section>
+
+                <!-- сравнение стека и очереди: таблица -->
+                <section>
+                    <h2>Стек vs Очередь</h2>
+                    <table style="font-size: 0.8em; width: 100%; margin-top: 0.8em;">
+                        <tr>
+                            <td></td>
+                            <td><strong>Стек</strong></td>
+                            <td><strong>Очередь</strong></td>
+                        </tr>
+                        <tr class="fragment">
+                            <td>Принцип</td>
+                            <td><mark>LIFO</mark></td>
+                            <td><mark>FIFO</mark></td>
+                        </tr>
+                        <tr class="fragment">
+                            <td>Добавить</td>
+                            <td><code>push(item)</code></td>
+                            <td><code>enqueue(item)</code></td>
+                        </tr>
+                        <tr class="fragment">
+                            <td>Забрать</td>
+                            <td><code>pop()</code></td>
+                            <td><code>dequeue()</code></td>
+                        </tr>
+                        <tr class="fragment">
+                            <td>Реализация</td>
+                            <td><code>list</code></td>
+                            <td><code>deque</code></td>
+                        </tr>
+                        <tr class="fragment">
+                            <td>Аналогия</td>
+                            <td>стопка тарелок</td>
+                            <td>очередь в кассу</td>
+                        </tr>
+                    </table>
+                </section>
+
+            </section>
+
+            <!-- ЧАСТЬ 3: Стек вызовов -->
+            <section>
+
+                <section style="font-size: 70px; height: 100%; width: 100%">
+                    <div class="lesson-time">35</div>
+                    <div class="fragment">
+                        <h1 style="font-size: 1.4em;">Стек вызовов</h1>
+                        <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">Call Stack</p>
+                    </div>
+                </section>
+
+                <!-- стек вызовов: как Python выполняет функции -->
+                <section>
+                    <h2>Как Python выполняет функции</h2>
+                    <div class="timeline">
+                        <div class="timeline-item fragment">
+                            <div class="timeline-label">Вызов</div>
+                            <div class="timeline-arrow">-></div>
+                            <div class="timeline-desc">новый кадр кладётся на стек вызовов</div>
+                        </div>
+                        <div class="timeline-item fragment">
+                            <div class="timeline-label">Локальные vars</div>
+                            <div class="timeline-arrow">-></div>
+                            <div class="timeline-desc">хранятся внутри кадра, исчезают вместе с ним</div>
+                        </div>
+                        <div class="timeline-item fragment">
+                            <div class="timeline-label">Возврат</div>
+                            <div class="timeline-arrow">-></div>
+                            <div class="timeline-desc">кадр снимается, управление возвращается вниз</div>
+                        </div>
+                    </div>
+                    <div class="fragment opinion">
+                        Python сам использует стек для управления вызовами - это не абстракция, это реальность
+                    </div>
+                </section>
+
+                <!-- анимация стека вызовов: fact(3) -->
+                <section>
+                    <h2><code>fact(3)</code> - стек вызовов</h2>
+                    <div style="display: flex; gap: 1.5em; align-items: flex-start; justify-content: center; margin-top: 0.5em;">
+                        <div style="width: 210px; flex-shrink: 0;">
+                            <div style="font-size: 0.5em; opacity: 0.4; text-align: center; margin-bottom: 0.4em;">^ вершина</div>
+                            <div class="ds-container" style="height: 9em;">
+                                <div class="fragment current-visible ds-state ds-state--stack" data-fragment-index="1">
+                                    <div class="ds-cell ds-cell--frame">fact(3)</div>
+                                </div>
+                                <div class="fragment current-visible ds-state ds-state--stack" data-fragment-index="2">
+                                    <div class="ds-cell ds-cell--frame ds-cell--active">fact(2)</div>
+                                    <div class="ds-cell ds-cell--frame">fact(3)</div>
+                                </div>
+                                <div class="fragment current-visible ds-state ds-state--stack" data-fragment-index="3">
+                                    <div class="ds-cell ds-cell--frame ds-cell--active">fact(1) = 1</div>
+                                    <div class="ds-cell ds-cell--frame">fact(2)</div>
+                                    <div class="ds-cell ds-cell--frame">fact(3)</div>
+                                </div>
+                                <div class="fragment current-visible ds-state ds-state--stack" data-fragment-index="4">
+                                    <div class="ds-cell ds-cell--frame ds-cell--active">fact(2) = 2</div>
+                                    <div class="ds-cell ds-cell--frame">fact(3)</div>
+                                </div>
+                                <div class="fragment current-visible ds-state ds-state--stack" data-fragment-index="5">
+                                    <div class="ds-cell ds-cell--frame ds-cell--active">fact(3) = 6</div>
+                                </div>
+                                <div class="fragment ds-state" data-fragment-index="6">
+                                    <div style="font-size: 0.6em; opacity: 0.4;">[ стек пуст ]</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div style="flex: 1; text-align: left; padding-top: 1.5em;">
+                            <div class="fragment current-visible" data-fragment-index="1" style="font-size: 0.6em; padding: 0.3em 0;">вызов fact(3)</div>
+                            <div class="fragment current-visible" data-fragment-index="2" style="font-size: 0.6em; padding: 0.3em 0;">вызывает fact(2)</div>
+                            <div class="fragment current-visible" data-fragment-index="3" style="font-size: 0.6em; padding: 0.3em 0;">fact(1) = 1, возврат</div>
+                            <div class="fragment current-visible" data-fragment-index="4" style="font-size: 0.6em; padding: 0.3em 0;">fact(2) = 1 * 2 = 2, возврат</div>
+                            <div class="fragment current-visible" data-fragment-index="5" style="font-size: 0.6em; padding: 0.3em 0;">fact(3) = 2 * 3 = 6, возврат</div>
+                            <div class="fragment" data-fragment-index="6" style="font-size: 0.65em; padding: 0.3em 0;"><mark class="green">результат: 6</mark></div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- стек в реальной жизни -->
+                <section>
+                    <h2>Примеры стеков</h2>
+                    <div class="timeline">
+                        <div class="timeline-item fragment">
+                            <div class="timeline-label">Ctrl+Z</div>
+                            <div class="timeline-arrow">-></div>
+                            <div class="timeline-desc">каждое действие на стеке, undo = pop()</div>
+                        </div>
+                        <div class="timeline-item fragment">
+                            <div class="timeline-label">Браузер</div>
+                            <div class="timeline-arrow">-></div>
+                            <div class="timeline-desc">история вкладки, кнопка "назад" = pop()</div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- очередь в реальной жизни -->
+                <section>
+                    <h2>Примеры очередей</h2>
+                    <div class="timeline">
+                        <div class="timeline-item fragment">
+                            <div class="timeline-label">Принтер</div>
+                            <div class="timeline-arrow">-></div>
+                            <div class="timeline-desc">задания печатаются в порядке отправки</div>
+                        </div>
+                        <div class="timeline-item fragment">
+                            <div class="timeline-label">BFS</div>
+                            <div class="timeline-arrow">-></div>
+                            <div class="timeline-desc">обход графа в ширину - вернёмся к этому в уроке 27</div>
+                        </div>
+                        <div class="timeline-item fragment">
+                            <div class="timeline-label">Сервер</div>
+                            <div class="timeline-arrow">-></div>
+                            <div class="timeline-desc">запросы клиентов обрабатываются по очереди</div>
+                        </div>
+                    </div>
+                </section>
+
+            </section>
+
+            <!-- ИТОГ -->
+            <section>
+                <div class="lesson-time">55</div>
+                <h2>Что запомнить</h2>
+                <ul>
+                    <li class="fragment"><mark>Очередь</mark> - FIFO: кто первым вошёл, тот первым вышел</li>
+                    <li class="fragment"><mark>Стек</mark> - LIFO: кто последним вошёл, тот первым вышел</li>
+                    <li class="fragment"><code>list.pop(0)</code> это O(n) - для очереди нужен <code>deque</code></li>
+                    <li class="fragment">Python сам использует стек вызовов при каждом вызове функции</li>
+                </ul>
+            </section>
+
         </div>
     </div>
+
     <script src="/utils/lib/js/head.min.js"></script>
     <script src="/utils/js/reveal.js"></script>
     <script>
         Reveal.initialize({
-            controls: true, progress: true, history: true, center: true,
-            transition: 'fade', transitionSpeed: 'fast',
+            controls: true,
+            progress: true,
+            history: true,
+            center: true,
+            transition: 'fade',
+            transitionSpeed: 'fast',
             dependencies: [
-                { src: '/utils/lib/js/classList.js', condition: function() { return !document.body.classList; } },
-                { src: '/utils/plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+                { src: '/utils/lib/js/classList.js', condition: function () { return !document.body.classList; } },
+                { src: '/utils/plugin/markdown/marked.js', condition: function () { return !!document.querySelector('[data-markdown]'); } },
+                { src: '/utils/plugin/markdown/markdown.js', condition: function () { return !!document.querySelector('[data-markdown]'); } },
+                { src: '/utils/plugin/highlight/highlight.js', async: true, callback: function () { hljs.initHighlightingOnLoad(); } },
                 { src: '/utils/plugin/zoom-js/zoom.js', async: true },
                 { src: '/utils/plugin/notes/notes.js', async: true }
             ]
@@ -45,4 +503,5 @@
         Reveal.configure({ slideNumber: 'c/t' });
     </script>
 </body>
+
 </html>

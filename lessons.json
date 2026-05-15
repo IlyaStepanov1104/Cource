@@ -286,7 +286,7 @@
     {
       "number": 16,
       "title": "Стек и очередь",
-      "date": "2026-05-19T17:00:00",
+      "date": "2026-05-15T17:00:00",
       "duration": 60,
       "presentations": [
         {
@@ -295,7 +295,13 @@
           "order": 1
         }
       ],
-      "homeworks": []
+      "homeworks": [
+        {
+          "title": "Очередь на стеках",
+          "description": "Используя два стека (класс Stack с урока или своя реализация) реализуй очередь (FIFO)\n(Добавил ссылку на статью про это)",
+          "link": "https://nerc.itmo.ru/wiki/index.php?title=Очередь#.D0.A0.D0.B5.D0.B0.D0.BB.D0.B8.D0.B7.D0.B0.D1.86.D0.B8.D1.8F_.D0.BD.D0.B0_.D0.B4.D0.B2.D1.83.D1.85_.D1.81.D1.82.D0.B5.D0.BA.D0.B0.D1.85"
+        }
+      ]
     },
     {
       "number": 17,
