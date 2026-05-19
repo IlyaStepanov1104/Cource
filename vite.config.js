@@ -79,6 +79,16 @@ export default defineConfig({
     {
       name: 'admin-api',
       configureServer(server) {
+        const originalPrintUrls = server.printUrls.bind(server);
+        server.printUrls = () => {
+          originalPrintUrls();
+          const local = server.resolvedUrls?.local?.[0];
+          if (local) {
+            const url = local.replace(/\/?$/, '') + '/admin/';
+            console.log(`  \x1b[32m➜\x1b[0m  \x1b[1mAdmin:  \x1b[0m \x1b[36m\x1b[4m${url}\x1b[0m`);
+          }
+        };
+
         const cwd = process.cwd();
 
         // POST /api/save-lessons

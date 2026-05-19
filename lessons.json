@@ -315,7 +315,13 @@
           "order": 1
         }
       ],
-      "homeworks": []
+      "homeworks": [
+        {
+          "title": "509. Fibonacci Number",
+          "description": "Написать функцию, которая будет возвращать число Фибоначчи под номером n",
+          "link": "https://leetcode.com/problems/fibonacci-number/description/"
+        }
+      ]
     },
     {
       "number": 18,

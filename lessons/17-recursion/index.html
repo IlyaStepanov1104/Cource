@@ -1,43 +1,807 @@
 <!doctype html>
 <html lang="ru">
+
 <head>
     <meta charset="utf-8">
-    <title>Занятие 17 - Рекурсия</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+    <title>Занятие 17 — Рекурсия</title>
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+
     <link rel="stylesheet" href="/utils/css/reveal.css">
     <link rel="stylesheet" href="/utils/lib/css/animate.css">
     <link rel="stylesheet" href="/utils/css/theme/night.css" id="theme">
     <link rel="stylesheet" href="/utils/lib/css/zenburn.css">
     <link rel="stylesheet" href="/utils/css/custom-base.css">
     <link rel="stylesheet" href="css-custom/custom.css">
+
     <script>
         var link = document.createElement('link');
         link.rel = 'stylesheet'; link.type = 'text/css';
-        link.href = window.location.search.match(/print-pdf/gi) ? '/utils/css/print/pdf.css' : '/utils/css/print/paper.css';
+        link.href = window.location.search.match(/print-pdf/gi)
+            ? '/utils/css/print/pdf.css'
+            : '/utils/css/print/paper.css';
         document.getElementsByTagName('head')[0].appendChild(link);
     </script>
 </head>
+
 <body>
     <div class="reveal">
         <div class="slides">
+
+            <!-- Титульный слайд -->
             <section style="font-size: 70px; height: 100%; width: 100%">
                 <div class="lesson-time">0</div>
                 <div class="fragment">
-                    <h1 class="animated" style="font-size: 1.6em;">Рекурсия</h1>
-                    <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">Занятие 17</p>
+                    <h1 class="animated" style="font-size: 1.8em;">Рекурсия</h1>
+                    <p style="text-align: center; font-size: 0.5em; opacity: 0.5;">Занятие 17</p>
                 </div>
             </section>
+
+            <!-- ЧАСТЬ 1: Разбор ДЗ - очередь на двух стеках -->
+            <section>
+
+                <section style="font-size: 70px; height: 100%; width: 100%">
+                    <div class="lesson-time">0</div>
+                    <div class="fragment">
+                        <h1 style="font-size: 1.4em;">Разбор домашнего задания</h1>
+                        <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">Очередь на двух стеках</p>
+                    </div>
+                </section>
+
+                <!-- напоминание задачи -->
+                <section>
+                    <h2>Задача</h2>
+                    <p class="fragment" style="font-size: 0.85em;">Реализовать <mark>очередь</mark> (FIFO), используя
+                        только два стека</p>
+                    <div class="compare" style="margin-top: 0.8em;">
+                        <div class="compare-block fragment">
+                            <h3>Дано</h3>
+                            <ul>
+                                <li>Класс Stack - push, pop, is_empty</li>
+                                <li>Два экземпляра</li>
+                            </ul>
+                        </div>
+                        <div class="compare-block fragment">
+                            <h3>Нужно</h3>
+                            <ul>
+                                <li>enqueue(item) - добавить в конец</li>
+                                <li>dequeue() - забрать из начала</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="fragment opinion">Стек - LIFO, очередь - FIFO. Как одно превратить в другое?</div>
+                </section>
+
+                <!-- идея -->
+                <section>
+                    <h2>Идея</h2>
+                    <div class="compare" style="margin-top: 0.8em;">
+                        <div class="compare-block fragment">
+                            <h3>stack_in</h3>
+                            <ul>
+                                <li>принимает новые элементы</li>
+                                <li><code>enqueue</code> - просто push</li>
+                            </ul>
+                        </div>
+                        <div class="compare-block fragment">
+                            <h3>stack_out</h3>
+                            <ul>
+                                <li>отдаёт элементы по порядку</li>
+                                <li><code>dequeue</code> - pop отсюда</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="fragment opinion">Когда stack_out пуст - перелить все из stack_in в stack_out</div>
+                </section>
+
+                <!-- визуализация enqueue -->
+                <section>
+                    <h2>enqueue: добавляем в stack_in</h2>
+                    <div style="position: relative; min-height: 8em; margin-top: 0.6em;">
+                        <div class="fragment current-visible" data-fragment-index="1"
+                            style="position: absolute; width: 100%; display: flex; gap: 4em; justify-content: center; align-items: flex-start;">
+                            <div style="text-align: center;">
+                                <p style="font-size: 0.55em; opacity: 0.5; margin-bottom: 0.4em;">stack_in ^ push/pop
+                                </p>
+                                <div style="display: flex; flex-direction: column; gap: 0.3em; align-items: center;">
+                                    <div class="ds-cell">1</div>
+                                </div>
+                            </div>
+                            <div style="text-align: center;">
+                                <p style="font-size: 0.55em; opacity: 0.5; margin-bottom: 0.4em;">stack_out</p>
+                                <div style="font-size: 0.5em; opacity: 0.3; margin-top: 1em;">пуст</div>
+                            </div>
+                        </div>
+                        <div class="fragment current-visible" data-fragment-index="2"
+                            style="position: absolute; width: 100%; display: flex; gap: 4em; justify-content: center; align-items: flex-start;">
+                            <div style="text-align: center;">
+                                <p style="font-size: 0.55em; opacity: 0.5; margin-bottom: 0.4em;">stack_in ^ push/pop
+                                </p>
+                                <div style="display: flex; flex-direction: column; gap: 0.3em; align-items: center;">
+                                    <div class="ds-cell">2</div>
+                                    <div class="ds-cell">1</div>
+                                </div>
+                            </div>
+                            <div style="text-align: center;">
+                                <p style="font-size: 0.55em; opacity: 0.5; margin-bottom: 0.4em;">stack_out</p>
+                                <div style="font-size: 0.5em; opacity: 0.3; margin-top: 1em;">пуст</div>
+                            </div>
+                        </div>
+                        <div class="fragment" data-fragment-index="3"
+                            style="position: absolute; width: 100%; display: flex; gap: 4em; justify-content: center; align-items: flex-start;">
+                            <div style="text-align: center;">
+                                <p style="font-size: 0.55em; opacity: 0.5; margin-bottom: 0.4em;">stack_in ^ push/pop
+                                </p>
+                                <div style="display: flex; flex-direction: column; gap: 0.3em; align-items: center;">
+                                    <div class="ds-cell">3</div>
+                                    <div class="ds-cell">2</div>
+                                    <div class="ds-cell">1</div>
+                                </div>
+                            </div>
+                            <div style="text-align: center;">
+                                <p style="font-size: 0.55em; opacity: 0.5; margin-bottom: 0.4em;">stack_out</p>
+                                <div style="font-size: 0.5em; opacity: 0.3; margin-top: 1em;">пуст</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="min-height: 1.5em; font-size: 0.65em; text-align: center;">
+                        <div class="fragment current-visible" data-fragment-index="1">enqueue(<mark>1</mark>)</div>
+                        <div class="fragment current-visible" data-fragment-index="2">enqueue(<mark>2</mark>)</div>
+                        <div class="fragment" data-fragment-index="3">enqueue(<mark>3</mark>)</div>
+                    </div>
+                </section>
+
+                <!-- визуализация dequeue: stack_out пуст - переливаем -->
+                <section>
+                    <h2>dequeue: stack_out пуст - переливаем</h2>
+                    <div style="position: relative; min-height: 8em; margin-top: 0.6em;">
+                        <div class="fragment current-visible" data-fragment-index="1"
+                            style="position: absolute; width: 100%; display: flex; gap: 4em; justify-content: center; align-items: flex-start;">
+                            <div style="text-align: center;">
+                                <p style="font-size: 0.55em; opacity: 0.5; margin-bottom: 0.4em;">stack_in</p>
+                                <div style="display: flex; flex-direction: column; gap: 0.3em; align-items: center;">
+                                    <div class="ds-cell">3</div>
+                                    <div class="ds-cell">2</div>
+                                    <div class="ds-cell">1</div>
+                                </div>
+                            </div>
+                            <div style="text-align: center;">
+                                <p style="font-size: 0.55em; opacity: 0.5; margin-bottom: 0.4em;">stack_out</p>
+                                <div style="font-size: 0.5em; opacity: 0.3; margin-top: 2em;">пуст</div>
+                            </div>
+                        </div>
+                        <div class="fragment current-visible" data-fragment-index="2"
+                            style="position: absolute; width: 100%; display: flex; gap: 4em; justify-content: center; align-items: flex-start;">
+                            <div style="text-align: center;">
+                                <p style="font-size: 0.55em; opacity: 0.5; margin-bottom: 0.4em;">stack_in</p>
+                                <div style="font-size: 0.5em; opacity: 0.3; margin-top: 2em;">пуст</div>
+                            </div>
+                            <div style="text-align: center;">
+                                <p style="font-size: 0.55em; opacity: 0.5; margin-bottom: 0.4em;">stack_out</p>
+                                <div style="display: flex; flex-direction: column; gap: 0.3em; align-items: center;">
+                                    <div class="ds-cell">1</div>
+                                    <div class="ds-cell">2</div>
+                                    <div class="ds-cell">3</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="fragment" data-fragment-index="3"
+                            style="position: absolute; width: 100%; display: flex; gap: 4em; justify-content: center; align-items: flex-start;">
+                            <div style="text-align: center;">
+                                <p style="font-size: 0.55em; opacity: 0.5; margin-bottom: 0.4em;">stack_in</p>
+                                <div style="font-size: 0.5em; opacity: 0.3; margin-top: 2em;">пуст</div>
+                            </div>
+                            <div style="text-align: center;">
+                                <p style="font-size: 0.55em; opacity: 0.5; margin-bottom: 0.4em;">stack_out</p>
+                                <div style="display: flex; flex-direction: column; gap: 0.3em; align-items: center;">
+                                    <div class="ds-cell">2</div>
+                                    <div class="ds-cell">3</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="min-height: 1.5em; font-size: 0.65em; text-align: center;">
+                        <div class="fragment current-visible" data-fragment-index="1">stack_out пуст - нужно перелить
+                        </div>
+                        <div class="fragment current-visible" data-fragment-index="2">переливаем: порядок
+                            переворачивается, 1 оказывается на вершине</div>
+                        <div class="fragment" data-fragment-index="3">dequeue() -> pop из stack_out -> <mark
+                                class="green">1</mark></div>
+                    </div>
+                </section>
+
+                <!-- визуализация dequeue: повторный, stack_out не пуст -->
+                <section>
+                    <h2>dequeue: stack_out не пуст - просто pop</h2>
+                    <div style="position: relative; min-height: 7em; margin-top: 0.6em;">
+                        <div class="fragment current-visible" data-fragment-index="1"
+                            style="position: absolute; width: 100%; display: flex; gap: 4em; justify-content: center; align-items: flex-start;">
+                            <div style="text-align: center;">
+                                <p style="font-size: 0.55em; opacity: 0.5; margin-bottom: 0.4em;">stack_in</p>
+                                <div style="font-size: 0.5em; opacity: 0.3; margin-top: 1.5em;">пуст</div>
+                            </div>
+                            <div style="text-align: center;">
+                                <p style="font-size: 0.55em; opacity: 0.5; margin-bottom: 0.4em;">stack_out</p>
+                                <div style="display: flex; flex-direction: column; gap: 0.3em; align-items: center;">
+                                    <div class="ds-cell">2</div>
+                                    <div class="ds-cell">3</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="fragment" data-fragment-index="2"
+                            style="position: absolute; width: 100%; display: flex; gap: 4em; justify-content: center; align-items: flex-start;">
+                            <div style="text-align: center;">
+                                <p style="font-size: 0.55em; opacity: 0.5; margin-bottom: 0.4em;">stack_in</p>
+                                <div style="font-size: 0.5em; opacity: 0.3; margin-top: 1.5em;">пуст</div>
+                            </div>
+                            <div style="text-align: center;">
+                                <p style="font-size: 0.55em; opacity: 0.5; margin-bottom: 0.4em;">stack_out</p>
+                                <div style="display: flex; flex-direction: column; gap: 0.3em; align-items: center;">
+                                    <div class="ds-cell">3</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="min-height: 1.5em; font-size: 0.65em; text-align: center;">
+                        <div class="fragment current-visible" data-fragment-index="1">stack_out не пуст - переливать не
+                            нужно</div>
+                        <div class="fragment" data-fragment-index="2">dequeue() -> pop из stack_out -> <mark
+                                class="green">2</mark></div>
+                    </div>
+                </section>
+            </section>
+
+            <!-- ЧАСТЬ 2: Что такое рекурсия -->
+            <section>
+
+                <section style="font-size: 70px; height: 100%; width: 100%">
+                    <div class="lesson-time">15</div>
+                    <div class="fragment">
+                        <h1 style="font-size: 1.4em;">Рекурсия</h1>
+                        <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">Функция, которая вызывает саму
+                            себя</p>
+                    </div>
+                </section>
+
+                <!-- определение -->
+                <section>
+                    <h2>Что такое рекурсия?</h2>
+                    <p class="fragment" style="font-size: 0.9em;">Функция, которая в своём теле <mark>вызывает саму
+                            себя</mark></p>
+                    <div class="code-block fragment">
+                        <pre class="python size-m"><code>def countdown(n):
+    print(n)
+    countdown(n - 1)   # вызывает саму себя</code></pre>
+                    </div>
+                    <div class="fragment opinion">Это законный Python - ничего магического здесь нет</div>
+                </section>
+
+                <!-- аналогия: матрёшка -->
+                <section>
+                    <h2>Матрёшка</h2>
+                    <div class="timeline">
+                        <div class="timeline-item fragment">
+                            <div class="timeline-label">Открываешь</div>
+                            <div class="timeline-arrow">-></div>
+                            <div class="timeline-desc">внутри такая же матрёшка, только меньше</div>
+                        </div>
+                        <div class="timeline-item fragment">
+                            <div class="timeline-label">Снова открываешь</div>
+                            <div class="timeline-arrow">-></div>
+                            <div class="timeline-desc">опять матрёшка - и так несколько раз</div>
+                        </div>
+                        <div class="timeline-item fragment">
+                            <div class="timeline-label">В какой-то момент</div>
+                            <div class="timeline-arrow">-></div>
+                            <div class="timeline-desc">матрёшка не открывается - это конец</div>
+                        </div>
+                    </div>
+                    <div class="fragment opinion">Задача внутри содержит задачу поменьше - и так до самой простой</div>
+                </section>
+
+                <!-- countdown пример -->
+                <section>
+                    <h2><code>countdown(n)</code></h2>
+                    <div class="code-block fragment">
+                        <pre class="python size-m"><code>def countdown(n):
+    if n == 0:
+        print("Пуск!")
+        return
+    print(n)
+    countdown(n - 1)</code></pre>
+                    </div>
+                    <div class="fragment opinion">Каждый вызов делает одно простое действие и передаёт задачу дальше
+                    </div>
+                </section>
+
+                <!-- трассировка countdown(3) -->
+                <section>
+                    <h2>countdown(3): что происходит</h2>
+                    <div class="timeline" style="margin-top: 0.8em;">
+                        <div class="timeline-item fragment">
+                            <div class="timeline-label">countdown(3)</div>
+                            <div class="timeline-arrow">-></div>
+                            <div class="timeline-desc">печатает 3, вызывает countdown(2)</div>
+                        </div>
+                        <div class="timeline-item fragment">
+                            <div class="timeline-label">countdown(2)</div>
+                            <div class="timeline-arrow">-></div>
+                            <div class="timeline-desc">печатает 2, вызывает countdown(1)</div>
+                        </div>
+                        <div class="timeline-item fragment">
+                            <div class="timeline-label">countdown(1)</div>
+                            <div class="timeline-arrow">-></div>
+                            <div class="timeline-desc">печатает 1, вызывает countdown(0)</div>
+                        </div>
+                        <div class="timeline-item fragment">
+                            <div class="timeline-label">countdown(0)</div>
+                            <div class="timeline-arrow">-></div>
+                            <div class="timeline-desc">печатает "Пуск!", return - цепочка останавливается</div>
+                        </div>
+                    </div>
+                </section>
+
+            </section>
+
+            <!-- ЧАСТЬ 3: Базовый случай -->
+            <section>
+
+                <section style="font-size: 70px; height: 100%; width: 100%">
+                    <div class="lesson-time">25</div>
+                    <div class="fragment">
+                        <h1 style="font-size: 1.4em;">Базовый случай</h1>
+                        <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">Когда рекурсия останавливается
+                        </p>
+                    </div>
+                </section>
+
+                <!-- что будет без базового случая -->
+                <section>
+                    <h2>Что будет без базового случая?</h2>
+                    <div class="code-block fragment">
+                        <pre class="python size-m"><code>def countdown(n):
+    print(n)
+    countdown(n - 1)   # нет условия остановки!</code></pre>
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        <mark class="yellow">RecursionError</mark>: maximum recursion depth exceeded
+                    </div>
+                    <p class="fragment" style="font-size: 0.75em; margin-top: 0.5em;">Python остановит программу сам -
+                        иначе она съела бы всю память</p>
+                </section>
+
+                <!-- структура рекурсии -->
+                <section>
+                    <h2>Структура любой рекурсии</h2>
+                    <div class="code-block fragment">
+                        <pre class="python size-m"><code>def recursive(n):
+    if &lt;базовый случай&gt;:    # условие остановки
+        return &lt;результат&gt;
+
+    # рекурсивный шаг: задача становится меньше
+    return recursive(n - 1)</code></pre>
+                    </div>
+                    <div class="compare" style="margin-top: 0.8em;">
+                        <div class="compare-block fragment">
+                            <h3>Базовый случай</h3>
+                            <ul>
+                                <li>Самый простой вариант</li>
+                                <li>Отвечает сразу без вызова себя</li>
+                                <li>Останавливает цепочку</li>
+                            </ul>
+                        </div>
+                        <div class="compare-block fragment">
+                            <h3>Рекурсивный шаг</h3>
+                            <ul>
+                                <li>Делает задачу <mark>меньше</mark></li>
+                                <li>Приближает к базовому случаю</li>
+                                <li>Вызывает себя с новым аргументом</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- factorial пример -->
+                <section>
+                    <h2><code>factorial(n)</code></h2>
+                    <div class="code-block fragment">
+                        <pre class="python size-m"><code>def factorial(n):
+    if n == 0:                    # базовый случай
+        return 1
+    return n * factorial(n - 1)   # рекурсивный шаг</code></pre>
+                    </div>
+                    <div class="fragment opinion">
+                        4! = 4 * 3! = 4 * 3 * 2! = 4 * 3 * 2 * 1 * 0! = 4 * 3 * 2 * 1 * 1 = 24
+                    </div>
+                </section>
+
+                <!-- трассировка factorial(4) -->
+                <section>
+                    <h2>Трассировка <code>factorial(4)</code></h2>
+                    <div class="code-block fragment">
+                        <pre class="python size-m"><code>factorial(4)
+  4 * factorial(3)
+        3 * factorial(2)
+              2 * factorial(1)
+                    1 * factorial(0)
+                              = 1     # базовый случай</code></pre>
+                    </div>
+                    <div class="code-block fragment">
+                        <pre class="python size-m"><code>factorial(0) = 1
+factorial(1) = 1 * 1 = 1
+factorial(2) = 2 * 1 = 2
+factorial(3) = 3 * 2 = 6
+factorial(4) = 4 * 6 = 24</code></pre>
+                    </div>
+                    <div class="fragment opinion">Сначала разворачиваемся вниз до базового случая, потом считаем снизу
+                        вверх</div>
+                </section>
+
+            </section>
+
+            <!-- ЧАСТЬ 4: Сколько операций делает рекурсия -->
+            <section>
+
+                <section style="font-size: 70px; height: 100%; width: 100%">
+                    <div class="lesson-time">33</div>
+                    <div class="fragment">
+                        <h1 style="font-size: 1.4em;">Сколько операций?</h1>
+                        <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">Стоимость рекурсии</p>
+                    </div>
+                </section>
+
+                <!-- factorial O(n) -->
+                <section>
+                    <h2><code>factorial(n)</code> - сколько вызовов?</h2>
+                    <div class="timeline" style="margin-top: 0.8em;">
+                        <div class="timeline-item fragment">
+                            <div class="timeline-label">factorial(4)</div>
+                            <div class="timeline-arrow">-></div>
+                            <div class="timeline-desc">вызывает factorial(3)</div>
+                        </div>
+                        <div class="timeline-item fragment">
+                            <div class="timeline-label">factorial(3)</div>
+                            <div class="timeline-arrow">-></div>
+                            <div class="timeline-desc">вызывает factorial(2)</div>
+                        </div>
+                        <div class="timeline-item fragment">
+                            <div class="timeline-label">factorial(2)</div>
+                            <div class="timeline-arrow">-></div>
+                            <div class="timeline-desc">вызывает factorial(1)</div>
+                        </div>
+                        <div class="timeline-item fragment">
+                            <div class="timeline-label">factorial(1)</div>
+                            <div class="timeline-arrow">-></div>
+                            <div class="timeline-desc">вызывает factorial(0) - цепочка в одну линию</div>
+                        </div>
+                    </div>
+                    <div class="fragment opinion">factorial(n) = n + 1 вызов = <mark>O(n)</mark></div>
+                </section>
+
+                <!-- fibonacci дерево -->
+                <section>
+                    <h2><code>fib(n)</code> - каждый вызов порождает <mark class="yellow">два</mark></h2>
+                    <div class="code-block fragment">
+                        <pre class="python size-s"><code>def fib(n):
+    if n &lt;= 1:
+        return n
+    return fib(n - 1) + fib(n - 2)   # два рекурсивных вызова!</code></pre>
+                    </div>
+                    <div class="fragment"
+                        style="font-family: monospace; font-size: 0.6em; line-height: 1.8; text-align: center; margin-top: 0.5em;">
+                        <div>fib(4)</div>
+                        <div style="opacity: 0.85;">fib(3) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; fib(2)</div>
+                        <div style="opacity: 0.7;">fib(2) &nbsp;&nbsp; fib(1) &nbsp;&nbsp; fib(1) &nbsp;&nbsp; fib(0)
+                        </div>
+                        <div style="opacity: 0.55;">fib(1) &nbsp; fib(0)</div>
+                    </div>
+                    <div class="fragment opinion">fib(4) = <mark>9 вызовов</mark>. fib(10) = 177. fib(50) - миллиарды.
+                        Растёт как <mark class="yellow">2^n</mark></div>
+                </section>
+
+                <!-- вывод: линейная vs ветвящаяся -->
+                <section>
+                    <h2>Линейная vs ветвящаяся рекурсия</h2>
+                    <div class="compare" style="margin-top: 0.8em;">
+                        <div class="compare-block fragment">
+                            <h3>Линейная</h3>
+                            <ul>
+                                <li>1 рекурсивный вызов</li>
+                                <li>factorial, countdown</li>
+                                <li>Дерево - одна ветка</li>
+                                <li><mark class="green">O(n)</mark></li>
+                            </ul>
+                        </div>
+                        <div class="compare-block fragment">
+                            <h3>Ветвящаяся</h3>
+                            <ul>
+                                <li>2+ рекурсивных вызова</li>
+                                <li>fibonacci</li>
+                                <li>Дерево расширяется</li>
+                                <li><mark class="yellow">O(2^n)</mark> - очень дорого</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="fragment opinion">fib(50) наивной рекурсией - программа зависнет</div>
+                </section>
+
+                <!-- связь с Big-O -->
+                <section>
+                    <h2>Как оценить сложность рекурсии</h2>
+                    <div class="timeline" style="margin-top: 0.8em;">
+                        <div class="timeline-item fragment">
+                            <div class="timeline-label">Глубина</div>
+                            <div class="timeline-arrow">-></div>
+                            <div class="timeline-desc">сколько уровней в дереве вызовов</div>
+                        </div>
+                        <div class="timeline-item fragment">
+                            <div class="timeline-label">Ветвление</div>
+                            <div class="timeline-arrow">-></div>
+                            <div class="timeline-desc">сколько рекурсивных вызовов делает один шаг</div>
+                        </div>
+                        <div class="timeline-item fragment">
+                            <div class="timeline-label">Итого</div>
+                            <div class="timeline-arrow">-></div>
+                            <div class="timeline-desc">ветвление ^ глубина = количество узлов в дереве</div>
+                        </div>
+                    </div>
+                    <div class="fragment opinion">factorial: 1^n = O(n) &nbsp;&nbsp; fibonacci: 2^n = O(2^n)</div>
+                </section>
+
+            </section>
+
+            <!-- ЧАСТЬ 5: Стек вызовов и ограничения -->
+            <section>
+
+                <section style="font-size: 70px; height: 100%; width: 100%">
+                    <div class="lesson-time">43</div>
+                    <div class="fragment">
+                        <h1 style="font-size: 1.4em;">Стек вызовов</h1>
+                        <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">Как Python хранит рекурсию в
+                            памяти</p>
+                    </div>
+                </section>
+
+                <!-- стек вызовов: фреймы в памяти -->
+                <section>
+                    <h2>Каждый вызов = фрейм в памяти</h2>
+                    <div class="timeline" style="margin-top: 0.8em;">
+                        <div class="timeline-item fragment">
+                            <div class="timeline-label">Вызов функции</div>
+                            <div class="timeline-arrow">-></div>
+                            <div class="timeline-desc">новый фрейм кладётся на стек вызовов</div>
+                        </div>
+                        <div class="timeline-item fragment">
+                            <div class="timeline-label">Локальные vars</div>
+                            <div class="timeline-arrow">-></div>
+                            <div class="timeline-desc">хранятся внутри фрейма, исчезают с ним</div>
+                        </div>
+                        <div class="timeline-item fragment">
+                            <div class="timeline-label">return</div>
+                            <div class="timeline-arrow">-></div>
+                            <div class="timeline-desc">фрейм снимается, управление возвращается вниз</div>
+                        </div>
+                    </div>
+                    <div class="fragment opinion">При рекурсии фреймы накапливаются один поверх другого</div>
+                </section>
+
+                <!-- визуализация стека вызовов для factorial(4) -->
+                <section>
+                    <h2>Стек вызовов: <code>factorial(4)</code></h2>
+                    <div
+                        style="display: flex; gap: 1.5em; align-items: flex-start; justify-content: center; margin-top: 0.5em;">
+                        <div style="width: 200px; flex-shrink: 0;">
+                            <div style="font-size: 0.5em; opacity: 0.4; text-align: center; margin-bottom: 0.4em;">^
+                                вершина</div>
+                            <div class="ds-container" style="height: 9em;">
+                                <div class="fragment current-visible ds-state ds-state--stack" data-fragment-index="1">
+                                    <div class="ds-cell ds-cell--frame">factorial(4)</div>
+                                </div>
+                                <div class="fragment current-visible ds-state ds-state--stack" data-fragment-index="2">
+                                    <div class="ds-cell ds-cell--frame ds-cell--active">factorial(3)</div>
+                                    <div class="ds-cell ds-cell--frame">factorial(4)</div>
+                                </div>
+                                <div class="fragment current-visible ds-state ds-state--stack" data-fragment-index="3">
+                                    <div class="ds-cell ds-cell--frame ds-cell--active">factorial(2)</div>
+                                    <div class="ds-cell ds-cell--frame">factorial(3)</div>
+                                    <div class="ds-cell ds-cell--frame">factorial(4)</div>
+                                </div>
+                                <div class="fragment current-visible ds-state ds-state--stack" data-fragment-index="4">
+                                    <div class="ds-cell ds-cell--frame ds-cell--active">factorial(1)</div>
+                                    <div class="ds-cell ds-cell--frame">factorial(2)</div>
+                                    <div class="ds-cell ds-cell--frame">factorial(3)</div>
+                                    <div class="ds-cell ds-cell--frame">factorial(4)</div>
+                                </div>
+                                <div class="fragment current-visible ds-state ds-state--stack" data-fragment-index="5">
+                                    <div class="ds-cell ds-cell--frame ds-cell--active">factorial(0) = 1</div>
+                                    <div class="ds-cell ds-cell--frame">factorial(1)</div>
+                                    <div class="ds-cell ds-cell--frame">factorial(2)</div>
+                                    <div class="ds-cell ds-cell--frame">factorial(3)</div>
+                                    <div class="ds-cell ds-cell--frame">factorial(4)</div>
+                                </div>
+                                <div class="fragment ds-state" data-fragment-index="6">
+                                    <div style="font-size: 0.6em; opacity: 0.4;">[ стек пуст ]</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div style="flex: 1; text-align: left; padding-top: 1.5em;">
+                            <div class="fragment current-visible" data-fragment-index="1" style="font-size: 0.6em;">
+                                вызов factorial(4)</div>
+                            <div class="fragment current-visible" data-fragment-index="2" style="font-size: 0.6em;">
+                                вызывает factorial(3)</div>
+                            <div class="fragment current-visible" data-fragment-index="3" style="font-size: 0.6em;">
+                                вызывает factorial(2)</div>
+                            <div class="fragment current-visible" data-fragment-index="4" style="font-size: 0.6em;">
+                                вызывает factorial(1)</div>
+                            <div class="fragment current-visible" data-fragment-index="5" style="font-size: 0.6em;">
+                                factorial(0) = 1, стек разворачивается</div>
+                            <div class="fragment" data-fragment-index="6" style="font-size: 0.65em;"><mark
+                                    class="green">результат: 24</mark></div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- RecursionError -->
+                <section>
+                    <h2><code>RecursionError</code></h2>
+                    <div class="code-block fragment">
+                        <pre class="python size-m"><code>def infinite(n):
+    return infinite(n + 1)
+
+infinite(0)
+# RecursionError: maximum recursion depth exceeded</code></pre>
+                    </div>
+                    <p class="fragment" style="font-size: 0.8em; margin-top: 0.5em;">Стек вызовов заполнился - Python
+                        остановил программу</p>
+                    <div class="fragment opinion">Это защита: без неё программа израсходовала бы всю память</div>
+                </section>
+
+                <!-- sys.getrecursionlimit -->
+                <section>
+                    <h2>Лимит глубины</h2>
+                    <div class="code-block fragment">
+                        <pre class="python size-m"><code>import sys
+
+sys.getrecursionlimit()      # 1000 по умолчанию
+sys.setrecursionlimit(5000)  # можно поднять</code></pre>
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        <mark class="yellow">Осторожно:</mark> слишком большой лимит - риск MemoryError
+                    </div>
+                    <p class="fragment" style="font-size: 0.75em; margin-top: 0.5em;">Если нужна глубина больше 1000 -
+                        скорее всего задача решается циклом</p>
+                </section>
+
+                <!-- когда рекурсия лучше цикла -->
+                <section>
+                    <h2>Рекурсия vs цикл</h2>
+                    <div class="compare" style="margin-top: 0.8em;">
+                        <div class="compare-block fragment">
+                            <h3>Рекурсия лучше</h3>
+                            <ul>
+                                <li>Деревья и графы</li>
+                                <li>Вложенные структуры</li>
+                                <li>Задачи "разделяй и властвуй"</li>
+                                <li>Код выглядит как математика</li>
+                            </ul>
+                        </div>
+                        <div class="compare-block fragment">
+                            <h3>Цикл лучше</h3>
+                            <ul>
+                                <li>Простая итерация</li>
+                                <li>Нужна глубина больше 1000</li>
+                                <li>Критична скорость и память</li>
+                                <li>Нет естественного разбиения</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+            </section>
+
+            <!-- ЧАСТЬ 6: Практика -->
+            <section>
+
+                <section style="font-size: 70px; height: 100%; width: 100%">
+                    <div class="lesson-time">50</div>
+                    <div class="fragment">
+                        <h1 style="font-size: 1.4em;">Практика</h1>
+                        <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">Пишем рекурсивные функции</p>
+                    </div>
+                </section>
+
+                <!-- задача 1: sum_list (разминка, вместе) -->
+                <section>
+                    <h2>Разминка: сумма списка</h2>
+                    <p class="fragment" style="font-size: 0.85em;">Написать <code>sum_list(lst)</code> - сумма элементов
+                        рекурсивно</p>
+                    <div class="code-block fragment">
+                        <pre class="python size-m"><code># Базовый случай?
+# Рекурсивный шаг?
+def sum_list(lst):
+    ???</code></pre>
+                    </div>
+                </section>
+
+                <!-- задача 2: leetcode 509 -->
+                <section>
+                    <h2>509. Fibonacci Number</h2>
+                    <a href="https://leetcode.com/problems/fibonacci-number/description/" class="fragment">ссылка</a>
+                    <p class="fragment" style="font-size: 0.8em;">F(0) = 0, F(1) = 1, F(n) = F(n-1) + F(n-2)</p>
+                    <div class="code-block fragment">
+                        <pre class="python size-m"><code>def fib(n: int) -> int:
+    ???</code></pre>
+                    </div>
+                </section>
+
+                <!-- задача 3: leetcode 344 -->
+                <section>
+                    <h2>344. Reverse String</h2>
+                    <a href="https://leetcode.com/problems/reverse-string/description/" class="fragment">ссылка</a>
+                    <p class="fragment" style="font-size: 0.8em;">Перевернуть список символов <mark>in-place</mark>
+                        рекурсивно</p>
+                    <div class="code-block fragment">
+                        <pre class="python size-m"><code>def reverseString(s: list[str]) -> None:
+    # подсказка: swap s[left] и s[right],
+    # затем двигаемся к центру
+    ???</code></pre>
+                    </div>
+                </section>
+
+                <!-- задача 4: leetcode 70 -->
+                <section>
+                    <h2>70. Climbing Stairs</h2>
+                    <a href="https://leetcode.com/problems/climbing-stairs/description/" class="fragment">ссылка</a>
+                    <p class="fragment" style="font-size: 0.8em;">Сколько способов подняться на <code>n</code> ступеней,
+                        делая 1 или 2 шага за раз?</p>
+                    <div class="compare" style="margin-top: 0.5em;">
+                        <div class="compare-block fragment">
+                            <h3>n = 1</h3>
+                            <ul>
+                                <li>1 способ: [1]</li>
+                            </ul>
+                        </div>
+                        <div class="compare-block fragment">
+                            <h3>n = 2</h3>
+                            <ul>
+                                <li>2 способа: [1,1] и [2]</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+            </section>
+
+            <!-- ИТОГ -->
+            <section>
+                <div class="lesson-time">58</div>
+                <h2>Что запомнить</h2>
+                <ul>
+                    <li class="fragment">Рекурсия - функция, вызывающая саму себя. <mark>Базовый случай
+                            обязателен</mark></li>
+                    <li class="fragment">Каждый вызов = фрейм в стеке. Лимит по умолчанию <mark>1000</mark></li>
+                    <li class="fragment">Линейная рекурсия - O(n). Ветвящаяся (2 вызова) - <mark
+                            class="yellow">O(2^n)</mark></li>
+                </ul>
+            </section>
+
         </div>
     </div>
+
     <script src="/utils/lib/js/head.min.js"></script>
     <script src="/utils/js/reveal.js"></script>
     <script>
         Reveal.initialize({
-            controls: true, progress: true, history: true, center: true,
-            transition: 'fade', transitionSpeed: 'fast',
+            controls: true,
+            progress: true,
+            history: true,
+            center: true,
+            transition: 'fade',
+            transitionSpeed: 'fast',
             dependencies: [
-                { src: '/utils/lib/js/classList.js', condition: function() { return !document.body.classList; } },
-                { src: '/utils/plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+                { src: '/utils/lib/js/classList.js', condition: function () { return !document.body.classList; } },
+                { src: '/utils/plugin/markdown/marked.js', condition: function () { return !!document.querySelector('[data-markdown]'); } },
+                { src: '/utils/plugin/markdown/markdown.js', condition: function () { return !!document.querySelector('[data-markdown]'); } },
+                { src: '/utils/plugin/highlight/highlight.js', async: true, callback: function () { hljs.initHighlightingOnLoad(); } },
                 { src: '/utils/plugin/zoom-js/zoom.js', async: true },
                 { src: '/utils/plugin/notes/notes.js', async: true }
             ]
@@ -45,4 +809,5 @@
         Reveal.configure({ slideNumber: 'c/t' });
     </script>
 </body>
+
 </html>

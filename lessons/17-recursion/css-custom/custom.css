@@ -1,1 +1,43 @@
-/* Занятие 17 - Рекурсия */
+/* Занятие 17 — Рекурсия */
+
+/* Контейнер для анимаций структур данных */
+.ds-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.ds-state {
+    position: absolute;
+    display: flex;
+    gap: 0.5em;
+    align-items: center;
+}
+
+.ds-state--stack {
+    flex-direction: column;
+}
+
+.ds-cell {
+    border: 2px solid #ffd54f;
+    border-radius: 0.3em;
+    padding: 0.35em 1em;
+    font-weight: bold;
+    font-size: 1em;
+    min-width: 2em;
+    text-align: center;
+}
+
+.ds-cell--frame {
+    border-color: rgba(255, 255, 255, 0.3);
+    min-width: 7em;
+    font-size: 0.65em;
+    font-weight: normal;
+    padding: 0.5em 0.8em;
+}
+
+.ds-cell--active {
+    border-color: #4caf50;
+    color: #4caf50;
+}
