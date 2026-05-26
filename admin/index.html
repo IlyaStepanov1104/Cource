@@ -237,6 +237,21 @@
     }
     .folder-open-btn:hover { color: var(--text); }
 
+    /* ── NEAREST LESSON ── */
+    .card.nearest {
+      box-shadow: 0 0 0 1px #6366f1, 0 0 12px rgba(99,102,241,0.25);
+    }
+    .card.nearest .num::before {
+      content: '→ ';
+      color: #6366f1;
+    }
+
+    /* ── URGENCY STRIPES ── */
+    .card.u-red    { border-left: 3px solid #ef4444; }
+    .card.u-orange { border-left: 3px solid #f97316; }
+    .card.u-yellow { border-left: 3px solid #eab308; }
+    .card.u-green  { border-left: 3px solid #10b981; }
+
     /* ── OLD LESSONS GROUP ── */
     #old-container {
       max-width: 900px; margin: 14px auto 0; padding: 0 20px;
@@ -285,9 +300,15 @@
 
   // ── RENDER ────────────────────────────────────────────────────
   function render() {
-    const weekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+    const now = Date.now();
+    const weekAgo = new Date(now - 7 * 24 * 60 * 60 * 1000);
     oldLessons    = data.lessons.filter(l => new Date(l.date) < weekAgo);
     recentLessons = data.lessons.filter(l => new Date(l.date) >= weekAgo);
+
+    const upcoming = data.lessons.filter(l => new Date(l.date) >= now);
+    const nearest = upcoming.length
+      ? upcoming.reduce((a, b) => new Date(a.date) <= new Date(b.date) ? a : b)
+      : data.lessons.reduce((a, b) => new Date(a.date) >= new Date(b.date) ? a : b);
 
     // Old lessons group
     const oldContainer = document.getElementById('old-container');
@@ -306,7 +327,7 @@
       update();
 
       oldLessons.forEach(lesson => {
-        const card = makeCard(lesson, data.lessons.indexOf(lesson));
+        const card = makeCard(lesson, data.lessons.indexOf(lesson), lesson === nearest);
         card.classList.add('old-card');
         oldList.appendChild(card);
       });
@@ -316,13 +337,18 @@
     // Recent / future lessons
     const list = document.getElementById('list');
     list.innerHTML = '';
-    recentLessons.forEach(lesson => list.appendChild(makeCard(lesson, data.lessons.indexOf(lesson))));
+    recentLessons.forEach(lesson => list.appendChild(makeCard(lesson, data.lessons.indexOf(lesson), lesson === nearest)));
     initSortable();
   }
 
-  function makeCard(lesson, i) {
+  function makeCard(lesson, i, isNearest = false) {
     const card = document.createElement('div');
-    card.className = 'card';
+    const rem = lesson.number % 8;
+    const urgencyClass = rem === 7 ? 'u-red'
+      : rem === 6 || rem === 5 ? 'u-orange'
+      : rem === 4 || rem === 3 ? 'u-yellow'
+      : 'u-green';
+    card.className = 'card ' + urgencyClass + (isNearest ? ' nearest' : '');
     card.dataset.i = i;
 
     // Main row

@@ -306,8 +306,8 @@
     {
       "number": 17,
       "title": "Рекурсия",
-      "date": "2026-05-22T17:00:00",
-      "duration": 90,
+      "date": "2026-05-19T17:00:00",
+      "duration": 60,
       "presentations": [
         {
           "title": "Презентация",
@@ -327,7 +327,7 @@
       "number": 18,
       "title": "Merge sort",
       "date": "2026-05-26T17:00:00",
-      "duration": 60,
+      "duration": 90,
       "presentations": [
         {
           "title": "Презентация",
@@ -335,26 +335,22 @@
           "order": 1
         }
       ],
-      "homeworks": []
+      "homeworks": [
+        {
+          "title": "912. Sort an Array",
+          "description": "Реализовать merge sort или quick sort без встроенных функций\n",
+          "link": "leetcode.com/problems/sort-an-array"
+        },
+        {
+          "title": "Бонус",
+          "description": "написать обе версии и сравнить время через time.perf_counter() на 100 000 случайных чисел"
+        }
+      ]
     },
     {
       "number": 19,
-      "title": "Quicksort",
-      "date": "2026-05-29T17:00:00",
-      "duration": 90,
-      "presentations": [
-        {
-          "title": "Презентация",
-          "link": "/lessons/19-quicksort/",
-          "order": 1
-        }
-      ],
-      "homeworks": []
-    },
-    {
-      "number": 20,
       "title": "Хеш-таблицы: идея",
-      "date": "2026-06-02T17:00:00",
+      "date": "2026-05-29T17:00:00",
       "duration": 60,
       "presentations": [
         {
@@ -366,9 +362,9 @@
       "homeworks": []
     },
     {
-      "number": 21,
+      "number": 20,
       "title": "Хеш-таблицы: реализация",
-      "date": "2026-06-05T17:00:00",
+      "date": "2026-06-02T17:00:00",
       "duration": 90,
       "presentations": [
         {
@@ -380,9 +376,9 @@
       "homeworks": []
     },
     {
-      "number": 22,
+      "number": 21,
       "title": "Pygame: основы",
-      "date": "2026-06-09T17:00:00",
+      "date": "2026-06-05T17:00:00",
       "duration": 60,
       "presentations": [
         {
@@ -394,9 +390,9 @@
       "homeworks": []
     },
     {
-      "number": 23,
+      "number": 22,
       "title": "Pygame: мини-игра",
-      "date": "2026-06-12T17:00:00",
+      "date": "2026-06-09T17:00:00",
       "duration": 90,
       "presentations": [
         {
@@ -408,9 +404,9 @@
       "homeworks": []
     },
     {
-      "number": 24,
+      "number": 23,
       "title": "Деревья + BST",
-      "date": "2026-06-16T17:00:00",
+      "date": "2026-06-12T17:00:00",
       "duration": 60,
       "presentations": [
         {
@@ -422,9 +418,9 @@
       "homeworks": []
     },
     {
-      "number": 25,
+      "number": 24,
       "title": "API: requests",
-      "date": "2026-06-19T17:00:00",
+      "date": "2026-06-16T17:00:00",
       "duration": 90,
       "presentations": [
         {
@@ -436,9 +432,9 @@
       "homeworks": []
     },
     {
-      "number": 26,
+      "number": 25,
       "title": "API: парсинг JSON",
-      "date": "2026-06-23T17:00:00",
+      "date": "2026-06-16T17:00:00",
       "duration": 60,
       "presentations": [
         {
@@ -450,9 +446,9 @@
       "homeworks": []
     },
     {
-      "number": 27,
+      "number": 26,
       "title": "Графы + BFS",
-      "date": "2026-06-26T17:00:00",
+      "date": "2026-06-19T17:00:00",
       "duration": 90,
       "presentations": [
         {
@@ -464,9 +460,9 @@
       "homeworks": []
     },
     {
-      "number": 28,
+      "number": 27,
       "title": "DFS",
-      "date": "2026-06-30T17:00:00",
+      "date": "2026-06-23T17:00:00",
       "duration": 60,
       "presentations": [
         {
@@ -478,9 +474,9 @@
       "homeworks": []
     },
     {
-      "number": 29,
+      "number": 28,
       "title": "Дейкстра",
-      "date": "2026-07-03T17:00:00",
+      "date": "2026-06-26T17:00:00",
       "duration": 90,
       "presentations": [
         {
@@ -492,9 +488,9 @@
       "homeworks": []
     },
     {
-      "number": 30,
+      "number": 29,
       "title": "Жадные алгоритмы",
-      "date": "2026-07-07T17:00:00",
+      "date": "2026-06-30T17:00:00",
       "duration": 60,
       "presentations": [
         {
@@ -506,9 +502,9 @@
       "homeworks": []
     },
     {
-      "number": 31,
+      "number": 30,
       "title": "SQL: введение",
-      "date": "2026-07-10T17:00:00",
+      "date": "2026-07-03T17:00:00",
       "duration": 90,
       "presentations": [
         {
@@ -520,9 +516,9 @@
       "homeworks": []
     },
     {
-      "number": 32,
+      "number": 31,
       "title": "SQL: JOIN и агрегации",
-      "date": "2026-07-14T17:00:00",
+      "date": "2026-07-07T17:00:00",
       "duration": 60,
       "presentations": [
         {
@@ -534,9 +530,9 @@
       "homeworks": []
     },
     {
-      "number": 33,
+      "number": 32,
       "title": "Проект: таблица рекордов",
-      "date": "2026-07-17T17:00:00",
+      "date": "2026-07-10T17:00:00",
       "duration": 90,
       "presentations": [
         {
@@ -548,9 +544,9 @@
       "homeworks": []
     },
     {
-      "number": 34,
+      "number": 33,
       "title": "DP: введение",
-      "date": "2026-07-21T17:00:00",
+      "date": "2026-07-14T17:00:00",
       "duration": 60,
       "presentations": [
         {
@@ -562,9 +558,9 @@
       "homeworks": []
     },
     {
-      "number": 35,
+      "number": 34,
       "title": "DP: задачи",
-      "date": "2026-07-24T17:00:00",
+      "date": "2026-07-17T17:00:00",
       "duration": 90,
       "presentations": [
         {
@@ -576,9 +572,9 @@
       "homeworks": []
     },
     {
-      "number": 36,
+      "number": 35,
       "title": "Итог + выбор специализации",
-      "date": "2026-07-28T17:00:00",
+      "date": "2026-07-21T17:00:00",
       "duration": 60,
       "presentations": [
         {

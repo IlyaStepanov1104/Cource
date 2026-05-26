@@ -1,43 +1,490 @@
 <!doctype html>
 <html lang="ru">
+
 <head>
     <meta charset="utf-8">
-    <title>Занятие 18 - Merge sort</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+    <title>Занятие 18 — Сортировки: разделяй и властвуй</title>
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+
     <link rel="stylesheet" href="/utils/css/reveal.css">
     <link rel="stylesheet" href="/utils/lib/css/animate.css">
     <link rel="stylesheet" href="/utils/css/theme/night.css" id="theme">
     <link rel="stylesheet" href="/utils/lib/css/zenburn.css">
     <link rel="stylesheet" href="/utils/css/custom-base.css">
     <link rel="stylesheet" href="css-custom/custom.css">
+
     <script>
         var link = document.createElement('link');
         link.rel = 'stylesheet'; link.type = 'text/css';
-        link.href = window.location.search.match(/print-pdf/gi) ? '/utils/css/print/pdf.css' : '/utils/css/print/paper.css';
+        link.href = window.location.search.match(/print-pdf/gi)
+            ? '/utils/css/print/pdf.css'
+            : '/utils/css/print/paper.css';
         document.getElementsByTagName('head')[0].appendChild(link);
     </script>
 </head>
+
 <body>
     <div class="reveal">
         <div class="slides">
+
+            <!-- ТИТУЛЬНЫЙ СЛАЙД -->
             <section style="font-size: 70px; height: 100%; width: 100%">
                 <div class="lesson-time">0</div>
                 <div class="fragment">
-                    <h1 class="animated" style="font-size: 1.6em;">Merge sort</h1>
-                    <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">Занятие 18</p>
+                    <h1 class="animated" style="font-size: 1.3em;">Сортировки:<br>разделяй и властвуй</h1>
+                    <p style="text-align: center; font-size: 0.45em; opacity: 0.7;">Merge Sort &amp; Quick Sort</p>
+                    <p style="text-align: center; font-size: 0.35em; opacity: 0.5;">Занятие 18</p>
                 </div>
             </section>
+
+            <!-- ===================================================== -->
+            <!-- ЧАСТЬ 1: Проблема O(n²)                               -->
+            <!-- ===================================================== -->
+            <section>
+
+                <section style="font-size: 70px; height: 100%; width: 100%">
+                    <div class="lesson-time">0</div>
+                    <div class="fragment">
+                        <h1 style="font-size: 1.4em;">Проблема</h1>
+                        <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">почему O(n²) недостаточно</p>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Почему O(n²) медленно?</h2>
+                    <ul>
+                        <li class="fragment">1 000 элементов -> ~500 000 операций <mark class="green">OK</mark></li>
+                        <li class="fragment">100 000 элементов -> ~5 000 000 000 <mark class="yellow">долго</mark></li>
+                        <li class="fragment">1 000 000 элементов -> ~500 000 000 000 <mark>очень долго</mark></li>
+                    </ul>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        Пузырьковая сортировка 1 миллиона чисел - около 8 минут на современном ПК
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Нужен другой подход</h2>
+                    <ul>
+                        <li class="fragment">O(n²): каждый элемент сравниваем со <mark>всеми</mark> остальными</li>
+                        <li class="fragment">Что если разбить список на маленькие части?</li>
+                        <li class="fragment">Решить каждую отдельно и объединить результаты</li>
+                    </ul>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        Так работают "умные" сортировки с O(n log n)
+                    </div>
+                </section>
+
+            </section>
+
+            <!-- ===================================================== -->
+            <!-- ЧАСТЬ 2: Разделяй и властвуй                         -->
+            <!-- ===================================================== -->
+            <section>
+
+                <section style="font-size: 70px; height: 100%; width: 100%">
+                    <div class="lesson-time">10</div>
+                    <div class="fragment">
+                        <h1 style="font-size: 1.4em;">Разделяй и властвуй</h1>
+                        <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">Divide &amp; Conquer</p>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Принцип Divide &amp; Conquer</h2>
+                    <p class="fragment" style="font-size: 0.8em;">
+                        Разбиваем сложную задачу на подзадачи <mark>того же типа</mark>, но меньшего размера
+                    </p>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        Рекурсия - задача вызывает саму себя на меньших данных
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Три шага D&amp;C</h2>
+                    <div class="timeline">
+                        <div class="timeline-item fragment">
+                            <div class="timeline-marker">1</div>
+                            <div class="timeline-content"><strong>Divide</strong> - разделить задачу на 2 меньших подзадачи</div>
+                        </div>
+                        <div class="timeline-item fragment">
+                            <div class="timeline-marker">2</div>
+                            <div class="timeline-content"><strong>Conquer</strong> - решить каждую рекурсивно (до базового случая)</div>
+                        </div>
+                        <div class="timeline-item fragment">
+                            <div class="timeline-marker">3</div>
+                            <div class="timeline-content"><strong>Combine</strong> - объединить результаты в ответ</div>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        Бинарный поиск - тоже D&amp;C: каждый шаг отбрасываем половину
+                    </div>
+                </section>
+
+            </section>
+
+            <!-- ===================================================== -->
+            <!-- ЧАСТЬ 3: Merge Sort                                   -->
+            <!-- ===================================================== -->
+            <section>
+
+                <section style="font-size: 70px; height: 100%; width: 100%">
+                    <div class="lesson-time">20</div>
+                    <div class="fragment">
+                        <h1 style="font-size: 1.4em;">Merge Sort</h1>
+                        <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">сортировка слиянием</p>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Идея</h2>
+                    <ul>
+                        <li class="fragment">Делим массив <mark>пополам</mark></li>
+                        <li class="fragment">Рекурсивно сортируем каждую половину</li>
+                        <li class="fragment">Сливаем два отсортированных массива в один</li>
+                    </ul>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        Базовый случай: массив из 1 элемента - он уже отсортирован
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Разбиение (сверху вниз)</h2>
+                    <pre class="fragment" style="font-size: 0.52em; line-height: 2; background: #1a1a2e; padding: 0.8em 2.5em; border-radius: 8px; display: inline-block;">
+    [8, 3, 5, 1]       делим пополам
+       /      \
+   [8, 3]  [5, 1]      делим ещё
+    /  \    /  \
+  [8]  [3] [5] [1]     1 элемент = уже готов</pre>
+                </section>
+
+                <section>
+                    <h2>Слияние (снизу вверх)</h2>
+                    <pre class="fragment" style="font-size: 0.52em; line-height: 2; background: #1a2e1a; padding: 0.8em 2.5em; border-radius: 8px; display: inline-block;">
+  [8]  [3] [5]  [1]    начинаем слияние
+    \  /     \  /
+  [3, 8]   [1, 5]      сливаем пары
+      \       /
+    [1, 3, 5, 8]       готово!</pre>
+                </section>
+
+                <section>
+                    <h2>Как работает слияние?</h2>
+                    <ul>
+                        <li class="fragment">Берём два <mark>отсортированных</mark> массива</li>
+                        <li class="fragment">Сравниваем первые элементы обоих</li>
+                        <li class="fragment">Меньший переносим в результат, двигаем указатель</li>
+                        <li class="fragment">Когда один массив кончился - добавляем остаток другого</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h2>Пример: [3, 8] + [1, 5]</h2>
+                    <table style="font-size: 0.75em; width: 100%; margin-top: 0.5em;">
+                        <tr>
+                            <td><strong>Left</strong></td>
+                            <td><strong>Right</strong></td>
+                            <td><strong>Сравниваем</strong></td>
+                            <td><strong>Result</strong></td>
+                        </tr>
+                        <tr class="fragment"><td>[<mark>3</mark>, 8]</td><td>[<mark>1</mark>, 5]</td><td>3 vs 1 - берём 1</td><td>[1]</td></tr>
+                        <tr class="fragment"><td>[<mark>3</mark>, 8]</td><td>[5]</td><td>3 vs 5 - берём 3</td><td>[1, 3]</td></tr>
+                        <tr class="fragment"><td>[8]</td><td>[<mark>5</mark>]</td><td>8 vs 5 - берём 5</td><td>[1, 3, 5]</td></tr>
+                        <tr class="fragment"><td>[8]</td><td>-</td><td>добавляем остаток</td><td>[1, 3, 5, 8]</td></tr>
+                    </table>
+                </section>
+                
+                <section>
+                    <h2>Дерево рекурсии</h2>
+                    <pre class="fragment" style="font-size: 0.38em; line-height: 1.75; background: #1a1a2e; padding: 0.8em 1.5em; border-radius: 8px; display: inline-block;">
+Уровень 0: [8, 3, 5, 1, 9, 2, 7, 4]    &lt;- n операций слияния
+                  /           \
+Уровень 1: [8,3,5,1]      [9,2,7,4]     &lt;- n суммарно
+              /   \          /   \
+Уровень 2: [8,3] [5,1]  [9,2] [7,4]     &lt;- n суммарно
+            / \   / \    / \   / \
+Уровень 3: [8][3][5][1][9][2][7][4]     &lt;- базовый случай</pre>
+                    <ul>
+                        <li class="fragment">Высота дерева = <mark>log n</mark> уровней</li>
+                        <li class="fragment">На каждом уровне суммарно = <mark>n</mark> операций слияния</li>
+                        <li class="fragment">Итого: <mark class="green">O(n log n)</mark></li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h2>Почему высота = log n?</h2>
+                    <p class="fragment" style="font-size: 0.75em;">На каждом уровне массив <mark>делится пополам</mark> - размер уменьшается в 2 раза</p>
+                    <pre class="fragment" style="font-size: 0.52em; line-height: 2; background: #1a1a2e; padding: 0.8em 2.5em; border-radius: 8px; display: inline-block;">
+уровень 0:  n
+уровень 1:  n / 2
+уровень 2:  n / 4
+уровень k:  n / 2^k</pre>
+                    <p class="fragment" style="font-size: 0.75em;">Останавливаемся, когда размер = 1:</p>
+                    <pre class="fragment" style="font-size: 0.52em; line-height: 2; background: #1a2e1a; padding: 0.8em 2.5em; border-radius: 8px; display: inline-block;">
+n / 2^k = 1  ->  2^k = n  ->  k = log2(n)</pre>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        log2(n) - это сколько раз нужно разделить n на 2, чтобы дойти до 1
+                    </div>
+                </section>
+
+                <section>
+                    <h2>O(n log n) vs O(n²)</h2>
+                    <table style="font-size: 0.75em; width: 100%; margin-top: 0.5em;">
+                        <tr>
+                            <td><strong>n</strong></td>
+                            <td><strong>O(n²)</strong></td>
+                            <td><strong>O(n log n)</strong></td>
+                        </tr>
+                        <tr class="fragment"><td>1 000</td><td>1 000 000</td><td>~10 000</td></tr>
+                        <tr class="fragment"><td>100 000</td><td>10 000 000 000</td><td>~1 700 000</td></tr>
+                        <tr class="fragment"><td>1 000 000</td><td>10<sup>12</sup></td><td>~20 000 000</td></tr>
+                    </table>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        Разница в 50 000 раз на миллионе элементов
+                    </div>
+                </section>
+
+            </section>
+
+            <!-- ===================================================== -->
+            <!-- ЧАСТЬ 4: Quick Sort                                   -->
+            <!-- ===================================================== -->
+            <section>
+
+                <section style="font-size: 70px; height: 100%; width: 100%">
+                    <div class="lesson-time">50</div>
+                    <div class="fragment">
+                        <h1 style="font-size: 1.4em;">Quick Sort</h1>
+                        <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">быстрая сортировка</p>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Идея Quick Sort</h2>
+                    <ul>
+                        <li class="fragment">Выбираем <mark>pivot</mark> - опорный элемент</li>
+                        <li class="fragment">Делим: элементы &lt; pivot / == pivot / &gt; pivot</li>
+                        <li class="fragment">Рекурсивно сортируем левую и правую части</li>
+                        <li class="fragment">Объединяем: left + middle + right</li>
+                    </ul>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        В отличие от Merge Sort - pivot уже стоит на своём месте, не нужно отдельно сливать
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Partition: разбиение</h2>
+                    <ul>
+                        <li class="fragment">Все элементы <code>&lt; pivot</code> - в левую часть</li>
+                        <li class="fragment">Все элементы <code>== pivot</code> - в среднюю</li>
+                        <li class="fragment">Все элементы <code>&gt; pivot</code> - в правую</li>
+                    </ul>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        После partition pivot стоит ровно там, где он будет в отсортированном массиве
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Пример partition</h2>
+                    <p class="fragment" style="font-size: 0.75em;">
+                        Массив: <code>[3, 6, 8, 10, 1, 2, 1]</code>, pivot = <mark>3</mark>
+                    </p>
+                    <div class="compare fragment">
+                        <div class="compare-block">
+                            <h4>left (&lt; 3)</h4>
+                            <code style="font-size: 1.1em;">[1, 2, 1]</code>
+                        </div>
+                        <div class="compare-block">
+                            <h4>middle (== 3)</h4>
+                            <code style="font-size: 1.1em;">[3]</code>
+                        </div>
+                        <div class="compare-block">
+                            <h4>right (&gt; 3)</h4>
+                            <code style="font-size: 1.1em;">[6, 8, 10]</code>
+                        </div>
+                    </div>
+                    <p class="fragment" style="font-size: 0.7em; margin-top: 1em;">
+                        Дальше: quick_sort([1, 2, 1]) + [3] + quick_sort([6, 8, 10])
+                    </p>
+                </section>
+
+
+                <section>
+                    <h2>Сложность: O(n log n) в среднем</h2>
+                    <ul>
+                        <li class="fragment">Удачный pivot делит массив <mark>примерно пополам</mark></li>
+                        <li class="fragment">Глубина рекурсии: <mark>log n</mark> уровней</li>
+                        <li class="fragment">На каждом уровне суммарно: <mark>n</mark> операций</li>
+                        <li class="fragment">Итого: <mark class="green">O(n log n)</mark></li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h2>Худший случай: O(n²)</h2>
+                    <ul>
+                        <li class="fragment">Если pivot всегда минимальный или максимальный элемент</li>
+                        <li class="fragment">Пример: <code>[1, 2, 3, 4, 5]</code>, pivot = первый элемент</li>
+                        <li class="fragment"><code>left=[], middle=[1], right=[2,3,4,5]</code> - дерево превращается в цепочку</li>
+                        <li class="fragment">Глубина n вместо log n -> <mark>O(n²)</mark></li>
+                    </ul>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        Решение: не брать первый или последний - брать средний или случайный
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Случайный pivot</h2>
+                    <ul>
+                        <li class="fragment">Вероятность n раз подряд выбрать плохой pivot: (2/n)^n - практически ноль</li>
+                        <li class="fragment">Ожидаемое время: <mark class="green">O(n log n)</mark> при любых входных данных</li>
+                        <li class="fragment">Именно этот подход используют реальные реализации Python, C++, Java</li>
+                    </ul>
+                </section>
+
+            </section>
+
+            <!-- ===================================================== -->
+            <!-- ЧАСТЬ 5: Сравнение и итог                             -->
+            <!-- ===================================================== -->
+            <section>
+
+                <section style="font-size: 70px; height: 100%; width: 100%">
+                    <div class="lesson-time">75</div>
+                    <div class="fragment">
+                        <h1 style="font-size: 1.2em;">Merge Sort vs Quick Sort</h1>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Сравнение</h2>
+                    <table style="font-size: 0.65em; width: 100%; margin-top: 0.5em;">
+                        <tr>
+                            <td></td>
+                            <td><strong>Merge Sort</strong></td>
+                            <td><strong>Quick Sort</strong></td>
+                        </tr>
+                        <tr class="fragment">
+                            <td><strong>Лучший случай</strong></td>
+                            <td>O(n log n)</td>
+                            <td>O(n log n)</td>
+                        </tr>
+                        <tr class="fragment">
+                            <td><strong>Средний случай</strong></td>
+                            <td>O(n log n)</td>
+                            <td>O(n log n)</td>
+                        </tr>
+                        <tr class="fragment">
+                            <td><strong>Худший случай</strong></td>
+                            <td><mark class="green">O(n log n)</mark></td>
+                            <td><mark>O(n²)</mark></td>
+                        </tr>
+                        <tr class="fragment">
+                            <td><strong>Доп. память</strong></td>
+                            <td><mark>O(n)</mark> - нужен буфер</td>
+                            <td><mark class="green">O(log n)</mark></td>
+                        </tr>
+                        <tr class="fragment">
+                            <td><strong>Стабильность</strong></td>
+                            <td><mark class="green">стабильная</mark></td>
+                            <td>нестабильная</td>
+                        </tr>
+                        <tr class="fragment">
+                            <td><strong>Скорость на практике</strong></td>
+                            <td>хорошая</td>
+                            <td><mark class="green">обычно быстрее</mark></td>
+                        </tr>
+                    </table>
+                </section>
+
+                <section>
+                    <h2>Почему Quick Sort быстрее на практике?</h2>
+                    <p class="fragment" style="font-size: 0.75em;">
+                        Оба алгоритма - <mark>O(n log n)</mark>. Но за этим скрывается константа:
+                    </p>
+                    <ul style="margin-top: 0.75em;">
+                        <li class="fragment">Merge Sort на каждом уровне создаёт <mark>новые массивы</mark> - дорогое выделение памяти</li>
+                        <li class="fragment">Quick Sort переставляет элементы <mark>прямо в исходном массиве</mark> - без аллокаций</li>
+                        <li class="fragment">Работа с одним массивом = данные в <mark>кеше процессора</mark> = быстро</li>
+                    </ul>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        Асимптотика говорит "одинаково", но константа - это реальные секунды
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Когда что выбирать?</h2>
+                    <div class="compare fragment">
+                        <div class="compare-block">
+                            <h4>Merge Sort</h4>
+                            <ul>
+                                <li>Нужна гарантия O(n log n)</li>
+                                <li>Нужна стабильность</li>
+                                <li>Сортировка связных списков</li>
+                                <li>Внешняя сортировка (файлы)</li>
+                            </ul>
+                        </div>
+                        <div class="compare-block">
+                            <h4>Quick Sort</h4>
+                            <ul>
+                                <li>Нужна максимальная скорость</li>
+                                <li>Данные помещаются в память</li>
+                                <li>Ограниченная память</li>
+                                <li>Случайные входные данные</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        sorted() в Python использует <strong>Timsort</strong> - гибрид Merge Sort + Insertion Sort
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Что запомнить</h2>
+                    <ul>
+                        <li class="fragment">D&amp;C: <mark>разделить</mark> - решить рекурсивно - <mark>объединить</mark></li>
+                        <li class="fragment">Merge Sort: делим пополам и сливаем - <mark class="green">O(n log n) всегда</mark></li>
+                        <li class="fragment">Quick Sort: pivot разбивает массив - O(n log n) в среднем, <mark>случайный pivot</mark> убирает O(n²)</li>
+                        <li class="fragment">O(n log n) быстрее O(n²) в <mark>тысячи раз</mark> на больших данных</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h2>Домашнее задание</h2>
+                    <ul>
+                        <li class="fragment">
+                            <strong>912. Sort an Array</strong><br>
+                            Реализовать merge sort или quick sort без встроенных функций<br>
+                            <a href="https://leetcode.com/problems/sort-an-array/" style="font-size: 0.65em; opacity: 0.7;">leetcode.com/problems/sort-an-array</a>
+                        </li>
+                        <li class="fragment" style="margin-top: 0.5em;">
+                            <strong>Бонус:</strong> написать обе версии и сравнить время через <code>time.perf_counter()</code> на 100 000 случайных чисел
+                        </li>
+                    </ul>
+                </section>
+
+            </section>
+
         </div>
     </div>
+
     <script src="/utils/lib/js/head.min.js"></script>
     <script src="/utils/js/reveal.js"></script>
     <script>
         Reveal.initialize({
-            controls: true, progress: true, history: true, center: true,
-            transition: 'fade', transitionSpeed: 'fast',
+            controls: true,
+            progress: true,
+            history: true,
+            center: true,
+            transition: 'fade',
+            transitionSpeed: 'fast',
             dependencies: [
-                { src: '/utils/lib/js/classList.js', condition: function() { return !document.body.classList; } },
-                { src: '/utils/plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+                { src: '/utils/lib/js/classList.js', condition: function () { return !document.body.classList; } },
+                { src: '/utils/plugin/markdown/marked.js', condition: function () { return !!document.querySelector('[data-markdown]'); } },
+                { src: '/utils/plugin/markdown/markdown.js', condition: function () { return !!document.querySelector('[data-markdown]'); } },
+                { src: '/utils/plugin/highlight/highlight.js', async: true, callback: function () { hljs.initHighlightingOnLoad(); } },
                 { src: '/utils/plugin/zoom-js/zoom.js', async: true },
                 { src: '/utils/plugin/notes/notes.js', async: true }
             ]
@@ -45,4 +492,5 @@
         Reveal.configure({ slideNumber: 'c/t' });
     </script>
 </body>
+
 </html>
