@@ -1,0 +1,82 @@
+n = 1_000_000
+
+======== Test #1 ========
+interval: [-10; 10]
+merge_sort: 4.2771756000001915; quick_sort: 0.7598020999867003
+Diff: 562.93%
+
+======== Test #2 ========
+interval: [-100; 100]
+merge_sort: 4.3587530000077095; quick_sort: 1.3157010000140872
+Diff: 331.29%
+
+======== Test #3 ========
+interval: [-1000; 1000]
+merge_sort: 4.5120026000076905; quick_sort: 2.817979199986439
+Diff: 160.11%
+
+======== Test #4 ========
+interval: [-10000; 10000]
+merge_sort: 3.9414841999823693; quick_sort: 1.8934779000119306
+Diff: 208.16%
+
+======== Test #5 ========
+interval: [-100000; 100000]
+merge_sort: 2.3479899000085425; quick_sort: 2.1642621000064537
+Diff: 108.49%
+
+======== Test #6 ========
+interval: [-1000000; 1000000]
+merge_sort: 2.3122064999770373; quick_sort: 2.509115799999563
+Diff: 92.15%
+-- Attempt 2 --
+merge_sort: 2.31568289999268; quick_sort: 2.5087143999990076
+Diff: 92.31%
+-- Attempt 3 --
+merge_sort: 2.286027699999977; quick_sort: 2.4923590999969747
+Diff: 91.72%
+
+======== Test #7 ========
+interval: [-10000000; 10000000]
+merge_sort: 2.371745899989037; quick_sort: 2.5899983999843244
+Diff: 91.57%
+-- Attempt 2 --
+merge_sort: 2.318869199982146; quick_sort: 2.6013259000028484
+Diff: 89.14%
+-- Attempt 3 --
+merge_sort: 2.3670623999787495; quick_sort: 2.658755199983716
+Diff: 89.03%
+
+======== Test #8 ========
+interval: [-100000000; 100000000]
+merge_sort: 2.4032116000016686; quick_sort: 2.652665600006003
+Diff: 90.6%
+-- Attempt 2 --
+merge_sort: 2.38636599999154; quick_sort: 2.6640640999830794
+Diff: 89.58%
+-- Attempt 3 --
+merge_sort: 2.412406900024507; quick_sort: 2.6273982000129763
+Diff: 91.82%
+
+======== Test #9 ========
+interval: [-1000000000; 1000000000]
+merge_sort: 2.4640742000192404; quick_sort: 2.545829600014258
+Diff: 96.79%
+-- Attempt 2 --
+merge_sort: 2.492492500023218; quick_sort: 2.701040900021326
+Diff: 92.28%
+-- Attempt 3 --
+merge_sort: 2.4377813000173774; quick_sort: 2.6924088000087067
+Diff: 90.54%
+
+======== Test #10 ========
+interval: [-10000000000; 10000000000]
+merge_sort: 2.522310300002573; quick_sort: 3.2167488999839406
+Diff: 78.41%
+-- Attempt 2 --
+merge_sort: 2.5251559000171255; quick_sort: 3.0540485000237823
+Diff: 82.68%
+-- Attempt 3 --
+merge_sort: 2.5651167000178248; quick_sort: 3.270421000022907
+Diff: 78.43%
+

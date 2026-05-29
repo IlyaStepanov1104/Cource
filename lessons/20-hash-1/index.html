@@ -1,43 +1,383 @@
 <!doctype html>
 <html lang="ru">
+
 <head>
     <meta charset="utf-8">
-    <title>Занятие 20 - Хеш-таблицы: идея</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+    <title>Занятие 20 — Хеш-таблицы</title>
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+
     <link rel="stylesheet" href="/utils/css/reveal.css">
     <link rel="stylesheet" href="/utils/lib/css/animate.css">
     <link rel="stylesheet" href="/utils/css/theme/night.css" id="theme">
     <link rel="stylesheet" href="/utils/lib/css/zenburn.css">
     <link rel="stylesheet" href="/utils/css/custom-base.css">
     <link rel="stylesheet" href="css-custom/custom.css">
+
     <script>
         var link = document.createElement('link');
         link.rel = 'stylesheet'; link.type = 'text/css';
-        link.href = window.location.search.match(/print-pdf/gi) ? '/utils/css/print/pdf.css' : '/utils/css/print/paper.css';
+        link.href = window.location.search.match(/print-pdf/gi)
+            ? '/utils/css/print/pdf.css'
+            : '/utils/css/print/paper.css';
         document.getElementsByTagName('head')[0].appendChild(link);
     </script>
 </head>
+
 <body>
     <div class="reveal">
         <div class="slides">
+
+            <!-- Титульный слайд -->
             <section style="font-size: 70px; height: 100%; width: 100%">
                 <div class="lesson-time">0</div>
                 <div class="fragment">
-                    <h1 class="animated" style="font-size: 1.6em;">Хеш-таблицы: идея</h1>
-                    <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">Занятие 20</p>
+                    <h1 class="animated" style="font-size: 1.8em;">Хеш-таблицы</h1>
+                    <p style="text-align: center; font-size: 0.5em; opacity: 0.5;">Занятие 20</p>
                 </div>
             </section>
+
+            <!-- ЧАСТЬ 1: Проблема -->
+            <section>
+                <section style="font-size: 70px; height: 100%; width: 100%">
+                    <div class="lesson-time">0</div>
+                    <div class="fragment">
+                        <h1 style="font-size: 1.4em;">Проблема</h1>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Задача</h2>
+                    <p class="fragment">База контактов - <mark>1 000 000 записей</mark></p>
+                    <div class="code-block fragment">
+                        <pre class="python size-m"><code>contacts = [
+    ("Alice",   "+7 900 111-22-33"),
+    ("Bob",     "+7 900 444-55-66"),
+    # ... ещё 999 998 записей
+]</code></pre>
+                    </div>
+                    <p class="fragment">Нужно найти телефон по имени. Как?</p>
+                </section>
+
+                <section>
+                    <h2>Поиск в списке</h2>
+                    <div class="code-block fragment">
+                        <pre class="python size-m"><code>def find(contacts, name):
+    for n, phone in contacts:
+        if n == name:
+            return phone
+    return None</code></pre>
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 0.8em;">
+                        В худшем случае - <mark class="yellow">1 000 000 итераций</mark>. Сложность: O(n)
+                    </div>
+                </section>
+
+                <section>
+                    <h2>А если dict?</h2>
+                    <div class="code-block fragment">
+                        <pre class="python size-m"><code>contacts = {
+    "Alice": "+7 900 111-22-33",
+    "Bob":   "+7 900 444-55-66",
+}
+
+phone = contacts["Alice"]  # мгновенно!</code></pre>
+                    </div>
+                    <p class="fragment" style="margin-top: 0.8em;">Сложность: <mark class="green">O(1)</mark> - независимо от размера</p>
+                    <div class="fragment opinion">
+                        Как Python находит значение по ключу за один шаг?
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Идея</h2>
+                    <p class="fragment">Что если <mark>вычислить индекс</mark> прямо из ключа?</p>
+                    <div class="fragment" style="display: flex; justify-content: center; align-items: center; gap: 0.6em; margin-top: 0.8em; font-size: 0.55em;">
+                        <div style="background: rgba(255,255,255,0.1); padding: 0.4em 0.8em; border-radius: 8px;">"Alice"</div>
+                        <div>-&gt;</div>
+                        <div style="background: rgba(99,99,255,0.3); padding: 0.4em 0.8em; border-radius: 8px; border: 1px solid #99f;">f(key)</div>
+                        <div>-&gt;</div>
+                        <div style="background: rgba(99,255,99,0.2); padding: 0.4em 0.8em; border-radius: 8px; border: 1px solid #6f6;">индекс 3</div>
+                        <div>-&gt;</div>
+                        <div style="background: rgba(255,255,255,0.1); padding: 0.4em 0.8em; border-radius: 8px;">array[3]</div>
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 0.8em;">
+                        Нужна функция: <mark>key -&gt; индекс</mark>.
+                    </div>
+                </section>
+            </section>
+
+            <!-- ЧАСТЬ 2: Хеш-функция -->
+            <section>
+                <section style="font-size: 70px; height: 100%; width: 100%">
+                    <div class="lesson-time">10</div>
+                    <div class="fragment">
+                        <h1 style="font-size: 1.4em;">Хеш-функция</h1>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Хеш-функция</h2>
+                    <div class="fragment" style="display: flex; justify-content: center; align-items: center; gap: 1em; margin: 0.8em 0; font-size: 0.55em;">
+                        <div style="text-align: center;">
+                            <div style="background: rgba(255,255,255,0.1); padding: 0.5em 1em; border-radius: 8px;">"Alice"</div>
+                            <div style="opacity: 0.5; margin-top: 0.3em;">любой ключ</div>
+                        </div>
+                        <div>-&gt;</div>
+                        <div style="text-align: center;">
+                            <div style="background: rgba(99,99,255,0.3); padding: 0.5em 1em; border-radius: 8px; border: 1px solid #99f;">hash()</div>
+                            <div style="opacity: 0.5; margin-top: 0.3em;">функция</div>
+                        </div>
+                        <div>-&gt;</div>
+                        <div style="text-align: center;">
+                            <div style="background: rgba(99,255,99,0.2); padding: 0.5em 1em; border-radius: 8px; border: 1px solid #6f6;">3</div>
+                            <div style="opacity: 0.5; margin-top: 0.3em;">индекс 0..N-1</div>
+                        </div>
+                    </div>
+                    <ul>
+                        <li class="fragment">Один ключ -&gt; <mark>всегда одинаковый</mark> результат</li>
+                        <li class="fragment">Результат - целое число в диапазоне <code>0..N-1</code></li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h2>Простая хеш-функция</h2>
+                    <div class="code-block fragment">
+                        <pre class="python size-m"><code>def _hash(key, size):
+    return sum(ord(c) for c in key) % size</code></pre>
+                    </div>
+                    <p class="fragment" style="margin-top: 0.8em;">Пример для <code>"cat"</code>, size = 10:</p>
+                    <div class="timeline fragment" style="margin-top: 0.5em; font-size: 0.75em;">
+                        <div class="timeline-item">
+                            <div class="timeline-marker">1</div>
+                            <div class="timeline-content"><code>ord('c') + ord('a') + ord('t') = 99 + 97 + 116 = 312</code></div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-marker">2</div>
+                            <div class="timeline-content"><code>312 % 10 = <mark>2</mark></code> - это индекс ячейки</div>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Ключи -&gt; индексы</h2>
+                    <div style="display: flex; gap: 2em; justify-content: center; align-items: flex-start; font-size: 0.5em; margin-top: 0.5em;">
+                        <div style="display: flex; flex-direction: column; gap: 0.6em; padding-top: 1.8em;">
+                            <div class="fragment" style="display: flex; align-items: center; gap: 0.8em;">
+                                <code style="background: rgba(255,255,255,0.1); padding: 0.3em 0.6em; border-radius: 4px;">"apple"</code>
+                                <span>-&gt;</span>
+                                <mark>3</mark>
+                            </div>
+                            <div class="fragment" style="display: flex; align-items: center; gap: 0.8em;">
+                                <code style="background: rgba(255,255,255,0.1); padding: 0.3em 0.6em; border-radius: 4px;">"banana"</code>
+                                <span>-&gt;</span>
+                                <mark>7</mark>
+                            </div>
+                            <div class="fragment" style="display: flex; align-items: center; gap: 0.8em;">
+                                <code style="background: rgba(255,255,255,0.1); padding: 0.3em 0.6em; border-radius: 4px;">"cat"</code>
+                                <span>-&gt;</span>
+                                <mark>2</mark>
+                            </div>
+                        </div>
+                        <div class="fragment" style="display: flex; flex-direction: column; gap: 0.25em;">
+                            <div style="opacity: 0.5; text-align: center; margin-bottom: 0.3em;">array[10]</div>
+                            <div style="display: flex; gap: 0.4em; align-items: center;"><span style="opacity:0.4; min-width:1.5em;">[0]</span><div style="background: rgba(255,255,255,0.05); padding: 0.25em 0.8em; border-radius: 4px; min-width: 7em; border: 1px solid rgba(255,255,255,0.1); opacity:0.4;">-</div></div>
+                            <div style="display: flex; gap: 0.4em; align-items: center;"><span style="opacity:0.4; min-width:1.5em;">[1]</span><div style="background: rgba(255,255,255,0.05); padding: 0.25em 0.8em; border-radius: 4px; min-width: 7em; border: 1px solid rgba(255,255,255,0.1); opacity:0.4;">-</div></div>
+                            <div style="display: flex; gap: 0.4em; align-items: center;"><span style="min-width:1.5em;">[2]</span><div style="background: rgba(99,255,99,0.15); padding: 0.25em 0.8em; border-radius: 4px; min-width: 7em; border: 1px solid #6f6;">"cat" value</div></div>
+                            <div style="display: flex; gap: 0.4em; align-items: center;"><span style="min-width:1.5em;">[3]</span><div style="background: rgba(99,255,99,0.15); padding: 0.25em 0.8em; border-radius: 4px; min-width: 7em; border: 1px solid #6f6;">"apple" value</div></div>
+                            <div style="display: flex; gap: 0.4em; align-items: center;"><span style="opacity:0.4; min-width:1.5em;">...</span><div style="background: rgba(255,255,255,0.05); padding: 0.25em 0.8em; border-radius: 4px; min-width: 7em; border: 1px solid rgba(255,255,255,0.1); opacity:0.4;">-</div></div>
+                            <div style="display: flex; gap: 0.4em; align-items: center;"><span style="min-width:1.5em;">[7]</span><div style="background: rgba(99,255,99,0.15); padding: 0.25em 0.8em; border-radius: 4px; min-width: 7em; border: 1px solid #6f6;">"banana" value</div></div>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Требования к хеш-функции</h2>
+                    <ul>
+                        <li class="fragment"><mark>Детерминированность</mark> - один ключ всегда даёт один индекс</li>
+                        <li class="fragment"><mark>Скорость</mark> - вычисление за O(1)</li>
+                        <li class="fragment"><mark>Равномерность</mark> - ключи распределяются по ячейкам без скоплений</li>
+                    </ul>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        Плохая хеш-функция = всё в одну ячейку = O(n) вместо O(1)
+                    </div>
+                </section>
+
+                <section>
+                    <h2>hash() в Python</h2>
+                    <div class="code-block fragment">
+                        <pre class="python size-m"><code>hash("apple")    # например: 1740259866648
+hash(42)         # 42
+hash((1, 2, 3))  # хеш кортежа
+hash([1, 2, 3])  # TypeError!</code></pre>
+                    </div>
+                    <ul style="margin-top: 0.8em;">
+                        <li class="fragment">Работает для <mark>неизменяемых</mark> типов: str, int, tuple</li>
+                        <li class="fragment"><mark class="yellow">Список нельзя</mark> - он изменяемый, хеш стал бы нестабильным</li>
+                        <li class="fragment">Python 3.3+ - результат разный при каждом запуске (защита от атак)</li>
+                    </ul>
+                </section>
+            </section>
+
+            <!-- ЧАСТЬ 3: Коллизии -->
+            <section>
+                <section style="font-size: 70px; height: 100%; width: 100%">
+                    <div class="lesson-time">25</div>
+                    <div class="fragment">
+                        <h1 style="font-size: 1.4em;">Коллизии</h1>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Коллизия</h2>
+                    <p class="fragment">Два <mark>разных</mark> ключа дают <mark class="yellow">одинаковый индекс</mark></p>
+                    <div class="fragment opinion" style="margin-top: 0.8em;">
+                        Коллизии <strong>неизбежны</strong> - ключей бесконечно много, ячеек конечное число
+                    </div>
+                    <p class="fragment" style="margin-top: 0.8em; opacity: 0.8; font-size: 0.85em;">
+                        Задача - не избежать коллизий, а <mark>грамотно их обработать</mark>
+                    </p>
+                </section>
+
+                <section>
+                    <h2>Пример коллизии</h2>
+                    <div class="compare fragment">
+                        <div class="compare-block">
+                            <h4>"abc"</h4>
+                            <p style="font-size: 0.7em;"><code>97 + 98 + 99 = 294</code></p>
+                            <p style="font-size: 0.7em;"><code>294 % 10 = <mark>4</mark></code></p>
+                        </div>
+                        <div class="compare-block">
+                            <h4>"bca"</h4>
+                            <p style="font-size: 0.7em;"><code>98 + 99 + 97 = 294</code></p>
+                            <p style="font-size: 0.7em;"><code>294 % 10 = <mark>4</mark></code></p>
+                        </div>
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 0.8em;">
+                        Оба ключа попадают в ячейку [4] - <mark class="yellow">коллизия!</mark>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Метод цепочек (Chaining)</h2>
+                    <p class="fragment">В каждой ячейке хранится <mark>список пар</mark> <code>(key, value)</code></p>
+                    <div class="code-block fragment">
+                        <pre class="python size-m"><code>buckets = [
+    [],                            # [0]
+    [],                            # [1]
+    [("cat", 42)],                 # [2]
+    [],                            # [3]
+    [("abc", "x"), ("bca", "y")],  # [4] - коллизия!
+]</code></pre>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Схема</h2>
+                    <div class="fragment" style="display: flex; gap: 1em; justify-content: center; font-size: 0.5em; margin-top: 0.5em;">
+                        <div style="display: flex; flex-direction: column; gap: 0.4em; font-weight: bold; justify-content: space-around;">
+                            <div style="padding: 0.35em 0.5em; text-align: right; opacity: 0.4;">[0]</div>
+                            <div style="padding: 0.35em 0.5em; text-align: right; opacity: 0.4;">[1]</div>
+                            <div style="padding: 0.35em 0.5em; text-align: right;">[2]</div>
+                            <div style="padding: 0.35em 0.5em; text-align: right; opacity: 0.4;">[3]</div>
+                            <div style="padding: 0.35em 0.5em; text-align: right; color: orange;">[4]</div>
+                        </div>
+                        <div style="display: flex; flex-direction: column; gap: 0.4em;">
+                            <div style="padding: 0.35em 1em; border-radius: 4px; border: 1px solid rgba(255,255,255,0.1); opacity: 0.4;">[ ]</div>
+                            <div style="padding: 0.35em 1em; border-radius: 4px; border: 1px solid rgba(255,255,255,0.1); opacity: 0.4;">[ ]</div>
+                            <div style="padding: 0.35em 1em; border-radius: 4px; border: 1px solid #6f6; background: rgba(99,255,99,0.1);">[ ("cat", 42) ]</div>
+                            <div style="padding: 0.35em 1em; border-radius: 4px; border: 1px solid rgba(255,255,255,0.1); opacity: 0.4;">[ ]</div>
+                            <div style="padding: 0.35em 1em; border-radius: 4px; border: 1px solid orange; background: rgba(255,165,0,0.1);">[ ("abc", "x"),&nbsp;&nbsp;("bca", "y") ]</div>
+                        </div>
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 0.8em;">
+                        При поиске: индекс -&gt; пройти по цепочке -&gt; сравнить ключи
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Load factor</h2>
+                    <p class="fragment"><strong>Коэффициент загрузки</strong> = n_items / n_slots</p>
+                    <div class="code-block fragment">
+                        <pre class="python size-m"><code># 7 элементов в массиве из 10 ячеек
+load_factor = 7 / 10  # = 0.7</code></pre>
+                    </div>
+                    <ul style="margin-top: 0.8em;">
+                        <li class="fragment">Если <code>load_factor &gt; 0.7</code> - много коллизий, деградация до O(n)</li>
+                        <li class="fragment">Решение: массив побольше и <mark>перехэшировать</mark> все элементы</li>
+                    </ul>
+                </section>
+            </section>
+
+            <!-- ПРАКТИКА -->
+            <section>
+                <section style="font-size: 70px; height: 100%; width: 100%">
+                    <div class="lesson-time">55</div>
+                    <div class="fragment">
+                        <h1 style="font-size: 1.4em;">Практика</h1>
+                        <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">задачи на хеш-таблицы</p>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Задача 1 - уникальный символ</h2>
+                    <p class="fragment">Найти индекс первого символа в строке, который не повторяется. Если такого нет - вернуть <code>-1</code>.</p>
+                    <div class="fragment opinion" style="margin-top: 0.8em;">
+                        <code>"leetcode"</code> <span style="opacity:0.6;">-&gt;</span> <code>0</code> (l)<br>
+                        <code>"loveleet"</code> <span style="opacity:0.6;">-&gt;</span> <code>2</code> (v)<br>
+                        <code>"aabb"</code> <span style="opacity:0.6;">-&gt;</span> <code>-1</code>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>LeetCode</h2>
+                    <ul>
+                        <li class="fragment">
+                            <a href="https://leetcode.com/problems/group-anagrams/" target="_blank" rel="noopener"><mark>#49 Group Anagrams</mark></a> - сгруппировать слова-анаграммы вместе
+                        </li>
+                        <li class="fragment">
+                            <a href="https://leetcode.com/problems/subarray-sum-equals-k/" target="_blank" rel="noopener"><mark>#560 Subarray Sum Equals K</mark></a> - количество подмассивов с суммой k
+                        </li>
+                        <li class="fragment">
+                            <a href="https://leetcode.com/problems/longest-consecutive-sequence/" target="_blank" rel="noopener"><mark>#128 Longest Consecutive Sequence</mark></a> - длиннейшая последовательность подряд идущих чисел за O(n)
+                        </li>
+                    </ul>
+                    <div class="fragment opinion" style="margin-top: 0.8em;">
+                        Все эти задачи решаются через <code>dict</code> или <code>set</code> - хеш-таблицы под капотом
+                    </div>
+                </section>
+            </section>
+
+            <!-- ИТОГ -->
+            <section>
+                <div class="lesson-time">75</div>
+                <h2>Что запомнить</h2>
+                <ul>
+                    <li class="fragment"><mark>Хеш-функция</mark> превращает ключ в индекс массива - поэтому O(1)</li>
+                    <li class="fragment"><mark>Коллизии</mark> неизбежны - решаются методом цепочек (chaining)</li>
+                    <li class="fragment"><mark>Load factor &gt; 0.7</mark> - таблица расширяется автоматически</li>
+                    <li class="fragment"><mark>dict</mark> в Python - это оптимизированная хеш-таблица</li>
+                </ul>
+            </section>
+
         </div>
     </div>
+
     <script src="/utils/lib/js/head.min.js"></script>
     <script src="/utils/js/reveal.js"></script>
     <script>
         Reveal.initialize({
-            controls: true, progress: true, history: true, center: true,
-            transition: 'fade', transitionSpeed: 'fast',
+            controls: true,
+            progress: true,
+            history: true,
+            center: true,
+            transition: 'fade',
+            transitionSpeed: 'fast',
             dependencies: [
-                { src: '/utils/lib/js/classList.js', condition: function() { return !document.body.classList; } },
-                { src: '/utils/plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+                { src: '/utils/lib/js/classList.js', condition: function () { return !document.body.classList; } },
+                { src: '/utils/plugin/markdown/marked.js', condition: function () { return !!document.querySelector('[data-markdown]'); } },
+                { src: '/utils/plugin/markdown/markdown.js', condition: function () { return !!document.querySelector('[data-markdown]'); } },
+                { src: '/utils/plugin/highlight/highlight.js', async: true, callback: function () { hljs.initHighlightingOnLoad(); } },
                 { src: '/utils/plugin/zoom-js/zoom.js', async: true },
                 { src: '/utils/plugin/notes/notes.js', async: true }
             ]
@@ -45,4 +385,5 @@
         Reveal.configure({ slideNumber: 'c/t' });
     </script>
 </body>
+
 </html>

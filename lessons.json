@@ -339,7 +339,7 @@
         {
           "title": "912. Sort an Array",
           "description": "Реализовать merge sort или quick sort без встроенных функций\n",
-          "link": "leetcode.com/problems/sort-an-array"
+          "link": "https://leetcode.com/problems/sort-an-array"
         },
         {
           "title": "Бонус",
@@ -349,8 +349,8 @@
     },
     {
       "number": 19,
-      "title": "Хеш-таблицы: идея",
-      "date": "2026-05-29T17:00:00",
+      "title": "Хеш-таблицы",
+      "date": "2026-05-29T16:00:00",
       "duration": 60,
       "presentations": [
         {
@@ -363,17 +363,23 @@
     },
     {
       "number": 20,
-      "title": "Хеш-таблицы: реализация",
-      "date": "2026-06-02T17:00:00",
+      "title": "Графы + DFS",
+      "date": "2026-05-29T17:00:00",
       "duration": 90,
       "presentations": [
         {
           "title": "Презентация",
-          "link": "/lessons/21-hash-2/",
+          "link": "/lessons/21-graphs-dfs/",
           "order": 1
         }
       ],
-      "homeworks": []
+      "homeworks": [
+        {
+          "title": "200. Number of Islands",
+          "description": "Дана сетка из '1' (суша) и '0' (вода). Найди количество островов — связных компонент из единиц, соединённых по горизонтали и вертикали.",
+          "link": "https://leetcode.com/problems/number-of-islands/"
+        }
+      ]
     },
     {
       "number": 21,

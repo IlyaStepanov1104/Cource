@@ -1,0 +1,408 @@
+<!doctype html>
+<html lang="ru">
+
+<head>
+    <meta charset="utf-8">
+    <title>Занятие 20 — Графы. Обход в глубину. Топологическая сортировка</title>
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+
+    <link rel="stylesheet" href="/utils/css/reveal.css">
+    <link rel="stylesheet" href="/utils/lib/css/animate.css">
+    <link rel="stylesheet" href="/utils/css/theme/night.css" id="theme">
+    <link rel="stylesheet" href="/utils/lib/css/zenburn.css">
+    <link rel="stylesheet" href="/utils/css/custom-base.css">
+    <link rel="stylesheet" href="css-custom/custom.css">
+
+    <script>
+        var link = document.createElement('link');
+        link.rel = 'stylesheet'; link.type = 'text/css';
+        link.href = window.location.search.match(/print-pdf/gi)
+            ? '/utils/css/print/pdf.css'
+            : '/utils/css/print/paper.css';
+        document.getElementsByTagName('head')[0].appendChild(link);
+    </script>
+</head>
+
+<body>
+    <div class="reveal">
+        <div class="slides">
+
+            <!-- Титульный слайд -->
+            <section style="font-size: 70px; height: 100%; width: 100%">
+                <div class="lesson-time">0</div>
+                <div class="fragment">
+                    <h1 class="animated" style="font-size: 1.3em;">Графы</h1>
+                    <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">Обход в глубину. Топологическая сортировка. Занятие 20</p>
+                </div>
+            </section>
+
+            <!-- ЧАСТЬ 1: Что такое граф -->
+            <section>
+                <section style="font-size: 70px; height: 100%; width: 100%">
+                    <div class="lesson-time">0</div>
+                    <div class="fragment">
+                        <h1 style="font-size: 1.4em;">Что такое граф</h1>
+                        <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">вершины + рёбра</p>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Графы везде</h2>
+                    <ul>
+                        <li class="fragment">Карта метро - <mark>станции</mark> и <mark>перегоны</mark></li>
+                        <li class="fragment">Google Maps - перекрёстки и дороги</li>
+                        <li class="fragment">Соцсети - люди и дружба / подписка</li>
+                        <li class="fragment"><code>pip install</code> - пакеты и их зависимости</li>
+                    </ul>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        Везде, где есть <mark>объекты</mark> и <mark>связи между ними</mark> - это граф
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Граф G = (V, E)</h2>
+                    <div class="compare fragment">
+                        <div class="compare-block">
+                            <h4>V - вершины</h4>
+                            <p style="font-size: 0.7em; opacity: 0.8;">Vertices / Nodes</p>
+                            <p style="font-size: 0.65em;">Станции, города, люди</p>
+                        </div>
+                        <div class="compare-block">
+                            <h4>E - рёбра</h4>
+                            <p style="font-size: 0.7em; opacity: 0.8;">Edges</p>
+                            <p style="font-size: 0.65em;">Перегоны, дороги, дружба</p>
+                        </div>
+                    </div>
+                    <div class="fragment" style="display: flex; justify-content: center; align-items: center; gap: 1em; margin-top: 1em; font-size: 0.5em;">
+                        <div style="width: 2.5em; height: 2.5em; border-radius: 50%; background: rgba(99,99,255,0.35); border: 2px solid #99f; display: flex; align-items: center; justify-content: center; font-weight: bold;">A</div>
+                        <div style="height: 2px; width: 2.5em; background: #99f;"></div>
+                        <div style="width: 2.5em; height: 2.5em; border-radius: 50%; background: rgba(99,99,255,0.35); border: 2px solid #99f; display: flex; align-items: center; justify-content: center; font-weight: bold;">B</div>
+                        <div style="height: 2px; width: 2.5em; background: #99f;"></div>
+                        <div style="width: 2.5em; height: 2.5em; border-radius: 50%; background: rgba(99,99,255,0.35); border: 2px solid #99f; display: flex; align-items: center; justify-content: center; font-weight: bold;">C</div>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Ориентированный / неориентированный</h2>
+                    <div class="compare fragment">
+                        <div class="compare-block">
+                            <h4>Неориентированный</h4>
+                            <p style="font-size: 0.65em;">ВКонтакте: дружба</p>
+                            <div style="display: flex; justify-content: center; align-items: center; gap: 0.8em; margin-top: 0.5em; font-size: 0.65em;">
+                                <div style="padding: 0.3em 0.6em; border-radius: 50%; border: 2px solid #99f;">A</div>
+                                <div>---</div>
+                                <div style="padding: 0.3em 0.6em; border-radius: 50%; border: 2px solid #99f;">B</div>
+                            </div>
+                            <p style="font-size: 0.6em; opacity: 0.7; margin-top: 0.5em;">связь в обе стороны</p>
+                        </div>
+                        <div class="compare-block">
+                            <h4>Ориентированный</h4>
+                            <p style="font-size: 0.65em;">Инстаграм: подписка</p>
+                            <div style="display: flex; justify-content: center; align-items: center; gap: 0.8em; margin-top: 0.5em; font-size: 0.65em;">
+                                <div style="padding: 0.3em 0.6em; border-radius: 50%; border: 2px solid #99f;">A</div>
+                                <div>-&gt;</div>
+                                <div style="padding: 0.3em 0.6em; border-radius: 50%; border: 2px solid #99f;">B</div>
+                            </div>
+                            <p style="font-size: 0.6em; opacity: 0.7; margin-top: 0.5em;">у ребра есть направление</p>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Основные термины</h2>
+                    <ul>
+                        <li class="fragment"><mark>Путь (path)</mark> - последовательность вершин через рёбра: A - B - C</li>
+                        <li class="fragment"><mark>Цикл (cycle)</mark> - путь, который возвращается в начало: A - B - C - A</li>
+                        <li class="fragment"><mark>Степень (degree)</mark> - количество рёбер у вершины</li>
+                    </ul>
+                </section>
+            </section>
+
+            <!-- ЧАСТЬ 2: Хранение графа -->
+            <section>
+                <section style="font-size: 70px; height: 100%; width: 100%">
+                    <div class="lesson-time">15</div>
+                    <div class="fragment">
+                        <h1 style="font-size: 1.4em;">Хранение графа</h1>
+                        <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">список смежности</p>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Список смежности</h2>
+                    <p class="fragment">Самый удобный способ в Python - <mark>словарь</mark>:</p>
+                    <div class="code-block fragment">
+                        <pre class="python size-m"><code>graph = {
+    'A': ['B', 'C'],
+    'B': ['D'],
+    'C': ['D'],
+    'D': [],
+}</code></pre>
+                    </div>
+                    <p class="fragment" style="margin-top: 0.8em;">Ключ = вершина, значение = <mark>список соседей</mark></p>
+                </section>
+
+                <section>
+                    <h2>Граф и код рядом</h2>
+                    <div class="compare fragment">
+                        <div class="compare-block">
+                            <h4>Граф (рёбра)</h4>
+                            <div style="font-size: 0.6em; line-height: 2.2; font-family: monospace; text-align: left; padding: 0.5em;">
+                                A -&gt; B, C<br>
+                                B -&gt; D<br>
+                                C -&gt; D<br>
+                                D -&gt; (нет)
+                            </div>
+                        </div>
+                        <div class="compare-block">
+                            <h4>Словарь</h4>
+                            <div style="font-size: 0.55em; font-family: monospace; text-align: left; padding: 0.5em; background: rgba(255,255,255,0.05); border-radius: 4px; line-height: 2;">
+                                'A': ['B', 'C']<br>
+                                'B': ['D']<br>
+                                'C': ['D']<br>
+                                'D': []
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+            </section>
+
+            <!-- ЧАСТЬ 3: DFS -->
+            <section>
+                <section style="font-size: 70px; height: 100%; width: 100%">
+                    <div class="lesson-time">30</div>
+                    <div class="fragment">
+                        <h1 style="font-size: 1.4em;">Поиск в глубину</h1>
+                        <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">Depth-First Search</p>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Идея: лабиринт</h2>
+                    <ul>
+                        <li class="fragment">Идём вперёд как можно дальше</li>
+                        <li class="fragment">Тупик - возвращаемся, пробуем другой путь</li>
+                        <li class="fragment"><mark>Обязательно</mark> отмечаем пройденные комнаты</li>
+                    </ul>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        Без <code>visited</code> зациклимся навсегда - будем ходить по кругу
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Трассировка DFS</h2>
+                    <div style="font-size: 0.5em; font-family: monospace; background: rgba(255,255,255,0.05); padding: 0.6em 1em; border-radius: 6px; margin: 0.3em auto; max-width: 85%; text-align: left;">
+                        graph = {'A': ['B','C'], 'B': ['D'], 'C': ['D'], 'D': []}
+                    </div>
+                    <div class="timeline" style="margin-top: 0.5em; font-size: 0.68em;">
+                        <div class="timeline-item fragment">
+                            <div class="timeline-marker">1</div>
+                            <div class="timeline-content"><code>dfs(A)</code> - посещаем A, идём в B</div>
+                        </div>
+                        <div class="timeline-item fragment">
+                            <div class="timeline-marker">2</div>
+                            <div class="timeline-content"><code>dfs(B)</code> - посещаем B, идём в D</div>
+                        </div>
+                        <div class="timeline-item fragment">
+                            <div class="timeline-marker">3</div>
+                            <div class="timeline-content"><code>dfs(D)</code> - посещаем D, нет соседей, возврат</div>
+                        </div>
+                        <div class="timeline-item fragment">
+                            <div class="timeline-marker">4</div>
+                            <div class="timeline-content">Возврат в A, идём в C</div>
+                        </div>
+                        <div class="timeline-item fragment">
+                            <div class="timeline-marker">5</div>
+                            <div class="timeline-content"><code>dfs(C)</code> - посещаем C, D уже в visited</div>
+                        </div>
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 0.5em;">
+                        Порядок вывода: <mark>A B D C</mark>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Применение: поиск цикла</h2>
+                    <p class="fragment">Идея: если в ходе DFS мы встречаем вершину, которая <mark>уже в visited</mark> - значит, мы попали в неё по второму пути. Цикл.</p>
+                    <div class="fragment" style="display: flex; justify-content: center; align-items: center; gap: 0.8em; margin-top: 0.8em; font-size: 0.5em;">
+                        <div style="width: 2.5em; height: 2.5em; border-radius: 50%; background: rgba(99,255,99,0.25); border: 2px solid #6f6; display: flex; align-items: center; justify-content: center; font-weight: bold;">A</div>
+                        <div>-&gt;</div>
+                        <div style="width: 2.5em; height: 2.5em; border-radius: 50%; background: rgba(99,99,255,0.35); border: 2px solid #99f; display: flex; align-items: center; justify-content: center; font-weight: bold;">B</div>
+                        <div>-&gt;</div>
+                        <div style="width: 2.5em; height: 2.5em; border-radius: 50%; background: rgba(99,99,255,0.35); border: 2px solid #99f; display: flex; align-items: center; justify-content: center; font-weight: bold;">C</div>
+                        <div>-&gt;</div>
+                        <div style="width: 2.5em; height: 2.5em; border-radius: 50%; background: rgba(99,255,99,0.25); border: 2px solid #f55; display: flex; align-items: center; justify-content: center; font-weight: bold;">A</div>
+                        <div class="fragment" style="font-size: 1.4em; color: #f55;">!</div>
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 0.8em;">
+                        Нюанс для <mark>неориентированного</mark> графа: вершина, из которой мы пришли - не считается. Иначе любое ребро выглядит как «цикл».
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Скорость DFS</h2>
+                    <p class="fragment">Сложность: <mark class="green">O(V + E)</mark></p>
+                    <ul style="margin-top: 0.8em;">
+                        <li class="fragment">Каждую <mark>вершину</mark> посещаем ровно один раз - как только добавили в visited, второй раз не заходим</li>
+                        <li class="fragment">Каждое <mark>ребро</mark> смотрим ровно один раз - когда перебираем соседей вершины</li>
+                    </ul>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        V вершин + E рёбер = один проход по всему графу. Быстрее не бывает.
+                    </div>
+                </section>
+
+            </section>
+
+            <!-- ЧАСТЬ 4: Топологическая сортировка -->
+            <section>
+                <section style="font-size: 70px; height: 100%; width: 100%">
+                    <div class="lesson-time">55</div>
+                    <div class="fragment">
+                        <h1 style="font-size: 1.3em;">Топологическая сортировка</h1>
+                        <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">порядок задач с зависимостями</p>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Задача</h2>
+                    <p class="fragment">Есть задачи, у которых <mark>порядок важен</mark>. Нельзя начать задачу, пока не выполнены все её зависимости.</p>
+                    <div class="fragment" style="display: flex; justify-content: center; align-items: center; gap: 1em; margin-top: 1em; font-size: 0.5em;">
+                        <div style="width: 2.5em; height: 2.5em; border-radius: 50%; background: rgba(99,255,99,0.25); border: 2px solid #6f6; display: flex; align-items: center; justify-content: center; font-weight: bold;">A</div>
+                        <div style="display: flex; flex-direction: column; gap: 1em; align-items: center;">
+                            <div style="height: 2px; width: 2.5em; background: #99f;"></div>
+                            <div style="height: 2px; width: 2.5em; background: #99f;"></div>
+                        </div>
+                        <div style="display: flex; flex-direction: column; gap: 1em;">
+                            <div style="width: 2.5em; height: 2.5em; border-radius: 50%; background: rgba(99,99,255,0.35); border: 2px solid #99f; display: flex; align-items: center; justify-content: center; font-weight: bold;">B</div>
+                            <div style="width: 2.5em; height: 2.5em; border-radius: 50%; background: rgba(99,99,255,0.35); border: 2px solid #99f; display: flex; align-items: center; justify-content: center; font-weight: bold;">C</div>
+                        </div>
+                        <div style="display: flex; flex-direction: column; gap: 1em; align-items: center;">
+                            <div style="height: 2px; width: 2.5em; background: #99f;"></div>
+                            <div style="height: 2px; width: 2.5em; background: #99f;"></div>
+                        </div>
+                        <div style="width: 2.5em; height: 2.5em; border-radius: 50%; background: rgba(255,165,0,0.3); border: 2px solid orange; display: flex; align-items: center; justify-content: center; font-weight: bold;">D</div>
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 0.8em;">
+                        Правильный порядок: <mark>A - B - C - D</mark> или <mark>A - C - B - D</mark>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Где нужен топсорт</h2>
+                    <ul>
+                        <li class="fragment"><code>pip install</code> - сначала зависимости, потом пакет</li>
+                        <li class="fragment">Сборка проекта - сначала модули без зависимостей</li>
+                        <li class="fragment">Расписание курсов - сначала базовые предметы</li>
+                    </ul>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        Работает только на <mark>DAG</mark> (Directed Acyclic Graph) - ориентированном графе без циклов
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Алгоритм через DFS</h2>
+                    <p class="fragment">Маленькое изменение в DFS:</p>
+                    <ul>
+                        <li class="fragment">Когда <mark>закончили</mark> обработку вершины (все соседи уже обойдены) - добавляем её в список</li>
+                        <li class="fragment">В конце <mark>разворачиваем</mark> список</li>
+                    </ul>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        Вершина попадает в список только <mark>после всех своих «потомков»</mark> - поэтому при развороте она оказывается раньше них
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Трассировка</h2>
+                    <div style="font-size: 0.5em; font-family: monospace; background: rgba(255,255,255,0.05); padding: 0.6em 1em; border-radius: 6px; margin: 0.3em auto; max-width: 85%; text-align: left;">
+                        graph = {'A': ['B','C'], 'B': ['D'], 'C': ['D'], 'D': []}
+                    </div>
+                    <div class="timeline" style="margin-top: 0.4em; font-size: 0.65em;">
+                        <div class="timeline-item fragment">
+                            <div class="timeline-marker">1</div>
+                            <div class="timeline-content">dfs(A) → dfs(B) → dfs(D) → нет соседей → <mark>append(D)</mark></div>
+                        </div>
+                        <div class="timeline-item fragment">
+                            <div class="timeline-marker">2</div>
+                            <div class="timeline-content">Возврат в B, все соседи обработаны → <mark>append(B)</mark></div>
+                        </div>
+                        <div class="timeline-item fragment">
+                            <div class="timeline-marker">3</div>
+                            <div class="timeline-content">Возврат в A → dfs(C), D уже visited → <mark>append(C)</mark></div>
+                        </div>
+                        <div class="timeline-item fragment">
+                            <div class="timeline-marker">4</div>
+                            <div class="timeline-content">Возврат в A, все обработаны → <mark>append(A)</mark></div>
+                        </div>
+                        <div class="timeline-item fragment">
+                            <div class="timeline-marker">5</div>
+                            <div class="timeline-content">result = [D, B, C, A] → reverse = <mark class="green">[A, C, B, D]</mark></div>
+                        </div>
+                    </div>
+                </section>
+            </section>
+
+            <!-- ПРАКТИКА + ИТОГ -->
+            <section>
+                <section style="font-size: 70px; height: 100%; width: 100%">
+                    <div class="lesson-time">80</div>
+                    <div class="fragment">
+                        <h1 style="font-size: 1.4em;">Практика</h1>
+                    </div>
+                </section>
+
+                <section>
+                    <h2><a href="https://leetcode.com/problems/number-of-provinces/" target="_blank" rel="noopener">547. Number of Provinces</a></h2>
+                    <p class="fragment" style="font-size: 0.85em;">Дана матрица смежности <code>n x n</code>. <code>isConnected[i][j] = 1</code> означает, что города <code>i</code> и <code>j</code> соединены. Найти количество <mark>провинций</mark> (связных компонент).</p>
+                    <div class="fragment" style="font-size: 0.5em; font-family: monospace; background: rgba(255,255,255,0.05); padding: 0.8em; border-radius: 6px; margin: 0.5em auto; max-width: 80%; text-align: left;">
+                        isConnected = [[1,1,0],<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[1,1,0],<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[0,0,1]]<br>
+                        # Ответ: 2 (города 0,1 связаны; город 2 - отдельно)
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 0.5em;">
+                        Подсказка: сконвертируй матрицу в список смежности и запусти DFS из каждой непосещённой вершины
+                    </div>
+                </section>
+            </section>
+
+            <!-- ИТОГ -->
+            <section>
+                <div class="lesson-time">88</div>
+                <h2>Что запомнить</h2>
+                <ul>
+                    <li class="fragment"><mark>Граф</mark> = вершины + рёбра (ориентированный / взвешенный)</li>
+                    <li class="fragment"><mark>Список смежности</mark> - dict, ключ = вершина, значение = соседи</li>
+                    <li class="fragment"><mark>DFS</mark> - рекурсия + visited set, идём вглубь</li>
+                    <li class="fragment"><mark>Топологическая сортировка</mark> - добавляем вершину <code>после</code> всех соседей, разворачиваем</li>
+                </ul>
+            </section>
+
+        </div>
+    </div>
+
+    <script src="/utils/lib/js/head.min.js"></script>
+    <script src="/utils/js/reveal.js"></script>
+    <script>
+        Reveal.initialize({
+            controls: true,
+            progress: true,
+            history: true,
+            center: true,
+            transition: 'fade',
+            transitionSpeed: 'fast',
+            dependencies: [
+                { src: '/utils/lib/js/classList.js', condition: function () { return !document.body.classList; } },
+                { src: '/utils/plugin/markdown/marked.js', condition: function () { return !!document.querySelector('[data-markdown]'); } },
+                { src: '/utils/plugin/markdown/markdown.js', condition: function () { return !!document.querySelector('[data-markdown]'); } },
+                { src: '/utils/plugin/highlight/highlight.js', async: true, callback: function () { hljs.initHighlightingOnLoad(); } },
+                { src: '/utils/plugin/zoom-js/zoom.js', async: true },
+                { src: '/utils/plugin/notes/notes.js', async: true }
+            ]
+        });
+        Reveal.configure({ slideNumber: 'c/t' });
+    </script>
+</body>
+
+</html>
