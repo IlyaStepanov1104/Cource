@@ -383,167 +383,233 @@
     },
     {
       "number": 21,
-      "title": "Pygame: основы",
-      "date": "2026-06-05T17:00:00",
+      "title": "DFS-алгоритмы",
+      "date": "2026-06-02T17:00:00",
       "duration": 60,
       "presentations": [
         {
           "title": "Презентация",
-          "link": "/lessons/22-pygame-1/",
+          "link": "/lessons/21-dfs-algorithms/",
           "order": 1
         }
       ],
-      "homeworks": []
+      "homeworks": [
+        {
+          "title": "785. Is Graph Bipartite?",
+          "description": "Проверь двудольность графа через DFS/BFS с 2-раскраской: сосед всегда должен быть другого цвета.",
+          "link": "https://leetcode.com/problems/is-graph-bipartite/"
+        }
+      ]
     },
     {
       "number": 22,
-      "title": "Pygame: мини-игра",
-      "date": "2026-06-09T17:00:00",
+      "title": "BFS + кратчайший путь",
+      "date": "2026-06-05T17:00:00",
       "duration": 90,
       "presentations": [
         {
           "title": "Презентация",
-          "link": "/lessons/23-pygame-2/",
+          "link": "/lessons/22-graphs-bfs/",
           "order": 1
         }
       ],
-      "homeworks": []
+      "homeworks": [
+        {
+          "title": "994. Rotting Oranges",
+          "description": "Multi-source BFS: несколько стартовых точек одновременно. Найди минимальное время, за которое сгниют все апельсины.",
+          "link": "https://leetcode.com/problems/rotting-oranges/"
+        }
+      ]
     },
     {
       "number": 23,
-      "title": "Деревья + BST",
+      "title": "Алгоритм Дейкстры",
       "date": "2026-06-12T17:00:00",
       "duration": 60,
       "presentations": [
         {
           "title": "Презентация",
-          "link": "/lessons/24-trees-bst/",
+          "link": "/lessons/22-dijkstra/",
           "order": 1
         }
       ],
-      "homeworks": []
+      "homeworks": [
+        {
+          "title": "743. Network Delay Time",
+          "description": "Классическая задача на Дейкстру: найди время, за которое сигнал дойдёт до всех узлов сети.",
+          "link": "https://leetcode.com/problems/network-delay-time/"
+        }
+      ]
     },
     {
       "number": 24,
-      "title": "API: requests",
+      "title": "Bellman-Ford + отрицательные веса",
       "date": "2026-06-16T17:00:00",
       "duration": 90,
       "presentations": [
         {
           "title": "Презентация",
-          "link": "/lessons/25-api-1/",
+          "link": "/lessons/24-bellman-ford/",
           "order": 1
         }
       ],
-      "homeworks": []
+      "homeworks": [
+        {
+          "title": "787. Cheapest Flights Within K Stops",
+          "description": "Найди самый дешёвый перелёт из A в B с не более чем K пересадками. Bellman-Ford с ограничением на количество рёбер.",
+          "link": "https://leetcode.com/problems/cheapest-flights-within-k-stops/"
+        }
+      ]
     },
     {
       "number": 25,
-      "title": "API: парсинг JSON",
-      "date": "2026-06-16T17:00:00",
+      "title": "Floyd-Warshall",
+      "date": "2026-06-19T17:00:00",
       "duration": 60,
       "presentations": [
         {
           "title": "Презентация",
-          "link": "/lessons/26-api-2/",
+          "link": "/lessons/25-floyd-warshall/",
           "order": 1
         }
       ],
-      "homeworks": []
+      "homeworks": [
+        {
+          "title": "1334. Find the City With the Smallest Number of Neighbors",
+          "description": "Floyd-Warshall для всех пар. Найди город, из которого достижимо наименьшее количество других городов в радиусе distanceThreshold.",
+          "link": "https://leetcode.com/problems/find-the-city-with-the-smallest-number-of-neighbors-at-a-threshold-distance/"
+        }
+      ]
     },
     {
       "number": 26,
-      "title": "Графы + BFS",
-      "date": "2026-06-19T17:00:00",
+      "title": "Union-Find (DSU)",
+      "date": "2026-06-23T17:00:00",
       "duration": 90,
       "presentations": [
         {
           "title": "Презентация",
-          "link": "/lessons/27-graphs-bfs/",
+          "link": "/lessons/26-union-find/",
           "order": 1
         }
       ],
-      "homeworks": []
+      "homeworks": [
+        {
+          "title": "684. Redundant Connection",
+          "description": "Найди лишнее ребро в графе, которое образует цикл. DSU: если оба конца ребра уже в одном компоненте - это лишнее ребро.",
+          "link": "https://leetcode.com/problems/redundant-connection/"
+        }
+      ]
     },
     {
       "number": 27,
-      "title": "DFS",
-      "date": "2026-06-23T17:00:00",
+      "title": "Минимальное остовное дерево",
+      "date": "2026-06-26T17:00:00",
       "duration": 60,
       "presentations": [
         {
           "title": "Презентация",
-          "link": "/lessons/28-dfs/",
+          "link": "/lessons/27-mst/",
           "order": 1
         }
       ],
-      "homeworks": []
+      "homeworks": [
+        {
+          "title": "1584. Min Cost to Connect All Points",
+          "description": "MST на точках в 2D-плоскости. Расстояние между точками - манхэттенское. Алгоритм Прима или Краскала.",
+          "link": "https://leetcode.com/problems/min-cost-to-connect-all-points/"
+        }
+      ]
     },
     {
       "number": 28,
-      "title": "Дейкстра",
-      "date": "2026-06-26T17:00:00",
+      "title": "Эйлеров путь и цикл",
+      "date": "2026-06-30T17:00:00",
       "duration": 90,
       "presentations": [
         {
           "title": "Презентация",
-          "link": "/lessons/29-dijkstra/",
+          "link": "/lessons/28-euler/",
           "order": 1
         }
       ],
-      "homeworks": []
+      "homeworks": [
+        {
+          "title": "332. Reconstruct Itinerary",
+          "description": "Восстанови маршрут из авиабилетов, используя каждый ровно один раз - это поиск Эйлерова пути. Алгоритм Флёри / Hierholzer.",
+          "link": "https://leetcode.com/problems/reconstruct-itinerary/"
+        }
+      ]
     },
     {
       "number": 29,
-      "title": "Жадные алгоритмы",
-      "date": "2026-06-30T17:00:00",
+      "title": "Мосты и точки сочленения",
+      "date": "2026-07-03T17:00:00",
       "duration": 60,
       "presentations": [
         {
           "title": "Презентация",
-          "link": "/lessons/30-greedy/",
+          "link": "/lessons/29-bridges/",
           "order": 1
         }
       ],
-      "homeworks": []
+      "homeworks": [
+        {
+          "title": "1192. Critical Connections in a Network",
+          "description": "Найди все критические рёбра (мосты) в сети - их удаление делает сеть несвязной. Алгоритм Тарьяна.",
+          "link": "https://leetcode.com/problems/critical-connections-in-a-network/"
+        }
+      ]
     },
     {
       "number": 30,
-      "title": "SQL: введение",
-      "date": "2026-07-03T17:00:00",
+      "title": "Сильно связные компоненты",
+      "date": "2026-07-07T17:00:00",
       "duration": 90,
       "presentations": [
         {
           "title": "Презентация",
-          "link": "/lessons/31-sql-1/",
+          "link": "/lessons/30-scc/",
           "order": 1
         }
       ],
-      "homeworks": []
+      "homeworks": [
+        {
+          "title": "207. Course Schedule",
+          "description": "Можно ли пройти все курсы с учётом зависимостей? Сводится к поиску цикла в ориентированном графе / топологической сортировке.",
+          "link": "https://leetcode.com/problems/course-schedule/"
+        }
+      ]
     },
     {
       "number": 31,
-      "title": "SQL: JOIN и агрегации",
-      "date": "2026-07-07T17:00:00",
+      "title": "DP на графах",
+      "date": "2026-07-10T17:00:00",
       "duration": 60,
       "presentations": [
         {
           "title": "Презентация",
-          "link": "/lessons/32-sql-2/",
+          "link": "/lessons/31-dp-graphs/",
           "order": 1
         }
       ],
-      "homeworks": []
+      "homeworks": [
+        {
+          "title": "329. Longest Increasing Path in Matrix",
+          "description": "Найди самый длинный возрастающий путь в матрице. DAG + мемоизация: из каждой клетки идём только в большие соседей.",
+          "link": "https://leetcode.com/problems/longest-increasing-path-in-a-matrix/"
+        }
+      ]
     },
     {
       "number": 32,
-      "title": "Проект: таблица рекордов",
-      "date": "2026-07-10T17:00:00",
+      "title": "Поток в сети (Ford-Fulkerson)",
+      "date": "2026-07-14T17:00:00",
       "duration": 90,
       "presentations": [
         {
           "title": "Презентация",
-          "link": "/lessons/33-project-sql/",
+          "link": "/lessons/32-max-flow/",
           "order": 1
         }
       ],
@@ -551,41 +617,21 @@
     },
     {
       "number": 33,
-      "title": "DP: введение",
-      "date": "2026-07-14T17:00:00",
+      "title": "LeetCode-марафон по графам",
+      "date": "2026-07-17T17:00:00",
       "duration": 60,
-      "presentations": [
-        {
-          "title": "Презентация",
-          "link": "/lessons/34-dp-1/",
-          "order": 1
-        }
-      ],
+      "presentations": [],
       "homeworks": []
     },
     {
       "number": 34,
-      "title": "DP: задачи",
-      "date": "2026-07-17T17:00:00",
+      "title": "Карта знаний + что дальше",
+      "date": "2026-07-21T17:00:00",
       "duration": 90,
       "presentations": [
         {
           "title": "Презентация",
-          "link": "/lessons/35-dp-2/",
-          "order": 1
-        }
-      ],
-      "homeworks": []
-    },
-    {
-      "number": 35,
-      "title": "Итог + выбор специализации",
-      "date": "2026-07-21T17:00:00",
-      "duration": 60,
-      "presentations": [
-        {
-          "title": "Презентация",
-          "link": "/lessons/36-results/",
+          "link": "/lessons/34-results/",
           "order": 1
         }
       ],
