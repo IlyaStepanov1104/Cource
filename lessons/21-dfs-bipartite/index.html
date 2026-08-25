@@ -1,0 +1,503 @@
+<!doctype html>
+<html lang="ru">
+
+<head>
+    <meta charset="utf-8">
+    <title>Занятие 21 — Двудольность + 2-раскраска</title>
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+
+    <link rel="stylesheet" href="/utils/css/reveal.css">
+    <link rel="stylesheet" href="/utils/lib/css/animate.css">
+    <link rel="stylesheet" href="/utils/css/theme/night.css" id="theme">
+    <link rel="stylesheet" href="/utils/lib/css/zenburn.css">
+    <link rel="stylesheet" href="/utils/css/custom-base.css">
+    <link rel="stylesheet" href="css-custom/custom.css">
+
+    <script>
+        var link = document.createElement('link');
+        link.rel = 'stylesheet'; link.type = 'text/css';
+        link.href = window.location.search.match(/print-pdf/gi)
+            ? '/utils/css/print/pdf.css'
+            : '/utils/css/print/paper.css';
+        document.getElementsByTagName('head')[0].appendChild(link);
+    </script>
+</head>
+
+<body>
+    <div class="reveal">
+        <div class="slides">
+
+            <!-- Титульный слайд -->
+            <section style="font-size: 70px; height: 100%; width: 100%">
+                <div class="lesson-time">0</div>
+                <div class="fragment">
+                    <h1 class="animated" style="font-size: 1.3em;">Двудольность</h1>
+                    <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">2-раскраска графа. Занятие 21</p>
+                </div>
+            </section>
+
+            <!-- ЧАСТЬ 1: Что такое двудольный граф -->
+            <section>
+
+                <!-- слайд-заголовок части -->
+                <section style="font-size: 70px; height: 100%; width: 100%">
+                    <div class="lesson-time">0</div>
+                    <div class="fragment">
+                        <h1 style="font-size: 1.4em;">Двудольный граф</h1>
+                        <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">bipartite graph</p>
+                    </div>
+                </section>
+
+                <!-- определение: два множества L и R, рёбра только между ними -->
+                <section>
+                    <h2>Определение</h2>
+                    <p class="fragment">Вершины разделены на два множества: <mark>L</mark> и <mark class="green">R</mark></p>
+                    <ul>
+                        <li class="fragment">Все рёбра идут <mark>между</mark> L и R</li>
+                        <li class="fragment">Рёбер <mark>внутри</mark> L или внутри R — нет</li>
+                    </ul>
+                    <div class="fragment" style="display: flex; justify-content: center; align-items: center; gap: 3em; margin-top: 1em; font-size: 0.55em;">
+                        <div style="display: flex; flex-direction: column; gap: 0.6em; align-items: center;">
+                            <span style="opacity: 0.6;">L</span>
+                            <div style="width: 2.5em; height: 2.5em; border-radius: 50%; background: rgba(255,80,80,0.3); border: 2px solid #f55; display: flex; align-items: center; justify-content: center; font-weight: bold;">1</div>
+                            <div style="width: 2.5em; height: 2.5em; border-radius: 50%; background: rgba(255,80,80,0.3); border: 2px solid #f55; display: flex; align-items: center; justify-content: center; font-weight: bold;">2</div>
+                        </div>
+                        <div style="opacity: 0.4; font-size: 1.5em;">- - -</div>
+                        <div style="display: flex; flex-direction: column; gap: 0.6em; align-items: center;">
+                            <span style="opacity: 0.6;">R</span>
+                            <div style="width: 2.5em; height: 2.5em; border-radius: 50%; background: rgba(80,150,255,0.3); border: 2px solid #69f; display: flex; align-items: center; justify-content: center; font-weight: bold;">A</div>
+                            <div style="width: 2.5em; height: 2.5em; border-radius: 50%; background: rgba(80,150,255,0.3); border: 2px solid #69f; display: flex; align-items: center; justify-content: center; font-weight: bold;">B</div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- примеры из жизни -->
+                <section>
+                    <h2>Примеры из жизни</h2>
+                    <div class="compare fragment">
+                        <div class="compare-block">
+                            <h4>Ученики - учителя</h4>
+                            <p style="font-size: 0.7em; opacity: 0.8;">ребро = "учится у"</p>
+                        </div>
+                        <div class="compare-block">
+                            <h4>Задачи - исполнители</h4>
+                            <p style="font-size: 0.7em; opacity: 0.8;">ребро = "назначена"</p>
+                        </div>
+                    </div>
+                    <div class="compare fragment">
+                        <div class="compare-block">
+                            <h4>Фильмы - зрители</h4>
+                            <p style="font-size: 0.7em; opacity: 0.8;">ребро = "посмотрел"</p>
+                        </div>
+                        <div class="compare-block">
+                            <h4>Товары - покупатели</h4>
+                            <p style="font-size: 0.7em; opacity: 0.8;">ребро = "купил"</p>
+                        </div>
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        Везде, где есть два <mark>разных типа</mark> объектов и связи только между ними
+                    </div>
+                </section>
+
+                <!-- визуализация: слева L, справа R, рёбра пересекают середину -->
+                <section>
+                    <h2>Как выглядит двудольный граф</h2>
+                    <svg class="fragment" width="520" height="230" style="display: block; margin: 0.5em auto;">
+                        <!-- edges (draw first so nodes overlap them) -->
+                        <line x1="140" y1="55"  x2="380" y2="55"  stroke="#888" stroke-width="1.5"/>
+                        <line x1="140" y1="55"  x2="380" y2="115" stroke="#888" stroke-width="1.5"/>
+                        <line x1="140" y1="115" x2="380" y2="55"  stroke="#888" stroke-width="1.5"/>
+                        <line x1="140" y1="115" x2="380" y2="175" stroke="#888" stroke-width="1.5"/>
+                        <line x1="140" y1="175" x2="380" y2="175" stroke="#888" stroke-width="1.5"/>
+                        <!-- L nodes -->
+                        <circle cx="140" cy="55"  r="24" fill="rgba(255,80,80,0.3)"   stroke="#f55" stroke-width="2"/>
+                        <circle cx="140" cy="115" r="24" fill="rgba(255,80,80,0.3)"   stroke="#f55" stroke-width="2"/>
+                        <circle cx="140" cy="175" r="24" fill="rgba(255,80,80,0.3)"   stroke="#f55" stroke-width="2"/>
+                        <text x="140" y="61"  text-anchor="middle" fill="white" font-size="16" font-weight="bold">1</text>
+                        <text x="140" y="121" text-anchor="middle" fill="white" font-size="16" font-weight="bold">2</text>
+                        <text x="140" y="181" text-anchor="middle" fill="white" font-size="16" font-weight="bold">3</text>
+                        <!-- R nodes -->
+                        <circle cx="380" cy="55"  r="24" fill="rgba(80,150,255,0.3)" stroke="#69f" stroke-width="2"/>
+                        <circle cx="380" cy="115" r="24" fill="rgba(80,150,255,0.3)" stroke="#69f" stroke-width="2"/>
+                        <circle cx="380" cy="175" r="24" fill="rgba(80,150,255,0.3)" stroke="#69f" stroke-width="2"/>
+                        <text x="380" y="61"  text-anchor="middle" fill="white" font-size="16" font-weight="bold">A</text>
+                        <text x="380" y="121" text-anchor="middle" fill="white" font-size="16" font-weight="bold">B</text>
+                        <text x="380" y="181" text-anchor="middle" fill="white" font-size="16" font-weight="bold">C</text>
+                        <!-- labels -->
+                        <text x="140" y="215" text-anchor="middle" fill="#f55" font-size="13" opacity="0.7">L</text>
+                        <text x="380" y="215" text-anchor="middle" fill="#69f" font-size="13" opacity="0.7">R</text>
+                    </svg>
+                    <div class="fragment opinion">
+                        Рёбра пересекают середину - ни одного внутри L или внутри R
+                    </div>
+                </section>
+
+                <!-- контрпример: треугольник — НЕ двудольный -->
+                <section>
+                    <h2>Когда граф НЕ двудольный</h2>
+                    <p class="fragment">Попробуем разделить <mark>треугольник</mark> A-B-C на два множества:</p>
+                    <div class="timeline" style="margin-top: 0.5em;">
+                        <div class="timeline-item fragment">
+                            <div class="timeline-marker">1</div>
+                            <div class="timeline-content">A кладём в L - ок</div>
+                        </div>
+                        <div class="timeline-item fragment">
+                            <div class="timeline-marker">2</div>
+                            <div class="timeline-content">B - сосед A, значит в R</div>
+                        </div>
+                        <div class="timeline-item fragment">
+                            <div class="timeline-marker">3</div>
+                            <div class="timeline-content">C - сосед A, значит в R</div>
+                        </div>
+                        <div class="timeline-item fragment">
+                            <div class="timeline-marker">!</div>
+                            <div class="timeline-content">B и C <mark class="yellow">соединены</mark>, но оба в R - <mark>противоречие!</mark></div>
+                        </div>
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 0.8em;">
+                        Треугольник - нечётный цикл длины 3 - разделить невозможно
+                    </div>
+                </section>
+
+            </section>
+
+            <!-- ЧАСТЬ 2: Признак двудольности -->
+            <section>
+
+                <!-- слайд-заголовок части -->
+                <section style="font-size: 70px; height: 100%; width: 100%">
+                    <div class="lesson-time">15</div>
+                    <div class="fragment">
+                        <h1 style="font-size: 1.2em;">Как проверить?</h1>
+                        <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">признак двудольности</p>
+                    </div>
+                </section>
+
+                <!-- теорема: двудольный <-> нет нечётного цикла -->
+                <section>
+                    <h2>Признак двудольности</h2>
+                    <div class="fragment opinion" style="font-size: 1em; margin-bottom: 1em;">
+                        Граф двудольный <mark class="green">тогда и только тогда</mark>, когда в нём нет нечётного цикла
+                    </div>
+                    <div class="compare">
+                        <div class="compare-block fragment">
+                            <h4>Нечётный цикл</h4>
+                            <p style="font-size: 0.7em;">длина 3, 5, 7...</p>
+                            <p style="font-size: 0.7em; color: #f55;">не двудольный</p>
+                        </div>
+                        <div class="compare-block fragment">
+                            <h4>Чётный цикл</h4>
+                            <p style="font-size: 0.7em;">длина 4, 6, 8...</p>
+                            <p style="font-size: 0.7em; color: #6f6;">двудольный</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- идея 2-раскраски -->
+                <section>
+                    <h2>Идея: 2-раскраска</h2>
+                    <ul>
+                        <li class="fragment">Красим вершины в <mark>2 цвета</mark>: красный и синий</li>
+                        <li class="fragment">Правило: сосед <mark>всегда другого</mark> цвета</li>
+                        <li class="fragment">Раскраска прошла без конфликтов - граф <mark class="green">двудольный</mark></li>
+                        <li class="fragment">L = все красные, R = все синие</li>
+                    </ul>
+                    <div class="fragment" style="display: flex; justify-content: center; align-items: center; gap: 1em; margin-top: 1em; font-size: 0.5em;">
+                        <div style="width: 2.5em; height: 2.5em; border-radius: 50%; background: rgba(255,80,80,0.3); border: 2px solid #f55; display: flex; align-items: center; justify-content: center; font-weight: bold;">1</div>
+                        <div style="height: 2px; width: 2.5em; background: #aaa;"></div>
+                        <div style="width: 2.5em; height: 2.5em; border-radius: 50%; background: rgba(80,150,255,0.3); border: 2px solid #69f; display: flex; align-items: center; justify-content: center; font-weight: bold;">2</div>
+                        <div style="height: 2px; width: 2.5em; background: #aaa;"></div>
+                        <div style="width: 2.5em; height: 2.5em; border-radius: 50%; background: rgba(255,80,80,0.3); border: 2px solid #f55; display: flex; align-items: center; justify-content: center; font-weight: bold;">3</div>
+                        <div style="height: 2px; width: 2.5em; background: #aaa;"></div>
+                        <div style="width: 2.5em; height: 2.5em; border-radius: 50%; background: rgba(80,150,255,0.3); border: 2px solid #69f; display: flex; align-items: center; justify-content: center; font-weight: bold;">4</div>
+                    </div>
+                </section>
+
+                <!-- визуализация: попытка раскраски треугольника - конфликт -->
+                <section>
+                    <h2>Треугольник: попытка раскраски</h2>
+                    <div class="timeline">
+                        <div class="timeline-item fragment">
+                            <div class="timeline-marker">A</div>
+                            <div class="timeline-content">A получает <mark>красный</mark> (цвет 0)</div>
+                        </div>
+                        <div class="timeline-item fragment">
+                            <div class="timeline-marker">B</div>
+                            <div class="timeline-content">B - сосед A, получает <mark class="green">синий</mark> (цвет 1)</div>
+                        </div>
+                        <div class="timeline-item fragment">
+                            <div class="timeline-marker">C</div>
+                            <div class="timeline-content">C - сосед A, получает <mark class="green">синий</mark> (цвет 1)</div>
+                        </div>
+                        <div class="timeline-item fragment">
+                            <div class="timeline-marker">!</div>
+                            <div class="timeline-content">B и C соединены, оба <mark class="yellow">синие</mark> - конфликт!</div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- вывод: раскраска прошла = двудольный -->
+                <section>
+                    <h2>Вывод</h2>
+                    <div class="compare" style="margin-top: 0.5em;">
+                        <div class="compare-block fragment">
+                            <h4 style="color: #6f6;">Раскраска прошла</h4>
+                            <p style="font-size: 0.7em;">граф <mark class="green">двудольный</mark></p>
+                            <p style="font-size: 0.65em; opacity: 0.7;">можно разделить на L и R</p>
+                        </div>
+                        <div class="compare-block fragment">
+                            <h4 style="color: #f55;">Нашли конфликт</h4>
+                            <p style="font-size: 0.7em;">граф <mark>не двудольный</mark></p>
+                            <p style="font-size: 0.65em; opacity: 0.7;">есть нечётный цикл</p>
+                        </div>
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 1.2em;">
+                        Вся задача сводится к: <mark>можно ли раскрасить граф в 2 цвета?</mark>
+                    </div>
+                </section>
+
+            </section>
+
+            <!-- ЧАСТЬ 3: Алгоритм через DFS -->
+            <section>
+
+                <!-- слайд-заголовок части -->
+                <section style="font-size: 70px; height: 100%; width: 100%">
+                    <div class="lesson-time">30</div>
+                    <div class="fragment">
+                        <h1 style="font-size: 1.2em;">Алгоритм 2-раскраски</h1>
+                        <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">через DFS</p>
+                    </div>
+                </section>
+
+                <!-- алгоритм словами -->
+                <section>
+                    <h2>Алгоритм</h2>
+                    <div class="timeline">
+                        <div class="timeline-item fragment">
+                            <div class="timeline-marker">1</div>
+                            <div class="timeline-content">Берём непосещённую вершину, даём ей <mark>цвет 0</mark></div>
+                        </div>
+                        <div class="timeline-item fragment">
+                            <div class="timeline-marker">2</div>
+                            <div class="timeline-content">Каждому непокрашенному соседу - <mark>цвет 1 - текущий</mark>, идём DFS</div>
+                        </div>
+                        <div class="timeline-item fragment">
+                            <div class="timeline-marker">3</div>
+                            <div class="timeline-content">Сосед уже покрашен и цвет <mark class="yellow">совпадает</mark> - конфликт, False</div>
+                        </div>
+                        <div class="timeline-item fragment">
+                            <div class="timeline-marker">4</div>
+                            <div class="timeline-content">Повторяем для всех компонент - если нигде нет конфликта: <mark class="green">True</mark></div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- трассировка: квадрат 0-1-2-3-0 (двудольный) -->
+                <section>
+                    <h2>Трассировка: квадрат</h2>
+                    <p class="fragment" style="font-size: 0.65em; font-family: monospace; background: rgba(255,255,255,0.05); padding: 0.3em 0.7em; border-radius: 4px; display: inline-block;">рёбра: 0-1, 1-2, 2-3, 3-0</p>
+                    <div class="timeline" style="margin-top: 0.4em; font-size: 0.9em;">
+                        <div class="timeline-item fragment">
+                            <div class="timeline-marker">0</div>
+                            <div class="timeline-content">color[0] = <mark>0</mark> (красный)</div>
+                        </div>
+                        <div class="timeline-item fragment">
+                            <div class="timeline-marker">1</div>
+                            <div class="timeline-content">color[1] = <mark class="green">1</mark> (синий), DFS дальше</div>
+                        </div>
+                        <div class="timeline-item fragment">
+                            <div class="timeline-marker">2</div>
+                            <div class="timeline-content">color[2] = <mark>0</mark> (красный), DFS дальше</div>
+                        </div>
+                        <div class="timeline-item fragment">
+                            <div class="timeline-marker">3</div>
+                            <div class="timeline-content">color[3] = <mark class="green">1</mark> (синий). Сосед 0 красный - ок</div>
+                        </div>
+                        <div class="timeline-item fragment">
+                            <div class="timeline-marker">✓</div>
+                            <div class="timeline-content">Конфликтов нет - граф <mark class="green">двудольный</mark></div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- трассировка конфликта: треугольник 0-1-2-0 -->
+                <section>
+                    <h2>Трассировка: треугольник (конфликт)</h2>
+                    <p class="fragment" style="font-size: 0.65em; font-family: monospace; background: rgba(255,255,255,0.05); padding: 0.3em 0.7em; border-radius: 4px; display: inline-block;">рёбра: 0-1, 1-2, 2-0</p>
+                    <div class="timeline" style="margin-top: 0.4em; font-size: 0.9em;">
+                        <div class="timeline-item fragment">
+                            <div class="timeline-marker">0</div>
+                            <div class="timeline-content">color[0] = <mark>0</mark> (красный)</div>
+                        </div>
+                        <div class="timeline-item fragment">
+                            <div class="timeline-marker">1</div>
+                            <div class="timeline-content">color[1] = <mark class="green">1</mark> (синий)</div>
+                        </div>
+                        <div class="timeline-item fragment">
+                            <div class="timeline-marker">2</div>
+                            <div class="timeline-content">color[2] = <mark>0</mark> (красный)</div>
+                        </div>
+                        <div class="timeline-item fragment">
+                            <div class="timeline-marker">!</div>
+                            <div class="timeline-content">Ребро 2-0: оба <mark class="yellow">красные</mark> - конфликт! Возврат <mark>False</mark></div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- обработка нескольких компонент -->
+                <section>
+                    <h2>Несколько компонент</h2>
+                    <p class="fragment">Граф может быть <mark>несвязным</mark> - несколько изолированных частей</p>
+                    <div class="fragment" style="display: flex; justify-content: center; gap: 3em; margin-top: 0.8em; font-size: 0.48em;">
+                        <div style="border: 1px dashed rgba(255,255,255,0.2); border-radius: 8px; padding: 1em; display: flex; flex-direction: column; align-items: center; gap: 0.6em;">
+                            <span style="opacity: 0.5; font-size: 0.9em;">компонента 1</span>
+                            <div style="display: flex; align-items: center; gap: 0.7em;">
+                                <div style="width: 2.3em; height: 2.3em; border-radius: 50%; background: rgba(255,80,80,0.3); border: 2px solid #f55; display: flex; align-items: center; justify-content: center; font-weight: bold;">0</div>
+                                <div style="height: 2px; width: 1.8em; background: #aaa;"></div>
+                                <div style="width: 2.3em; height: 2.3em; border-radius: 50%; background: rgba(80,150,255,0.3); border: 2px solid #69f; display: flex; align-items: center; justify-content: center; font-weight: bold;">1</div>
+                            </div>
+                        </div>
+                        <div style="border: 1px dashed rgba(255,255,255,0.2); border-radius: 8px; padding: 1em; display: flex; flex-direction: column; align-items: center; gap: 0.6em;">
+                            <span style="opacity: 0.5; font-size: 0.9em;">компонента 2</span>
+                            <div style="display: flex; align-items: center; gap: 0.7em;">
+                                <div style="width: 2.3em; height: 2.3em; border-radius: 50%; background: rgba(255,80,80,0.3); border: 2px solid #f55; display: flex; align-items: center; justify-content: center; font-weight: bold;">2</div>
+                                <div style="height: 2px; width: 1.8em; background: #aaa;"></div>
+                                <div style="width: 2.3em; height: 2.3em; border-radius: 50%; background: rgba(80,150,255,0.3); border: 2px solid #69f; display: flex; align-items: center; justify-content: center; font-weight: bold;">3</div>
+                                <div style="height: 2px; width: 1.8em; background: #aaa;"></div>
+                                <div style="width: 2.3em; height: 2.3em; border-radius: 50%; background: rgba(255,80,80,0.3); border: 2px solid #f55; display: flex; align-items: center; justify-content: center; font-weight: bold;">4</div>
+                            </div>
+                        </div>
+                    </div>
+                    <ul style="margin-top: 0.8em;">
+                        <li class="fragment">DFS запускаем из каждой <mark>непосещённой</mark> вершины</li>
+                        <li class="fragment">Хоть одна компонента не двудольна - весь граф <mark>не двудольный</mark></li>
+                    </ul>
+                </section>
+
+            </section>
+
+            <!-- ПРАКТИКА: задачи -->
+            <section>
+
+                <section style="font-size: 70px; height: 100%; width: 100%">
+                    <div class="lesson-time">45</div>
+                    <div class="fragment">
+                        <h1 style="font-size: 1.4em;">Задачи</h1>
+                        <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">найди связь с двудольностью</p>
+                    </div>
+                </section>
+
+                <!-- 1. Два стола -->
+                <section>
+                    <h2>Два стола <span style="font-size:0.5em;opacity:0.4;">⭐</span></h2>
+                    <p class="fragment">На вечеринке N человек. Некоторые пары <mark>конфликтуют</mark>. Можно ли рассадить всех за два стола так, чтобы за каждым не было ни одной ссоры?</p>
+                </section>
+
+                <!-- 2. Реактивы на складе -->
+                <section>
+                    <h2>Реактивы на складе <span style="font-size:0.5em;opacity:0.4;">⭐</span></h2>
+                    <p class="fragment">N химических веществ. Некоторые пары <mark>взрываются</mark> при контакте. Можно ли разложить их по двум комнатам так, чтобы опасные пары всегда оказались в разных комнатах?</p>
+                </section>
+
+                <!-- 3. Враг моего врага -->
+                <section>
+                    <h2>Враг моего врага <span style="font-size:0.5em;opacity:0.4;">⭐⭐</span></h2>
+                    <p class="fragment">N людей, некоторые пары - <mark>враги</mark>. Можно ли разбить всех на «красных» и «синих» так, чтобы все враги оказались в разных командах?</p>
+                </section>
+
+                <!-- 4. Электрические узлы -->
+                <section>
+                    <h2>Электрические узлы <span style="font-size:0.5em;opacity:0.4;">⭐⭐</span></h2>
+                    <p class="fragment">Электрическая схема: N узлов, соединённых проводниками. Можно ли пометить каждый узел как <mark>+</mark> или <mark>-</mark> так, чтобы каждый проводник соединял + с -? Если можно — выведи разметку.</p>
+                </section>
+
+                <!-- 5. Возврат в начало -->
+                <section>
+                    <h2>Возврат в начало <span style="font-size:0.5em;opacity:0.4;">⭐⭐⭐</span></h2>
+                    <p class="fragment">Фишка на шахматной доске. За один ход она идёт в соседнюю клетку (вверх/вниз/влево/вправо). Может ли фишка вернуться в начальную клетку за <mark class="yellow">нечётное</mark> число ходов?</p>
+                </section>
+
+                <!-- 6. Лампочки в комнате -->
+                <section>
+                    <h2>Лампочки в комнате <span style="font-size:0.5em;opacity:0.4;">⭐⭐⭐</span></h2>
+                    <p class="fragment">N лампочек, каждая горит или нет. Тебе дают подсказки:</p>
+                    <ul>
+                        <li class="fragment">«Лампочки 3 и 7 в <mark>одинаковом</mark> состоянии»</li>
+                        <li class="fragment">«Лампочки 1 и 5 в <mark>разных</mark> состояниях»</li>
+                    </ul>
+                    <p class="fragment" style="margin-top: 0.5em;">Могут ли все подсказки быть правдой одновременно?</p>
+                </section>
+
+                <!-- 7. Конь на шахматной доске -->
+                <section>
+                    <h2>Конь на шахматной доске <span style="font-size:0.5em;opacity:0.4;">⭐⭐⭐</span></h2>
+                    <p class="fragment">Нужно покрасить клетки доски N×M в несколько цветов так, чтобы конь <mark>всегда</mark> прыгал на клетку <mark>другого</mark> цвета.</p>
+                    <p class="fragment" style="margin-top: 0.8em;">Какое <mark class="green">минимальное</mark> количество цветов для этого необходимо?</p>
+                </section>
+
+            </section>
+
+            <!-- ИТОГ -->
+            <section>
+                <div class="lesson-time">58</div>
+                <h2>Что запомнить</h2>
+                <ul>
+                    <li class="fragment"><mark>Двудольный граф</mark> = два множества L и R, рёбра только между ними</li>
+                    <li class="fragment"><mark>Признак</mark>: нет нечётного цикла (длины 3, 5, 7...)</li>
+                    <li class="fragment"><mark>Алгоритм</mark>: DFS с 2 цветами, конфликт = сосед того же цвета</li>
+                    <li class="fragment"><mark>ДЗ:</mark> <a href="https://leetcode.com/problems/is-graph-bipartite/" target="_blank" rel="noopener">785. Is Graph Bipartite?</a></li>
+                </ul>
+            </section>
+
+            <!-- ЧТО ДЕЛАТЬ ЛЕТОМ -->
+            <section>
+                <h2>Что делать летом</h2>
+                <p style="font-size: 0.55em; opacity: 0.5; margin-bottom: 0.5em;">следующее занятие через 3 месяца - план на лето</p>
+                <div class="compare fragment">
+                    <div class="compare-block">
+                        <h4><a href="https://visualgo.net/ru/dfsbfs" target="_blank" rel="noopener">visualgo.net</a></h4>
+                        <p style="font-size: 0.65em;">Анимация DFS и BFS прямо в браузере - можно самому запускать и наблюдать</p>
+                    </div>
+                    <div class="compare-block">
+                        <h4><a href="https://neetcode.io/roadmap" target="_blank" rel="noopener">neetcode.io</a></h4>
+                        <p style="font-size: 0.65em;">Roadmap задач по темам с видео-объяснениями. Раздел Graphs - то что нам нужно</p>
+                    </div>
+                    <div class="compare-block">
+                        <h4><a href="https://leetcode.com/tag/graph/" target="_blank" rel="noopener">leetcode.com</a></h4>
+                        <p style="font-size: 0.65em;">Фильтр Graph + Easy/Medium. Решать по одной, не торопиться</p>
+                    </div>
+                </div>
+                <div class="fragment opinion" style="margin-top: 0.8em;">
+                    Темп: <mark>1-2 задачи в неделю</mark>. Застрял - смотри разбор на neetcode.io, это нормально
+                </div>
+            </section>
+
+        </div>
+    </div>
+
+    <script src="/utils/lib/js/head.min.js"></script>
+    <script src="/utils/js/reveal.js"></script>
+    <script>
+        Reveal.initialize({
+            controls: true,
+            progress: true,
+            history: true,
+            center: true,
+            transition: 'fade',
+            transitionSpeed: 'fast',
+            dependencies: [
+                { src: '/utils/lib/js/classList.js', condition: function () { return !document.body.classList; } },
+                { src: '/utils/plugin/markdown/marked.js', condition: function () { return !!document.querySelector('[data-markdown]'); } },
+                { src: '/utils/plugin/markdown/markdown.js', condition: function () { return !!document.querySelector('[data-markdown]'); } },
+                { src: '/utils/plugin/highlight/highlight.js', async: true, callback: function () { hljs.initHighlightingOnLoad(); } },
+                { src: '/utils/plugin/zoom-js/zoom.js', async: true },
+                { src: '/utils/plugin/notes/notes.js', async: true }
+            ]
+        });
+        Reveal.configure({ slideNumber: 'c/t' });
+    </script>
+</body>
+
+</html>

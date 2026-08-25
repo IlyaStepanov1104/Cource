@@ -1,0 +1,92 @@
+/* Занятие 22 — Повторение: от строк до графов */
+
+/* Кнопка-подсказка на слайдах-задачах: открывает попап с теорией для решения */
+.reveal .hint-btn {
+    margin-top: 0.7em;
+    padding: 0.3em 0.9em;
+    font-size: 0.42em;
+    background: rgba(255, 213, 79, 0.12);
+    border: 1px solid rgba(255, 213, 79, 0.5);
+    border-radius: 2em;
+    color: #ffd54f;
+    cursor: pointer;
+    font-family: inherit;
+}
+
+.reveal .hint-btn:hover {
+    background: rgba(255, 213, 79, 0.28);
+}
+
+/* Попап с подсказкой */
+.hint-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 200;
+    align-items: center;
+    justify-content: center;
+}
+
+.hint-overlay.open {
+    display: flex;
+}
+
+.hint-modal {
+    background: #1a1a2e;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 8px;
+    padding: 28px 34px;
+    max-width: min(90vw, 640px);
+    max-height: 70vh;
+    overflow-y: auto;
+    /* тот же шрифт, что и у обычного текста слайда (night.css, .reveal) */
+    font-family: textbook, sans-serif;
+    font-size: 30px;
+    font-weight: normal;
+    line-height: 1.5;
+    color: #eee;
+}
+
+.hint-modal h3 {
+    margin-top: 0;
+    color: #ffd54f;
+    font-size: 1em;
+}
+
+.hint-modal ul {
+    margin: 0;
+    padding-left: 1.1em;
+}
+
+.hint-modal li {
+    margin-bottom: 0.5em;
+}
+
+.hint-modal li:last-child {
+    margin-bottom: 0;
+}
+
+/* инлайн-код внутри подсказки — как <code> на обычных слайдах */
+.hint-modal code {
+    font-family: monospace;
+    color: #ffd54f;
+    background: rgba(255, 213, 79, 0.1);
+    padding: 0.05em 0.25em;
+    border-radius: 3px;
+}
+
+.hint-modal-close {
+    margin-top: 1em;
+    padding: 0.3em 1.1em;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    border-radius: 1.5em;
+    color: inherit;
+    cursor: pointer;
+    font-family: inherit;
+}
+
+.hint-modal-close:hover {
+    background: rgba(255, 255, 255, 0.2);
+}

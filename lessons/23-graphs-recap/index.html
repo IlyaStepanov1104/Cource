@@ -1,0 +1,496 @@
+<!doctype html>
+<html lang="ru">
+
+<head>
+    <meta charset="utf-8">
+    <title>Занятие 23 — Графы: повторение и практика</title>
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+
+    <link rel="stylesheet" href="/utils/css/reveal.css">
+    <link rel="stylesheet" href="/utils/lib/css/animate.css">
+    <link rel="stylesheet" href="/utils/css/theme/night.css" id="theme">
+    <link rel="stylesheet" href="/utils/lib/css/zenburn.css">
+    <link rel="stylesheet" href="/utils/css/custom-base.css">
+    <link rel="stylesheet" href="css-custom/custom.css">
+
+    <script>
+        var link = document.createElement('link');
+        link.rel = 'stylesheet'; link.type = 'text/css';
+        link.href = window.location.search.match(/print-pdf/gi)
+            ? '/utils/css/print/pdf.css'
+            : '/utils/css/print/paper.css';
+        document.getElementsByTagName('head')[0].appendChild(link);
+    </script>
+</head>
+
+<body>
+    <div class="reveal">
+        <div class="slides">
+
+            <!-- Титульный слайд -->
+            <section style="font-size: 70px; height: 100%; width: 100%">
+                <div class="lesson-time">0</div>
+                <div class="fragment">
+                    <h1 class="animated" style="font-size: 1.3em;">Графы</h1>
+                    <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">Повторение и практика. Занятие 23</p>
+                </div>
+            </section>
+
+            <!-- ЧАСТЬ 1: Граф - что это и как хранить -->
+            <section>
+
+                <section style="font-size: 70px; height: 100%; width: 100%">
+                    <div class="lesson-time">0</div>
+                    <div class="fragment">
+                        <h1 style="font-size: 1.4em;">Граф: вспоминаем</h1>
+                        <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">определение и хранение</p>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Что такое граф</h2>
+                    <ul>
+                        <li class="fragment"><mark>Граф</mark> - вершины (объекты) + рёбра (связи между ними)</li>
+                        <li class="fragment"><mark>Вершина (vertex)</mark> - один объект: город, человек, страница сайта
+                        </li>
+                        <li class="fragment"><mark>Ребро (edge)</mark> - связь между двумя вершинами</li>
+                    </ul>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        Три месяца не трогали графы - разберём всё на одном примере, который останется с нами весь урок
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Наш граф на весь урок</h2>
+                    <svg class="fragment" width="480" height="220" style="display: block; margin: 0.5em auto;">
+                        <line x1="90" y1="60" x2="210" y2="60" stroke="#888" stroke-width="1.5" />
+                        <line x1="210" y1="60" x2="210" y2="180" stroke="#888" stroke-width="1.5" />
+                        <line x1="210" y1="180" x2="90" y2="180" stroke="#888" stroke-width="1.5" />
+                        <line x1="90" y1="180" x2="90" y2="60" stroke="#888" stroke-width="1.5" />
+                        <line x1="380" y1="90" x2="380" y2="150" stroke="#888" stroke-width="1.5" />
+                        <circle cx="90" cy="60" r="24" fill="rgba(99,99,255,0.35)" stroke="#99f" stroke-width="2" />
+                        <circle cx="210" cy="60" r="24" fill="rgba(99,99,255,0.35)" stroke="#99f" stroke-width="2" />
+                        <circle cx="210" cy="180" r="24" fill="rgba(99,99,255,0.35)" stroke="#99f" stroke-width="2" />
+                        <circle cx="90" cy="180" r="24" fill="rgba(99,99,255,0.35)" stroke="#99f" stroke-width="2" />
+                        <circle cx="380" cy="90" r="24" fill="rgba(255,165,0,0.3)" stroke="orange" stroke-width="2" />
+                        <circle cx="380" cy="150" r="24" fill="rgba(255,165,0,0.3)" stroke="orange" stroke-width="2" />
+                        <text x="90" y="66" text-anchor="middle" fill="white" font-size="16" font-weight="bold">0</text>
+                        <text x="210" y="66" text-anchor="middle" fill="white" font-size="16"
+                            font-weight="bold">1</text>
+                        <text x="210" y="186" text-anchor="middle" fill="white" font-size="16"
+                            font-weight="bold">2</text>
+                        <text x="90" y="186" text-anchor="middle" fill="white" font-size="16"
+                            font-weight="bold">3</text>
+                        <text x="380" y="96" text-anchor="middle" fill="white" font-size="16"
+                            font-weight="bold">4</text>
+                        <text x="380" y="156" text-anchor="middle" fill="white" font-size="16"
+                            font-weight="bold">5</text>
+                    </svg>
+                    <div class="fragment opinion">
+                        Рёбра: 0-1, 1-2, 2-3, 3-0, 4-5
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Матрица смежности</h2>
+                    <p class="fragment">Наш граф в виде таблицы 6×6: <code>1</code> - есть ребро, <code>0</code> - нет
+                    </p>
+                    <div class="code-block fragment">
+                        <pre class="python size-s"><code>matrix = [
+    #0  1  2  3  4  5
+    [0, 1, 0, 1, 0, 0],  # 0
+    [1, 0, 1, 0, 0, 0],  # 1
+    [0, 1, 0, 1, 0, 0],  # 2
+    [1, 0, 1, 0, 0, 0],  # 3
+    [0, 0, 0, 0, 0, 1],  # 4
+    [0, 0, 0, 0, 1, 0],  # 5
+]</code></pre>
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 0.6em;">
+                        <code>matrix[u][v] == 1</code> - есть ребро между u и v. Просто, но ячеек всегда n×n, даже если
+                        рёбер почти нет
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Список смежности</h2>
+                    <p class="fragment">Тот же граф в виде словаря - только соседи, без пустых ячеек:</p>
+                    <div class="code-block fragment">
+                        <pre class="python size-m"><code>graph = {
+    0: [1, 3],
+    1: [0, 2],
+    2: [1, 3],
+    3: [2, 0],
+    4: [5],
+    5: [4],
+}</code></pre>
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 0.8em;">
+                        Ключ = вершина, значение = список соседей. Быстрее матрицы, когда рёбер мало - а их обычно мало
+                    </div>
+                    <p class="fragment">Или в виде списка:</p>
+                    <div class="code-block fragment">
+                        <pre class="python size-m"><code>graph = [[1, 3], [0, 2], [1, 3], [2, 0], [5], [4]]</code></pre>
+                </section>
+
+                <section>
+                    <h2>Класс Graph</h2>
+                    <p class="fragment">Вспоминаем структуру - без реализации:</p>
+                    <div class="code-block fragment">
+                        <pre class="python size-m"><code>class Graph:
+    def __init__(self, n):
+        self.edges = ...  # список списков
+
+    def add_edge(self, u, v):
+        ...</code></pre>
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 0.8em;">
+                        Попробуй восстановить реализацию сам, прежде чем подглядывать в старый код
+                    </div>
+                </section>
+
+            </section>
+
+            <!-- ЧАСТЬ 2: DFS -->
+            <section>
+
+                <section style="font-size: 70px; height: 100%; width: 100%">
+                    <div class="lesson-time">12</div>
+                    <div class="fragment">
+                        <h1 style="font-size: 1.4em;">Вспоминаем DFS</h1>
+                        <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">поиск в глубину</p>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Идея DFS</h2>
+                    <ul>
+                        <li class="fragment">Идём <mark>вперёд</mark>, пока есть куда идти</li>
+                        <li class="fragment">Тупик (соседей нет или все посещены) - <mark>возвращаемся</mark> и пробуем
+                            другой путь</li>
+                        <li class="fragment">Как в лабиринте с ниткой</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h2>Зачем нужен visited</h2>
+                    <p class="fragment">Наш граф циклический - квадрат 0-1-2-3-0. Без пометок DFS будет <mark>бегать по
+                            кругу</mark> вечно</p>
+                    <div class="fragment"
+                        style="display: flex; justify-content: center; align-items: center; gap: 0.8em; margin-top: 0.8em; font-size: 0.5em;">
+                        <div
+                            style="width: 2.5em; height: 2.5em; border-radius: 50%; background: rgba(99,99,255,0.35); border: 2px solid #99f; display: flex; align-items: center; justify-content: center; font-weight: bold;">
+                            0</div>
+                        <div>-&gt;</div>
+                        <div
+                            style="width: 2.5em; height: 2.5em; border-radius: 50%; background: rgba(99,99,255,0.35); border: 2px solid #99f; display: flex; align-items: center; justify-content: center; font-weight: bold;">
+                            1</div>
+                        <div>-&gt;</div>
+                        <div
+                            style="width: 2.5em; height: 2.5em; border-radius: 50%; background: rgba(99,99,255,0.35); border: 2px solid #99f; display: flex; align-items: center; justify-content: center; font-weight: bold;">
+                            2</div>
+                        <div>-&gt;</div>
+                        <div
+                            style="width: 2.5em; height: 2.5em; border-radius: 50%; background: rgba(99,99,255,0.35); border: 2px solid #99f; display: flex; align-items: center; justify-content: center; font-weight: bold;">
+                            3</div>
+                        <div>-&gt;</div>
+                        <div
+                            style="width: 2.5em; height: 2.5em; border-radius: 50%; background: rgba(99,99,255,0.35); border: 2px solid #f55; display: flex; align-items: center; justify-content: center; font-weight: bold;">
+                            0</div>
+                        <div class="fragment" style="font-size: 1.4em; color: #f55;">!</div>
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 0.8em;">
+                        Зашли в вершину - сразу добавили в <code>visited</code>. Иначе цикл 0-1-2-3-0 никогда не
+                        закончится
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Трассировка DFS</h2>
+                    <p class="fragment"
+                        style="font-size: 0.65em; font-family: monospace; background: rgba(255,255,255,0.05); padding: 0.3em 0.7em; border-radius: 4px; display: inline-block;">
+                        старт: dfs(0)</p>
+                    <div class="timeline" style="margin-top: 0.4em; font-size: 0.72em;">
+                        <div class="timeline-item fragment">
+                            <div class="timeline-marker">1</div>
+                            <div class="timeline-content"><code>dfs(0)</code> - посещаем 0, идём в 1</div>
+                        </div>
+                        <div class="timeline-item fragment">
+                            <div class="timeline-marker">2</div>
+                            <div class="timeline-content"><code>dfs(1)</code> - посещаем 1, идём в 2</div>
+                        </div>
+                        <div class="timeline-item fragment">
+                            <div class="timeline-marker">3</div>
+                            <div class="timeline-content"><code>dfs(2)</code> - посещаем 2, идём в 3</div>
+                        </div>
+                        <div class="timeline-item fragment">
+                            <div class="timeline-marker">4</div>
+                            <div class="timeline-content"><code>dfs(3)</code> - посещаем 3, соседи 2 и 0 уже visited -
+                                тупик, возврат</div>
+                        </div>
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 0.5em;">
+                        Порядок обхода: <mark>0 1 2 3</mark>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>dfs() - структура</h2>
+                    <div class="code-block fragment">
+                        <pre class="python size-m"><code>def dfs(graph, v, visited):
+    visited.add(v)
+    ...  # что делаем с v
+
+    for neighbor in graph[v]:
+        if neighbor not in visited:
+            ...</code></pre>
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 0.8em;">
+                        Сигнатура одна и та же для компонент и для двудольности - меняется только то, что делаем внутри
+                    </div>
+                </section>
+
+            </section>
+
+            <!-- ЧАСТЬ 3: Компоненты связности и двудольность -->
+            <section>
+
+                <section style="font-size: 70px; height: 100%; width: 100%">
+                    <div class="lesson-time">27</div>
+                    <div class="fragment">
+                        <h1 style="font-size: 1.3em;">Компоненты и двудольность</h1>
+                        <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">две задачи поверх DFS</p>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Несвязный граф</h2>
+                    <p class="fragment">Наш граф распадается на <mark>2 компоненты</mark>: квадрат 0-1-2-3 и пара 4-5
+                    </p>
+                    <div class="fragment"
+                        style="display: flex; justify-content: center; gap: 2.5em; margin-top: 0.8em; font-size: 0.5em;">
+                        <div
+                            style="border: 1px dashed rgba(255,255,255,0.2); border-radius: 8px; padding: 0.8em; display: flex; flex-direction: column; align-items: center; gap: 0.5em;">
+                            <span style="opacity: 0.5; font-size: 0.85em;">компонента 1</span>
+                            <div>0 - 1 - 2 - 3 - 0</div>
+                        </div>
+                        <div
+                            style="border: 1px dashed rgba(255,255,255,0.2); border-radius: 8px; padding: 0.8em; display: flex; flex-direction: column; align-items: center; gap: 0.5em;">
+                            <span style="opacity: 0.5; font-size: 0.85em;">компонента 2</span>
+                            <div>4 - 5</div>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Как считать компоненты</h2>
+                    <div class="timeline">
+                        <div class="timeline-item fragment">
+                            <div class="timeline-marker">1</div>
+                            <div class="timeline-content">Счётчик <code>count = 0</code></div>
+                        </div>
+                        <div class="timeline-item fragment">
+                            <div class="timeline-marker">2</div>
+                            <div class="timeline-content">Перебираем все вершины по порядку</div>
+                        </div>
+                        <div class="timeline-item fragment">
+                            <div class="timeline-marker">3</div>
+                            <div class="timeline-content">Вершина не в <code>visited</code> - запускаем
+                                <code>dfs(v)</code>, <mark>count += 1</mark>
+                            </div>
+                        </div>
+                        <div class="timeline-item fragment">
+                            <div class="timeline-marker">4</div>
+                            <div class="timeline-content">DFS сама пометит всю компоненту как visited</div>
+                        </div>
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 0.6em;">
+                        На нашем графе: <code>dfs(0)</code> закрасит {0,1,2,3}, <code>dfs(4)</code> закрасит {4,5} -
+                        <mark class="green">count = 2</mark>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Что такое двудольный граф</h2>
+                    <p class="fragment">Вершины разбиты на два множества: <mark>L</mark> и <mark class="green">R</mark>
+                    </p>
+                    <ul>
+                        <li class="fragment">Рёбра идут только <mark>между</mark> L и R</li>
+                        <li class="fragment">Внутри L или внутри R рёбер <mark>нет</mark></li>
+                    </ul>
+                    <svg class="fragment" width="480" height="210" style="display: block; margin: 0.5em auto;">
+                        <line x1="130" y1="50" x2="350" y2="50" stroke="#888" stroke-width="1.5" />
+                        <line x1="130" y1="50" x2="350" y2="105" stroke="#888" stroke-width="1.5" />
+                        <line x1="130" y1="105" x2="350" y2="50" stroke="#888" stroke-width="1.5" />
+                        <line x1="130" y1="105" x2="350" y2="160" stroke="#888" stroke-width="1.5" />
+                        <line x1="130" y1="160" x2="350" y2="160" stroke="#888" stroke-width="1.5" />
+                        <circle cx="130" cy="50" r="22" fill="rgba(255,80,80,0.3)" stroke="#f55" stroke-width="2" />
+                        <circle cx="130" cy="105" r="22" fill="rgba(255,80,80,0.3)" stroke="#f55" stroke-width="2" />
+                        <circle cx="130" cy="160" r="22" fill="rgba(255,80,80,0.3)" stroke="#f55" stroke-width="2" />
+                        <text x="130" y="56" text-anchor="middle" fill="white" font-size="15"
+                            font-weight="bold">1</text>
+                        <text x="130" y="111" text-anchor="middle" fill="white" font-size="15"
+                            font-weight="bold">2</text>
+                        <text x="130" y="166" text-anchor="middle" fill="white" font-size="15"
+                            font-weight="bold">3</text>
+                        <circle cx="350" cy="50" r="22" fill="rgba(80,150,255,0.3)" stroke="#69f" stroke-width="2" />
+                        <circle cx="350" cy="105" r="22" fill="rgba(80,150,255,0.3)" stroke="#69f" stroke-width="2" />
+                        <circle cx="350" cy="160" r="22" fill="rgba(80,150,255,0.3)" stroke="#69f" stroke-width="2" />
+                        <text x="350" y="56" text-anchor="middle" fill="white" font-size="15"
+                            font-weight="bold">A</text>
+                        <text x="350" y="111" text-anchor="middle" fill="white" font-size="15"
+                            font-weight="bold">B</text>
+                        <text x="350" y="166" text-anchor="middle" fill="white" font-size="15"
+                            font-weight="bold">C</text>
+                        <text x="130" y="193" text-anchor="middle" fill="#f55" font-size="12" opacity="0.7">L</text>
+                        <text x="350" y="193" text-anchor="middle" fill="#69f" font-size="12" opacity="0.7">R</text>
+                    </svg>
+                </section>
+
+                <section>
+                    <h2>Почему двудольность = только чётные циклы</h2>
+                    <p class="fragment">В двудольном графе рёбра всегда идут <mark>между</mark> L и R - каждый шаг по
+                        циклу меняет сторону.</p>
+                    <ul>
+                        <li class="fragment">Чтобы цикл замкнулся на <mark>той же стороне</mark>, шагов должно быть
+                            чётное число</li>
+                        <li class="fragment">И наоборот: нечётный цикл раскрасить в 2 цвета без конфликта нельзя - мы
+                            видели это на треугольнике</li>
+                    </ul>
+                    <div class="fragment opinion" style="margin-top: 0.8em;">
+                        Граф двудольный <mark class="green">тогда и только тогда</mark>, когда в нём нет цикла
+                        <mark>нечётной длины</mark>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Двудольность: напоминание</h2>
+                    <ul>
+                        <li class="fragment">Красим вершины в <mark>2 цвета</mark></li>
+                        <li class="fragment">Правило: сосед <mark>всегда другого</mark> цвета</li>
+                        <li class="fragment">Раскраска без конфликтов - граф <mark class="green">двудольный</mark></li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h2>Квадрат vs треугольник</h2>
+                    <div class="compare fragment">
+                        <div class="compare-block">
+                            <h4>Квадрат 0-1-2-3-0</h4>
+                            <p style="font-size: 0.65em;">цвета: 0, 1, 0, 1 - без конфликтов</p>
+                            <p style="font-size: 0.7em; color: #6f6;">двудольный</p>
+                        </div>
+                        <div class="compare-block">
+                            <h4>Треугольник A-B-C</h4>
+                            <p style="font-size: 0.65em;">третья вершина всегда получит цвет соседа</p>
+                            <p style="font-size: 0.7em; color: #f55;">не двудольный</p>
+                        </div>
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 0.8em;">
+                        Признак: <mark>нечётный цикл</mark> (3, 5, 7...) - в нём раскраска всегда конфликтует
+                    </div>
+                </section>
+
+            </section>
+
+            <!-- ПРАКТИКА -->
+            <section>
+
+                <section style="font-size: 70px; height: 100%; width: 100%">
+                    <div class="lesson-time">40</div>
+                    <div class="fragment">
+                        <h1 style="font-size: 1.4em;">Практика</h1>
+                        <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">три задачи на сегодня</p>
+                    </div>
+                </section>
+
+                <section>
+                    <h2><a href="https://leetcode.com/problems/find-if-path-exists-in-graph/" target="_blank"
+                            rel="noopener">1971. Find if Path Exists in Graph</a></h2>
+                    <p class="fragment" style="font-size: 0.85em;">Дан граф из n вершин и список рёбер. Проверь, можно
+                        ли добраться из вершины <code>source</code> в вершину <code>destination</code>.</p>
+                    <div class="fragment opinion" style="margin-top: 0.8em;">
+                        Подсказка: запусти DFS из <code>source</code> и проверь, попал ли <code>destination</code> в
+                        <code>visited</code>
+                    </div>
+                </section>
+
+                <section>
+                    <h2><a href="https://leetcode.com/problems/number-of-provinces/" target="_blank" rel="noopener">547.
+                            Number of Provinces</a></h2>
+                    <p class="fragment" style="font-size: 0.85em;">Дана матрица смежности <code>n x n</code>.
+                        <code>isConnected[i][j] = 1</code> означает, что города <code>i</code> и <code>j</code>
+                        соединены. Найти количество <mark>провинций</mark> (связных компонент).
+                    </p>
+                    <div class="fragment"
+                        style="font-size: 0.5em; font-family: monospace; background: rgba(255,255,255,0.05); padding: 0.8em; border-radius: 6px; margin: 0.5em auto; max-width: 80%; text-align: left;">
+                        isConnected = [[1,1,0],<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[1,1,0],<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[0,0,1]]<br>
+                        # Ответ: 2 (города 0,1 связаны; город 2 - отдельно)
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 0.5em;">
+                        Подсказка: сконвертируй матрицу в список смежности и запусти DFS из каждой непосещённой вершины
+                    </div>
+                </section>
+
+                <section>
+                    <h2><a href="https://leetcode.com/problems/possible-bipartition/" target="_blank"
+                            rel="noopener">886. Possible Bipartition</a></h2>
+                    <p class="fragment" style="font-size: 0.85em;">N человек, список пар <mark>врагов</mark>
+                        <code>dislikes</code>. Можно ли разбить всех на 2 группы так, чтобы враги не оказались в одной
+                        группе?
+                    </p>
+                </section>
+
+            </section>
+
+            <!-- ИТОГ -->
+            <section>
+                <div class="lesson-time">55</div>
+                <h2>Что запомнить</h2>
+                <ul>
+                    <li class="fragment"><mark>Список смежности</mark> - словарь, вершина -&gt; соседи</li>
+                    <li class="fragment"><mark>DFS</mark> - рекурсия + <code>visited</code>, идём вглубь до тупика</li>
+                    <li class="fragment"><mark>Компоненты</mark> - <code>dfs()</code> из каждой непосещённой вершины +
+                        счётчик</li>
+                    <li class="fragment"><mark>Двудольность</mark> - 2-раскраска, конфликт = сосед того же цвета</li>
+                </ul>
+            </section>
+            <section>
+                <div class="lesson-time">58</div>
+                <h2>Домашнее задание</h2>
+                <h2><a href="https://leetcode.com/problems/number-of-operations-to-make-network-connected/"
+                        target="_blank" rel="noopener">1319. Number of Operations to Make Network Connected</a></h2>
+                <p class="fragment" style="font-size: 0.85em;">N компьютеров соединены кабелями. Определи минимальное
+                    число операций (переставить один кабель), чтобы связать все компьютеры в одну сеть - или верни -1,
+                    если кабелей не хватает.</p>
+            </section>
+        </div>
+    </div>
+
+    <script src="/utils/lib/js/head.min.js"></script>
+    <script src="/utils/js/reveal.js"></script>
+    <script>
+        Reveal.initialize({
+            controls: true,
+            progress: true,
+            history: true,
+            center: true,
+            transition: 'fade',
+            transitionSpeed: 'fast',
+            dependencies: [
+                { src: '/utils/lib/js/classList.js', condition: function () { return !document.body.classList; } },
+                { src: '/utils/plugin/markdown/marked.js', condition: function () { return !!document.querySelector('[data-markdown]'); } },
+                { src: '/utils/plugin/markdown/markdown.js', condition: function () { return !!document.querySelector('[data-markdown]'); } },
+                { src: '/utils/plugin/highlight/highlight.js', async: true, callback: function () { hljs.initHighlightingOnLoad(); } },
+                { src: '/utils/plugin/zoom-js/zoom.js', async: true },
+                { src: '/utils/plugin/notes/notes.js', async: true }
+            ]
+        });
+        Reveal.configure({ slideNumber: 'c/t' });
+    </script>
+</body>
+
+</html>
