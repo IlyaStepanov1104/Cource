@@ -1,0 +1,1156 @@
+<!doctype html>
+<html lang="ru">
+
+<head>
+    <meta charset="utf-8">
+    <title>Занятие 24 — Мосты и точки сочленения</title>
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+
+    <link rel="stylesheet" href="/utils/css/reveal.css">
+    <link rel="stylesheet" href="/utils/lib/css/animate.css">
+    <link rel="stylesheet" href="/utils/css/theme/night.css" id="theme">
+    <link rel="stylesheet" href="/utils/lib/css/zenburn.css">
+    <link rel="stylesheet" href="/utils/css/custom-base.css">
+    <link rel="stylesheet" href="css-custom/custom.css">
+
+    <script>
+        var link = document.createElement('link');
+        link.rel = 'stylesheet'; link.type = 'text/css';
+        link.href = window.location.search.match(/print-pdf/gi)
+            ? '/utils/css/print/pdf.css'
+            : '/utils/css/print/paper.css';
+        document.getElementsByTagName('head')[0].appendChild(link);
+    </script>
+</head>
+
+<body>
+    <div class="reveal">
+        <div class="slides">
+
+            <!-- Титульный слайд -->
+            <section style="font-size: 70px; height: 100%; width: 100%">
+                <div class="lesson-time">0</div>
+                <div class="fragment">
+                    <h1 class="animated" style="font-size: 1.2em;">Мосты и точки сочленения</h1>
+                    <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">Критичные рёбра и вершины графа.
+                        Занятие 24</p>
+                </div>
+            </section>
+
+            <!-- ЧАСТЬ 0: разбор домашнего задания -->
+            <section>
+
+                <section style="font-size: 70px; height: 100%; width: 100%">
+                    <div class="lesson-time">0</div>
+                    <div class="fragment">
+                        <h1 style="font-size: 1.3em;">Разбор ДЗ</h1>
+                        <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">1319. Number of Operations to
+                            Make Network Connected</p>
+                    </div>
+                </section>
+
+                <!-- разбор ДЗ прошлого занятия: условие -->
+                <section>
+                    <h2>Условие</h2>
+                    <p class="fragment"><mark>n</mark> компьютеров, часть уже соединена кабелями. За одну операцию можно
+                        взять любой кабель и переставить между двумя другими компьютерами.</p>
+                    <p class="fragment" style="margin-top: 0.6em;">Найти <mark>минимум операций</mark>, чтобы связать
+                        все компьютеры в одну сеть, или вернуть <code>-1</code>, если кабелей физически не хватает.</p>
+                </section>
+
+                <!-- напоминание условия и подхода: подсчёт компонент связности через DFS -->
+                <section>
+                    <h2>Идея решения</h2>
+                    <div class="timeline">
+                        <div class="timeline-item fragment">
+                            <div class="timeline-marker">1</div>
+                            <div class="timeline-content">Чтобы связать <mark>n</mark> компьютеров, нужно минимум
+                                <mark>n - 1</mark> кабель
+                            </div>
+                        </div>
+                        <div class="timeline-item fragment">
+                            <div class="timeline-marker">2</div>
+                            <div class="timeline-content">Кабелей меньше, чем <code>n - 1</code> - соединить в принципе
+                                <mark class="yellow">невозможно</mark>, ответ <code>-1</code>
+                            </div>
+                        </div>
+                        <div class="timeline-item fragment">
+                            <div class="timeline-marker">3</div>
+                            <div class="timeline-content">Иначе считаем число <mark>компонент связности</mark> через DFS
+                                - "лишние" кабели внутри компонент можно переставить</div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- разбор решения: формула ответа -->
+                <section>
+                    <h2>Разбор на примере</h2>
+                    <svg width="360" height="150" style="display: block; margin: 0.3em auto;" class="fragment">
+                        <line x1="60" y1="110" x2="100" y2="30" stroke="#888" stroke-width="1.5" />
+                        <line x1="100" y1="30" x2="140" y2="110" stroke="#888" stroke-width="1.5" />
+                        <line x1="140" y1="110" x2="60" y2="110" stroke="#888" stroke-width="1.5" />
+                        <circle cx="60" cy="110" r="19" fill="rgba(99,99,255,0.35)" stroke="#99f" stroke-width="2" />
+                        <circle cx="100" cy="30" r="19" fill="rgba(99,99,255,0.35)" stroke="#99f" stroke-width="2" />
+                        <circle cx="140" cy="110" r="19" fill="rgba(99,99,255,0.35)" stroke="#99f" stroke-width="2" />
+                        <circle cx="300" cy="75" r="19" fill="rgba(255,80,80,0.25)" stroke="#f55" stroke-width="2"
+                            stroke-dasharray="4,3" />
+                        <text x="60" y="115" text-anchor="middle" fill="white" font-size="14"
+                            font-weight="bold">1</text>
+                        <text x="100" y="35" text-anchor="middle" fill="white" font-size="14"
+                            font-weight="bold">0</text>
+                        <text x="140" y="115" text-anchor="middle" fill="white" font-size="14"
+                            font-weight="bold">2</text>
+                        <text x="300" y="80" text-anchor="middle" fill="white" font-size="14"
+                            font-weight="bold">3</text>
+                        <text x="100" y="140" text-anchor="middle" fill="#99f" font-size="12" opacity="0.7">компонента
+                            1</text>
+                        <text x="300" y="140" text-anchor="middle" fill="#f55" font-size="12" opacity="0.7">компонента
+                            2</text>
+                    </svg>
+                    <div class="fragment"
+                        style="font-size: 0.55em; font-family: monospace; background: rgba(255,255,255,0.05); padding: 0.5em 1em; border-radius: 6px; margin: 0.3em auto; max-width: 85%; text-align: left;">
+                        n = 4, connections = [[0,1], [0,2], [1,2]]
+                    </div>
+                    <div class="timeline" style="margin-top: 0.5em;">
+                        <div class="timeline-item fragment">
+                            <div class="timeline-marker">✓</div>
+                            <div class="timeline-content">Кабелей 3, нужно минимум <code>n - 1 = 3</code> - хватает
+                            </div>
+                        </div>
+                        <div class="timeline-item fragment">
+                            <div class="timeline-marker">✓</div>
+                            <div class="timeline-content">DFS: компонента <code>{0,1,2}</code> и компонента
+                                <code>{3}</code> - всего <mark>2 компоненты</mark>
+                            </div>
+                        </div>
+                        <div class="timeline-item fragment">
+                            <div class="timeline-marker">=</div>
+                            <div class="timeline-content">Ответ = <code>components - 1</code> = <mark
+                                    class="green">1</mark> операция</div>
+                        </div>
+                    </div>
+                </section>
+            </section>
+
+            <!-- ЧАСТЬ 1: постановка задачи -->
+            <section>
+
+                <section style="font-size: 70px; height: 100%; width: 100%">
+                    <div class="lesson-time">5</div>
+                    <div class="fragment">
+                        <h1 style="font-size: 1.3em;">Критичное ребро</h1>
+                        <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">что если его убрать?</p>
+                    </div>
+                </section>
+
+                <!-- возвращаемся к домашке: перенос кабеля мог развалить исходную КС на две -->
+                <section>
+                    <h2>Возвращаемся к домашке</h2>
+                    <p class="fragment">Мы брали "лишний" кабель внутри одной компоненты связности (КС) и
+                        переставляли его в другую - чтобы объединить их.</p>
+                    <svg width="560" height="200" style="display: block; margin: 0.6em auto 0;" class="fragment">
+                        <line x1="70" y1="50" x2="190" y2="50" stroke="#888" stroke-width="1.5" />
+                        <line x1="190" y1="50" x2="190" y2="170" stroke="#888" stroke-width="1.5" />
+                        <line x1="190" y1="170" x2="70" y2="170" stroke="#6f6" stroke-width="3" />
+                        <line x1="70" y1="170" x2="70" y2="50" stroke="#888" stroke-width="1.5" />
+                        <line x1="190" y1="50" x2="300" y2="50" stroke="#888" stroke-width="1.5" />
+                        <line x1="300" y1="50" x2="410" y2="50" stroke="#ffd54f" stroke-width="3" />
+                        <line x1="410" y1="50" x2="520" y2="50" stroke="#888" stroke-width="1.5" />
+                        <circle cx="70" cy="50" r="20" fill="rgba(99,99,255,0.35)" stroke="#99f" stroke-width="2" />
+                        <circle cx="190" cy="50" r="20" fill="rgba(99,99,255,0.35)" stroke="#99f" stroke-width="2" />
+                        <circle cx="190" cy="170" r="20" fill="rgba(99,99,255,0.35)" stroke="#99f" stroke-width="2" />
+                        <circle cx="70" cy="170" r="20" fill="rgba(99,99,255,0.35)" stroke="#99f" stroke-width="2" />
+                        <circle cx="300" cy="50" r="20" fill="rgba(99,99,255,0.35)" stroke="#99f" stroke-width="2" />
+                        <circle cx="410" cy="50" r="20" fill="rgba(99,99,255,0.35)" stroke="#99f" stroke-width="2" />
+                        <circle cx="520" cy="50" r="20" fill="rgba(99,99,255,0.35)" stroke="#99f" stroke-width="2" />
+                        <text x="70" y="55" text-anchor="middle" fill="white" font-size="15" font-weight="bold">0</text>
+                        <text x="190" y="55" text-anchor="middle" fill="white" font-size="15"
+                            font-weight="bold">1</text>
+                        <text x="190" y="175" text-anchor="middle" fill="white" font-size="15"
+                            font-weight="bold">2</text>
+                        <text x="70" y="175" text-anchor="middle" fill="white" font-size="15"
+                            font-weight="bold">3</text>
+                        <text x="300" y="55" text-anchor="middle" fill="white" font-size="15"
+                            font-weight="bold">4</text>
+                        <text x="410" y="55" text-anchor="middle" fill="white" font-size="15"
+                            font-weight="bold">5</text>
+                        <text x="520" y="55" text-anchor="middle" fill="white" font-size="15"
+                            font-weight="bold">6</text>
+                    </svg>
+                    <div class="timeline" style="margin-top: 0.5em;">
+                        <div class="timeline-item fragment">
+                            <div class="timeline-marker">✓</div>
+                            <div class="timeline-content">Ребро <mark class="green">2-3</mark> - часть цикла. Уберём
+                                его - компонента всё равно целая, через 3-0-1-2. Кабель <mark class="green">можно</mark>
+                                переносить</div>
+                        </div>
+                        <div class="timeline-item fragment">
+                            <div class="timeline-marker">!</div>
+                            <div class="timeline-content">Ребро <mark>4-5</mark> - цикла рядом нет. Уберём его -
+                                компонента разваливается на <code>{0,1,2,3,4}</code> и <code>{5,6}</code> - вместо
+                                одной КС получили две!</div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- проблема: критичное ребро в графе - что будет, если его убрать -->
+                <section>
+                    <h2>Не все рёбра одинаковы</h2>
+                    <p class="fragment">Иногда удаление ребра <mark>ничего не меняет</mark> - до всех вершин всё ещё
+                        можно добраться.</p>
+                    <p class="fragment" style="margin-top: 0.6em;">А иногда удаление ребра <mark
+                            class="yellow">разрывает граф</mark> на несколько кусков.</p>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        Как найти именно такие - критичные - рёбра, не перебирая их все по одному?
+                    </div>
+                </section>
+
+                <!-- примеры из жизни: физический мост, сервер-хаб в сети -->
+                <section>
+                    <h2>Примеры из жизни</h2>
+                    <div class="compare fragment">
+                        <div class="compare-block">
+                            <h4>Мост через реку</h4>
+                            <p style="font-size: 0.7em; opacity: 0.8;">единственная переправа между районами</p>
+                        </div>
+                        <div class="compare-block">
+                            <h4>Кабель между ЦОДами</h4>
+                            <p style="font-size: 0.7em; opacity: 0.8;">единственная связь между дата-центрами</p>
+                        </div>
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        Сломается это ребро - часть сети <mark>полностью отрезана</mark> от другой
+                    </div>
+                </section>
+
+                <!-- определение моста -->
+                <section>
+                    <h2>Определение: мост</h2>
+                    <div class="fragment opinion" style="font-size: 0.9em;">
+                        <mark>Мост</mark> - ребро, чьё удаление увеличивает число компонент связности
+                    </div>
+                    <svg width="560" height="200" style="display: block; margin: 0.8em auto 0;" class="fragment">
+                        <line x1="20" y1="150" x2="90" y2="40" stroke="#888" stroke-width="1.5" />
+                        <line x1="90" y1="40" x2="160" y2="150" stroke="#888" stroke-width="1.5" />
+                        <line x1="160" y1="150" x2="20" y2="150" stroke="#888" stroke-width="1.5" />
+                        <line x1="160" y1="150" x2="400" y2="150" stroke="#ffd54f" stroke-width="3" />
+                        <line x1="400" y1="150" x2="470" y2="40" stroke="#888" stroke-width="1.5" />
+                        <line x1="470" y1="40" x2="540" y2="150" stroke="#888" stroke-width="1.5" />
+                        <line x1="540" y1="150" x2="400" y2="150" stroke="#888" stroke-width="1.5" />
+                        <circle cx="20" cy="150" r="22" fill="rgba(99,99,255,0.35)" stroke="#99f" stroke-width="2" />
+                        <circle cx="90" cy="40" r="22" fill="rgba(99,99,255,0.35)" stroke="#99f" stroke-width="2" />
+                        <circle cx="160" cy="150" r="22" fill="rgba(99,99,255,0.35)" stroke="#99f" stroke-width="2" />
+                        <circle cx="400" cy="150" r="22" fill="rgba(99,99,255,0.35)" stroke="#99f" stroke-width="2" />
+                        <circle cx="470" cy="40" r="22" fill="rgba(99,99,255,0.35)" stroke="#99f" stroke-width="2" />
+                        <circle cx="540" cy="150" r="22" fill="rgba(99,99,255,0.35)" stroke="#99f" stroke-width="2" />
+                        <text x="20" y="156" text-anchor="middle" fill="white" font-size="16"
+                            font-weight="bold">2</text>
+                        <text x="90" y="46" text-anchor="middle" fill="white" font-size="16" font-weight="bold">0</text>
+                        <text x="160" y="156" text-anchor="middle" fill="white" font-size="16"
+                            font-weight="bold">1</text>
+                        <text x="400" y="156" text-anchor="middle" fill="white" font-size="16"
+                            font-weight="bold">3</text>
+                        <text x="470" y="46" text-anchor="middle" fill="white" font-size="16"
+                            font-weight="bold">4</text>
+                        <text x="540" y="156" text-anchor="middle" fill="white" font-size="16"
+                            font-weight="bold">5</text>
+                        <text x="280" y="130" text-anchor="middle" fill="#ffd54f" font-size="14">мост</text>
+                    </svg>
+                    <p class="fragment" style="margin-top: 0.4em; font-size: 0.6em; opacity: 0.8;">Уберём ребро 1-3 -
+                        граф распадётся на два треугольника. Любое другое ребро убрать - граф останется связным.</p>
+                </section>
+
+                <!-- наивный подход -->
+                <section>
+                    <h2>Наивный подход</h2>
+                    <div class="timeline">
+                        <div class="timeline-item fragment">
+                            <div class="timeline-marker">1</div>
+                            <div class="timeline-content">Берём ребро, <mark>временно удаляем</mark> его из графа</div>
+                        </div>
+                        <div class="timeline-item fragment">
+                            <div class="timeline-marker">2</div>
+                            <div class="timeline-content">Запускаем DFS, считаем число компонент связности</div>
+                        </div>
+                        <div class="timeline-item fragment">
+                            <div class="timeline-marker">3</div>
+                            <div class="timeline-content">Стало компонент больше - это <mark>мост</mark>. Возвращаем
+                                ребро обратно</div>
+                        </div>
+                        <div class="timeline-item fragment">
+                            <div class="timeline-marker">4</div>
+                            <div class="timeline-content">Повторяем для <mark>каждого</mark> ребра графа</div>
+                        </div>
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 0.8em;">
+                        На каждое из E рёбер - отдельный DFS за O(V+E). Итого <mark class="yellow">O(E * (V+E))</mark>
+                    </div>
+                </section>
+
+                <!-- зачем нужен алгоритм за один проход DFS -->
+                <section>
+                    <h2>Слишком медленно</h2>
+                    <p class="fragment">Для графа с <code>10^5</code> рёбер это <code>~10^10</code> операций - точно не
+                        уложимся в разумное время.</p>
+                    <div class="fragment opinion" style="margin-top: 1em; font-size: 0.95em;">
+                        Хотим находить <mark class="green">все мосты сразу</mark>, за <mark class="green">один проход
+                            DFS</mark> - O(V + E)
+                    </div>
+                </section>
+
+            </section>
+
+            <!-- ЧАСТЬ 2: алгоритм поиска мостов -->
+            <section>
+
+                <section style="font-size: 70px; height: 100%; width: 100%">
+                    <div class="lesson-time">20</div>
+                    <div class="fragment">
+                        <h1 style="font-size: 1.2em;">Алгоритм Тарьяна</h1>
+                        <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">поиск мостов за один DFS</p>
+                    </div>
+                </section>
+
+                <!-- что такое дерево: определение + классическое изображение -->
+                <section>
+                    <h2>Что такое дерево</h2>
+                    <p class="fragment"><mark>Дерево</mark> - связный граф без циклов: направленный, от корня к любой
+                        другой вершине идёт <mark>ровно один</mark> путь.</p>
+                    <svg width="360" height="230" style="display: block; margin: 0.4em auto;" class="fragment">
+                        <defs>
+                            <marker id="tarrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5"
+                                orient="auto-start-reverse">
+                                <path d="M 0 0 L 10 5 L 0 10 z" fill="#999" />
+                            </marker>
+                        </defs>
+                        <line x1="170" y1="50" x2="112" y2="112" stroke="#999" stroke-width="1.5"
+                            marker-end="url(#tarrow)" />
+                        <line x1="190" y1="50" x2="248" y2="112" stroke="#999" stroke-width="1.5"
+                            marker-end="url(#tarrow)" />
+                        <line x1="90" y1="147" x2="66" y2="192" stroke="#999" stroke-width="1.5"
+                            marker-end="url(#tarrow)" />
+                        <line x1="110" y1="147" x2="134" y2="192" stroke="#999" stroke-width="1.5"
+                            marker-end="url(#tarrow)" />
+                        <circle cx="180" cy="35" r="20" fill="rgba(255,213,79,0.3)" stroke="#ffd54f" stroke-width="2" />
+                        <circle cx="100" cy="130" r="18" fill="rgba(99,99,255,0.35)" stroke="#99f" stroke-width="2" />
+                        <circle cx="260" cy="130" r="18" fill="rgba(99,99,255,0.35)" stroke="#99f" stroke-width="2" />
+                        <circle cx="60" cy="210" r="16" fill="rgba(99,99,255,0.35)" stroke="#99f" stroke-width="2" />
+                        <circle cx="140" cy="210" r="16" fill="rgba(99,99,255,0.35)" stroke="#99f" stroke-width="2" />
+                        <text x="180" y="40" text-anchor="middle" fill="white" font-size="14"
+                            font-weight="bold">R</text>
+                        <text x="180" y="15" text-anchor="middle" fill="#ffd54f" font-size="12"
+                            opacity="0.8">корень</text>
+                    </svg>
+                    <p class="fragment" style="margin-top: 0.3em; font-size: 0.65em; opacity: 0.85;">Стрелки идут вниз
+                        от <mark>корня</mark> к потомкам. Ни один путь никогда не возвращается наверх - циклов нет.</p>
+                    <div class="fragment opinion" style="margin-top: 0.6em;">
+                        DFS строит именно такое дерево <mark>из обычного графа</mark> - беря лишь подмножество его
+                        рёбер: те, по которым реально прошла рекурсия
+                    </div>
+                </section>
+
+                <!-- идея: DFS-дерево + back edges -->
+                <section>
+                    <h2>DFS-дерево и обратные рёбра</h2>
+                    <p class="fragment">Запустим DFS из вершины 0. Часть рёбер станут <mark>рёбрами дерева</mark> (по
+                        ним идёт обход), остальные - <mark class="yellow">обратными рёбрами</mark> (back edges).</p>
+                    <svg width="560" height="200" style="display: block; margin: 0.6em auto 0;" class="fragment">
+                        <line x1="20" y1="150" x2="90" y2="40" stroke="#f55" stroke-width="1.5"
+                            stroke-dasharray="5,4" />
+                        <line x1="540" y1="150" x2="400" y2="150" stroke="#f55" stroke-width="1.5"
+                            stroke-dasharray="5,4" />
+                        <line x1="90" y1="40" x2="160" y2="150" stroke="#6f6" stroke-width="2.5" />
+                        <line x1="160" y1="150" x2="20" y2="150" stroke="#6f6" stroke-width="2.5" />
+                        <line x1="160" y1="150" x2="400" y2="150" stroke="#6f6" stroke-width="2.5" />
+                        <line x1="400" y1="150" x2="470" y2="40" stroke="#6f6" stroke-width="2.5" />
+                        <line x1="470" y1="40" x2="540" y2="150" stroke="#6f6" stroke-width="2.5" />
+                        <circle cx="20" cy="150" r="22" fill="rgba(99,99,255,0.35)" stroke="#99f" stroke-width="2" />
+                        <circle cx="90" cy="40" r="22" fill="rgba(99,99,255,0.35)" stroke="#99f" stroke-width="2" />
+                        <circle cx="160" cy="150" r="22" fill="rgba(99,99,255,0.35)" stroke="#99f" stroke-width="2" />
+                        <circle cx="400" cy="150" r="22" fill="rgba(99,99,255,0.35)" stroke="#99f" stroke-width="2" />
+                        <circle cx="470" cy="40" r="22" fill="rgba(99,99,255,0.35)" stroke="#99f" stroke-width="2" />
+                        <circle cx="540" cy="150" r="22" fill="rgba(99,99,255,0.35)" stroke="#99f" stroke-width="2" />
+                        <text x="20" y="156" text-anchor="middle" fill="white" font-size="16"
+                            font-weight="bold">2</text>
+                        <text x="90" y="46" text-anchor="middle" fill="white" font-size="16" font-weight="bold">0</text>
+                        <text x="160" y="156" text-anchor="middle" fill="white" font-size="16"
+                            font-weight="bold">1</text>
+                        <text x="400" y="156" text-anchor="middle" fill="white" font-size="16"
+                            font-weight="bold">3</text>
+                        <text x="470" y="46" text-anchor="middle" fill="white" font-size="16"
+                            font-weight="bold">4</text>
+                        <text x="540" y="156" text-anchor="middle" fill="white" font-size="16"
+                            font-weight="bold">5</text>
+                    </svg>
+                    <p class="fragment" style="margin-top: 0.3em; font-size: 0.55em;"><span
+                            style="color:#6f6;">━━</span> рёбра дерева &nbsp;&nbsp; <span style="color:#f55;">┅┅</span>
+                        обратные рёбра (back edges)</p>
+                </section>
+
+                <!-- tin[v] -->
+                <section>
+                    <h2><code>tin[v]</code> - время входа</h2>
+                    <p class="fragment">Представь: DFS идёт по вершинам и <mark>подписывает номерок</mark> на каждой -
+                        в каком порядке первый раз в неё зашли. Как номерок в очереди.</p>
+                    <svg width="560" height="200" style="display: block; margin: 0.5em auto;" class="fragment">
+                        <line x1="20" y1="150" x2="90" y2="40" stroke="#888" stroke-width="1.5"
+                            stroke-dasharray="5,4" />
+                        <line x1="540" y1="150" x2="400" y2="150" stroke="#888" stroke-width="1.5"
+                            stroke-dasharray="5,4" />
+                        <line x1="90" y1="40" x2="160" y2="150" stroke="#888" stroke-width="1.5" />
+                        <line x1="160" y1="150" x2="20" y2="150" stroke="#888" stroke-width="1.5" />
+                        <line x1="160" y1="150" x2="400" y2="150" stroke="#888" stroke-width="1.5" />
+                        <line x1="400" y1="150" x2="470" y2="40" stroke="#888" stroke-width="1.5" />
+                        <line x1="470" y1="40" x2="540" y2="150" stroke="#888" stroke-width="1.5" />
+                        <circle cx="20" cy="150" r="22" fill="rgba(99,99,255,0.35)" stroke="#99f" stroke-width="2" />
+                        <circle cx="90" cy="40" r="22" fill="rgba(99,99,255,0.35)" stroke="#99f" stroke-width="2" />
+                        <circle cx="160" cy="150" r="22" fill="rgba(99,99,255,0.35)" stroke="#99f" stroke-width="2" />
+                        <circle cx="400" cy="150" r="22" fill="rgba(99,99,255,0.35)" stroke="#99f" stroke-width="2" />
+                        <circle cx="470" cy="40" r="22" fill="rgba(99,99,255,0.35)" stroke="#99f" stroke-width="2" />
+                        <circle cx="540" cy="150" r="22" fill="rgba(99,99,255,0.35)" stroke="#99f" stroke-width="2" />
+                        <text x="20" y="156" text-anchor="middle" fill="white" font-size="16"
+                            font-weight="bold">2</text>
+                        <text x="90" y="46" text-anchor="middle" fill="white" font-size="16" font-weight="bold">0</text>
+                        <text x="160" y="156" text-anchor="middle" fill="white" font-size="16"
+                            font-weight="bold">1</text>
+                        <text x="400" y="156" text-anchor="middle" fill="white" font-size="16"
+                            font-weight="bold">3</text>
+                        <text x="470" y="46" text-anchor="middle" fill="white" font-size="16"
+                            font-weight="bold">4</text>
+                        <text x="540" y="156" text-anchor="middle" fill="white" font-size="16"
+                            font-weight="bold">5</text>
+                        <g class="fragment">
+                            <text x="90" y="15" text-anchor="middle" fill="#ffd54f" font-size="15"
+                                font-weight="bold">tin=0</text>
+                            <text x="160" y="185" text-anchor="middle" fill="#ffd54f" font-size="15"
+                                font-weight="bold">tin=1</text>
+                            <text x="20" y="185" text-anchor="middle" fill="#ffd54f" font-size="15"
+                                font-weight="bold">tin=2</text>
+                        </g>
+                        <g class="fragment">
+                            <text x="400" y="185" text-anchor="middle" fill="#ffd54f" font-size="15"
+                                font-weight="bold">tin=3</text>
+                            <text x="470" y="15" text-anchor="middle" fill="#ffd54f" font-size="15"
+                                font-weight="bold">tin=4</text>
+                            <text x="540" y="185" text-anchor="middle" fill="#ffd54f" font-size="15"
+                                font-weight="bold">tin=5</text>
+                        </g>
+                    </svg>
+                    <div class="fragment opinion">
+                        Просто <mark>счётчик времени</mark>, который увеличивается на 1 при каждом заходе в новую
+                        вершину
+                    </div>
+                </section>
+
+                <!-- low[v] -->
+                <section>
+                    <h2><code>low[v]</code> - можно ли обойти ребро наверх</h2>
+                    <p class="fragment" style="font-size: 0.7em;">Стоим в вершине v. Вопрос: если <mark>убрать
+                            ребро</mark>, по которому мы
+                        сюда пришли - останется ли путь наверх, в обход, через какое-то другое ребро?</p>
+                    <p class="fragment" style="font-size: 0.7em;"><code>low[v]</code> - это <mark>самый маленький
+                            tin</mark>, до которого можно дотянуться из v (или из того, куда мы попали дальше
+                        рекурсией), сделав <mark>ровно один "прыжок назад"</mark> по обратному ребру.</p>
+                    <svg width="360" height="180" viewBox="-60 0 420 180" style="display: block; margin: 0.5em auto;"
+                        class="fragment">
+                        <defs>
+                            <marker id="lowarrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5"
+                                orient="auto-start-reverse">
+                                <path d="M 0 0 L 10 5 L 0 10 z" fill="#ffd54f" />
+                            </marker>
+                        </defs>
+                        <line x1="90" y1="40" x2="160" y2="150" stroke="#888" stroke-width="1.5" />
+                        <line x1="160" y1="150" x2="20" y2="150" stroke="#888" stroke-width="1.5" />
+                        <path d="M 15 140 Q -30 90 75 48" fill="none" stroke="#ffd54f" stroke-width="2.5"
+                            stroke-dasharray="5,4" marker-end="url(#lowarrow)" />
+                        <circle cx="90" cy="40" r="22" fill="rgba(99,99,255,0.35)" stroke="#99f" stroke-width="2" />
+                        <circle cx="160" cy="150" r="22" fill="rgba(99,99,255,0.35)" stroke="#99f" stroke-width="2" />
+                        <circle cx="20" cy="150" r="22" fill="rgba(255,213,79,0.35)" stroke="#ffd54f"
+                            stroke-width="3" />
+                        <text x="90" y="46" text-anchor="middle" fill="white" font-size="16" font-weight="bold">0</text>
+                        <text x="160" y="156" text-anchor="middle" fill="white" font-size="16"
+                            font-weight="bold">1</text>
+                        <text x="20" y="156" text-anchor="middle" fill="white" font-size="16"
+                            font-weight="bold">2</text>
+                        <text x="90" y="15" text-anchor="middle" fill="white" font-size="13" opacity="0.7">tin=0</text>
+                        <text x="20" y="185" text-anchor="middle" fill="#ffd54f" font-size="14"
+                            font-weight="bold">low=0</text>
+                        <text x="-30" y="85" text-anchor="middle" fill="#ffd54f" font-size="12">прыжок назад</text>
+                    </svg>
+                    <div class="fragment opinion" style="font-size: 0.7em;">
+                        У вершины 2 есть обратное ребро прямо в вершину 0 (<code>tin=0</code>). Значит
+                        <code>low[2] = 0</code> - в обход можно дотянуться очень высоко наверх
+                    </div>
+                </section>
+
+                <!-- формула пересчёта low -->
+                <section>
+                    <h2>Как считается <code>low[v]</code></h2>
+                    <div class="compare fragment">
+                        <div class="compare-block">
+                            <h4>Сосед ещё не посещён</h4>
+                            <svg width="140" height="90" style="display: block; margin: 0.3em auto;">
+                                <defs>
+                                    <marker id="f1arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5"
+                                        markerHeight="5" orient="auto-start-reverse">
+                                        <path d="M 0 0 L 10 5 L 0 10 z" fill="#6f6" />
+                                    </marker>
+                                </defs>
+                                <line x1="35" y1="45" x2="95" y2="45" stroke="#6f6" stroke-width="2.5"
+                                    marker-end="url(#f1arrow)" />
+                                <circle cx="25" cy="45" r="18" fill="rgba(99,99,255,0.35)" stroke="#99f"
+                                    stroke-width="2" />
+                                <circle cx="115" cy="45" r="18" fill="rgba(99,99,255,0.35)" stroke="#99f"
+                                    stroke-width="2" />
+                                <text x="25" y="50" text-anchor="middle" fill="white" font-size="14"
+                                    font-weight="bold">v</text>
+                                <text x="115" y="50" text-anchor="middle" fill="white" font-size="13"
+                                    font-weight="bold">to</text>
+                            </svg>
+                            <p style="font-size: 0.65em; opacity: 0.8;">заходим туда рекурсией, потом тянемся</p>
+                            <p style="font-size: 0.65em;"><code>low[v] = min(low[v], low[to])</code></p>
+                        </div>
+                        <div class="compare-block">
+                            <h4>Сосед уже посещён</h4>
+                            <svg width="140" height="90" style="display: block; margin: 0.3em auto;">
+                                <defs>
+                                    <marker id="f2arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5"
+                                        markerHeight="5" orient="auto-start-reverse">
+                                        <path d="M 0 0 L 10 5 L 0 10 z" fill="#ffd54f" />
+                                    </marker>
+                                </defs>
+                                <line x1="35" y1="45" x2="95" y2="45" stroke="#ffd54f" stroke-width="2.5"
+                                    stroke-dasharray="5,4" marker-end="url(#f2arrow)" />
+                                <circle cx="25" cy="45" r="18" fill="rgba(99,99,255,0.35)" stroke="#99f"
+                                    stroke-width="2" />
+                                <circle cx="115" cy="45" r="18" fill="rgba(255,213,79,0.35)" stroke="#ffd54f"
+                                    stroke-width="2" />
+                                <text x="25" y="50" text-anchor="middle" fill="white" font-size="14"
+                                    font-weight="bold">v</text>
+                                <text x="115" y="50" text-anchor="middle" fill="white" font-size="13"
+                                    font-weight="bold">to</text>
+                            </svg>
+                            <p style="font-size: 0.65em; opacity: 0.8;">не заходим, сразу тянемся к нему - <mark
+                                    class="yellow">кроме</mark> вершины, откуда мы сами пришли</p>
+                            <p style="font-size: 0.65em;"><code>low[v] = min(low[v], tin[to])</code></p>
+                        </div>
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 0.8em;">
+                        В начале <code>low[v] = tin[v]</code>, дальше только уменьшаем
+                    </div>
+                </section>
+
+                <!-- условие моста -->
+                <section>
+                    <h2>Условие моста</h2>
+                    <div class="fragment opinion" style="font-size: 1.1em;">
+                        Ребро <code>(v, to)</code> - мост, если <mark class="green">low[to] &gt; tin[v]</mark>
+                    </div>
+                    <svg width="260" height="210" viewBox="-30 0 290 210" style="display: block; margin: 0.6em auto;"
+                        class="fragment">
+                        <defs>
+                            <marker id="noescape" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5"
+                                orient="auto-start-reverse">
+                                <path d="M 0 0 L 10 5 L 0 10 z" fill="#f55" />
+                            </marker>
+                        </defs>
+                        <ellipse cx="110" cy="155" rx="75" ry="45" fill="rgba(255,255,255,0.04)" stroke="#888"
+                            stroke-dasharray="4,3" />
+                        <line x1="110" y1="48" x2="110" y2="108" stroke="#888" stroke-width="2" />
+                        <path d="M 70 190 Q 10 80 90 20" fill="none" stroke="#f55" stroke-width="2"
+                            stroke-dasharray="5,4" marker-end="url(#noescape)" />
+                        <circle cx="110" cy="30" r="20" fill="rgba(99,99,255,0.35)" stroke="#99f" stroke-width="2" />
+                        <circle cx="110" cy="120" r="18" fill="rgba(99,99,255,0.35)" stroke="#99f" stroke-width="2" />
+                        <text x="110" y="35" text-anchor="middle" fill="white" font-size="15"
+                            font-weight="bold">v</text>
+                        <text x="110" y="125" text-anchor="middle" fill="white" font-size="13"
+                            font-weight="bold">to</text>
+                        <text x="110" y="165" text-anchor="middle" fill="white" font-size="11" opacity="0.6">to и всё
+                            под ним</text>
+                        <text x="55" y="55" text-anchor="middle" fill="#f55" font-size="12">такого ребра нет!</text>
+                    </svg>
+                    <p class="fragment" style="margin-top: 0.4em;">Смысл: из <code>to</code> (и всего, что под ним) не
+                        существует <mark>обратного ребра</mark>, ведущего в v или выше - без ребра (v, to) туда вообще
+                        не добраться.</p>
+                </section>
+
+                <!-- трассировка на примере графа: часть 1 -->
+                <section>
+                    <h2>Трассировка: спускаемся</h2>
+                    <svg width="560" height="200" style="display: block; margin: 0.3em auto;">
+                        <line id="e20" x1="20" y1="150" x2="90" y2="40" stroke="#888" stroke-width="1.5"
+                            stroke-dasharray="5,4" />
+                        <line x1="540" y1="150" x2="400" y2="150" stroke="#555" stroke-width="1.5"
+                            stroke-dasharray="5,4" opacity="0.35" />
+                        <line x1="90" y1="40" x2="160" y2="150" stroke="#888" stroke-width="1.5" />
+                        <line id="e12" x1="160" y1="150" x2="20" y2="150" stroke="#888" stroke-width="1.5" />
+                        <line x1="160" y1="150" x2="400" y2="150" stroke="#555" stroke-width="1.5" opacity="0.35" />
+                        <line x1="400" y1="150" x2="470" y2="40" stroke="#555" stroke-width="1.5" opacity="0.35" />
+                        <line x1="470" y1="40" x2="540" y2="150" stroke="#555" stroke-width="1.5" opacity="0.35" />
+                        <circle cx="20" cy="150" r="22" fill="rgba(99,99,255,0.35)" stroke="#99f" stroke-width="2" />
+                        <circle cx="90" cy="40" r="22" fill="rgba(99,99,255,0.35)" stroke="#99f" stroke-width="2" />
+                        <circle cx="160" cy="150" r="22" fill="rgba(99,99,255,0.35)" stroke="#99f" stroke-width="2" />
+                        <circle cx="400" cy="150" r="22" fill="rgba(99,99,255,0.15)" stroke="#666" stroke-width="2" />
+                        <circle cx="470" cy="40" r="22" fill="rgba(99,99,255,0.15)" stroke="#666" stroke-width="2" />
+                        <circle cx="540" cy="150" r="22" fill="rgba(99,99,255,0.15)" stroke="#666" stroke-width="2" />
+                        <text x="20" y="156" text-anchor="middle" fill="white" font-size="16"
+                            font-weight="bold">2</text>
+                        <text x="90" y="46" text-anchor="middle" fill="white" font-size="16" font-weight="bold">0</text>
+                        <text x="160" y="156" text-anchor="middle" fill="white" font-size="16"
+                            font-weight="bold">1</text>
+                        <text x="400" y="156" text-anchor="middle" fill="#888" font-size="16">3</text>
+                        <text x="470" y="46" text-anchor="middle" fill="#888" font-size="16">4</text>
+                        <text x="540" y="156" text-anchor="middle" fill="#888" font-size="16">5</text>
+                        <text class="fragment" data-fragment-index="0" x="90" y="15" text-anchor="middle" fill="#ffd54f"
+                            font-size="14" font-weight="bold">tin=0 low=0</text>
+                        <text class="fragment" data-fragment-index="1" x="160" y="185" text-anchor="middle"
+                            fill="#ffd54f" font-size="14" font-weight="bold">tin=1</text>
+                        <text class="fragment" data-fragment-index="2" x="20" y="185" text-anchor="middle"
+                            fill="#ffd54f" font-size="14" font-weight="bold">tin=2</text>
+                        <line class="fragment" data-fragment-index="2" x1="20" y1="150" x2="90" y2="40" stroke="#f55"
+                            stroke-width="3" stroke-dasharray="5,4" />
+                        <text class="fragment" data-fragment-index="3" x="160" y="200" text-anchor="middle" fill="#6f6"
+                            font-size="13" font-weight="bold">low=0</text>
+                        <text class="fragment" data-fragment-index="3" x="20" y="200" text-anchor="middle" fill="#6f6"
+                            font-size="13" font-weight="bold">low=0</text>
+                        <text class="fragment" data-fragment-index="4" x="90" y="180" text-anchor="middle" fill="#888"
+                            font-size="13">не мост</text>
+                    </svg>
+                    <div class="timeline" style="font-size: 0.85em;">
+                        <div class="timeline-item fragment" data-fragment-index="0">
+                            <div class="timeline-marker">0</div>
+                            <div class="timeline-content">tin[0]=low[0]=<mark>0</mark>. Идём в 1</div>
+                        </div>
+                        <div class="timeline-item fragment" data-fragment-index="1">
+                            <div class="timeline-marker">1</div>
+                            <div class="timeline-content">tin[1]=low[1]=<mark>1</mark>. Идём в 2</div>
+                        </div>
+                        <div class="timeline-item fragment" data-fragment-index="2">
+                            <div class="timeline-marker">2</div>
+                            <div class="timeline-content">tin[2]=low[2]=<mark>2</mark>. Сосед 0 уже посещён и это <mark
+                                    class="yellow">не родитель</mark> - back edge</div>
+                        </div>
+                        <div class="timeline-item fragment" data-fragment-index="3">
+                            <div class="timeline-marker">!</div>
+                            <div class="timeline-content">low[2] = min(2, tin[0]=0) = <mark class="green">0</mark>.
+                                Возврат в 1: low[1] = min(1, 0) = <mark class="green">0</mark></div>
+                        </div>
+                        <div class="timeline-item fragment" data-fragment-index="4">
+                            <div class="timeline-marker">?</div>
+                            <div class="timeline-content">Мост 1-2? low[2]=0 &gt; tin[1]=1? <mark>Нет</mark> - не мост
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- трассировка на примере графа: часть 2 -->
+                <section>
+                    <h2>Трассировка: второй треугольник</h2>
+                    <svg width="560" height="200" style="display: block; margin: 0.3em auto;">
+                        <line x1="20" y1="150" x2="90" y2="40" stroke="#888" stroke-width="1.5"
+                            stroke-dasharray="5,4" />
+                        <line id="e53" x1="540" y1="150" x2="400" y2="150" stroke="#888" stroke-width="1.5"
+                            stroke-dasharray="5,4" />
+                        <line x1="90" y1="40" x2="160" y2="150" stroke="#888" stroke-width="1.5" />
+                        <line x1="160" y1="150" x2="20" y2="150" stroke="#888" stroke-width="1.5" />
+                        <line id="e13" x1="160" y1="150" x2="400" y2="150" stroke="#888" stroke-width="1.5" />
+                        <line x1="400" y1="150" x2="470" y2="40" stroke="#888" stroke-width="1.5" />
+                        <line x1="470" y1="40" x2="540" y2="150" stroke="#888" stroke-width="1.5" />
+                        <circle cx="20" cy="150" r="22" fill="rgba(99,99,255,0.35)" stroke="#99f" stroke-width="2" />
+                        <circle cx="90" cy="40" r="22" fill="rgba(99,99,255,0.35)" stroke="#99f" stroke-width="2" />
+                        <circle cx="160" cy="150" r="22" fill="rgba(99,99,255,0.35)" stroke="#99f" stroke-width="2" />
+                        <circle cx="400" cy="150" r="22" fill="rgba(99,99,255,0.35)" stroke="#99f" stroke-width="2" />
+                        <circle cx="470" cy="40" r="22" fill="rgba(99,99,255,0.35)" stroke="#99f" stroke-width="2" />
+                        <circle cx="540" cy="150" r="22" fill="rgba(99,99,255,0.35)" stroke="#99f" stroke-width="2" />
+                        <text x="20" y="156" text-anchor="middle" fill="white" font-size="16"
+                            font-weight="bold">2</text>
+                        <text x="90" y="46" text-anchor="middle" fill="white" font-size="16" font-weight="bold">0</text>
+                        <text x="160" y="156" text-anchor="middle" fill="white" font-size="16"
+                            font-weight="bold">1</text>
+                        <text x="400" y="156" text-anchor="middle" fill="white" font-size="16"
+                            font-weight="bold">3</text>
+                        <text x="470" y="46" text-anchor="middle" fill="white" font-size="16"
+                            font-weight="bold">4</text>
+                        <text x="540" y="156" text-anchor="middle" fill="white" font-size="16"
+                            font-weight="bold">5</text>
+                        <text x="90" y="15" text-anchor="middle" fill="#ffd54f" font-size="13">tin=0 low=0</text>
+                        <text x="160" y="185" text-anchor="middle" fill="#ffd54f" font-size="13">tin=1 low=0</text>
+                        <text x="20" y="185" text-anchor="middle" fill="#ffd54f" font-size="13">tin=2 low=0</text>
+                        <text class="fragment" data-fragment-index="5" x="400" y="185" text-anchor="middle"
+                            fill="#ffd54f" font-size="14" font-weight="bold">tin=3 low=3</text>
+                        <text class="fragment" data-fragment-index="6" x="470" y="15" text-anchor="middle"
+                            fill="#ffd54f" font-size="14" font-weight="bold">tin=4 low=3</text>
+                        <text class="fragment" data-fragment-index="6" x="540" y="185" text-anchor="middle"
+                            fill="#ffd54f" font-size="14" font-weight="bold">tin=5 low=3</text>
+                        <line class="fragment" data-fragment-index="6" x1="540" y1="150" x2="400" y2="150" stroke="#f55"
+                            stroke-width="3" stroke-dasharray="5,4" />
+                        <text class="fragment" data-fragment-index="8" x="280" y="130" text-anchor="middle"
+                            fill="#ffd54f" font-size="15" font-weight="bold">МОСТ!</text>
+                        <line class="fragment" data-fragment-index="8" x1="160" y1="150" x2="400" y2="150"
+                            stroke="#ffd54f" stroke-width="4" />
+                    </svg>
+                    <div class="timeline" style="font-size: 0.85em;">
+                        <div class="timeline-item fragment" data-fragment-index="5">
+                            <div class="timeline-marker">3</div>
+                            <div class="timeline-content">Из 1 идём в 3: tin[3]=low[3]=<mark>3</mark></div>
+                        </div>
+                        <div class="timeline-item fragment" data-fragment-index="6">
+                            <div class="timeline-marker">4,5</div>
+                            <div class="timeline-content">3 → 4 → 5, затем back edge 5-3: low[5]=<mark
+                                    class="green">3</mark>, low[4]=<mark class="green">3</mark>, low[3]=<mark
+                                    class="green">3</mark></div>
+                        </div>
+                        <div class="timeline-item fragment" data-fragment-index="7">
+                            <div class="timeline-marker">↑</div>
+                            <div class="timeline-content">Возврат в 1: low[1] = min(low[1]=0, low[3]=3) = <mark
+                                    class="green">0</mark></div>
+                        </div>
+                        <div class="timeline-item fragment" data-fragment-index="8">
+                            <div class="timeline-marker">!</div>
+                            <div class="timeline-content">Мост 1-3? low[3]=<mark>3</mark> &gt; tin[1]=<mark>1</mark>?
+                                <mark class="green">Да!</mark> Ребро (1,3) - мост
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ловушка: кратные рёбра -->
+                <section>
+                    <h2>Ловушка: кратные рёбра</h2>
+                    <svg width="260" height="120" style="display: block; margin: 0.4em auto;" class="fragment">
+                        <path d="M 60 60 Q 150 20 220 60" fill="none" stroke="#888" stroke-width="2" />
+                        <path d="M 60 60 Q 150 100 220 60" fill="none" stroke="#f55" stroke-width="2"
+                            stroke-dasharray="5,4" />
+                        <circle cx="50" cy="60" r="22" fill="rgba(99,99,255,0.35)" stroke="#99f" stroke-width="2" />
+                        <circle cx="230" cy="60" r="22" fill="rgba(99,99,255,0.35)" stroke="#99f" stroke-width="2" />
+                        <text x="50" y="66" text-anchor="middle" fill="white" font-size="13" font-weight="bold">v</text>
+                        <text x="230" y="66" text-anchor="middle" fill="white" font-size="12"
+                            font-weight="bold">parent</text>
+                        <text x="150" y="15" text-anchor="middle" fill="#888" font-size="11">пришли по этому</text>
+                        <text x="150" y="112" text-anchor="middle" fill="#f55" font-size="11">это НЕ back edge!</text>
+                    </svg>
+                    <p class="fragment">Если между v и parent есть <mark>два разных ребра</mark>, нельзя просто
+                        пропускать соседа "равного parent".</p>
+                    <p class="fragment" style="margin-top: 0.6em;">Иначе второе ребро к parent посчитается как <mark
+                            class="yellow">back edge</mark>, и настоящий мост рядом с ним будет пропущен по ошибке.</p>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        Решение: передавать в DFS не вершину-родителя, а <mark class="green">индекс ребра</mark>, по
+                        которому пришли, и пропускать именно его
+                    </div>
+                </section>
+
+            </section>
+
+            <!-- ЧАСТЬ 3: точки сочленения -->
+            <section>
+
+                <section style="font-size: 70px; height: 100%; width: 100%">
+                    <div class="lesson-time">40</div>
+                    <div class="fragment">
+                        <h1 style="font-size: 1.2em;">Точки сочленения</h1>
+                        <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">articulation points</p>
+                    </div>
+                </section>
+
+                <!-- определение -->
+                <section>
+                    <h2>Определение</h2>
+                    <div class="fragment opinion" style="font-size: 0.9em;">
+                        <mark>Точка сочленения</mark> - вершина, чьё удаление увеличивает число компонент связности
+                    </div>
+                    <svg width="560" height="200" style="display: block; margin: 0.6em auto;" class="fragment">
+                        <line x1="20" y1="150" x2="90" y2="40" stroke="#888" stroke-width="1.5" />
+                        <line x1="90" y1="40" x2="160" y2="150" stroke="#888" stroke-width="1.5" />
+                        <line x1="160" y1="150" x2="20" y2="150" stroke="#888" stroke-width="1.5" />
+                        <line x1="160" y1="150" x2="400" y2="150" stroke="#888" stroke-width="1.5" />
+                        <line x1="400" y1="150" x2="470" y2="40" stroke="#888" stroke-width="1.5" />
+                        <line x1="470" y1="40" x2="540" y2="150" stroke="#888" stroke-width="1.5" />
+                        <line x1="540" y1="150" x2="400" y2="150" stroke="#888" stroke-width="1.5" />
+                        <circle cx="20" cy="150" r="22" fill="rgba(99,99,255,0.35)" stroke="#99f" stroke-width="2" />
+                        <circle cx="90" cy="40" r="22" fill="rgba(99,99,255,0.35)" stroke="#99f" stroke-width="2" />
+                        <circle cx="160" cy="150" r="24" fill="rgba(255,213,79,0.35)" stroke="#ffd54f"
+                            stroke-width="3" />
+                        <circle cx="400" cy="150" r="24" fill="rgba(255,213,79,0.35)" stroke="#ffd54f"
+                            stroke-width="3" />
+                        <circle cx="470" cy="40" r="22" fill="rgba(99,99,255,0.35)" stroke="#99f" stroke-width="2" />
+                        <circle cx="540" cy="150" r="22" fill="rgba(99,99,255,0.35)" stroke="#99f" stroke-width="2" />
+                        <text x="20" y="156" text-anchor="middle" fill="white" font-size="16"
+                            font-weight="bold">2</text>
+                        <text x="90" y="46" text-anchor="middle" fill="white" font-size="16" font-weight="bold">0</text>
+                        <text x="160" y="156" text-anchor="middle" fill="white" font-size="16"
+                            font-weight="bold">1</text>
+                        <text x="400" y="156" text-anchor="middle" fill="white" font-size="16"
+                            font-weight="bold">3</text>
+                        <text x="470" y="46" text-anchor="middle" fill="white" font-size="16"
+                            font-weight="bold">4</text>
+                        <text x="540" y="156" text-anchor="middle" fill="white" font-size="16"
+                            font-weight="bold">5</text>
+                    </svg>
+                    <p class="fragment" style="margin-top: 0.2em;">В нашем графе - вершины <mark>1</mark> и
+                        <mark>3</mark>: убери любую из них, треугольники разъединятся.
+                    </p>
+                </section>
+
+                <!-- а если моста нет: два треугольника, склеенных по вершине -->
+                <section>
+                    <h2>А если моста нет?</h2>
+                    <p class="fragment">Возьмём два треугольника, склеенных не ребром, а <mark>прямо по
+                            вершине</mark>.</p>
+                    <svg width="480" height="180" style="display: block; margin: 0.5em auto;" class="fragment">
+                        <line x1="180" y1="40" x2="180" y2="150" stroke="#888" stroke-width="1.5" />
+                        <line x1="180" y1="150" x2="280" y2="95" stroke="#888" stroke-width="1.5" />
+                        <line x1="280" y1="95" x2="180" y2="40" stroke="#888" stroke-width="1.5" />
+                        <line x1="280" y1="95" x2="380" y2="40" stroke="#888" stroke-width="1.5" />
+                        <line x1="380" y1="40" x2="380" y2="150" stroke="#888" stroke-width="1.5" />
+                        <line x1="380" y1="150" x2="280" y2="95" stroke="#888" stroke-width="1.5" />
+                        <circle cx="180" cy="40" r="20" fill="rgba(99,99,255,0.35)" stroke="#99f" stroke-width="2" />
+                        <circle cx="180" cy="150" r="20" fill="rgba(99,99,255,0.35)" stroke="#99f" stroke-width="2" />
+                        <circle cx="380" cy="40" r="20" fill="rgba(99,99,255,0.35)" stroke="#99f" stroke-width="2" />
+                        <circle cx="380" cy="150" r="20" fill="rgba(99,99,255,0.35)" stroke="#99f" stroke-width="2" />
+                        <circle cx="280" cy="95" r="22" fill="rgba(255,213,79,0.35)" stroke="#ffd54f"
+                            stroke-width="3" />
+                        <text x="180" y="46" text-anchor="middle" fill="white" font-size="15"
+                            font-weight="bold">0</text>
+                        <text x="180" y="156" text-anchor="middle" fill="white" font-size="15"
+                            font-weight="bold">1</text>
+                        <text x="380" y="46" text-anchor="middle" fill="white" font-size="15"
+                            font-weight="bold">3</text>
+                        <text x="380" y="156" text-anchor="middle" fill="white" font-size="15"
+                            font-weight="bold">4</text>
+                        <text x="280" y="100" text-anchor="middle" fill="white" font-size="15"
+                            font-weight="bold">2</text>
+                    </svg>
+                    <div class="timeline" style="margin-top: 0.3em;">
+                        <div class="timeline-item fragment">
+                            <div class="timeline-content">Убери любое <mark>ребро</mark> - граф всё равно
+                                останется целым (у него есть цикл). <mark>Мостов тут нет вообще</mark></div>
+                        </div>
+                        <div class="timeline-item fragment">
+                            <div class="timeline-content">Убери <mark>вершину 2</mark> - треугольники сразу
+                                распадаются на <code>{0,1}</code> и <code>{3,4}</code></div>
+                        </div>
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 0.6em;">
+                        Вершина 2 - точка сочленения, хотя рядом с ней <mark class="green">нет ни одного моста</mark>.
+                        Это два разных понятия - они просто совпали в прошлом примере
+                    </div>
+                </section>
+
+                <!-- чем отличается от моста -->
+                <section>
+                    <h2>Чем отличается от моста</h2>
+                    <div class="compare">
+                        <div class="compare-block fragment">
+                            <h4>Мост</h4>
+                            <p style="font-size: 0.7em;">критичное <mark>ребро</mark></p>
+                            <p style="font-size: 0.65em; opacity: 0.7;">условие: low[to] &gt; tin[v]</p>
+                        </div>
+                        <div class="compare-block fragment">
+                            <h4>Точка сочленения</h4>
+                            <p style="font-size: 0.7em;">критичная <mark>вершина</mark></p>
+                            <p style="font-size: 0.65em; opacity: 0.7;">условие: low[to] &gt;= tin[v]</p>
+                        </div>
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        Считаются в <mark>одном и том же</mark> DFS, по тем же массивам tin/low
+                    </div>
+                </section>
+
+                <!-- условие -->
+                <section>
+                    <h2>Условие</h2>
+                    <div class="fragment opinion" style="font-size: 1.1em;">
+                        Вершина <code>v</code> (не корень) - точка сочленения, если у неё есть ребёнок <code>to</code>,
+                        для которого <mark class="green">low[to] &gt;= tin[v]</mark>
+                    </div>
+                    <svg width="260" height="210" viewBox="-30 0 290 210" style="display: block; margin: 0.6em auto;"
+                        class="fragment">
+                        <defs>
+                            <marker id="apescape" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5"
+                                orient="auto-start-reverse">
+                                <path d="M 0 0 L 10 5 L 0 10 z" fill="#ffd54f" />
+                            </marker>
+                        </defs>
+                        <ellipse cx="110" cy="155" rx="75" ry="45" fill="rgba(255,255,255,0.04)" stroke="#888"
+                            stroke-dasharray="4,3" />
+                        <line x1="110" y1="48" x2="110" y2="108" stroke="#888" stroke-width="2" />
+                        <path d="M 70 190 Q 20 90 105 45" fill="none" stroke="#ffd54f" stroke-width="2"
+                            stroke-dasharray="5,4" marker-end="url(#apescape)" />
+                        <circle cx="110" cy="30" r="20" fill="rgba(99,99,255,0.35)" stroke="#99f" stroke-width="2" />
+                        <circle cx="110" cy="120" r="18" fill="rgba(99,99,255,0.35)" stroke="#99f" stroke-width="2" />
+                        <text x="110" y="35" text-anchor="middle" fill="white" font-size="15"
+                            font-weight="bold">v</text>
+                        <text x="110" y="125" text-anchor="middle" fill="white" font-size="13"
+                            font-weight="bold">to</text>
+                        <text x="55" y="55" text-anchor="middle" fill="#ffd54f" font-size="12">долетает ровно до
+                            v</text>
+                    </svg>
+                    <p class="fragment" style="margin-top: 0.4em;">Разница с мостом всего в один знак:
+                        <code>&gt;=</code> вместо <code>&gt;</code>. Даже если обратное ребро дотягивается <mark>ровно
+                            до v</mark> (не выше) - убрав саму v, всё равно всё оторвётся.
+                    </p>
+                </section>
+
+                <!-- особый случай корня -->
+                <section>
+                    <h2>Особый случай: корень</h2>
+                    <p class="fragment">У корня (вершина 0) нет родителя, и условие <code>low[to] &gt;= tin[0]</code>
+                        выполняется <mark>почти всегда</mark> - но это не значит, что корень критичен.</p>
+                    <div class="compare fragment" style="margin-top: 0.6em;">
+                        <div class="compare-block">
+                            <h4 style="font-size: 0.8em;">1 ребёнок - не критичен</h4>
+                            <svg width="140" height="110" style="display: block; margin: 0.3em auto;">
+                                <line x1="70" y1="30" x2="70" y2="90" stroke="#888" stroke-width="2" />
+                                <circle cx="70" cy="20" r="16" fill="rgba(255,213,79,0.35)" stroke="#ffd54f"
+                                    stroke-width="2" />
+                                <circle cx="70" cy="100" r="16" fill="rgba(99,99,255,0.35)" stroke="#99f"
+                                    stroke-width="2" />
+                                <text x="70" y="25" text-anchor="middle" fill="white" font-size="12"
+                                    font-weight="bold">R</text>
+                            </svg>
+                            <p style="font-size: 0.6em; opacity: 0.8;">убрать R - остальное всё ещё связано само по
+                                себе</p>
+                        </div>
+                        <div class="compare-block">
+                            <h4 style="font-size: 0.8em;">2 ребёнка - критичен!</h4>
+                            <svg width="140" height="110" style="display: block; margin: 0.3em auto;">
+                                <line x1="70" y1="30" x2="30" y2="90" stroke="#888" stroke-width="2" />
+                                <line x1="70" y1="30" x2="110" y2="90" stroke="#888" stroke-width="2" />
+                                <circle cx="70" cy="20" r="16" fill="rgba(255,213,79,0.35)" stroke="#ffd54f"
+                                    stroke-width="2" />
+                                <circle cx="30" cy="100" r="16" fill="rgba(99,99,255,0.35)" stroke="#99f"
+                                    stroke-width="2" />
+                                <circle cx="110" cy="100" r="16" fill="rgba(99,99,255,0.35)" stroke="#99f"
+                                    stroke-width="2" />
+                                <text x="70" y="25" text-anchor="middle" fill="white" font-size="12"
+                                    font-weight="bold">R</text>
+                            </svg>
+                            <p style="font-size: 0.6em; opacity: 0.8;">убрать R - два ребёнка остаются в разных
+                                кусках</p>
+                        </div>
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 0.6em; font-size: 0.95em;">
+                        Корень - точка сочленения, только если у него <mark class="green">2 и больше детей</mark> в
+                        DFS-дереве
+                    </div>
+                    <p class="fragment" style="margin-top: 0.4em; font-size: 0.75em; opacity: 0.8;">У вершины 0 в нашем
+                        графе только один ребёнок (1) - значит, 0 не точка сочленения, хотя формальное условие сработало
+                        бы</p>
+                </section>
+
+                <!-- трассировка -->
+                <section>
+                    <h2>Проверяем каждую вершину</h2>
+                    <table style="font-size: 0.75em; width: 100%; margin-top: 0.5em;">
+                        <tr>
+                            <td><strong>v → ребёнок</strong></td>
+                            <td><strong>low[to] vs tin[v]</strong></td>
+                            <td><strong>точка сочленения?</strong></td>
+                        </tr>
+                        <tr class="fragment">
+                            <td>0 → 1 (корень)</td>
+                            <td>0 &gt;= 0</td>
+                            <td>только 1 ребёнок - <mark>нет</mark></td>
+                        </tr>
+                        <tr class="fragment">
+                            <td>1 → 2</td>
+                            <td>0 &gt;= 1? нет</td>
+                            <td>нет</td>
+                        </tr>
+                        <tr class="fragment">
+                            <td>1 → 3</td>
+                            <td>3 &gt;= 1? да</td>
+                            <td><mark class="green">да</mark></td>
+                        </tr>
+                        <tr class="fragment">
+                            <td>3 → 4</td>
+                            <td>3 &gt;= 3? да</td>
+                            <td><mark class="green">да</mark></td>
+                        </tr>
+                        <tr class="fragment">
+                            <td>4 → 5</td>
+                            <td>3 &gt;= 4? нет</td>
+                            <td>нет</td>
+                        </tr>
+                    </table>
+                    <svg width="480" height="170" style="display: block; margin: 0.5em auto;" class="fragment">
+                        <line x1="17" y1="128" x2="77" y2="34" stroke="#888" stroke-width="1.5" />
+                        <line x1="77" y1="34" x2="137" y2="128" stroke="#888" stroke-width="1.5" />
+                        <line x1="137" y1="128" x2="17" y2="128" stroke="#888" stroke-width="1.5" />
+                        <line x1="137" y1="128" x2="343" y2="128" stroke="#888" stroke-width="1.5" />
+                        <line x1="343" y1="128" x2="403" y2="34" stroke="#888" stroke-width="1.5" />
+                        <line x1="403" y1="34" x2="463" y2="128" stroke="#888" stroke-width="1.5" />
+                        <line x1="463" y1="128" x2="343" y2="128" stroke="#888" stroke-width="1.5" />
+                        <circle cx="17" cy="128" r="19" fill="rgba(99,99,255,0.35)" stroke="#99f" stroke-width="2" />
+                        <circle cx="77" cy="34" r="19" fill="rgba(99,99,255,0.35)" stroke="#99f" stroke-width="2" />
+                        <circle cx="137" cy="128" r="21" fill="rgba(255,213,79,0.35)" stroke="#ffd54f"
+                            stroke-width="3" />
+                        <circle cx="343" cy="128" r="21" fill="rgba(255,213,79,0.35)" stroke="#ffd54f"
+                            stroke-width="3" />
+                        <circle cx="403" cy="34" r="19" fill="rgba(99,99,255,0.35)" stroke="#99f" stroke-width="2" />
+                        <circle cx="463" cy="128" r="19" fill="rgba(99,99,255,0.35)" stroke="#99f" stroke-width="2" />
+                        <text x="17" y="133" text-anchor="middle" fill="white" font-size="14"
+                            font-weight="bold">2</text>
+                        <text x="77" y="39" text-anchor="middle" fill="white" font-size="14" font-weight="bold">0</text>
+                        <text x="137" y="133" text-anchor="middle" fill="white" font-size="14"
+                            font-weight="bold">1</text>
+                        <text x="343" y="133" text-anchor="middle" fill="white" font-size="14"
+                            font-weight="bold">3</text>
+                        <text x="403" y="39" text-anchor="middle" fill="white" font-size="14"
+                            font-weight="bold">4</text>
+                        <text x="463" y="133" text-anchor="middle" fill="white" font-size="14"
+                            font-weight="bold">5</text>
+                    </svg>
+                    <div class="fragment opinion" style="margin-top: 0.4em;">
+                        Итог: точки сочленения - <mark class="green">{1, 3}</mark>. Ровно концы моста, как и ожидалось
+                    </div>
+                </section>
+
+            </section>
+
+            <!-- ЧАСТЬ 4: практика (резерв, если урок идёт быстрее плана) -->
+            <section>
+
+                <section style="font-size: 70px; height: 100%; width: 100%">
+                    <div class="lesson-time">50</div>
+                    <div class="fragment">
+                        <h1 style="font-size: 1.4em;">Практика</h1>
+                        <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">если осталось время</p>
+                    </div>
+                </section>
+
+                <!-- задача 1: find_bridges -->
+                <section>
+                    <h2>Задача 1: find_bridges</h2>
+                    <p class="fragment">Напиши <code>find_bridges(graph)</code>, возвращающую список всех мостов - для
+                        нашего графа с занятия.</p>
+                    <svg width="480" height="170" style="display: block; margin: 0.5em auto;" class="fragment">
+                        <line x1="17" y1="128" x2="77" y2="34" stroke="#888" stroke-width="1.5" />
+                        <line x1="77" y1="34" x2="137" y2="128" stroke="#888" stroke-width="1.5" />
+                        <line x1="137" y1="128" x2="17" y2="128" stroke="#888" stroke-width="1.5" />
+                        <line x1="137" y1="128" x2="343" y2="128" stroke="#ffd54f" stroke-width="3" />
+                        <line x1="343" y1="128" x2="403" y2="34" stroke="#888" stroke-width="1.5" />
+                        <line x1="403" y1="34" x2="463" y2="128" stroke="#888" stroke-width="1.5" />
+                        <line x1="463" y1="128" x2="343" y2="128" stroke="#888" stroke-width="1.5" />
+                        <circle cx="17" cy="128" r="19" fill="rgba(99,99,255,0.35)" stroke="#99f" stroke-width="2" />
+                        <circle cx="77" cy="34" r="19" fill="rgba(99,99,255,0.35)" stroke="#99f" stroke-width="2" />
+                        <circle cx="137" cy="128" r="19" fill="rgba(99,99,255,0.35)" stroke="#99f" stroke-width="2" />
+                        <circle cx="343" cy="128" r="19" fill="rgba(99,99,255,0.35)" stroke="#99f" stroke-width="2" />
+                        <circle cx="403" cy="34" r="19" fill="rgba(99,99,255,0.35)" stroke="#99f" stroke-width="2" />
+                        <circle cx="463" cy="128" r="19" fill="rgba(99,99,255,0.35)" stroke="#99f" stroke-width="2" />
+                        <text x="17" y="133" text-anchor="middle" fill="white" font-size="14"
+                            font-weight="bold">2</text>
+                        <text x="77" y="39" text-anchor="middle" fill="white" font-size="14" font-weight="bold">0</text>
+                        <text x="137" y="133" text-anchor="middle" fill="white" font-size="14"
+                            font-weight="bold">1</text>
+                        <text x="343" y="133" text-anchor="middle" fill="white" font-size="14"
+                            font-weight="bold">3</text>
+                        <text x="403" y="39" text-anchor="middle" fill="white" font-size="14"
+                            font-weight="bold">4</text>
+                        <text x="463" y="133" text-anchor="middle" fill="white" font-size="14"
+                            font-weight="bold">5</text>
+                    </svg>
+                    <div class="fragment"
+                        style="font-size: 0.5em; font-family: monospace; background: rgba(255,255,255,0.05); padding: 0.5em 1em; border-radius: 6px; margin: 0.4em auto; max-width: 85%; text-align: left;">
+                        graph = {0:[1,2], 1:[0,2,3], 2:[0,1], 3:[1,4,5], 4:[3,5], 5:[3,4]}<br>
+                        find_bridges(graph) → [(1, 3)]
+                    </div>
+                </section>
+
+                <!-- задача 2: find_articulation_points -->
+                <section>
+                    <h2>Задача 2: find_articulation_points</h2>
+                    <p class="fragment">Напиши <code>find_articulation_points(graph)</code> - переиспользуй код задачи
+                        1, поменяв только условие. Тот же граф:</p>
+                    <svg width="480" height="170" style="display: block; margin: 0.5em auto;" class="fragment">
+                        <line x1="17" y1="128" x2="77" y2="34" stroke="#888" stroke-width="1.5" />
+                        <line x1="77" y1="34" x2="137" y2="128" stroke="#888" stroke-width="1.5" />
+                        <line x1="137" y1="128" x2="17" y2="128" stroke="#888" stroke-width="1.5" />
+                        <line x1="137" y1="128" x2="343" y2="128" stroke="#888" stroke-width="1.5" />
+                        <line x1="343" y1="128" x2="403" y2="34" stroke="#888" stroke-width="1.5" />
+                        <line x1="403" y1="34" x2="463" y2="128" stroke="#888" stroke-width="1.5" />
+                        <line x1="463" y1="128" x2="343" y2="128" stroke="#888" stroke-width="1.5" />
+                        <circle cx="17" cy="128" r="19" fill="rgba(99,99,255,0.35)" stroke="#99f" stroke-width="2" />
+                        <circle cx="77" cy="34" r="19" fill="rgba(99,99,255,0.35)" stroke="#99f" stroke-width="2" />
+                        <circle cx="137" cy="128" r="19" fill="rgba(255,213,79,0.35)" stroke="#ffd54f"
+                            stroke-width="3" />
+                        <circle cx="343" cy="128" r="19" fill="rgba(255,213,79,0.35)" stroke="#ffd54f"
+                            stroke-width="3" />
+                        <circle cx="403" cy="34" r="19" fill="rgba(99,99,255,0.35)" stroke="#99f" stroke-width="2" />
+                        <circle cx="463" cy="128" r="19" fill="rgba(99,99,255,0.35)" stroke="#99f" stroke-width="2" />
+                        <text x="17" y="133" text-anchor="middle" fill="white" font-size="14"
+                            font-weight="bold">2</text>
+                        <text x="77" y="39" text-anchor="middle" fill="white" font-size="14" font-weight="bold">0</text>
+                        <text x="137" y="133" text-anchor="middle" fill="white" font-size="14"
+                            font-weight="bold">1</text>
+                        <text x="343" y="133" text-anchor="middle" fill="white" font-size="14"
+                            font-weight="bold">3</text>
+                        <text x="403" y="39" text-anchor="middle" fill="white" font-size="14"
+                            font-weight="bold">4</text>
+                        <text x="463" y="133" text-anchor="middle" fill="white" font-size="14"
+                            font-weight="bold">5</text>
+                    </svg>
+                    <div class="fragment"
+                        style="font-size: 0.5em; font-family: monospace; background: rgba(255,255,255,0.05); padding: 0.5em 1em; border-radius: 6px; margin: 0.4em auto; max-width: 85%; text-align: left;">
+                        find_articulation_points(graph) → {1, 3}
+                    </div>
+                </section>
+            </section>
+
+            <!-- ИТОГ -->
+            <section>
+                <div class="lesson-time">58</div>
+                <h2>Что запомнить</h2>
+                <ul>
+                    <li class="fragment"><mark>Мост</mark>: ребро (v, to), для которого <code>low[to] &gt; tin[v]</code>
+                    </li>
+                    <li class="fragment"><mark>Точка сочленения</mark>: ребёнок с <code>low[to] &gt;= tin[v]</code> (для
+                        корня - особый случай: 2+ детей)</li>
+                    <li class="fragment">Оба ищутся за <mark class="green">один проход DFS</mark>, O(V + E)</li>
+                </ul>
+            </section>
+
+            <!-- домашнее задание -->
+            <section>
+                <div class="lesson-time">60</div>
+                <h2><a href="https://leetcode.com/problems/critical-connections-in-a-network/" target="_blank"
+                        rel="noopener">1192. Critical Connections in a Network</a></h2>
+                <p class="fragment">Дана сеть из <code>n</code> серверов и список кабельных соединений между ними
+                    (граф). Нужно найти все <mark>критические соединения</mark> - кабели, поломка которых разорвёт
+                    сеть на несколько частей.</p>
+                <div class="fragment opinion" style="margin-top: 0.8em;">
+                    Другими словами - найти <mark class="green">все мосты</mark> в графе. Ровно то, что разобрали на
+                    занятии
+                </div>
+                <p class="fragment" style="margin-top: 0.6em; font-size: 0.7em; opacity: 0.8;">Ответ - список пар
+                    <code>[a, b]</code>, порядок пар и порядок вершин внутри пары не важен</p>
+            </section>
+
+        </div>
+    </div>
+
+    <script src="/utils/lib/js/head.min.js"></script>
+    <script src="/utils/js/reveal.js"></script>
+    <script>
+        Reveal.initialize({
+            controls: true,
+            progress: true,
+            history: true,
+            center: true,
+            transition: 'fade',
+            transitionSpeed: 'fast',
+            dependencies: [
+                { src: '/utils/lib/js/classList.js', condition: function () { return !document.body.classList; } },
+                { src: '/utils/plugin/markdown/marked.js', condition: function () { return !!document.querySelector('[data-markdown]'); } },
+                { src: '/utils/plugin/markdown/markdown.js', condition: function () { return !!document.querySelector('[data-markdown]'); } },
+                { src: '/utils/plugin/highlight/highlight.js', async: true, callback: function () { hljs.initHighlightingOnLoad(); } },
+                { src: '/utils/plugin/zoom-js/zoom.js', async: true },
+                { src: '/utils/plugin/notes/notes.js', async: true }
+            ]
+        });
+        Reveal.configure({ slideNumber: 'c/t' });
+    </script>
+</body>
+
+</html>
