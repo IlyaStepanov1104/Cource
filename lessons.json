@@ -457,10 +457,16 @@
     },
     {
       "number": 25,
-      "title": "ЕГЭ/олимпиады: маршруты в графах",
+      "title": "Компоненты сильной связности",
       "date": "2026-09-01T15:00:00",
       "duration": 60,
-      "presentations": [],
+      "presentations": [
+        {
+          "title": "Презентация",
+          "link": "/lessons/25-scc/",
+          "order": 1
+        }
+      ],
       "homeworks": []
     },
     {
