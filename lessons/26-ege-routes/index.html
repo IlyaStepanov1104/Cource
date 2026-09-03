@@ -1,0 +1,565 @@
+<!doctype html>
+<html lang="ru">
+
+<head>
+    <meta charset="utf-8">
+    <title>Занятие 26 - Маршруты в графах</title>
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+
+    <link rel="stylesheet" href="/utils/css/reveal.css">
+    <link rel="stylesheet" href="/utils/lib/css/animate.css">
+    <link rel="stylesheet" href="/utils/css/theme/night.css" id="theme">
+    <link rel="stylesheet" href="/utils/lib/css/zenburn.css">
+    <link rel="stylesheet" href="/utils/css/custom-base.css">
+    <link rel="stylesheet" href="css-custom/custom.css">
+
+    <script>
+        var link = document.createElement('link');
+        link.rel = 'stylesheet'; link.type = 'text/css';
+        link.href = window.location.search.match(/print-pdf/gi)
+            ? '/utils/css/print/pdf.css'
+            : '/utils/css/print/paper.css';
+        document.getElementsByTagName('head')[0].appendChild(link);
+    </script>
+</head>
+
+<body>
+    <div class="reveal">
+        <div class="slides">
+
+            <!-- Титульный слайд -->
+            <section style="font-size: 70px; height: 100%; width: 100%">
+                <div class="lesson-time">0</div>
+                <div class="fragment">
+                    <h1 class="animated" style="font-size: 1.3em;">Графы на ЕГЭ и в олимпиадах</h1>
+                    <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">Занятие 26</p>
+                </div>
+            </section>
+
+            <!-- разбор ДЗ занятия 25 -->
+            <section>
+
+                <section>
+                    <div class="lesson-time">0</div>
+                    <h2>Разбор ДЗ</h2>
+                    <p class="fragment"><a href="https://leetcode.com/problems/find-eventual-safe-states/"
+                            target="_blank" rel="noopener">802. Find Eventual Safe States</a></p>
+                    <ul>
+                        <li class="fragment">Дан ориентированный граф списком смежности: <code>graph[v]</code> - куда
+                            ведут стрелки из <code>v</code>.</li>
+                        <li class="fragment">Вершина <mark class="green">безопасная</mark>, если <mark>любой</mark> путь
+                            из неё заканчивается в терминальной вершине (без исходящих рёбер).</li>
+                        <li class="fragment">Вернуть все безопасные вершины по возрастанию.</li>
+                    </ul>
+                </section>
+            </section>
+
+            <!-- ЧАСТЬ 1: маршрут в графе и таблица смежности (ЕГЭ №1) -->
+            <section>
+                <section style="font-size: 70px; height: 100%; width: 100%">
+                    <div class="lesson-time">0</div>
+                    <div class="fragment">
+                        <h1 style="font-size: 1.3em;">Маршрут по таблице</h1>
+                        <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">Задание 1 ЕГЭ: схема дорог</p>
+                    </div>
+                </section>
+
+                <!-- зачем тема -->
+                <section>
+                    <h2>Что мы уже знаем</h2>
+                    <ul>
+                        <li class="fragment">Обход графа в глубину</li>
+                        <li class="fragment">Компоненты связности</li>
+                        <li class="fragment">Поиск цикла</li>
+                        <li class="fragment">Мосты и точки сочленения</li>
+                        <li class="fragment">Компоненты сильной связности</li>
+                    </ul>
+                    <div class="fragment opinion" style="margin-top: 0.8em;">
+                        Сегодня новых алгоритмов почти нет. Новое - <mark>формат задач</mark> ЕГЭ и олимпиад и умение
+                        увидеть в условии граф.
+                    </div>
+                </section>
+
+                <!-- термины: маршрут, путь, длина -->
+                <section>
+                    <h2>Маршрут, путь, длина</h2>
+                    <svg width="420" height="170" style="display: block; margin: 0.3em auto;" class="fragment">
+                        <line x1="50" y1="120" x2="150" y2="40" stroke="#888" stroke-width="1.5" />
+                        <line x1="50" y1="120" x2="160" y2="130" stroke="#7d7" stroke-width="4" />
+                        <line x1="160" y1="130" x2="280" y2="110" stroke="#7d7" stroke-width="4" />
+                        <line x1="150" y1="40" x2="280" y2="110" stroke="#888" stroke-width="1.5" />
+                        <line x1="280" y1="110" x2="370" y2="45" stroke="#888" stroke-width="1.5" />
+                        <text x="95" y="70" fill="#bbb" font-size="13">4</text>
+                        <text x="100" y="140" fill="#7d7" font-size="13">3</text>
+                        <text x="220" y="132" fill="#7d7" font-size="13">4</text>
+                        <text x="220" y="70" fill="#bbb" font-size="13">9</text>
+                        <text x="330" y="70" fill="#bbb" font-size="13">2</text>
+                        <circle cx="50" cy="120" r="19" fill="rgba(120,220,140,0.30)" stroke="#7d7" stroke-width="2" />
+                        <circle cx="150" cy="40" r="19" fill="rgba(120,120,255,0.30)" stroke="#99f" stroke-width="2" />
+                        <circle cx="160" cy="130" r="19" fill="rgba(120,220,140,0.30)" stroke="#7d7" stroke-width="2" />
+                        <circle cx="280" cy="110" r="19" fill="rgba(120,220,140,0.30)" stroke="#7d7" stroke-width="2" />
+                        <circle cx="370" cy="45" r="19" fill="rgba(120,120,255,0.30)" stroke="#99f" stroke-width="2" />
+                        <text x="50" y="125" text-anchor="middle" fill="white" font-size="14"
+                            font-weight="bold">A</text>
+                        <text x="150" y="45" text-anchor="middle" fill="white" font-size="14"
+                            font-weight="bold">B</text>
+                        <text x="160" y="135" text-anchor="middle" fill="white" font-size="14"
+                            font-weight="bold">C</text>
+                        <text x="280" y="115" text-anchor="middle" fill="white" font-size="14"
+                            font-weight="bold">D</text>
+                        <text x="370" y="50" text-anchor="middle" fill="white" font-size="14"
+                            font-weight="bold">E</text>
+                    </svg>
+                    <ul style="font-size: 0.8em;">
+                        <li class="fragment"><strong>Маршрут</strong> - идём по рёбрам от вершины к вершине.</li>
+                        <li class="fragment"><strong>Путь</strong> - маршрут, где вершины не повторяются.</li>
+                        <li class="fragment"><strong>Длина</strong> - число рёбер или сумма весов. Здесь путь
+                            <mark class="green">A - C - D</mark> имеет длину 3 + 4 = 7.
+                        </li>
+                    </ul>
+                </section>
+
+                <!-- таблица смежности -->
+                <section>
+                    <h2>Таблица смежности</h2>
+                    <div style="display: flex; align-items: center; justify-content: center; gap: 1.5em;">
+                        <svg width="230" height="180" class="fragment">
+                            <line x1="40" y1="140" x2="115" y2="40" stroke="#888" stroke-width="1.5" />
+                            <line x1="115" y1="40" x2="190" y2="140" stroke="#888" stroke-width="1.5" />
+                            <line x1="40" y1="140" x2="190" y2="140" stroke="#888" stroke-width="1.5" />
+                            <text x="65" y="90" fill="#bbb" font-size="13">5</text>
+                            <text x="160" y="90" fill="#bbb" font-size="13">2</text>
+                            <text x="115" y="158" fill="#bbb" font-size="13">7</text>
+                            <circle cx="40" cy="140" r="17" fill="rgba(120,120,255,0.30)" stroke="#99f"
+                                stroke-width="2" />
+                            <circle cx="115" cy="40" r="17" fill="rgba(120,120,255,0.30)" stroke="#99f"
+                                stroke-width="2" />
+                            <circle cx="190" cy="140" r="17" fill="rgba(120,120,255,0.30)" stroke="#99f"
+                                stroke-width="2" />
+                            <text x="40" y="145" text-anchor="middle" fill="white" font-size="13"
+                                font-weight="bold">1</text>
+                            <text x="115" y="45" text-anchor="middle" fill="white" font-size="13"
+                                font-weight="bold">2</text>
+                            <text x="190" y="145" text-anchor="middle" fill="white" font-size="13"
+                                font-weight="bold">3</text>
+                        </svg>
+                        <table class="fragment" style="font-size: 0.8em;">
+                            <tr>
+                                <td></td>
+                                <td><strong>1</strong></td>
+                                <td><strong>2</strong></td>
+                                <td><strong>3</strong></td>
+                            </tr>
+                            <tr>
+                                <td><strong>1</strong></td>
+                                <td></td>
+                                <td>5</td>
+                                <td>7</td>
+                            </tr>
+                            <tr>
+                                <td><strong>2</strong></td>
+                                <td>5</td>
+                                <td></td>
+                                <td>2</td>
+                            </tr>
+                            <tr>
+                                <td><strong>3</strong></td>
+                                <td>7</td>
+                                <td>2</td>
+                                <td></td>
+                            </tr>
+                        </table>
+                    </div>
+                    <ul style="font-size: 0.8em;">
+                        <li class="fragment">На пересечении строки <code>i</code> и столбца <code>j</code> - вес ребра.
+                        </li>
+                        <li class="fragment">Пусто - ребра нет.</li>
+                        <li class="fragment">Граф неориентированный - таблица <mark>симметрична</mark>.</li>
+                    </ul>
+                </section>
+
+                <!-- ЕГЭ №1: сопоставить таблицу и рисунок -->
+                <section>
+                    <h2>Задание 1: сопоставить</h2>
+                    <ul>
+                        <li class="fragment">Дают таблицу и рисунок <mark>отдельно</mark>, подписи вершин не совпадают.
+                        </li>
+                        <li class="fragment">Шаг 1: посчитать <mark class="green">степень</mark> каждой вершины (сколько
+                            дорог) и в таблице, и на рисунке.</li>
+                        <li class="fragment">Уникальную степень закрепляем сразу.</li>
+                        <li class="fragment">Шаг 2: если степень повторяется - различаем вершины <mark>по структуре
+                                связей</mark>, не по одной степени.</li>
+                        <li class="fragment">В конце проверка: каждое ребро таблицы есть на рисунке и наоборот.</li>
+                    </ul>
+                </section>
+
+                <!-- ЕГЭ №1: за что зацепиться при равных степенях -->
+                <section>
+                    <h2>Задание 1: за что зацепиться</h2>
+                    <svg width="320" height="165" style="display: block; margin: 0.2em auto;" class="fragment">
+                        <line x1="120" y1="45" x2="70" y2="125" stroke="#7d7" stroke-width="3" />
+                        <line x1="120" y1="45" x2="185" y2="125" stroke="#7d7" stroke-width="3" />
+                        <line x1="70" y1="125" x2="185" y2="125" stroke="#7d7" stroke-width="3" />
+                        <line x1="120" y1="45" x2="255" y2="35" stroke="#888" stroke-width="1.5" />
+                        <circle cx="120" cy="45" r="18" fill="rgba(120,120,255,0.30)" stroke="#99f" stroke-width="2" />
+                        <circle cx="70" cy="125" r="18" fill="rgba(120,220,140,0.30)" stroke="#7d7" stroke-width="2" />
+                        <circle cx="185" cy="125" r="18" fill="rgba(120,220,140,0.30)" stroke="#7d7" stroke-width="2" />
+                        <circle cx="255" cy="35" r="16" fill="rgba(120,120,255,0.30)" stroke="#99f" stroke-width="2" />
+                        <text x="120" y="50" text-anchor="middle" fill="white" font-size="13"
+                            font-weight="bold">3</text>
+                        <text x="70" y="130" text-anchor="middle" fill="white" font-size="13"
+                            font-weight="bold">2</text>
+                        <text x="185" y="130" text-anchor="middle" fill="white" font-size="13"
+                            font-weight="bold">2</text>
+                        <text x="255" y="40" text-anchor="middle" fill="white" font-size="12"
+                            font-weight="bold">1</text>
+                    </svg>
+                    <ul style="font-size: 0.78em;">
+                        <li class="fragment">Две вершины <mark>одной степени</mark>: одна соединена с уже опознанной
+                            вершиной, другая нет.</li>
+                        <li class="fragment">Две вершины степени 2, обе связаны <mark class="green">с одной и той же
+                                третьей</mark> - вместе с ней это треугольник.</li>
+                        <li class="fragment">Висячая вершина (степень 1) - смотрим, к кому она подключена.</li>
+                        <li class="fragment">Тупиковая цепочка, кратные рёбра, самый тяжёлый вес - тоже зацепки.</li>
+                    </ul>
+                </section>
+
+                <!-- разбор задания 1 с Решу ЕГЭ -->
+                <section>
+                    <h2>Задание 1: разбор</h2>
+                    <p class="fragment" style="font-size: 0.85em;">Схема дорог района задана графом и таблицей длин.
+                        Найти <mark>сумму длин маршрутов</mark> между двумя парами пунктов. Ответ - целое число.</p>
+                    <div class="timeline">
+                        <div class="timeline-item fragment">
+                            <div class="timeline-marker">1</div>
+                            <div class="timeline-content">По степеням вершин подставили буквы в таблицу</div>
+                        </div>
+                        <div class="timeline-item fragment">
+                            <div class="timeline-marker">2</div>
+                            <div class="timeline-content">Для первой пары выписали 2-3 коротких маршрута, взяли
+                                минимальную сумму</div>
+                        </div>
+                        <div class="timeline-item fragment">
+                            <div class="timeline-marker">3</div>
+                            <div class="timeline-content">То же для второй пары, сложили два ответа</div>
+                        </div>
+                    </div>
+                    <p class="fragment" style="font-size: 0.72em; opacity: 0.8;">Задачи берём с <a
+                            href="https://inf-ege.sdamgia.ru/prob_catalog" target="_blank" rel="noopener">Решу ЕГЭ</a>,
+                        задание 1, и разбираем на экране.</p>
+                </section>
+            </section>
+
+            <!-- ЧАСТЬ 2: подсчёт числа путей в ациклическом графе (ЕГЭ №13 + олимпиада) -->
+            <section>
+                <section style="font-size: 70px; height: 100%; width: 100%">
+                    <div class="lesson-time">15</div>
+                    <div class="fragment">
+                        <h1 style="font-size: 1.3em;">Сколько существует маршрутов</h1>
+                        <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">Задание 13: считаем пути</p>
+                    </div>
+                </section>
+
+                <!-- DAG и топологический порядок -->
+                <section>
+                    <h2>Ациклический граф</h2>
+                    <svg width="440" height="150" style="display: block; margin: 0.3em auto;" class="fragment">
+                        <defs>
+                            <marker id="ah" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+                                <path d="M0,0 L7,3 L0,6 Z" fill="#888" />
+                            </marker>
+                        </defs>
+                        <line x1="45" y1="75" x2="120" y2="35" stroke="#888" stroke-width="1.5" marker-end="url(#ah)" />
+                        <line x1="45" y1="75" x2="120" y2="115" stroke="#888" stroke-width="1.5"
+                            marker-end="url(#ah)" />
+                        <line x1="140" y1="35" x2="220" y2="35" stroke="#888" stroke-width="1.5"
+                            marker-end="url(#ah)" />
+                        <line x1="140" y1="115" x2="220" y2="75" stroke="#888" stroke-width="1.5"
+                            marker-end="url(#ah)" />
+                        <line x1="240" y1="35" x2="320" y2="75" stroke="#888" stroke-width="1.5"
+                            marker-end="url(#ah)" />
+                        <line x1="240" y1="75" x2="320" y2="75" stroke="#888" stroke-width="1.5"
+                            marker-end="url(#ah)" />
+                        <line x1="340" y1="75" x2="400" y2="75" stroke="#888" stroke-width="1.5"
+                            marker-end="url(#ah)" />
+                        <circle cx="35" cy="75" r="16" fill="rgba(120,120,255,0.30)" stroke="#99f" stroke-width="2" />
+                        <circle cx="130" cy="35" r="16" fill="rgba(120,120,255,0.30)" stroke="#99f" stroke-width="2" />
+                        <circle cx="130" cy="115" r="16" fill="rgba(120,120,255,0.30)" stroke="#99f" stroke-width="2" />
+                        <circle cx="230" cy="35" r="16" fill="rgba(120,120,255,0.30)" stroke="#99f" stroke-width="2" />
+                        <circle cx="230" cy="75" r="16" fill="rgba(120,120,255,0.30)" stroke="#99f" stroke-width="2" />
+                        <circle cx="330" cy="75" r="16" fill="rgba(120,120,255,0.30)" stroke="#99f" stroke-width="2" />
+                        <circle cx="415" cy="75" r="16" fill="rgba(120,120,255,0.30)" stroke="#99f" stroke-width="2" />
+                        <text x="35" y="80" text-anchor="middle" fill="white" font-size="12" font-weight="bold">S</text>
+                        <text x="130" y="40" text-anchor="middle" fill="white" font-size="12"
+                            font-weight="bold">A</text>
+                        <text x="130" y="120" text-anchor="middle" fill="white" font-size="12"
+                            font-weight="bold">B</text>
+                        <text x="230" y="40" text-anchor="middle" fill="white" font-size="12"
+                            font-weight="bold">C</text>
+                        <text x="230" y="80" text-anchor="middle" fill="white" font-size="12"
+                            font-weight="bold">D</text>
+                        <text x="330" y="80" text-anchor="middle" fill="white" font-size="12"
+                            font-weight="bold">E</text>
+                        <text x="415" y="80" text-anchor="middle" fill="white" font-size="12"
+                            font-weight="bold">T</text>
+                    </svg>
+                    <ul style="font-size: 0.8em;">
+                        <li class="fragment">Все рёбра - стрелки, циклов нет.</li>
+                        <li class="fragment">Значит вершины можно выстроить в линию так, что стрелки идут только вперёд
+                            -
+                            <mark class="green">топологический порядок</mark>.
+                        </li>
+                    </ul>
+                </section>
+
+                <!-- почему удобно -->
+                <section>
+                    <h2>Почему это удобно</h2>
+                    <ul>
+                        <li class="fragment">Идём по вершинам в топологическом порядке.</li>
+                        <li class="fragment">Когда обрабатываем вершину <code>v</code>, все вершины со стрелкой в неё
+                            <mark>уже посчитаны</mark>.
+                        </li>
+                        <li class="fragment">Ответ для <code>v</code> собираем из готовых ответов её предшественников.
+                        </li>
+                    </ul>
+                    <div class="fragment opinion" style="margin-top: 0.8em;">
+                        Один проход слева направо - и ответ есть для каждой вершины.
+                    </div>
+                </section>
+
+                <!-- рекуррента + трассировка -->
+                <section>
+                    <h2>Число путей: правило</h2>
+                    <p class="fragment"><strong>путей(S)</strong> = 1. <strong>путей(v)</strong> = сумма
+                        <code>путей(u)</code> по всем стрелкам <code>u в v</code>.
+                    </p>
+                    <svg width="420" height="120" style="display: block; margin: 0.2em auto;" class="fragment">
+                        <defs>
+                            <marker id="ah2" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+                                <path d="M0,0 L7,3 L0,6 Z" fill="#888" />
+                            </marker>
+                        </defs>
+                        <line x1="45" y1="60" x2="110" y2="30" stroke="#888" stroke-width="1.5"
+                            marker-end="url(#ah2)" />
+                        <line x1="45" y1="60" x2="110" y2="90" stroke="#888" stroke-width="1.5"
+                            marker-end="url(#ah2)" />
+                        <line x1="135" y1="30" x2="230" y2="45" stroke="#888" stroke-width="1.5"
+                            marker-end="url(#ah2)" />
+                        <line x1="135" y1="90" x2="230" y2="55" stroke="#888" stroke-width="1.5"
+                            marker-end="url(#ah2)" />
+                        <line x1="135" y1="30" x2="230" y2="30" stroke="#888" stroke-width="1.5"
+                            marker-end="url(#ah2)" />
+                        <line x1="255" y1="30" x2="350" y2="45" stroke="#888" stroke-width="1.5"
+                            marker-end="url(#ah2)" />
+                        <line x1="255" y1="50" x2="350" y2="50" stroke="#888" stroke-width="1.5"
+                            marker-end="url(#ah2)" />
+                        <circle cx="35" cy="60" r="15" fill="rgba(120,120,255,0.30)" stroke="#99f" stroke-width="2" />
+                        <circle cx="123" cy="30" r="15" fill="rgba(120,120,255,0.30)" stroke="#99f" stroke-width="2" />
+                        <circle cx="123" cy="90" r="15" fill="rgba(120,120,255,0.30)" stroke="#99f" stroke-width="2" />
+                        <circle cx="243" cy="30" r="15" fill="rgba(120,120,255,0.30)" stroke="#99f" stroke-width="2" />
+                        <circle cx="243" cy="55" r="15" fill="rgba(120,120,255,0.30)" stroke="#99f" stroke-width="2" />
+                        <circle cx="363" cy="48" r="15" fill="rgba(120,220,140,0.30)" stroke="#7d7" stroke-width="2" />
+                        <text x="35" y="65" text-anchor="middle" fill="white" font-size="12" font-weight="bold">S</text>
+                        <text x="123" y="35" text-anchor="middle" fill="white" font-size="12"
+                            font-weight="bold">A</text>
+                        <text x="123" y="95" text-anchor="middle" fill="white" font-size="12"
+                            font-weight="bold">B</text>
+                        <text x="243" y="35" text-anchor="middle" fill="white" font-size="12"
+                            font-weight="bold">C</text>
+                        <text x="243" y="60" text-anchor="middle" fill="white" font-size="12"
+                            font-weight="bold">D</text>
+                        <text x="363" y="53" text-anchor="middle" fill="white" font-size="12"
+                            font-weight="bold">T</text>
+                    </svg>
+                    <table style="font-size: 0.8em; margin: 0 auto;">
+                        <tr>
+                            <td><strong>S</strong></td>
+                            <td><strong>A</strong></td>
+                            <td><strong>B</strong></td>
+                            <td><strong>C</strong></td>
+                            <td><strong>D</strong></td>
+                            <td><strong>T</strong></td>
+                        </tr>
+                        <tr>
+                            <td class="fragment">1</td>
+                            <td class="fragment">1</td>
+                            <td class="fragment">1</td>
+                            <td class="fragment">1</td>
+                            <td class="fragment">2</td>
+                            <td class="fragment"><mark class="green">3</mark></td>
+                        </tr>
+                    </table>
+                </section>
+
+                <!-- граф состояний -->
+                <section>
+                    <h2>Числа как вершины</h2>
+                    <ul style="font-size: 0.85em;">
+                        <li class="fragment">Задание 13: исполнитель по командам меняет число на экране.</li>
+                        <li class="fragment">Каждое число - вершина, команда - стрелка из числа в результат.</li>
+                        <li class="fragment">Вопрос "сколько программ" = <mark class="green">"сколько путей"</mark> из
+                            старта в цель.</li>
+                    </ul>
+                    <svg width="420" height="120" style="display: block; margin: 0.2em auto;" class="fragment">
+                        <defs>
+                            <marker id="ah3" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+                                <path d="M0,0 L7,3 L0,6 Z" fill="#888" />
+                            </marker>
+                        </defs>
+                        <line x1="70" y1="60" x2="130" y2="60" stroke="#888" stroke-width="1.5"
+                            marker-end="url(#ah3)" />
+                        <line x1="170" y1="60" x2="230" y2="60" stroke="#888" stroke-width="1.5"
+                            marker-end="url(#ah3)" />
+                        <line x1="150" y1="45" x2="150" y2="20" stroke="#7d7" stroke-width="1.8"
+                            marker-end="url(#ah3)" />
+                        <text x="95" y="52" fill="#bbb" font-size="12">+1</text>
+                        <text x="195" y="52" fill="#bbb" font-size="12">+1</text>
+                        <text x="158" y="30" fill="#7d7" font-size="12">swap</text>
+                        <circle cx="50" cy="60" r="18" fill="rgba(120,120,255,0.30)" stroke="#99f" stroke-width="2" />
+                        <circle cx="150" cy="60" r="18" fill="rgba(120,120,255,0.30)" stroke="#99f" stroke-width="2" />
+                        <circle cx="250" cy="60" r="18" fill="rgba(120,120,255,0.30)" stroke="#99f" stroke-width="2" />
+                        <circle cx="150" cy="12" r="14" fill="rgba(120,220,140,0.30)" stroke="#7d7" stroke-width="2" />
+                        <text x="50" y="65" text-anchor="middle" fill="white" font-size="12"
+                            font-weight="bold">100</text>
+                        <text x="150" y="65" text-anchor="middle" fill="white" font-size="12"
+                            font-weight="bold">101</text>
+                        <text x="250" y="65" text-anchor="middle" fill="white" font-size="12"
+                            font-weight="bold">102</text>
+                        <text x="150" y="16" text-anchor="middle" fill="white" font-size="10"
+                            font-weight="bold">110</text>
+                    </svg>
+                </section>
+
+                <!-- ограничения через вершины -->
+                <section>
+                    <h2>Через одни вершины можно, через другие нет</h2>
+                    <ul>
+                        <li class="fragment"><strong>Не проходить через X</strong> - убираем вершину X из графа, считаем
+                            как обычно.</li>
+                        <li class="fragment"><strong>Обязательно через X</strong> - <code>путей(старт в X)</code>
+                            умножить на <code>путей(X в цель)</code>.</li>
+                    </ul>
+                </section>
+
+                <!-- олимпиада: число маршрутов на поле -->
+                <section>
+                    <h2>Олимпиада: число маршрутов</h2>
+                    <p class="fragment" style="font-size: 0.82em;">Школьный и муниципальный этапы ВсОШ, типовая задача
+                        (<a href="https://vos.olimpiada.ru" target="_blank" rel="noopener">архив</a>):</p>
+                    <ul style="font-size: 0.82em;">
+                        <li class="fragment">Поле до 1000 на 1000, часть клеток - стены.</li>
+                        <li class="fragment">Посчитать число маршрутов из левого верхнего угла в правый нижний, ходы
+                            вправо и вниз.</li>
+                        <li class="fragment">Ответ большой - просят остаток от деления на заданное число.</li>
+                    </ul>
+                    <div class="fragment opinion" style="margin-top: 0.7em;">
+                        Тот же счёт, что в задании 13: <code>путей(клетка) = сверху + слева</code>, стена = 0. Только
+                        поле большое и нужна программа.
+                    </div>
+                </section>
+            </section>
+
+
+            <!-- ЧАСТЬ 4: где решать и откуда будут ДЗ -->
+            <section>
+                <section style="font-size: 70px; height: 100%; width: 100%">
+                    <div class="lesson-time">45</div>
+                    <div class="fragment">
+                        <h1 style="font-size: 1.3em;">Где решать и откуда ДЗ</h1>
+                        <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">acmp.ru и другие площадки</p>
+                    </div>
+                </section>
+
+                <!-- acmp: что это -->
+                <section>
+                    <h2>acmp.ru</h2>
+                    <ul>
+                        <li class="fragment">Бесплатный российский архив задач с <mark>автоматической проверкой</mark>.
+                        </li>
+                        <li class="fragment">Отправляешь программу - система прогоняет её на тестах и говорит результат.
+                        </li>
+                        <li class="fragment">Задачи собраны в тематические курсы, среди них - <mark
+                                class="green">"Теория графов"</mark>.</li>
+                    </ul>
+                </section>
+
+                <!-- карточка задачи -->
+                <section>
+                    <h2>Что показывает задача</h2>
+                    <table style="font-size: 0.85em; width: 100%; margin-top: 0.8em;">
+                        <tr>
+                            <td><strong>Условие и пример</strong></td>
+                            <td>что на входе, что на выходе</td>
+                        </tr>
+                        <tr class="fragment">
+                            <td><strong>Ограничения</strong></td>
+                            <td>время (1-2 сек) и память</td>
+                        </tr>
+                        <tr class="fragment">
+                            <td><strong>Сложность</strong></td>
+                            <td>число баллов, грубая оценка трудности</td>
+                        </tr>
+                        <tr class="fragment">
+                            <td><strong>Решаемость</strong></td>
+                            <td>процент решивших и сколько человек решили</td>
+                        </tr>
+                    </table>
+                </section>
+
+                <!-- другие площадки -->
+                <section>
+                    <h2>Ещё источники</h2>
+                    <ul style="font-size: 0.85em;">
+                        <li class="fragment"><a href="https://informatics.msk.ru" target="_blank"
+                                rel="noopener">informatics.msk.ru</a> - задачи с Московских олимпиад и командной
+                            олимпиады, с разборами.</li>
+                        <li class="fragment"><a href="https://vos.olimpiada.ru" target="_blank"
+                                rel="noopener">vos.olimpiada.ru</a> - архив Всероссийской олимпиады по этапам и годам.
+                        </li>
+                        <li class="fragment"><a href="https://olymp.itmo.ru" target="_blank"
+                                rel="noopener">olymp.itmo.ru</a> - Открытая олимпиада ИТМО, отборочные туры.</li>
+                    </ul>
+                </section>
+
+                <!-- как войдёт в курс -->
+                <section>
+                    <h2>Как это войдёт в занятия</h2>
+                    <ul>
+                        <li class="fragment">Часть ДЗ теперь - задача с acmp по уже пройденной теме.</li>
+                        <li class="fragment">Нерешённое разбираем в начале следующего занятия.</li>
+                        <li class="fragment">Постепенно набираешь личный архив решённых задач.</li>
+                    </ul>
+                    <div class="fragment opinion" style="margin-top: 0.8em;">
+                        Олимпиадная практика - это насмотренность. Она набирается только решением задач.
+                    </div>
+                </section>
+            </section>
+        </div>
+    </div>
+
+    <script src="/utils/lib/js/head.min.js"></script>
+    <script src="/utils/js/reveal.js"></script>
+    <script>
+        Reveal.initialize({
+            controls: true,
+            progress: true,
+            history: true,
+            center: true,
+            transition: 'fade',
+            transitionSpeed: 'fast',
+            dependencies: [
+                { src: '/utils/lib/js/classList.js', condition: function () { return !document.body.classList; } },
+                { src: '/utils/plugin/markdown/marked.js', condition: function () { return !!document.querySelector('[data-markdown]'); } },
+                { src: '/utils/plugin/markdown/markdown.js', condition: function () { return !!document.querySelector('[data-markdown]'); } },
+                { src: '/utils/plugin/highlight/highlight.js', async: true, callback: function () { hljs.initHighlightingOnLoad(); } },
+                { src: '/utils/plugin/zoom-js/zoom.js', async: true },
+                { src: '/utils/plugin/notes/notes.js', async: true }
+            ]
+        });
+        Reveal.configure({ slideNumber: 'c/t' });
+    </script>
+</body>
+
+</html>
