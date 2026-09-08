@@ -510,8 +510,20 @@
       "title": "Эйлеров и гамильтонов путь и цикл",
       "date": "2026-09-08T15:00:00",
       "duration": 90,
-      "presentations": [],
-      "homeworks": []
+      "presentations": [
+        {
+          "title": "Презентация",
+          "link": "/lessons/27-euler-hamilton/",
+          "order": 1
+        }
+      ],
+      "homeworks": [
+        {
+          "title": "332. Reconstruct Itinerary",
+          "description": "Дан список авиабилетов. Найти маршрут, который использует каждый билет ровно один раз, начиная с \"JFK\", а при выборе - идти в лексикографически меньший город. Это ровно поиск эйлерова пути",
+          "link": "https://leetcode.com/problems/reconstruct-itinerary/description/"
+        }
+      ]
     },
     {
       "number": 28,

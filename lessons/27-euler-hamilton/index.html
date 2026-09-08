@@ -1,0 +1,939 @@
+<!doctype html>
+<html lang="ru">
+
+<head>
+    <meta charset="utf-8">
+    <title>Занятие 27 - Эйлеров и гамильтонов путь и цикл</title>
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+
+    <link rel="stylesheet" href="/utils/css/reveal.css">
+    <link rel="stylesheet" href="/utils/lib/css/animate.css">
+    <link rel="stylesheet" href="/utils/css/theme/night.css" id="theme">
+    <link rel="stylesheet" href="/utils/lib/css/zenburn.css">
+    <link rel="stylesheet" href="/utils/css/custom-base.css">
+    <link rel="stylesheet" href="css-custom/custom.css">
+
+    <script>
+        var link = document.createElement('link');
+        link.rel = 'stylesheet'; link.type = 'text/css';
+        link.href = window.location.search.match(/print-pdf/gi)
+            ? '/utils/css/print/pdf.css'
+            : '/utils/css/print/paper.css';
+        document.getElementsByTagName('head')[0].appendChild(link);
+    </script>
+</head>
+
+<body>
+    <div class="reveal">
+        <div class="slides">
+
+            <!-- титульный слайд -->
+            <section style="font-size: 70px; height: 100%; width: 100%">
+                <div class="lesson-time">0</div>
+                <div class="fragment">
+                    <h1 class="animated" style="font-size: 1.25em;">Эйлеров и гамильтонов путь и цикл</h1>
+                    <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">Семь мостов Кёнигсберга и рождение
+                        теории графов. Занятие 27</p>
+                </div>
+            </section>
+
+            <!-- РАЗБОР ДЗ занятия 26 -->
+            <section>
+
+                <section style="font-size: 70px; height: 100%; width: 100%">
+                    <div class="lesson-time">0</div>
+                    <div class="fragment">
+                        <h1 style="font-size: 1.3em;">Разбор ДЗ</h1>
+                        <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">степени вершин в деле</p>
+                    </div>
+                </section>
+
+                <!-- разбор ДЗ: acmp 124 "Светофорчики" - светофоров на перекрёстке столько же, сколько степень вершины -->
+                <section>
+                    <h2>Разбор ДЗ: <a href="https://acmp.ru/index.asp?main=task&amp;id_task=124" target="_blank"
+                            rel="noopener">124. Светофорчики</a></h2>
+                    <p class="fragment">В подземелье <code>M</code> тоннелей между <code>N</code> перекрёстками. Перед
+                        каждым перекрёстком в каждом тоннеле - светофор. Сколько светофоров стоит у каждого
+                        перекрёстка?</p>
+                    <div class="fragment opinion" style="margin-top: 0.8em;">
+                        У перекрёстка <mark>i</mark> светофоров ровно столько, сколько тоннелей в него входит - то есть
+                        <mark>степень вершины i</mark>
+                    </div>
+                    <p class="fragment" style="font-size: 0.85em; opacity: 0.85;">Решение: строим список смежности и
+                        печатаем <code>len(adj[i])</code> для каждой вершины</p>
+                </section>
+
+                <!-- разбор ДЗ: acmp 15 "Дороги" - сумма степеней = 2 * количество рёбер, лемма о рукопожатиях -->
+                <section>
+                    <h2>Разбор ДЗ: <a href="https://acmp.ru/index.asp?main=task&amp;id_task=15" target="_blank"
+                            rel="noopener">15. Дороги</a></h2>
+                    <p class="fragment">Известно, сколько дорог выходит из каждого города. Нужно посчитать общее число
+                        дорог на планете.</p>
+                    <p class="fragment" style="margin-top: 0.6em;">Если сложить степени всех городов - каждая дорога
+                        посчитается <mark>дважды</mark>: она добавляет +1 к степени <mark>обоих</mark> городов, которые
+                        соединяет</p>
+                    <div class="fragment opinion" style="margin-top: 0.6em;">
+                        Значит: <mark>сумма степеней = 2 x количество рёбер</mark>. Это правило работает для любого
+                        графа - его называют <mark>леммой о рукопожатиях</mark>
+                    </div>
+                    <p class="fragment" style="font-size: 0.85em; opacity: 0.85;">Ответ: <code>sum(degrees) // 2</code>
+                    </p>
+                </section>
+
+            </section>
+
+            <!-- ЧАСТЬ 1: Мосты Кёнигсберга и эйлеров путь -->
+            <section>
+
+                <section style="font-size: 70px; height: 100%; width: 100%">
+                    <div class="lesson-time">5</div>
+                    <div class="fragment">
+                        <h1 style="font-size: 1.3em;">Мосты Кёнигсберга</h1>
+                        <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">задача, с которой началась теория
+                            графов</p>
+                    </div>
+                </section>
+
+                <!-- задача о семи мостах Кёнигсберга: SVG-схема города, река, два острова, 7 мостов -->
+                <section>
+                    <h2>Город на реке Прегель, 1736 год</h2>
+                    <svg width="480" height="260" style="display: block; margin: 0.3em auto;" class="fragment">
+                        <rect x="0" y="90" width="480" height="80" fill="rgba(80,140,255,0.25)" />
+                        <text x="10" y="30" fill="#ddd" font-size="14">Северный берег</text>
+                        <rect x="0" y="35" width="480" height="45" fill="rgba(120,255,140,0.12)" />
+                        <text x="10" y="245" fill="#ddd" font-size="14">Южный берег</text>
+                        <rect x="0" y="180" width="480" height="45" fill="rgba(120,255,140,0.12)" />
+                        <ellipse cx="150" cy="130" rx="70" ry="38" fill="rgba(255,213,79,0.25)" stroke="#ffd54f"
+                            stroke-width="2" />
+                        <text x="150" y="135" text-anchor="middle" fill="#ffd54f" font-size="13">о. Кнайпхоф</text>
+                        <ellipse cx="330" cy="130" rx="55" ry="34" fill="rgba(255,120,180,0.22)" stroke="#f7a"
+                            stroke-width="2" />
+                        <text x="330" y="135" text-anchor="middle" fill="#f7a" font-size="13">о. Ломзе</text>
+                        <line x1="120" y1="80" x2="130" y2="98" stroke="#fff" stroke-width="4" />
+                        <line x1="160" y1="80" x2="155" y2="98" stroke="#fff" stroke-width="4" />
+                        <line x1="120" y1="180" x2="130" y2="162" stroke="#fff" stroke-width="4" />
+                        <line x1="160" y1="180" x2="155" y2="162" stroke="#fff" stroke-width="4" />
+                        <line x1="330" y1="80" x2="330" y2="98" stroke="#fff" stroke-width="4" />
+                        <line x1="330" y1="180" x2="330" y2="162" stroke="#fff" stroke-width="4" />
+                        <line x1="205" y1="128" x2="278" y2="128" stroke="#fff" stroke-width="4" />
+                    </svg>
+                    <p class="fragment" style="font-size: 0.85em; opacity: 0.85; text-align: center;">2 берега, 2
+                        острова,
+                        <mark>7 мостов</mark> между ними
+                    </p>
+                </section>
+
+                <!-- вопрос ученику: можно ли пройти каждый мост ровно один раз? дать 1-2 минуты попробовать -->
+                <section>
+                    <h2>Загадка для горожан</h2>
+                    <div class="fragment opinion" style="font-size: 1em;">
+                        Можно ли пройти прогулку так, чтобы пройти по <mark>каждому мосту ровно один раз</mark> и
+                        вернуться туда, откуда начал?
+                    </div>
+                    <p class="fragment" style="margin-top: 1em; font-size: 0.9em; opacity: 0.85;">Попробуй на предыдущей
+                        картинке - 1-2 минуты. Начинай с любого берега или острова.</p>
+                    <p class="fragment" style="font-size: 0.85em; opacity: 0.7;">В 1736 году над этим бился весь
+                        Кёнигсберг. Ответ нашёл Леонард Эйлер - и не перебором, а рассуждением</p>
+                </section>
+
+                <!-- превращаем карту в граф: 4 вершины (берега и острова), 7 рёбер (мосты), SVG рядом с картой -->
+                <section>
+                    <h2>Идея Эйлера: убрать лишнее</h2>
+                    <p class="fragment">Неважно, какой формы остров и где именно мост. Важно только - <mark>что с чем
+                            соединено</mark>.</p>
+                    <svg width="440" height="230" style="display: block; margin: 0.4em auto;" class="fragment">
+                        <path d="M200,40 Q140,60 120,130" fill="none" stroke="#888" stroke-width="1.6" />
+                        <path d="M200,40 Q180,100 120,130" fill="none" stroke="#888" stroke-width="1.6" />
+                        <path d="M200,220 Q140,200 120,130" fill="none" stroke="#888" stroke-width="1.6" />
+                        <path d="M200,220 Q180,160 120,130" fill="none" stroke="#888" stroke-width="1.6" />
+                        <path d="M200,40 Q260,70 320,130" fill="none" stroke="#888" stroke-width="1.6" />
+                        <path d="M200,220 Q260,190 320,130" fill="none" stroke="#888" stroke-width="1.6" />
+                        <path d="M120,130 Q220,100 320,130" fill="none" stroke="#888" stroke-width="1.6" />
+                        <circle cx="200" cy="40" r="22" fill="rgba(120,255,140,0.25)" stroke="#8f8" stroke-width="2" />
+                        <circle cx="200" cy="220" r="22" fill="rgba(120,255,140,0.25)" stroke="#8f8" stroke-width="2" />
+                        <circle cx="120" cy="130" r="22" fill="rgba(255,213,79,0.25)" stroke="#ffd54f"
+                            stroke-width="2" />
+                        <circle cx="320" cy="130" r="22" fill="rgba(255,120,180,0.22)" stroke="#f7a" stroke-width="2" />
+                        <text x="200" y="45" text-anchor="middle" fill="white" font-size="15"
+                            font-weight="bold">N</text>
+                        <text x="200" y="225" text-anchor="middle" fill="white" font-size="15"
+                            font-weight="bold">S</text>
+                        <text x="120" y="135" text-anchor="middle" fill="white" font-size="15"
+                            font-weight="bold">A</text>
+                        <text x="320" y="135" text-anchor="middle" fill="white" font-size="15"
+                            font-weight="bold">B</text>
+                    </svg>
+                    <p class="fragment" style="font-size: 0.8em; opacity: 0.8; text-align: center;">4 вершины (N, S -
+                        берега; A, B - острова), 7 рёбер (мосты) - <mark>тот же граф</mark>, что и карта</p>
+                </section>
+
+                <!-- определение эйлерова пути: проходим каждое РЕБРО ровно один раз, SVG с подсвеченным маршрутом -->
+                <section>
+                    <h2>Эйлеров путь</h2>
+                    <div class="fragment opinion">
+                        Маршрут, который проходит <mark>каждое ребро графа ровно один раз</mark> (вершины повторять
+                        можно)
+                    </div>
+                </section>
+
+                <!-- определение эйлерова цикла: то же самое, но старт = финиш, SVG -->
+                <section>
+                    <h2>Эйлеров цикл</h2>
+                    <div class="fragment opinion">
+                        То же самое, но <mark>старт и финиш совпадают</mark> - прошли все рёбра и вернулись домой
+                    </div>
+                    <svg width="200" height="180" style="display: block; margin: 0.6em auto;" class="fragment">
+                        <line x1="100" y1="30" x2="180" y2="90" stroke="#8f8" stroke-width="3" />
+                        <line x1="180" y1="90" x2="100" y2="150" stroke="#8f8" stroke-width="3" />
+                        <line x1="100" y1="150" x2="20" y2="90" stroke="#8f8" stroke-width="3" />
+                        <line x1="20" y1="90" x2="100" y2="30" stroke="#8f8" stroke-width="3" />
+                        <circle cx="100" cy="30" r="18" fill="rgba(99,99,255,0.35)" stroke="#99f" stroke-width="2" />
+                        <circle cx="180" cy="90" r="18" fill="rgba(99,99,255,0.35)" stroke="#99f" stroke-width="2" />
+                        <circle cx="100" cy="150" r="18" fill="rgba(99,99,255,0.35)" stroke="#99f" stroke-width="2" />
+                        <circle cx="20" cy="90" r="18" fill="rgba(99,99,255,0.35)" stroke="#99f" stroke-width="2" />
+                        <text x="100" y="35" text-anchor="middle" fill="white" font-size="14">1</text>
+                        <text x="180" y="95" text-anchor="middle" fill="white" font-size="14">2</text>
+                        <text x="100" y="155" text-anchor="middle" fill="white" font-size="14">3</text>
+                        <text x="20" y="95" text-anchor="middle" fill="white" font-size="14">4</text>
+                    </svg>
+                    <p class="fragment" style="font-size: 0.85em; opacity: 0.85; text-align: center;">Простой квадрат:
+                        <code>1 -&gt; 2 -&gt; 3 -&gt; 4 -&gt; 1</code> - все рёбра пройдены по разу, финиш = старт
+                    </p>
+                </section>
+
+                <!-- анонс различия: Эйлер про рёбра, Гамильтон про вершины (две картинки рядом) -->
+                <section>
+                    <h2>Скоро будет ещё одна задача</h2>
+                    <p class="fragment">Обойти <mark>каждое ребро</mark> - это Эйлер. А что если нужно обойти
+                        <mark>каждую
+                            вершину</mark>?
+                    </p>
+                    <div style="display: flex; justify-content: space-around; margin-top: 1em;" class="fragment">
+                        <div style="text-align: center;">
+                            <svg width="140" height="120">
+                                <line x1="30" y1="90" x2="70" y2="30" stroke="#8f8" stroke-width="3" />
+                                <line x1="70" y1="30" x2="110" y2="90" stroke="#8f8" stroke-width="3" />
+                                <line x1="110" y1="90" x2="30" y2="90" stroke="#8f8" stroke-width="3" />
+                                <circle cx="30" cy="90" r="6" fill="#99f" />
+                                <circle cx="70" cy="30" r="6" fill="#99f" />
+                                <circle cx="110" cy="90" r="6" fill="#99f" />
+                            </svg>
+                            <p style="font-size: 0.75em; opacity: 0.8;">Эйлер - все <mark>рёбра</mark></p>
+                        </div>
+                        <div style="text-align: center;">
+                            <svg width="140" height="120">
+                                <line x1="30" y1="90" x2="70" y2="30" stroke="#666" stroke-width="1.4" />
+                                <line x1="70" y1="30" x2="110" y2="90" stroke="#666" stroke-width="1.4" />
+                                <circle cx="30" cy="90" r="9" fill="rgba(255,213,79,0.35)" stroke="#ffd54f" />
+                                <circle cx="70" cy="30" r="9" fill="rgba(255,213,79,0.35)" stroke="#ffd54f" />
+                                <circle cx="110" cy="90" r="9" fill="rgba(255,213,79,0.35)" stroke="#ffd54f" />
+                            </svg>
+                            <p style="font-size: 0.75em; opacity: 0.8;">Гамильтон - все <mark>вершины</mark></p>
+                        </div>
+                    </div>
+                    <p class="fragment" style="text-align: center; font-size: 0.85em; opacity: 0.7;">Про Гамильтона -
+                        позже. Сначала разберёмся с Эйлером до конца</p>
+                </section>
+
+            </section>
+
+            <!-- ЧАСТЬ 2: Критерий существования эйлерова цикла и пути -->
+            <section>
+
+                <section style="font-size: 70px; height: 100%; width: 100%">
+                    <div class="lesson-time">20</div>
+                    <div class="fragment">
+                        <h1 style="font-size: 1.25em;">Когда обход существует?</h1>
+                        <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">критерий без единого перебора</p>
+                    </div>
+                </section>
+
+                <!-- ключевая идея: пришёл в вершину - надо и выйти, каждый заход съедает 2 ребра, SVG -->
+                <section>
+                    <h2>Ключевая идея</h2>
+                    <p class="fragment">Представь, что маршрут проходит через вершину <mark>не в начале и не в
+                            конце</mark> пути.</p>
+                    <svg width="240" height="180" style="display: block; margin: 0.5em auto;" class="fragment">
+                        <defs>
+                            <marker id="ah1" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6"
+                                orient="auto-start-reverse">
+                                <path d="M0,0 L10,5 L0,10 z" fill="#8f8" />
+                            </marker>
+                        </defs>
+                        <line x1="30" y1="30" x2="112" y2="85" stroke="#8f8" stroke-width="2.5"
+                            marker-end="url(#ah1)" />
+                        <line x1="128" y1="85" x2="210" y2="30" stroke="#8f8" stroke-width="2.5"
+                            marker-end="url(#ah1)" />
+                        <line x1="90" y1="150" x2="120" y2="103" stroke="#555" stroke-width="1.4"
+                            stroke-dasharray="3 3" />
+                        <line x1="150" y1="150" x2="140" y2="103" stroke="#555" stroke-width="1.4"
+                            stroke-dasharray="3 3" />
+                        <circle cx="120" cy="95" r="20" fill="rgba(255,213,79,0.3)" stroke="#ffd54f" stroke-width="2" />
+                        <text x="120" y="100" text-anchor="middle" fill="white" font-size="14">v</text>
+                    </svg>
+                    <p class="fragment" style="text-align: center; font-size: 0.85em; opacity: 0.85;">Зашли по одному
+                        ребру - обязаны выйти по другому. <mark>Заход + выход = 2 ребра</mark> за посещение</p>
+                </section>
+
+                <!-- вывод: у промежуточной вершины степень обязана быть чётной, SVG с подсчётом -->
+                <section>
+                    <h2>Вывод: степень чётная</h2>
+                    <svg width="220" height="200" style="display: block; margin: 0.4em auto;" class="fragment">
+                        <line x1="110" y1="100" x2="110" y2="20" stroke="#8f8" stroke-width="2.5" />
+                        <line x1="110" y1="100" x2="180" y2="55" stroke="#8f8" stroke-width="2.5" />
+                        <line x1="110" y1="100" x2="180" y2="145" stroke="#8f8" stroke-width="2.5" />
+                        <line x1="110" y1="100" x2="110" y2="180" stroke="#8f8" stroke-width="2.5" />
+                        <circle cx="110" cy="100" r="22" fill="rgba(255,213,79,0.3)" stroke="#ffd54f"
+                            stroke-width="2" />
+                        <text x="110" y="105" text-anchor="middle" fill="white" font-size="15">v</text>
+                        <text x="70" y="105" text-anchor="middle" fill="#8f8" font-size="13">4 ребра</text>
+                    </svg>
+                    <p class="fragment" style="text-align: center; font-size: 0.9em;">4 ребра = <mark>2 полных
+                            захода</mark>. Каждое посещение тратит ровно 2 ребра, остатка быть не может</p>
+                    <div class="fragment opinion" style="margin-top: 0.6em;">
+                        Степень любой «промежуточной» вершины эйлерова маршрута - <mark>чётная</mark>
+                    </div>
+                </section>
+
+                <!-- вершина нечётной степени может быть только стартом или финишем, SVG -->
+                <section>
+                    <h2>А что с нечётной степенью?</h2>
+                    <svg width="220" height="200" style="display: block; margin: 0.4em auto;" class="fragment">
+                        <line x1="110" y1="100" x2="110" y2="20" stroke="#8f8" stroke-width="2.5" />
+                        <line x1="110" y1="100" x2="180" y2="55" stroke="#8f8" stroke-width="2.5" />
+                        <line x1="110" y1="100" x2="180" y2="145" stroke="#f7a" stroke-width="3" />
+                        <circle cx="110" cy="100" r="22" fill="rgba(255,120,180,0.28)" stroke="#f7a" stroke-width="2" />
+                        <text x="110" y="105" text-anchor="middle" fill="white" font-size="15">v</text>
+                        <text x="60" y="105" text-anchor="middle" fill="#f7a" font-size="13">3 ребра</text>
+                    </svg>
+                    <p class="fragment" style="text-align: center; font-size: 0.9em;">Одно ребро всегда остаётся без
+                        пары - значит вершина может быть только <mark>стартом</mark> или <mark>финишем</mark>, но не
+                        серединой пути</p>
+                </section>
+
+                <!-- критерий эйлерова ЦИКЛА: граф связен + все степени чётные, SVG "да" и "нет" рядом -->
+                <section>
+                    <h2>Критерий эйлерова цикла</h2>
+                    <div class="fragment opinion">
+                        Граф <mark>связен</mark> и <mark>все степени чётные</mark> - здесь старт совпадает с финишем,
+                        значит нечётных вершин быть не может вообще
+                    </div>
+                    <div style="display: flex; justify-content: space-around; margin-top: 0.8em;" class="fragment">
+                        <div style="text-align: center;">
+                            <svg width="140" height="130">
+                                <line x1="30" y1="100" x2="70" y2="30" stroke="#8f8" stroke-width="2.5" />
+                                <line x1="70" y1="30" x2="110" y2="100" stroke="#8f8" stroke-width="2.5" />
+                                <line x1="110" y1="100" x2="30" y2="100" stroke="#8f8" stroke-width="2.5" />
+                                <circle cx="30" cy="100" r="8" fill="#8f8" />
+                                <circle cx="70" cy="30" r="8" fill="#8f8" />
+                                <circle cx="110" cy="100" r="8" fill="#8f8" />
+                            </svg>
+                            <p style="font-size: 0.8em; color: #8f8;">✅ все степени чётные (по 2)</p>
+                        </div>
+                        <div style="text-align: center;">
+                            <svg width="140" height="130">
+                                <line x1="30" y1="100" x2="70" y2="30" stroke="#f7a" stroke-width="2.5" />
+                                <line x1="70" y1="30" x2="110" y2="100" stroke="#f7a" stroke-width="2.5" />
+                                <line x1="110" y1="100" x2="140" y2="60" stroke="#f7a" stroke-width="2.5" />
+                                <circle cx="30" cy="100" r="8" fill="#f7a" />
+                                <circle cx="70" cy="30" r="8" fill="#f7a" />
+                                <circle cx="110" cy="100" r="8" fill="#f7a" />
+                                <circle cx="140" cy="60" r="8" fill="#f7a" />
+                            </svg>
+                            <p style="font-size: 0.8em; color: #f7a;">❌ есть вершины степени 1</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- критерий эйлерова ПУТИ: граф связен + ровно 0 или 2 нечётные вершины, SVG -->
+                <section>
+                    <h2>Критерий эйлерова пути</h2>
+                    <div class="fragment opinion">
+                        Граф <mark>связен</mark> и нечётных вершин <mark>ровно 0 или ровно 2</mark>
+                    </div>
+                    <ul style="margin-top: 0.6em;">
+                        <li class="fragment">0 нечётных - подходит и путь, и цикл (цикл - частный случай пути)</li>
+                        <li class="fragment">2 нечётные - путь есть, но только <mark>между этими двумя</mark> вершинами
+                            (это обязательные старт и финиш)</li>
+                    </ul>
+                    <svg width="260" height="130" style="display: block; margin: 0.5em auto;" class="fragment">
+                        <line x1="40" y1="100" x2="90" y2="30" stroke="#8f8" stroke-width="2.5" />
+                        <line x1="90" y1="30" x2="140" y2="100" stroke="#8f8" stroke-width="2.5" />
+                        <line x1="140" y1="100" x2="40" y2="100" stroke="#8f8" stroke-width="2.5" />
+                        <line x1="140" y1="100" x2="220" y2="100" stroke="#8f8" stroke-width="2.5" />
+                        <circle cx="40" cy="100" r="9" fill="#8f8" />
+                        <circle cx="90" cy="30" r="9" fill="#8f8" />
+                        <circle cx="140" cy="100" r="10" fill="rgba(255,120,180,0.3)" stroke="#f7a" />
+                        <circle cx="220" cy="100" r="10" fill="rgba(255,120,180,0.3)" stroke="#f7a" />
+                        <text x="140" y="122" text-anchor="middle" fill="#f7a" font-size="11">степень 3</text>
+                        <text x="220" y="122" text-anchor="middle" fill="#f7a" font-size="11">степень 1</text>
+                    </svg>
+                </section>
+
+                <!-- почему нечётных вершин не может быть ровно 1 или 3: лемма о рукопожатиях из ДЗ -->
+                <section>
+                    <h2>А ровно 1 или 3 нечётных - бывает?</h2>
+                    <p class="fragment">Нет. Вспомним лемму о рукопожатиях из разбора ДЗ.</p>
+                    <div class="fragment opinion" style="margin-top: 0.5em;">
+                        Сумма степеней = 2 x количество рёбер - всегда <mark>чётное число</mark>
+                    </div>
+                    <p class="fragment" style="margin-top: 0.6em; font-size: 0.9em;">Если бы нечётных вершин было
+                        нечётное количество (1, 3, 5...), сумма всех степеней получилась бы <mark
+                            class="yellow">нечётной</mark> - противоречие</p>
+                    <div class="fragment opinion" style="margin-top: 0.6em;">
+                        Значит, нечётных вершин в любом графе всегда <mark>чётное число</mark>: 0, 2, 4, 6...
+                    </div>
+                </section>
+
+                <!-- возвращаемся к Кёнигсбергу: все 4 вершины нечётной степени -> обхода не существует, SVG с подписанными степенями -->
+                <section>
+                    <h2>Возвращаемся в Кёнигсберг</h2>
+                    <svg width="300" height="230" style="display: block; margin: 0.3em auto;" class="fragment">
+                        <path d="M150,40 Q100,60 90,120" fill="none" stroke="#f7a" stroke-width="1.6" />
+                        <path d="M150,40 Q130,90 90,120" fill="none" stroke="#f7a" stroke-width="1.6" />
+                        <path d="M150,210 Q100,190 90,120" fill="none" stroke="#f7a" stroke-width="1.6" />
+                        <path d="M150,210 Q130,160 90,120" fill="none" stroke="#f7a" stroke-width="1.6" />
+                        <path d="M150,40 Q200,70 230,120" fill="none" stroke="#f7a" stroke-width="1.6" />
+                        <path d="M150,210 Q200,180 230,120" fill="none" stroke="#f7a" stroke-width="1.6" />
+                        <path d="M90,120 Q160,95 230,120" fill="none" stroke="#f7a" stroke-width="1.6" />
+                        <circle cx="150" cy="40" r="20" fill="rgba(255,120,180,0.25)" stroke="#f7a" stroke-width="2" />
+                        <circle cx="150" cy="210" r="20" fill="rgba(255,120,180,0.25)" stroke="#f7a" stroke-width="2" />
+                        <circle cx="90" cy="120" r="20" fill="rgba(255,120,180,0.25)" stroke="#f7a" stroke-width="2" />
+                        <circle cx="230" cy="120" r="20" fill="rgba(255,120,180,0.25)" stroke="#f7a" stroke-width="2" />
+                        <text x="150" y="45" text-anchor="middle" fill="white" font-size="13">N: 3</text>
+                        <text x="150" y="215" text-anchor="middle" fill="white" font-size="13">S: 3</text>
+                        <text x="90" y="125" text-anchor="middle" fill="white" font-size="13">A: 5</text>
+                        <text x="230" y="125" text-anchor="middle" fill="white" font-size="13">B: 3</text>
+                    </svg>
+                    <p class="fragment" style="text-align: center; font-size: 0.9em;"><mark>Все 4 вершины
+                            нечётные</mark>
+                        - нужно 0 или 2, а тут 4. Обхода <mark class="yellow">не существует</mark> - ни цикла, ни даже
+                        пути</p>
+                    <p class="fragment" style="text-align: center; font-size: 0.8em; opacity: 0.75;">Так Эйлер решил
+                        задачу, даже не пытаясь перебирать маршруты</p>
+                </section>
+
+                <!-- разминка: 4 маленьких графа, для каждого ответ цикл / путь / ничего, ответы через .fragment -->
+                <section>
+                    <h2>Разминка: цикл, путь или ничего?</h2>
+                    <div style="display: flex; justify-content: space-around;">
+                        <div style="text-align: center;">
+                            <svg width="100" height="100">
+                                <line x1="20" y1="80" x2="50" y2="20" stroke="#888" stroke-width="2" />
+                                <line x1="50" y1="20" x2="80" y2="80" stroke="#888" stroke-width="2" />
+                                <line x1="80" y1="80" x2="20" y2="80" stroke="#888" stroke-width="2" />
+                                <circle cx="20" cy="80" r="7" fill="#99f" />
+                                <circle cx="50" cy="20" r="7" fill="#99f" />
+                                <circle cx="80" cy="80" r="7" fill="#99f" />
+                            </svg>
+                            <p class="fragment" style="font-size: 0.75em; color: #8f8;">цикл</p>
+                        </div>
+                        <div style="text-align: center;">
+                            <svg width="100" height="100">
+                                <line x1="20" y1="80" x2="50" y2="20" stroke="#888" stroke-width="2" />
+                                <line x1="50" y1="20" x2="80" y2="80" stroke="#888" stroke-width="2" />
+                                <circle cx="20" cy="80" r="7" fill="#99f" />
+                                <circle cx="50" cy="20" r="7" fill="#99f" />
+                                <circle cx="80" cy="80" r="7" fill="#99f" />
+                            </svg>
+                            <p class="fragment" style="font-size: 0.75em; color: #ffd54f;">путь</p>
+                        </div>
+                        <div style="text-align: center;">
+                            <svg width="100" height="100">
+                                <line x1="20" y1="50" x2="50" y2="20" stroke="#888" stroke-width="2" />
+                                <line x1="20" y1="50" x2="50" y2="80" stroke="#888" stroke-width="2" />
+                                <line x1="20" y1="50" x2="80" y2="50" stroke="#888" stroke-width="2" />
+                                <circle cx="20" cy="50" r="7" fill="#99f" />
+                                <circle cx="50" cy="20" r="7" fill="#99f" />
+                                <circle cx="50" cy="80" r="7" fill="#99f" />
+                                <circle cx="80" cy="50" r="7" fill="#99f" />
+                            </svg>
+                            <p class="fragment" style="font-size: 0.75em; color: #f7a;">ничего (3 нечётных)</p>
+                        </div>
+                        <div style="text-align: center;">
+                            <svg width="100" height="100">
+                                <line x1="20" y1="80" x2="50" y2="20" stroke="#888" stroke-width="2" />
+                                <line x1="50" y1="20" x2="80" y2="80" stroke="#888" stroke-width="2" />
+                                <line x1="80" y1="80" x2="20" y2="80" stroke="#888" stroke-width="2" />
+                                <line x1="20" y1="80" x2="50" y2="140" stroke="#888" stroke-width="2" />
+                                <circle cx="20" cy="80" r="7" fill="#99f" />
+                                <circle cx="50" cy="20" r="7" fill="#99f" />
+                                <circle cx="80" cy="80" r="7" fill="#99f" />
+                                <circle cx="50" cy="140" r="7" fill="#99f" />
+                            </svg>
+                            <p class="fragment" style="font-size: 0.75em; color: #ffd54f;">путь</p>
+                        </div>
+                    </div>
+                </section>
+
+            </section>
+
+            <!-- ЧАСТЬ 3: Как построить эйлеров цикл -->
+            <section>
+
+                <section style="font-size: 70px; height: 100%; width: 100%">
+                    <div class="lesson-time">45</div>
+                    <div class="fragment">
+                        <h1 style="font-size: 1.25em;">Алгоритм Хиерхольцера</h1>
+                        <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">как построить сам маршрут</p>
+                    </div>
+                </section>
+
+                <!-- идея алгоритма Хиерхольцера: идём куда глаза глядят, стирая пройденные рёбра, SVG шаг 1 -->
+                <section>
+                    <h2>Идея: иди, куда получится</h2>
+                    <p class="fragment">Критерий говорит «маршрут есть». Как его <mark>построить</mark>?</p>
+                    <div class="fragment opinion" style="margin-top: 0.6em;">
+                        Идём из старта по <mark>любому</mark> непройденному ребру. Прошли - сразу вычёркиваем его из
+                        графа, чтобы не пройти дважды
+                    </div>
+                    <p class="fragment" style="margin-top: 0.6em; font-size: 0.85em; opacity: 0.85;">Никакой хитрости в
+                        выборе следующего ребра нет - берём любое доступное</p>
+                </section>
+
+                <!-- почему мы обязательно вернёмся в старт: степени чётные, застрять негде, SVG -->
+                <section>
+                    <h2>Почему мы не застрянем</h2>
+                    <p class="fragment">Все степени чётные. Заходя в вершину, тратим одно ребро - но выйти есть чем,
+                        ведь <mark>рёбер у вершины чётное число</mark>.</p>
+                    <div class="fragment opinion" style="margin-top: 0.6em;">
+                        Единственное место, где выйти <mark class="green">не обязательно</mark> - это старт: туда мы уже
+                        не обязаны возвращаться... но обязательно вернёмся, потому что застрять больше негде
+                    </div>
+                    <p class="fragment" style="margin-top: 0.5em; font-size: 0.85em; opacity: 0.8;">Итог: рано или
+                        поздно маршрут придёт обратно в старт и превратится в цикл</p>
+                </section>
+
+                <!-- проблема: вернулись, но часть рёбер не пройдена, SVG с оставшимися рёбрами -->
+                <section>
+                    <h2>Проблема</h2>
+                    <p class="fragment">Вернулись в старт - но это не значит, что граф пройден <mark>весь</mark>.</p>
+                    <svg width="300" height="140" style="display: block; margin: 0.5em auto;" class="fragment">
+                        <line x1="40" y1="70" x2="100" y2="20" stroke="#8f8" stroke-width="3" />
+                        <line x1="100" y1="20" x2="160" y2="70" stroke="#8f8" stroke-width="3" />
+                        <line x1="160" y1="70" x2="40" y2="70" stroke="#8f8" stroke-width="3" />
+                        <line x1="160" y1="70" x2="220" y2="20" stroke="#666" stroke-width="1.6"
+                            stroke-dasharray="4 4" />
+                        <line x1="220" y1="20" x2="280" y2="70" stroke="#666" stroke-width="1.6"
+                            stroke-dasharray="4 4" />
+                        <line x1="280" y1="70" x2="160" y2="70" stroke="#666" stroke-width="1.6"
+                            stroke-dasharray="4 4" />
+                        <circle cx="40" cy="70" r="16" fill="rgba(99,99,255,0.35)" stroke="#99f" stroke-width="2" />
+                        <circle cx="100" cy="20" r="16" fill="rgba(99,99,255,0.35)" stroke="#99f" stroke-width="2" />
+                        <circle cx="160" cy="70" r="18" fill="rgba(255,213,79,0.3)" stroke="#ffd54f" stroke-width="2" />
+                        <circle cx="220" cy="20" r="16" fill="rgba(120,120,120,0.3)" stroke="#888" stroke-width="2" />
+                        <circle cx="280" cy="70" r="16" fill="rgba(120,120,120,0.3)" stroke="#888" stroke-width="2" />
+                    </svg>
+                    <p class="fragment" style="text-align: center; font-size: 0.85em; opacity: 0.85;">Первый треугольник
+                        пройден (зелёный), но у жёлтой вершины ещё остались непройденные рёбра (пунктир) во второй
+                        треугольник</p>
+                </section>
+
+                <!-- решение: находим вершину с непройденными рёбрами и вклеиваем в маршрут второй цикл, SVG шаг 2 -->
+                <section>
+                    <h2>Решение: склеить два цикла</h2>
+                    <p class="fragment">Берём вершину <mark>на уже построенном маршруте</mark>, у которой остались
+                        непройденные рёбра, и с неё повторяем ту же процедуру</p>
+                    <div class="fragment opinion" style="margin-top: 0.6em;">
+                        Получаем второй маленький цикл. <mark>Вклеиваем</mark> его в первый маршрут прямо в месте той
+                        вершины
+                    </div>
+                    <p class="fragment" style="margin-top: 0.6em; font-size: 0.85em; opacity: 0.85;">Повторяем, пока
+                        непройденных рёбер не останется вообще</p>
+                </section>
+
+                <!-- полная трассировка на одном графе: 5-6 шагов через .fragment, на каждом шаге SVG и текущий маршрут -->
+                <section>
+                    <h2>Трассировка на графе-бабочке</h2>
+                    <svg width="320" height="150" style="display: block; margin: 0.3em auto;">
+                        <line x1="60" y1="80" x2="110" y2="20" stroke="#8f8" stroke-width="2.5" />
+                        <line x1="110" y1="20" x2="160" y2="80" stroke="#8f8" stroke-width="2.5" />
+                        <line x1="160" y1="80" x2="60" y2="80" stroke="#8f8" stroke-width="2.5" />
+                        <line x1="160" y1="80" x2="210" y2="20" stroke="#f7a" stroke-width="2.5" />
+                        <line x1="210" y1="20" x2="260" y2="80" stroke="#f7a" stroke-width="2.5" />
+                        <line x1="260" y1="80" x2="160" y2="80" stroke="#f7a" stroke-width="2.5" />
+                        <circle cx="60" cy="80" r="15" fill="rgba(99,99,255,0.35)" stroke="#99f" />
+                        <circle cx="110" cy="20" r="15" fill="rgba(99,99,255,0.35)" stroke="#99f" />
+                        <circle cx="160" cy="80" r="17" fill="rgba(255,213,79,0.3)" stroke="#ffd54f" stroke-width="2" />
+                        <circle cx="210" cy="20" r="15" fill="rgba(99,99,255,0.35)" stroke="#99f" />
+                        <circle cx="260" cy="80" r="15" fill="rgba(99,99,255,0.35)" stroke="#99f" />
+                        <text x="60" y="85" text-anchor="middle" fill="white" font-size="13">A</text>
+                        <text x="110" y="25" text-anchor="middle" fill="white" font-size="13">B</text>
+                        <text x="160" y="85" text-anchor="middle" fill="white" font-size="13">C</text>
+                        <text x="210" y="25" text-anchor="middle" fill="white" font-size="13">D</text>
+                        <text x="260" y="85" text-anchor="middle" fill="white" font-size="13">E</text>
+                    </svg>
+                    <p style="text-align: center; font-size: 0.8em; opacity: 0.8;">Два треугольника A-B-C и C-D-E,
+                        общая вершина - C. Степени: A=2, B=2, C=4, D=2, E=2 - все чётные</p>
+                    <div class="fragment opinion" style="font-size: 0.85em; margin-top: 0.3em;">
+                        Шаг 1: старт в A, идём куда получится - <code>A -&gt; B -&gt; C -&gt; A</code>. Вернулись в A,
+                        но рёбра C-D, D-E, E-C ещё не пройдены
+                    </div>
+                    <div class="fragment opinion" style="font-size: 0.85em; margin-top: 0.3em;">
+                        Шаг 2: на маршруте есть вершина с непройденными рёбрами - это <mark>C</mark>
+                    </div>
+                    <div class="fragment opinion" style="font-size: 0.85em; margin-top: 0.3em;">
+                        Шаг 3: из C строим второй цикл - <code>C -&gt; D -&gt; E -&gt; C</code>
+                    </div>
+                    <div class="fragment opinion" style="font-size: 0.85em; margin-top: 0.3em;">
+                        Шаг 4: склеиваем маршруты в месте вершины C: <code>A -&gt; B -&gt; C -&gt; D -&gt; E -&gt; C
+                            -&gt; A</code>
+                    </div>
+                    <div class="fragment opinion" style="font-size: 0.85em; margin-top: 0.3em;">
+                        Все 6 рёбер пройдены ровно по разу - это и есть эйлеров цикл
+                    </div>
+                </section>
+
+                <!-- реализация словами: стек вершин, множество использованных рёбер, ответ собирается с конца -->
+                <section>
+                    <h2>Как это реализовать</h2>
+                    <div class="timeline">
+                        <div class="timeline-item fragment">
+                            <div class="timeline-marker">1</div>
+                            <div class="timeline-content">Заводим <mark>стек</mark> вершин, кладём туда стартовую
+                                вершину</div>
+                        </div>
+                        <div class="timeline-item fragment">
+                            <div class="timeline-marker">2</div>
+                            <div class="timeline-content">Смотрим на вершину сверху стека: есть непройденное ребро -
+                                <mark>помечаем его использованным</mark> и кладём соседа в стек
+                            </div>
+                        </div>
+                        <div class="timeline-item fragment">
+                            <div class="timeline-marker">3</div>
+                            <div class="timeline-content">Непройденных рёбер нет - <mark>снимаем</mark> вершину со
+                                стека и дописываем в ответ</div>
+                        </div>
+                        <div class="timeline-item fragment">
+                            <div class="timeline-marker">4</div>
+                            <div class="timeline-content">Ответ собирается <mark>с конца маршрута</mark> - в конце
+                                разворачиваем список</div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- новый приём: как пометить ребро использованным - set с парой (u, v), только сигнатура -->
+                <section>
+                    <h2>Новый приём: помечаем рёбра</h2>
+                    <p class="fragment">Для вершин мы обычно заводим <code>visited</code>. Для рёбер нужно то же самое -
+                        только ключ теперь <mark>пара вершин</mark>.</p>
+                    <div class="code-block fragment">
+                        <pre class="python size-m"><code>used = set()  # используем как used.add((u, v))</code></pre>
+                    </div>
+                    <p class="fragment" style="font-size: 0.85em; opacity: 0.85;">Граф неориентированный, поэтому ребро
+                        <code>(u, v)</code> и <code>(v, u)</code> - одно и то же. Если не следить за этим отдельно,
+                        легко пройти его дважды
+                    </p>
+                    <div class="fragment opinion" style="font-size: 0.85em; margin-top: 0.4em;">
+                        Частая ошибка: помечать только <code>(u, v)</code>, забыв про обратное направление <code>(v,
+                            u)</code>
+                    </div>
+                </section>
+
+                <!-- сложность O(V + E): каждое ребро трогаем один раз -->
+                <section>
+                    <h2>Сложность</h2>
+                    <div class="fragment opinion">
+                        <code>O(V + E)</code>
+                    </div>
+                    <p class="fragment" style="margin-top: 0.6em; font-size: 0.9em;">Каждое ребро мы трогаем <mark>ровно
+                            один раз</mark> - используем и вычёркиваем. Склейки циклов не увеличивают асимптотику,
+                        просто меняют порядок обработки вершин</p>
+                </section>
+
+            </section>
+
+            <!-- ЧАСТЬ 4: Гамильтонов путь и цикл -->
+            <section>
+
+                <section style="font-size: 70px; height: 100%; width: 100%">
+                    <div class="lesson-time">65</div>
+                    <div class="fragment">
+                        <h1 style="font-size: 1.25em;">Гамильтонов путь и цикл</h1>
+                        <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">теперь про вершины, а не про
+                            рёбра</p>
+                    </div>
+                </section>
+
+                <!-- определение гамильтонова пути и цикла: каждая ВЕРШИНА ровно один раз, SVG с маршрутом -->
+                <section>
+                    <h2>Определение</h2>
+                    <div class="fragment opinion">
+                        <mark>Гамильтонов путь</mark> - маршрут, который проходит через <mark>каждую вершину графа
+                            ровно один раз</mark>. Если ещё и вернулись в старт - <mark>гамильтонов цикл</mark>
+                    </div>
+                    <svg width="240" height="200" style="display: block; margin: 0.5em auto;" class="fragment">
+                        <line x1="120" y1="20" x2="200" y2="80" stroke="#666" stroke-width="1.4" />
+                        <line x1="200" y1="80" x2="170" y2="170" stroke="#666" stroke-width="1.4" />
+                        <line x1="170" y1="170" x2="70" y2="170" stroke="#666" stroke-width="1.4" />
+                        <line x1="70" y1="170" x2="40" y2="80" stroke="#666" stroke-width="1.4" />
+                        <line x1="40" y1="80" x2="120" y2="20" stroke="#666" stroke-width="1.4" />
+                        <line x1="120" y1="20" x2="70" y2="170" stroke="#ffd54f" stroke-width="2.5"
+                            stroke-dasharray="1 0" />
+                        <circle cx="120" cy="20" r="14" fill="rgba(255,213,79,0.3)" stroke="#ffd54f" />
+                        <circle cx="200" cy="80" r="14" fill="rgba(255,213,79,0.3)" stroke="#ffd54f" />
+                        <circle cx="170" cy="170" r="14" fill="rgba(255,213,79,0.3)" stroke="#ffd54f" />
+                        <circle cx="70" cy="170" r="14" fill="rgba(255,213,79,0.3)" stroke="#ffd54f" />
+                        <circle cx="40" cy="80" r="14" fill="rgba(255,213,79,0.3)" stroke="#ffd54f" />
+                        <text x="120" y="25" text-anchor="middle" fill="white" font-size="12">1</text>
+                        <text x="200" y="85" text-anchor="middle" fill="white" font-size="12">2</text>
+                        <text x="170" y="175" text-anchor="middle" fill="white" font-size="12">3</text>
+                        <text x="70" y="175" text-anchor="middle" fill="white" font-size="12">4</text>
+                        <text x="40" y="85" text-anchor="middle" fill="white" font-size="12">5</text>
+                    </svg>
+                    <p class="fragment" style="text-align: center; font-size: 0.8em; opacity: 0.8;">Побывали в каждой
+                        вершине пятиугольника ровно раз - неважно, что часть рёбер графа при этом не использована</p>
+                </section>
+
+                <!-- ловушка: граф с эйлеровым циклом, но без гамильтонова, и наоборот, две SVG-картинки -->
+                <section>
+                    <h2>Ловушка: одно не следует из другого</h2>
+                    <div style="display: flex; justify-content: space-around;" class="fragment">
+                        <div style="text-align: center;">
+                            <svg width="150" height="100">
+                                <line x1="30" y1="70" x2="60" y2="20" stroke="#888" stroke-width="2" />
+                                <line x1="60" y1="20" x2="90" y2="70" stroke="#888" stroke-width="2" />
+                                <line x1="90" y1="70" x2="30" y2="70" stroke="#888" stroke-width="2" />
+                                <line x1="90" y1="70" x2="120" y2="20" stroke="#888" stroke-width="2" />
+                                <line x1="120" y1="20" x2="140" y2="70" stroke="#888" stroke-width="2" />
+                                <line x1="140" y1="70" x2="90" y2="70" stroke="#888" stroke-width="2" />
+                                <circle cx="30" cy="70" r="7" fill="#99f" />
+                                <circle cx="60" cy="20" r="7" fill="#99f" />
+                                <circle cx="90" cy="70" r="8" fill="#ffd54f" />
+                                <circle cx="120" cy="20" r="7" fill="#99f" />
+                                <circle cx="140" cy="70" r="7" fill="#99f" />
+                            </svg>
+                            <p style="font-size: 0.75em; opacity: 0.85;">граф-бабочка: <mark class="green">есть</mark>
+                                эйлеров цикл, <mark class="yellow">нет</mark> гамильтонова - вершину C нельзя пройти
+                                дважды</p>
+                        </div>
+                        <div style="text-align: center;">
+                            <svg width="150" height="130">
+                                <line x1="75" y1="20" x2="130" y2="60" stroke="#888" stroke-width="2" />
+                                <line x1="130" y1="60" x2="110" y2="115" stroke="#888" stroke-width="2" />
+                                <line x1="110" y1="115" x2="40" y2="115" stroke="#888" stroke-width="2" />
+                                <line x1="40" y1="115" x2="20" y2="60" stroke="#888" stroke-width="2" />
+                                <line x1="20" y1="60" x2="75" y2="20" stroke="#888" stroke-width="2" />
+                                <line x1="75" y1="20" x2="110" y2="115" stroke="#f7a" stroke-width="2" />
+                                <circle cx="75" cy="20" r="7" fill="#f7a" />
+                                <circle cx="130" cy="60" r="7" fill="#99f" />
+                                <circle cx="110" cy="115" r="7" fill="#f7a" />
+                                <circle cx="40" cy="115" r="7" fill="#99f" />
+                                <circle cx="20" cy="60" r="7" fill="#99f" />
+                            </svg>
+                            <p style="font-size: 0.75em; opacity: 0.85;">пятиугольник с диагональю: <mark
+                                    class="green">есть</mark> гамильтонов цикл (по внешнему кольцу), <mark
+                                    class="yellow">нет</mark> эйлерова - 2 вершины нечётной степени (3)</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- плохая новость: простого критерия нет, задача NP-полная, объяснить своими словами без формализма -->
+                <section>
+                    <h2>Плохая новость</h2>
+                    <p class="fragment">Для Эйлера критерий - одна проверка степеней, <code>O(V + E)</code>.</p>
+                    <div class="fragment opinion" style="margin-top: 0.6em;">
+                        Для Гамильтона такого фокуса <mark class="yellow">нет</mark>. За полвека никто не придумал
+                        быстрый способ проверить существование гамильтонова цикла в произвольном графе
+                    </div>
+                    <p class="fragment" style="margin-top: 0.6em; font-size: 0.85em; opacity: 0.85;">Задача входит в
+                        список <mark>NP-полных</mark> - таких же трудных, как знаменитая задача о рюкзаке или
+                        коммивояжёре. Быстрого алгоритма, скорее всего, вообще не существует</p>
+                </section>
+
+                <!-- достаточное условие - теорема Дирака: SVG-картинка "каждая вершина знакома с половиной зала" + формула степень >= n/2 -->
+                <section>
+                    <h2>Теорема Дирака</h2>
+                    <p class="fragment">Полного критерия нет, но есть <mark>достаточное</mark> условие - если оно
+                        выполнено, цикл точно есть.</p>
+                    <svg width="260" height="220" style="display: block; margin: 0.4em auto;" class="fragment">
+                        <line x1="130" y1="30" x2="220" y2="90" stroke="#555" stroke-width="1" />
+                        <line x1="130" y1="30" x2="190" y2="190" stroke="#555" stroke-width="1" />
+                        <line x1="130" y1="30" x2="40" y2="90" stroke="#555" stroke-width="1" />
+                        <line x1="130" y1="30" x2="70" y2="190" stroke="#555" stroke-width="1" />
+                        <line x1="220" y1="90" x2="190" y2="190" stroke="#333" stroke-width="0.7" opacity="0.4" />
+                        <line x1="40" y1="90" x2="70" y2="190" stroke="#333" stroke-width="0.7" opacity="0.4" />
+                        <circle cx="130" cy="30" r="16" fill="rgba(255,213,79,0.3)" stroke="#ffd54f" />
+                        <circle cx="220" cy="90" r="12" fill="rgba(99,99,255,0.35)" stroke="#99f" />
+                        <circle cx="190" cy="190" r="12" fill="rgba(99,99,255,0.35)" stroke="#99f" />
+                        <circle cx="70" cy="190" r="12" fill="rgba(99,99,255,0.35)" stroke="#99f" />
+                        <circle cx="40" cy="90" r="12" fill="rgba(99,99,255,0.35)" stroke="#99f" />
+                    </svg>
+                    <p class="fragment" style="text-align: center; font-size: 0.85em; opacity: 0.85;">Представь зал на
+                        <code>n</code> человек. Если каждый знаком минимум с <mark>половиной</mark> зала - все смогут
+                        встать в один круг знакомых подряд
+                    </p>
+                    <div class="fragment opinion" style="margin-top: 0.4em; font-size: 0.9em;">
+                        Формально: если степень <mark>каждой</mark> вершины &gt;= n / 2 - гамильтонов цикл существует
+                    </div>
+                </section>
+
+                <!-- как решают на практике: перебор с возвратом, словами и SVG-деревом вариантов -->
+                <section>
+                    <h2>А как решают на практике?</h2>
+                    <p class="fragment">Раз быстрого способа нет - перебором с <mark>отсечением</mark> (backtracking):
+                        строим путь по одной вершине, а если зашли в тупик - откатываемся назад</p>
+                    <svg width="280" height="160" style="display: block; margin: 0.4em auto;" class="fragment">
+                        <line x1="140" y1="20" x2="70" y2="70" stroke="#8f8" stroke-width="1.6" />
+                        <line x1="140" y1="20" x2="140" y2="70" stroke="#8f8" stroke-width="1.6" />
+                        <line x1="140" y1="20" x2="210" y2="70" stroke="#8f8" stroke-width="1.6" />
+                        <line x1="70" y1="70" x2="40" y2="120" stroke="#8f8" stroke-width="1.6" />
+                        <line x1="70" y1="70" x2="90" y2="120" stroke="#666" stroke-width="1.2"
+                            stroke-dasharray="3 3" />
+                        <line x1="210" y1="70" x2="180" y2="120" stroke="#666" stroke-width="1.2"
+                            stroke-dasharray="3 3" />
+                        <line x1="210" y1="70" x2="230" y2="120" stroke="#666" stroke-width="1.2"
+                            stroke-dasharray="3 3" />
+                        <circle cx="140" cy="20" r="10" fill="#99f" />
+                        <circle cx="70" cy="70" r="9" fill="#99f" />
+                        <circle cx="140" cy="70" r="9" fill="rgba(255,120,180,0.3)" stroke="#f7a" />
+                        <circle cx="210" cy="70" r="9" fill="#99f" />
+                        <circle cx="40" cy="120" r="8" fill="#8f8" />
+                        <circle cx="90" cy="120" r="8" fill="#555" />
+                        <circle cx="180" cy="120" r="8" fill="#555" />
+                        <circle cx="230" cy="120" r="8" fill="#555" />
+                        <text x="140" y="145" text-anchor="middle" fill="#f7a" font-size="11">тупик - откат</text>
+                    </svg>
+                    <div class="fragment opinion" style="margin-top: 0.6em; font-size: 0.9em;">
+                        Наивный backtracking - до <code>O(n!)</code> в худшем случае (перебираем порядок вершин)
+                    </div>
+                    <p class="fragment" style="font-size: 0.85em; opacity: 0.85;">Есть способ быстрее - <mark>динамика
+                            по
+                            подмножествам</mark> (маска посещённых вершин): <code>O(2^n * n^2)</code>. Быстрее
+                        факториала,
+                        но всё равно экспонента - для сотен вершин не спасает</p>
+                </section>
+
+                <!-- анонс: задача коммивояжёра - гамильтонов цикл минимальной стоимости -->
+                <section>
+                    <h2>На горизонте: коммивояжёр</h2>
+                    <p class="fragment">Есть города и расстояния между ними. Нужно объехать все города по разу и
+                        вернуться домой, потратив <mark>минимум пути</mark>.</p>
+                    <div class="fragment opinion" style="margin-top: 0.6em;">
+                        Это <mark>гамильтонов цикл минимальной стоимости</mark> во взвешенном графе - классическая
+                        «задача коммивояжёра» (TSP)
+                    </div>
+                    <p class="fragment" style="margin-top: 0.5em; font-size: 0.85em; opacity: 0.75;">Обсудим её, когда
+                        дойдём до взвешенных графов</p>
+                </section>
+
+                <!-- сравнение Эйлер / Гамильтон: таблица (что обходим, критерий, сложность) -->
+                <section>
+                    <h2>Эйлер vs Гамильтон</h2>
+                    <table style="font-size: 0.82em; width: 100%; margin-top: 0.6em;">
+                        <tr>
+                            <td><strong></strong></td>
+                            <td><strong>Эйлеров путь/цикл</strong></td>
+                            <td><strong>Гамильтонов путь/цикл</strong></td>
+                        </tr>
+                        <tr class="fragment">
+                            <td>Обходим</td>
+                            <td>каждое ребро</td>
+                            <td>каждую вершину</td>
+                        </tr>
+                        <tr class="fragment">
+                            <td>Критерий</td>
+                            <td>чётность степеней</td>
+                            <td><mark class="yellow">неизвестен</mark></td>
+                        </tr>
+                        <tr class="fragment">
+                            <td>Проверка</td>
+                            <td><code>O(V + E)</code></td>
+                            <td>NP-полная, точный перебор - <code>O(2^n * n^2)</code></td>
+                        </tr>
+                    </table>
+                </section>
+
+            </section>
+
+            <!-- ПРАКТИКА -->
+            <section>
+
+                <section style="font-size: 70px; height: 100%; width: 100%">
+                    <div class="lesson-time">80</div>
+                    <div class="fragment">
+                        <h1 style="font-size: 1.4em;">Практика</h1>
+                        <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">practice/27-euler-hamilton/</p>
+                    </div>
+                </section>
+
+                <!-- практика practice/27-euler-hamilton: определить по степеням, есть ли эйлеров цикл или путь -->
+                <section>
+                    <h2>Задача 1: определить тип обхода</h2>
+                    <p class="fragment">Дан граф списком смежности. Вернуть <code>"cycle"</code>, <code>"path"</code>
+                        или <code>"none"</code> - есть ли эйлеров цикл, только путь или ничего.</p>
+                    <ul style="margin-top: 0.4em;">
+                        <li class="fragment">Проверить связность (обход из любой вершины)</li>
+                        <li class="fragment">Посчитать степени всех вершин</li>
+                        <li class="fragment">Применить критерий из части 2</li>
+                    </ul>
+                </section>
+
+                <!-- практика: построить эйлеров цикл алгоритмом Хиерхольцера на готовом графе -->
+                <section>
+                    <h2>Задача 2: построить сам маршрут</h2>
+                    <p class="fragment">Функция <code>euler_circuit(adj)</code> - на графе, где цикл точно существует,
+                        вернуть сам маршрут списком вершин.</p>
+                    <ul style="margin-top: 0.4em;">
+                        <li class="fragment">Реализуем алгоритм Хиерхольцера словами из части 3</li>
+                        <li class="fragment">В файле уже есть заготовка и тесты через <code>print(actual,
+                                expected)</code></li>
+                    </ul>
+                </section>
+
+                <!-- домашнее задание: анонс задачи со ссылкой target="_blank" -->
+                <section>
+                    <h2>Домашнее задание</h2>
+                    <p class="fragment"><a href="https://leetcode.com/problems/reconstruct-itinerary/" target="_blank"
+                            rel="noopener">332. Reconstruct Itinerary</a></p>
+                    <p class="fragment" style="font-size: 0.85em; opacity: 0.9;">Дан список авиабилетов. Найти маршрут,
+                        который использует <mark>каждый билет ровно один раз</mark>, начиная с <code>"JFK"</code>, а
+                        при выборе - идти в лексикографически меньший город. Это ровно поиск эйлерова пути</p>
+                </section>
+
+            </section>
+
+            <!-- ИТОГ -->
+            <section>
+                <div class="lesson-time">87</div>
+                <h2>Что запомнить</h2>
+                <ul>
+                    <li class="fragment"><mark>Эйлеров путь/цикл</mark> - каждое РЕБРО ровно один раз; <mark>гамильтонов
+                            путь/цикл</mark> - каждая ВЕРШИНА ровно один раз</li>
+                    <li class="fragment">Критерий Эйлера - <mark>связность + чётность степеней</mark> (0 или 2
+                        нечётные вершины). Проверяется за <code>O(V + E)</code>, без перебора</li>
+                    <li class="fragment"><mark>Алгоритм Хиерхольцера</mark>: идём, стирая рёбра, а если застряли не в
+                        старте - склеиваем со вторым циклом из той же вершины</li>
+                    <li class="fragment">Для Гамильтона быстрого критерия <mark class="yellow">нет</mark> (NP-полная
+                        задача) - только достаточное условие (теорема Дирака) и перебор с возвратом</li>
+                </ul>
+            </section>
+
+        </div>
+    </div>
+
+    <script src="/utils/lib/js/head.min.js"></script>
+    <script src="/utils/js/reveal.js"></script>
+    <script>
+        Reveal.initialize({
+            controls: true,
+            progress: true,
+            history: true,
+            center: true,
+            transition: 'fade',
+            transitionSpeed: 'fast',
+            dependencies: [
+                { src: '/utils/lib/js/classList.js', condition: function () { return !document.body.classList; } },
+                { src: '/utils/plugin/markdown/marked.js', condition: function () { return !!document.querySelector('[data-markdown]'); } },
+                { src: '/utils/plugin/markdown/markdown.js', condition: function () { return !!document.querySelector('[data-markdown]'); } },
+                { src: '/utils/plugin/highlight/highlight.js', async: true, callback: function () { hljs.initHighlightingOnLoad(); } },
+                { src: '/utils/plugin/zoom-js/zoom.js', async: true },
+                { src: '/utils/plugin/notes/notes.js', async: true }
+            ]
+        });
+        Reveal.configure({ slideNumber: 'c/t' });
+    </script>
+</body>
+
+</html>
