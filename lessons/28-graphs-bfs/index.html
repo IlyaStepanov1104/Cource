@@ -1,0 +1,540 @@
+<!doctype html>
+<html lang="ru">
+
+<head>
+    <meta charset="utf-8">
+    <title>Занятие 28 - BFS и кратчайший путь</title>
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+
+    <link rel="stylesheet" href="/utils/css/reveal.css">
+    <link rel="stylesheet" href="/utils/lib/css/animate.css">
+    <link rel="stylesheet" href="/utils/css/theme/night.css" id="theme">
+    <link rel="stylesheet" href="/utils/lib/css/zenburn.css">
+    <link rel="stylesheet" href="/utils/css/custom-base.css">
+    <link rel="stylesheet" href="css-custom/custom.css">
+
+    <script>
+        var link = document.createElement('link');
+        link.rel = 'stylesheet'; link.type = 'text/css';
+        link.href = window.location.search.match(/print-pdf/gi)
+            ? '/utils/css/print/pdf.css'
+            : '/utils/css/print/paper.css';
+        document.getElementsByTagName('head')[0].appendChild(link);
+    </script>
+</head>
+
+<body>
+    <div class="reveal">
+        <div class="slides">
+
+            <!-- титульный слайд -->
+            <section style="font-size: 70px; height: 100%; width: 100%">
+                <div class="lesson-time">0</div>
+                <div class="fragment">
+                    <h1 class="animated" style="font-size: 1.25em;">BFS и кратчайший путь</h1>
+                    <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">Обход графа по слоям. Занятие 28</p>
+                </div>
+            </section>
+
+            <!-- ЧАСТЬ 1: разбор ДЗ и зачем нужен BFS -->
+            <section>
+                <!-- разбор ДЗ 27: 332. Reconstruct Itinerary - эйлеров путь, идея алгоритма Хирхольцера, ссылка на LeetCode target=_blank -->
+                <section>
+                    <h2>Разбор ДЗ: <a href="https://leetcode.com/problems/reconstruct-itinerary/" target="_blank"
+                            rel="noopener">332. Reconstruct Itinerary</a></h2>
+                    <p class="fragment">Дан список авиабилетов <code>[from, to]</code>. Построить маршрут из
+                        <code>"JFK"</code>, который использует <mark>каждый билет ровно один раз</mark>; при развилке -
+                        идти в лексикографически меньший город.
+                    </p>
+                    <div class="fragment opinion" style="margin-top: 0.6em;">
+                        Билет - это ребро. Пройти каждое ребро по разу - <mark>эйлеров путь</mark> в ориентированном
+                        графе
+                    </div>
+                    <p class="fragment" style="font-size: 0.85em; opacity: 0.85;">Решение: тот же Хирхольцер на стеке.
+                        <code>adj[city]</code> отсортирован; идём жадно в первый доступный город, помечая билет
+                        использованным. У кого билетов не осталось - снимаем со стека в ответ. В конце <mark>ответ
+                            разворачиваем</mark>
+                    </p>
+                </section>
+
+                <!-- напоминание про DFS: уходим вглубь по одной ветке; SVG-рисунок графа с порядком обхода DFS -->
+                <section>
+                    <h2>Напоминание: как ходит DFS</h2>
+                    <p class="fragment">Заходим в соседа и <mark>сразу ныряем вглубь</mark> по этой ветке, пока есть
+                        куда. Тупик - откат на шаг назад.</p>
+                    <svg width="440" height="240" style="display: block; margin: 0.3em auto;" class="fragment">
+                        <line x1="45" y1="120" x2="165" y2="55" stroke="#888" stroke-width="1.6" />
+                        <line x1="45" y1="120" x2="165" y2="185" stroke="#888" stroke-width="1.6" />
+                        <line x1="165" y1="55" x2="290" y2="55" stroke="#888" stroke-width="1.6" />
+                        <line x1="165" y1="185" x2="290" y2="55" stroke="#888" stroke-width="1.6" />
+                        <line x1="165" y1="185" x2="290" y2="185" stroke="#888" stroke-width="1.6" />
+                        <line x1="290" y1="55" x2="410" y2="120" stroke="#888" stroke-width="1.6" />
+                        <line x1="290" y1="185" x2="410" y2="120" stroke="#888" stroke-width="1.6" />
+                        <circle cx="45" cy="120" r="20" fill="rgba(255,120,180,0.22)" stroke="#f7a" stroke-width="2" />
+                        <circle cx="165" cy="55" r="20" fill="rgba(255,120,180,0.22)" stroke="#f7a" stroke-width="2" />
+                        <circle cx="165" cy="185" r="20" fill="rgba(255,120,180,0.22)" stroke="#f7a" stroke-width="2" />
+                        <circle cx="290" cy="55" r="20" fill="rgba(255,120,180,0.22)" stroke="#f7a" stroke-width="2" />
+                        <circle cx="290" cy="185" r="20" fill="rgba(255,120,180,0.22)" stroke="#f7a" stroke-width="2" />
+                        <circle cx="410" cy="120" r="20" fill="rgba(255,120,180,0.22)" stroke="#f7a" stroke-width="2" />
+                        <text x="45" y="126" text-anchor="middle" fill="white" font-size="15">A</text>
+                        <text x="165" y="61" text-anchor="middle" fill="white" font-size="15">B</text>
+                        <text x="165" y="191" text-anchor="middle" fill="white" font-size="15">C</text>
+                        <text x="290" y="61" text-anchor="middle" fill="white" font-size="15">D</text>
+                        <text x="290" y="191" text-anchor="middle" fill="white" font-size="15">E</text>
+                        <text x="410" y="126" text-anchor="middle" fill="white" font-size="15">F</text>
+                        <text x="45" y="90" text-anchor="middle" fill="#f7a" font-size="13">1</text>
+                        <text x="188" y="45" text-anchor="middle" fill="#f7a" font-size="13">2</text>
+                        <text x="188" y="205" text-anchor="middle" fill="#f7a" font-size="13">4</text>
+                        <text x="313" y="45" text-anchor="middle" fill="#f7a" font-size="13">3</text>
+                        <text x="313" y="205" text-anchor="middle" fill="#f7a" font-size="13">5</text>
+                        <text x="410" y="90" text-anchor="middle" fill="#f7a" font-size="13">6</text>
+                    </svg>
+                    <p class="fragment" style="text-align: center; font-size: 0.82em; opacity: 0.85;">Порядок DFS:
+                        <code>A -&gt; B -&gt; D -&gt; C -&gt; E -&gt; F</code>. К вершине C пришли <mark>длинным
+                            путём</mark>, хотя она сосед старта
+                    </p>
+                </section>
+
+                <!-- идея BFS: обход по слоям-волнам от старта; аналогия - круги на воде от брошенного камня -->
+                <section>
+                    <h2>Идея BFS: обход по слоям</h2>
+                    <p class="fragment"><mark>BFS</mark> (breadth-first search, обход в ширину): сначала все соседи
+                        старта, потом соседи соседей, и так <mark>слой за слоем</mark>.</p>
+                    <svg width="300" height="200" style="display: block; margin: 0.3em auto;" class="fragment">
+                        <circle cx="150" cy="100" r="90" fill="none" stroke="#556" stroke-width="1" />
+                        <circle cx="150" cy="100" r="62" fill="none" stroke="#668" stroke-width="1" />
+                        <circle cx="150" cy="100" r="32" fill="none" stroke="#88a" stroke-width="1" />
+                        <circle cx="150" cy="100" r="7" fill="#ffd54f" />
+                        <circle cx="182" cy="100" r="4" fill="#99f" />
+                        <circle cx="150" cy="68" r="4" fill="#99f" />
+                        <circle cx="118" cy="100" r="4" fill="#99f" />
+                        <circle cx="205" cy="140" r="4" fill="#8f8" />
+                        <circle cx="95" cy="140" r="4" fill="#8f8" />
+                        <circle cx="150" cy="190" r="4" fill="#f7a" />
+                    </svg>
+                    <p class="fragment" style="text-align: center; font-size: 0.85em; opacity: 0.85;">Как круги на воде от
+                        брошенного камня - волна расходится <mark>равномерно во все стороны</mark></p>
+                </section>
+
+                <!-- SVG-картинка: тот же граф, вершины подкрашены по расстоянию от старта (слой 0, 1, 2, 3) -->
+                <section>
+                    <h2>Тот же граф, разложенный по слоям</h2>
+                    <svg width="440" height="240" style="display: block; margin: 0.3em auto;" class="fragment">
+                        <line x1="45" y1="120" x2="165" y2="55" stroke="#888" stroke-width="1.6" />
+                        <line x1="45" y1="120" x2="165" y2="185" stroke="#888" stroke-width="1.6" />
+                        <line x1="165" y1="55" x2="290" y2="55" stroke="#888" stroke-width="1.6" />
+                        <line x1="165" y1="185" x2="290" y2="55" stroke="#888" stroke-width="1.6" />
+                        <line x1="165" y1="185" x2="290" y2="185" stroke="#888" stroke-width="1.6" />
+                        <line x1="290" y1="55" x2="410" y2="120" stroke="#888" stroke-width="1.6" />
+                        <line x1="290" y1="185" x2="410" y2="120" stroke="#888" stroke-width="1.6" />
+                        <circle cx="45" cy="120" r="20" fill="rgba(120,255,140,0.25)" stroke="#8f8" stroke-width="2" />
+                        <circle cx="165" cy="55" r="20" fill="rgba(99,99,255,0.35)" stroke="#99f" stroke-width="2" />
+                        <circle cx="165" cy="185" r="20" fill="rgba(99,99,255,0.35)" stroke="#99f" stroke-width="2" />
+                        <circle cx="290" cy="55" r="20" fill="rgba(255,213,79,0.3)" stroke="#ffd54f" stroke-width="2" />
+                        <circle cx="290" cy="185" r="20" fill="rgba(255,213,79,0.3)" stroke="#ffd54f" stroke-width="2" />
+                        <circle cx="410" cy="120" r="20" fill="rgba(255,120,180,0.22)" stroke="#f7a" stroke-width="2" />
+                        <text x="45" y="126" text-anchor="middle" fill="white" font-size="15">A</text>
+                        <text x="165" y="61" text-anchor="middle" fill="white" font-size="15">B</text>
+                        <text x="165" y="191" text-anchor="middle" fill="white" font-size="15">C</text>
+                        <text x="290" y="61" text-anchor="middle" fill="white" font-size="15">D</text>
+                        <text x="290" y="191" text-anchor="middle" fill="white" font-size="15">E</text>
+                        <text x="410" y="126" text-anchor="middle" fill="white" font-size="15">F</text>
+                        <text x="45" y="165" text-anchor="middle" fill="#8f8" font-size="12">слой 0</text>
+                        <text x="165" y="222" text-anchor="middle" fill="#99f" font-size="12">слой 1</text>
+                        <text x="290" y="222" text-anchor="middle" fill="#ffd54f" font-size="12">слой 2</text>
+                        <text x="410" y="165" text-anchor="middle" fill="#f7a" font-size="12">слой 3</text>
+                    </svg>
+                    <p class="fragment" style="text-align: center; font-size: 0.82em; opacity: 0.85;">BFS посещает вершины
+                        <mark>строго по порядку расстояния</mark> от старта (в рёбрах): A, потом B и C, потом D и E,
+                        потом F
+                    </p>
+                </section>
+
+                <!-- зачем BFS: находит путь с наименьшим числом рёбер; контрпример-картинка, где DFS находит длинный путь, а BFS - короткий -->
+                <section>
+                    <h2>Зачем это нужно</h2>
+                    <svg width="400" height="200" style="display: block; margin: 0.2em auto;" class="fragment">
+                        <line x1="40" y1="110" x2="120" y2="45" stroke="#f7a" stroke-width="2.5" />
+                        <line x1="120" y1="45" x2="200" y2="35" stroke="#f7a" stroke-width="2.5" />
+                        <line x1="200" y1="35" x2="280" y2="45" stroke="#f7a" stroke-width="2.5" />
+                        <line x1="280" y1="45" x2="360" y2="110" stroke="#f7a" stroke-width="2.5" />
+                        <line x1="40" y1="110" x2="360" y2="110" stroke="#8f8" stroke-width="2.5" />
+                        <circle cx="40" cy="110" r="16" fill="rgba(255,213,79,0.3)" stroke="#ffd54f" stroke-width="2" />
+                        <circle cx="360" cy="110" r="16" fill="rgba(255,213,79,0.3)" stroke="#ffd54f" stroke-width="2" />
+                        <circle cx="120" cy="45" r="12" fill="rgba(99,99,255,0.35)" stroke="#99f" />
+                        <circle cx="200" cy="35" r="12" fill="rgba(99,99,255,0.35)" stroke="#99f" />
+                        <circle cx="280" cy="45" r="12" fill="rgba(99,99,255,0.35)" stroke="#99f" />
+                        <text x="40" y="115" text-anchor="middle" fill="white" font-size="13">S</text>
+                        <text x="360" y="115" text-anchor="middle" fill="white" font-size="13">T</text>
+                        <text x="200" y="135" text-anchor="middle" fill="#8f8" font-size="12">1 ребро</text>
+                        <text x="200" y="18" text-anchor="middle" fill="#f7a" font-size="12">4 ребра</text>
+                    </svg>
+                    <p class="fragment" style="font-size: 0.85em;">DFS с таким порядком соседей уйдёт по верхней цепочке:
+                        <code>S -&gt; ... -&gt; T</code> за <mark class="yellow">4 ребра</mark>
+                    </p>
+                    <div class="fragment opinion" style="margin-top: 0.4em;">
+                        DFS находит <mark>хоть какой-то</mark> путь. BFS находит путь с <mark>наименьшим числом
+                            рёбер</mark> - в невзвешенном графе это и есть кратчайший
+                    </div>
+                </section>
+
+            </section>
+
+            <!-- ЧАСТЬ 2: как работает BFS -->
+            <section>
+
+                <section style="font-size: 70px; height: 100%; width: 100%">
+                    <div class="lesson-time">15</div>
+                    <div class="fragment">
+                        <h1 style="font-size: 1.3em;">Как работает BFS</h1>
+                        <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">очередь, состояния вершины,
+                            трассировка</p>
+                    </div>
+                </section>
+
+                <!-- очередь как основа BFS: FIFO, кто первым вошёл - первым выйдет; связь с занятием 16 (стек и очередь) -->
+                <section>
+                    <h2>Основа BFS - очередь</h2>
+                    <p class="fragment">Очередь работает по правилу <mark>FIFO</mark> - кто первым вошёл,
+                        тот первым и выйдет.</p>
+                    <svg width="360" height="90" style="display: block; margin: 0.4em auto;" class="fragment">
+                        <rect x="60" y="25" width="240" height="40" fill="none" stroke="#888" stroke-width="1.5" />
+                        <rect x="70" y="30" width="55" height="30" fill="rgba(99,99,255,0.35)" stroke="#99f" />
+                        <rect x="130" y="30" width="55" height="30" fill="rgba(99,99,255,0.35)" stroke="#99f" />
+                        <rect x="190" y="30" width="55" height="30" fill="rgba(99,99,255,0.35)" stroke="#99f" />
+                        <text x="40" y="48" fill="#8f8" font-size="12">выход</text>
+                        <text x="305" y="48" fill="#ffd54f" font-size="12">вход</text>
+                    </svg>
+                    <p class="fragment">Новые найденные вершины кладём в <mark>конец</mark>, обрабатываем с
+                        <mark>начала</mark>. Значит ближний слой обработается раньше дальнего - он попал в очередь первым
+                    </p>
+                    <div class="code-block fragment">
+                        <pre class="python size-s"><code>from collections import deque
+
+q = deque([start])   # q.append(x) - в конец, q.popleft() - с начала</code></pre>
+                    </div>
+                </section>
+
+                <!-- три состояния вершины: не найдена / лежит в очереди / уже обработана; показать цветами на SVG-графе -->
+                <section>
+                    <h2>Три состояния вершины</h2>
+                    <svg width="440" height="200" style="display: block; margin: 0.2em auto;" class="fragment">
+                        <line x1="45" y1="100" x2="165" y2="45" stroke="#888" stroke-width="1.6" />
+                        <line x1="45" y1="100" x2="165" y2="155" stroke="#888" stroke-width="1.6" />
+                        <line x1="165" y1="45" x2="290" y2="45" stroke="#888" stroke-width="1.6" />
+                        <line x1="165" y1="155" x2="290" y2="45" stroke="#888" stroke-width="1.6" />
+                        <line x1="165" y1="155" x2="290" y2="155" stroke="#888" stroke-width="1.6" />
+                        <line x1="290" y1="45" x2="410" y2="100" stroke="#888" stroke-width="1.6" />
+                        <line x1="290" y1="155" x2="410" y2="100" stroke="#888" stroke-width="1.6" />
+                        <circle cx="45" cy="100" r="18" fill="rgba(120,255,140,0.25)" stroke="#8f8" stroke-width="2" />
+                        <circle cx="165" cy="45" r="18" fill="rgba(255,213,79,0.3)" stroke="#ffd54f" stroke-width="2" />
+                        <circle cx="165" cy="155" r="18" fill="rgba(255,213,79,0.3)" stroke="#ffd54f" stroke-width="2" />
+                        <circle cx="290" cy="45" r="18" fill="rgba(120,120,120,0.25)" stroke="#888" stroke-width="2" />
+                        <circle cx="290" cy="155" r="18" fill="rgba(120,120,120,0.25)" stroke="#888" stroke-width="2" />
+                        <circle cx="410" cy="100" r="18" fill="rgba(120,120,120,0.25)" stroke="#888" stroke-width="2" />
+                    </svg>
+                    <ul style="font-size: 0.82em; margin-top: 0.2em;">
+                        <li class="fragment"><mark style="background: rgba(120,120,120,0.4)">серая</mark> - не найдена,
+                            ещё не видели</li>
+                        <li class="fragment"><mark class="yellow">жёлтая</mark> - лежит в очереди, ждёт обработки</li>
+                        <li class="fragment"><mark class="green">зелёная</mark> - обработана, всех соседей просмотрели
+                        </li>
+                    </ul>
+                    <div class="fragment opinion" style="font-size: 0.8em; margin-top: 0.3em;">
+                        Помечаем <code>visited</code> в момент <mark>попадания в очередь</mark>, а не обработки - иначе
+                        один сосед заедет в очередь несколько раз
+                    </div>
+                </section>
+
+                <!-- пошаговая трассировка BFS на SVG-графе: на каждом шаге показываем содержимое очереди и отмеченные вершины, слой за слоем -->
+                <section>
+                    <h2>Трассировка BFS от A</h2>
+                    <svg width="380" height="170" style="display: block; margin: 0.2em auto;">
+                        <line x1="40" y1="85" x2="140" y2="40" stroke="#888" stroke-width="1.6" />
+                        <line x1="40" y1="85" x2="140" y2="130" stroke="#888" stroke-width="1.6" />
+                        <line x1="140" y1="40" x2="245" y2="40" stroke="#888" stroke-width="1.6" />
+                        <line x1="140" y1="130" x2="245" y2="40" stroke="#888" stroke-width="1.6" />
+                        <line x1="140" y1="130" x2="245" y2="130" stroke="#888" stroke-width="1.6" />
+                        <line x1="245" y1="40" x2="345" y2="85" stroke="#888" stroke-width="1.6" />
+                        <line x1="245" y1="130" x2="345" y2="85" stroke="#888" stroke-width="1.6" />
+                        <circle cx="40" cy="85" r="16" fill="rgba(120,255,140,0.25)" stroke="#8f8" />
+                        <circle cx="140" cy="40" r="16" fill="rgba(120,255,140,0.25)" stroke="#8f8" />
+                        <circle cx="140" cy="130" r="16" fill="rgba(120,255,140,0.25)" stroke="#8f8" />
+                        <circle cx="245" cy="40" r="16" fill="rgba(120,255,140,0.25)" stroke="#8f8" />
+                        <circle cx="245" cy="130" r="16" fill="rgba(120,255,140,0.25)" stroke="#8f8" />
+                        <circle cx="345" cy="85" r="16" fill="rgba(120,255,140,0.25)" stroke="#8f8" />
+                        <text x="40" y="90" text-anchor="middle" fill="white" font-size="13">A</text>
+                        <text x="140" y="45" text-anchor="middle" fill="white" font-size="13">B</text>
+                        <text x="140" y="135" text-anchor="middle" fill="white" font-size="13">C</text>
+                        <text x="245" y="45" text-anchor="middle" fill="white" font-size="13">D</text>
+                        <text x="245" y="135" text-anchor="middle" fill="white" font-size="13">E</text>
+                        <text x="345" y="90" text-anchor="middle" fill="white" font-size="13">F</text>
+                    </svg>
+                    <div class="fragment opinion" style="font-size: 0.8em; margin-top: 0.2em;">достаём <mark>A</mark>,
+                        кладём соседей: очередь <code>[B, C]</code></div>
+                    <div class="fragment opinion" style="font-size: 0.8em;">достаём <mark>B</mark>, новый сосед D:
+                        очередь <code>[C, D]</code></div>
+                    <div class="fragment opinion" style="font-size: 0.8em;">достаём <mark>C</mark>, новый сосед E:
+                        очередь <code>[D, E]</code></div>
+                    <div class="fragment opinion" style="font-size: 0.8em;">достаём <mark>D</mark>, новый сосед F:
+                        очередь <code>[E, F]</code></div>
+                    <div class="fragment opinion" style="font-size: 0.8em;">достаём E, потом F - новых нет. Очередь
+                        пуста, конец. Порядок: <mark>A B C D E F</mark></div>
+                </section>
+
+                <!-- код BFS: только каркас обхода - deque, множество visited, while queue: popleft, проход по соседям, append; без прикладной логики -->
+                <section>
+                    <h2>Каркас обхода</h2>
+                    <div class="code-block fragment">
+                        <pre class="python size-m"><code>from collections import deque
+
+def bfs(adj, start):
+    visited = {start}
+    q = deque([start])
+    while q:
+        v = q.popleft()
+        for to in adj[v]:
+            if to not in visited:
+                visited.add(to)
+                q.append(to)</code></pre>
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 0.5em;">
+                        Тот же каркас, что у DFS - <mark>только вместо стека очередь</mark>, и берём элемент с другого
+                        конца (<code>popleft</code> вместо <code>pop</code>)
+                    </div>
+                </section>
+
+            </section>
+
+            <!-- ЧАСТЬ 3: кратчайший путь через BFS -->
+            <section>
+
+                <section style="font-size: 70px; height: 100%; width: 100%">
+                    <div class="lesson-time">30</div>
+                    <div class="fragment">
+                        <h1 style="font-size: 1.3em;">Кратчайший путь</h1>
+                        <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">dist, parent, сетка-лабиринт</p>
+                    </div>
+                </section>
+
+                <!-- массив dist: расстояние в рёбрах от старта; dist[start] = 0; при первом попадании в соседа dist[neighbor] = dist[v] + 1 -->
+                <section>
+                    <h2>Считаем расстояния: dist</h2>
+                    <p class="fragment">Вместо множества <code>visited</code> заводим словарь <code>dist</code>:
+                        <code>dist[start] = 0</code>, у остальных значения пока нет.
+                    </p>
+                    <p class="fragment">Когда из <code>v</code> <mark>впервые</mark> попадаем в соседа <code>to</code>:
+                        <code>dist[to] = dist[v] + 1</code> и кладём <code>to</code> в очередь.
+                    </p>
+                    <div class="code-block fragment">
+                        <pre class="python size-s"><code>if to not in dist:
+    dist[to] = dist[v] + 1
+    q.append(to)</code></pre>
+                    </div>
+                    <div class="fragment opinion" style="font-size: 0.85em; margin-top: 0.3em;">
+                        Наличие ключа в <code>dist</code> заменяет <code>visited</code>. Повторно вершину не трогаем -
+                        первое найденное значение уже минимальное
+                    </div>
+                </section>
+
+                <!-- почему BFS даёт именно кратчайший путь: слои обходятся строго по возрастанию расстояния; объяснить словами и картинкой слоёв -->
+                <section>
+                    <h2>Почему это кратчайший путь</h2>
+                    <svg width="440" height="200" style="display: block; margin: 0.2em auto;" class="fragment">
+                        <line x1="115" y1="20" x2="115" y2="180" stroke="#556" stroke-width="1" stroke-dasharray="4 4" />
+                        <line x1="235" y1="20" x2="235" y2="180" stroke="#556" stroke-width="1" stroke-dasharray="4 4" />
+                        <line x1="355" y1="20" x2="355" y2="180" stroke="#556" stroke-width="1" stroke-dasharray="4 4" />
+                        <line x1="55" y1="100" x2="170" y2="60" stroke="#8f8" stroke-width="2" />
+                        <line x1="55" y1="100" x2="170" y2="140" stroke="#8f8" stroke-width="2" />
+                        <line x1="170" y1="60" x2="295" y2="100" stroke="#8f8" stroke-width="2" />
+                        <line x1="170" y1="140" x2="295" y2="100" stroke="#8f8" stroke-width="2" />
+                        <line x1="295" y1="100" x2="410" y2="100" stroke="#8f8" stroke-width="2" />
+                        <circle cx="55" cy="100" r="15" fill="rgba(120,255,140,0.25)" stroke="#8f8" stroke-width="2" />
+                        <circle cx="170" cy="60" r="15" fill="rgba(99,99,255,0.35)" stroke="#99f" stroke-width="2" />
+                        <circle cx="170" cy="140" r="15" fill="rgba(99,99,255,0.35)" stroke="#99f" stroke-width="2" />
+                        <circle cx="295" cy="100" r="15" fill="rgba(255,213,79,0.3)" stroke="#ffd54f" stroke-width="2" />
+                        <circle cx="410" cy="100" r="15" fill="rgba(255,120,180,0.22)" stroke="#f7a" stroke-width="2" />
+                        <text x="55" y="180" text-anchor="middle" fill="#8f8" font-size="12">0</text>
+                        <text x="175" y="180" text-anchor="middle" fill="#99f" font-size="12">1</text>
+                        <text x="295" y="180" text-anchor="middle" fill="#ffd54f" font-size="12">2</text>
+                        <text x="410" y="180" text-anchor="middle" fill="#f7a" font-size="12">3</text>
+                    </svg>
+                    <p class="fragment" style="font-size: 0.83em;">Очередь обрабатывает вершины <mark>по неубыванию
+                            dist</mark>: сначала весь слой 0, потом весь слой 1, потом слой 2.</p>
+                    <div class="fragment opinion" style="font-size: 0.83em; margin-top: 0.3em;">
+                        Вершину <code>to</code> находим впервые из вершины слоя <code>k</code> - значит она в слое
+                        <code>k + 1</code>. Ближе быть не могло, иначе нашли бы раньше. Первое посещение = <mark>кратчайшее
+                            расстояние</mark>
+                    </div>
+                </section>
+
+                <!-- восстановление пути: массив parent, запоминаем откуда пришли; идём от конца к старту и разворачиваем -->
+                <section>
+                    <h2>Восстановление самого пути</h2>
+                    <p class="fragment"><code>dist</code> даёт <mark>длину</mark>, но не сам маршрут. В тот же момент,
+                        когда ставим <code>dist[to]</code>, запоминаем <code>parent[to] = v</code> - откуда пришли.</p>
+                    <svg width="420" height="170" style="display: block; margin: 0.2em auto;" class="fragment">
+                        <line x1="40" y1="85" x2="150" y2="45" stroke="#8f8" stroke-width="3" />
+                        <line x1="150" y1="45" x2="260" y2="45" stroke="#8f8" stroke-width="3" />
+                        <line x1="260" y1="45" x2="370" y2="85" stroke="#8f8" stroke-width="3" />
+                        <line x1="40" y1="85" x2="150" y2="125" stroke="#555" stroke-width="1.4" />
+                        <line x1="150" y1="125" x2="260" y2="125" stroke="#555" stroke-width="1.4" />
+                        <line x1="260" y1="125" x2="370" y2="85" stroke="#555" stroke-width="1.4" />
+                        <circle cx="40" cy="85" r="16" fill="rgba(120,255,140,0.25)" stroke="#8f8" stroke-width="2" />
+                        <circle cx="150" cy="45" r="16" fill="rgba(99,99,255,0.35)" stroke="#99f" stroke-width="2" />
+                        <circle cx="260" cy="45" r="16" fill="rgba(255,213,79,0.3)" stroke="#ffd54f" stroke-width="2" />
+                        <circle cx="370" cy="85" r="16" fill="rgba(255,120,180,0.22)" stroke="#f7a" stroke-width="2" />
+                        <text x="40" y="90" text-anchor="middle" fill="white" font-size="13">A</text>
+                        <text x="150" y="50" text-anchor="middle" fill="white" font-size="13">B</text>
+                        <text x="260" y="50" text-anchor="middle" fill="white" font-size="13">D</text>
+                        <text x="370" y="90" text-anchor="middle" fill="white" font-size="13">F</text>
+                    </svg>
+                    <p class="fragment" style="font-size: 0.83em;">Чтобы получить путь до F: идём
+                        <code>parent[F] -&gt; parent[D] -&gt; parent[B]</code>, пока не дойдём до старта, потом
+                        <mark>разворачиваем</mark> список
+                    </p>
+                    <div class="code-block fragment">
+                        <pre class="python size-s"><code>path = []
+cur = target
+while cur is not None:
+    path.append(cur)
+    cur = parent.get(cur)
+path.reverse()</code></pre>
+                    </div>
+                </section>
+
+                <!-- сетка (лабиринт) как граф: клетка = вершина, соседи = 4 направления; multi-source BFS - в очередь сразу несколько стартов; подводка к ДЗ 994. Rotting Oranges, ссылка target=_blank -->
+                <section>
+                    <h2>Сетка-лабиринт - тот же граф</h2>
+                    <div style="display: flex; align-items: center; justify-content: center; gap: 1.2em;">
+                        <svg width="230" height="230" class="fragment">
+                            <g stroke="#556" stroke-width="1" fill="none">
+                                <rect x="4" y="4" width="44" height="44" /><rect x="48" y="4" width="44" height="44" />
+                                <rect x="92" y="4" width="44" height="44" />
+                                <rect x="136" y="4" width="44" height="44" /><rect x="180" y="4" width="44"
+                                    height="44" />
+                                <rect x="4" y="48" width="44" height="44" /><rect x="48" y="48" width="44"
+                                    height="44" />
+                                <rect x="92" y="48" width="44" height="44" /><rect x="136" y="48" width="44"
+                                    height="44" />
+                                <rect x="180" y="48" width="44" height="44" />
+                                <rect x="4" y="92" width="44" height="44" /><rect x="48" y="92" width="44"
+                                    height="44" />
+                                <rect x="92" y="92" width="44" height="44" /><rect x="136" y="92" width="44"
+                                    height="44" />
+                                <rect x="180" y="92" width="44" height="44" />
+                                <rect x="4" y="136" width="44" height="44" /><rect x="48" y="136" width="44"
+                                    height="44" />
+                                <rect x="92" y="136" width="44" height="44" /><rect x="136" y="136" width="44"
+                                    height="44" />
+                                <rect x="180" y="136" width="44" height="44" />
+                                <rect x="4" y="180" width="44" height="44" /><rect x="48" y="180" width="44"
+                                    height="44" />
+                                <rect x="92" y="180" width="44" height="44" /><rect x="136" y="180" width="44"
+                                    height="44" />
+                                <rect x="180" y="180" width="44" height="44" />
+                            </g>
+                            <g fill="rgba(120,120,120,0.55)">
+                                <rect x="136" y="4" width="44" height="44" />
+                                <rect x="4" y="48" width="44" height="44" /><rect x="48" y="48" width="44"
+                                    height="44" />
+                                <rect x="136" y="48" width="44" height="44" />
+                                <rect x="48" y="136" width="44" height="44" /><rect x="92" y="136" width="44"
+                                    height="44" />
+                                <rect x="136" y="136" width="44" height="44" />
+                            </g>
+                            <rect x="4" y="4" width="44" height="44" fill="rgba(120,255,140,0.3)" />
+                            <rect x="180" y="180" width="44" height="44" fill="rgba(255,213,79,0.35)" />
+                            <g fill="rgba(99,99,255,0.28)">
+                                <rect x="48" y="4" width="44" height="44" /><rect x="92" y="4" width="44" height="44" />
+                                <rect x="92" y="48" width="44" height="44" />
+                                <rect x="92" y="92" width="44" height="44" /><rect x="136" y="92" width="44"
+                                    height="44" />
+                                <rect x="180" y="92" width="44" height="44" />
+                                <rect x="180" y="136" width="44" height="44" />
+                            </g>
+                            <text x="26" y="32" text-anchor="middle" fill="white" font-size="14">S</text>
+                            <text x="202" y="208" text-anchor="middle" fill="white" font-size="14">T</text>
+                        </svg>
+                        <ul style="font-size: 0.8em; text-align: left;">
+                            <li class="fragment">клетка = вершина</li>
+                            <li class="fragment">соседи - 4 клетки: смещения <code>(-1,0) (1,0) (0,-1) (0,1)</code></li>
+                            <li class="fragment">стена и край - не сосед</li>
+                            <li class="fragment">список смежности строить не нужно, соседей считаем на лету</li>
+                            <li class="fragment">путь S - T за <mark>8 шагов</mark> (синие клетки)</li>
+                        </ul>
+                    </div>
+                    <div class="fragment opinion" style="font-size: 0.8em; margin-top: 0.2em;">
+                        <mark>Multi-source BFS</mark>: можно положить в очередь сразу несколько стартов с
+                        <code>dist = 0</code> - волна пойдёт от всех одновременно. ДЗ на это -
+                        <a href="https://leetcode.com/problems/rotting-oranges/" target="_blank" rel="noopener">994.
+                            Rotting Oranges</a> (ответ = номер последнего слоя)
+                    </div>
+                </section>
+
+                <!-- практическое задание practice/28-graphs-bfs/: BFS по сетке-лабиринту, вернуть длину кратчайшего пути; шаблон решения + проверки через print(actual, expected) -->
+                <section>
+                    <h2>Практика: <code>practice/28-graphs-bfs/</code></h2>
+                    <p class="fragment"><code>grid_shortest(grid, start, target)</code> - лабиринт из <code>'.'</code> и
+                        <code>'#'</code>. Вернуть <mark>длину кратчайшего пути</mark> в шагах или <code>-1</code>, если
+                        пути нет.
+                    </p>
+                    <ul style="margin-top: 0.3em;">
+                        <li class="fragment">обычный BFS, соседей клетки считаем через 4 смещения</li>
+                        <li class="fragment"><code>dist</code> на словаре: <code>dist[start] = 0</code></li>
+                        <li class="fragment">дошли до <code>target</code> - возвращаем <code>dist[target]</code></li>
+                    </ul>
+                    <div class="fragment opinion" style="font-size: 0.85em; margin-top: 0.3em;">
+                        В файле <code>grid_shortest.py</code> уже есть заготовка и проверки через
+                        <code>print(actual, expected)</code>
+                    </div>
+                </section>
+
+            </section>
+
+            <!-- итог: что запомнить, 3-4 пункта -->
+            <section>
+                <div class="lesson-time">50</div>
+                <h2>Что запомнить</h2>
+                <ul>
+                    <li class="fragment"><mark>BFS</mark> = очередь + обход по слоям (в ширину), в отличие от DFS (в
+                        глубину)</li>
+                    <li class="fragment">В невзвешенном графе <mark>первое посещение</mark> вершины = кратчайший путь по
+                        числу рёбер; храним <code>dist</code>, ставим <code>dist[to] = dist[v] + 1</code></li>
+                    <li class="fragment">Сам путь восстанавливаем через <code>parent</code>: идём от цели назад к старту
+                        и разворачиваем</li>
+                    <li class="fragment">Сетка-лабиринт - тот же граф (клетка = вершина, 4 соседа); <mark>multi-source
+                            BFS</mark> = несколько стартов в очереди сразу</li>
+                    <li class="fragment">ДЗ: <a href="https://leetcode.com/problems/rotting-oranges/" target="_blank"
+                            rel="noopener">994. Rotting Oranges</a></li>
+                </ul>
+            </section>
+
+        </div>
+    </div>
+
+    <script src="/utils/lib/js/head.min.js"></script>
+    <script src="/utils/js/reveal.js"></script>
+    <script>
+        Reveal.initialize({
+            controls: true,
+            progress: true,
+            history: true,
+            center: true,
+            transition: 'fade',
+            transitionSpeed: 'fast',
+            dependencies: [
+                { src: '/utils/lib/js/classList.js', condition: function () { return !document.body.classList; } },
+                { src: '/utils/plugin/markdown/marked.js', condition: function () { return !!document.querySelector('[data-markdown]'); } },
+                { src: '/utils/plugin/markdown/markdown.js', condition: function () { return !!document.querySelector('[data-markdown]'); } },
+                { src: '/utils/plugin/highlight/highlight.js', async: true, callback: function () { hljs.initHighlightingOnLoad(); } },
+                { src: '/utils/plugin/zoom-js/zoom.js', async: true },
+                { src: '/utils/plugin/notes/notes.js', async: true }
+            ]
+        });
+        Reveal.configure({ slideNumber: 'c/t' });
+    </script>
+</body>
+
+</html>
