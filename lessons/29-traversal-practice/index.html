@@ -1,0 +1,677 @@
+<!doctype html>
+<html lang="ru">
+
+<head>
+    <meta charset="utf-8">
+    <title>Занятие 29 — Практика: обход графов</title>
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+
+    <link rel="stylesheet" href="/utils/css/reveal.css">
+    <link rel="stylesheet" href="/utils/lib/css/animate.css">
+    <link rel="stylesheet" href="/utils/css/theme/night.css" id="theme">
+    <link rel="stylesheet" href="/utils/lib/css/zenburn.css">
+    <link rel="stylesheet" href="/utils/css/custom-base.css">
+    <link rel="stylesheet" href="css-custom/custom.css">
+
+    <script>
+        var link = document.createElement('link');
+        link.rel = 'stylesheet'; link.type = 'text/css';
+        link.href = window.location.search.match(/print-pdf/gi)
+            ? '/utils/css/print/pdf.css'
+            : '/utils/css/print/paper.css';
+        document.getElementsByTagName('head')[0].appendChild(link);
+    </script>
+</head>
+
+<body>
+    <div class="reveal">
+        <div class="slides">
+
+            <!-- титульный слайд -->
+            <section style="font-size: 70px; height: 100%; width: 100%">
+                <div class="lesson-time">0</div>
+                <div class="fragment">
+                    <h1 class="animated" style="font-size: 1.25em;">DFS или BFS?</h1>
+                    <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">Практика: обход графов вперемешку.
+                        Занятие 29</p>
+                </div>
+            </section>
+
+            <!-- РАЗБОР ДЗ -->
+            <section>
+
+                <!-- разбор ДЗ занятия 28: 994. Rotting Oranges - что за задача, ссылка на LeetCode -->
+                <section>
+                    <h2>Разбор ДЗ: <a href="https://leetcode.com/problems/rotting-oranges/" target="_blank"
+                            rel="noopener">994. Rotting Oranges</a></h2>
+                    <p class="fragment">Сетка клеток: <code>0</code> - пусто, <code>1</code> - свежий апельсин,
+                        <code>2</code> - гнилой. Каждую минуту гнилой заражает <mark>4 соседние</mark> клетки.
+                    </p>
+                    <p class="fragment">Через сколько минут сгниют все? Если хоть один остался свежим - ответ
+                        <code>-1</code>.
+                    </p>
+                    <div class="fragment opinion" style="margin-top: 0.4em;">
+                        Заражение расходится <mark>волной</mark> - это слово почти всегда означает BFS
+                    </div>
+                </section>
+
+                <!-- multi-source BFS: рисунок сетки, все гнилые апельсины кладём в очередь сразу -->
+                <section>
+                    <h2>Multi-source BFS</h2>
+                    <div style="display: flex; align-items: center; justify-content: center; gap: 1.2em;">
+                        <svg width="200" height="200" class="fragment">
+                            <g stroke="#556" stroke-width="1" fill="none">
+                                <rect x="10" y="10" width="60" height="60" />
+                                <rect x="70" y="10" width="60" height="60" />
+                                <rect x="130" y="10" width="60" height="60" />
+                                <rect x="10" y="70" width="60" height="60" />
+                                <rect x="70" y="70" width="60" height="60" />
+                                <rect x="130" y="70" width="60" height="60" />
+                                <rect x="10" y="130" width="60" height="60" />
+                                <rect x="70" y="130" width="60" height="60" />
+                                <rect x="130" y="130" width="60" height="60" />
+                            </g>
+                            <rect x="10" y="10" width="60" height="60" fill="rgba(255,120,180,0.28)" />
+                            <rect x="70" y="10" width="60" height="60" fill="rgba(99,99,255,0.3)" />
+                            <rect x="10" y="70" width="60" height="60" fill="rgba(99,99,255,0.3)" />
+                            <rect x="130" y="10" width="60" height="60" fill="rgba(255,213,79,0.28)" />
+                            <rect x="70" y="70" width="60" height="60" fill="rgba(255,213,79,0.28)" />
+                            <rect x="70" y="130" width="60" height="60" fill="rgba(120,255,140,0.25)" />
+                            <rect x="130" y="130" width="60" height="60" fill="rgba(120,255,140,0.18)" />
+                            <text x="40" y="47" text-anchor="middle" fill="white" font-size="18">0</text>
+                            <text x="100" y="47" text-anchor="middle" fill="white" font-size="18">1</text>
+                            <text x="40" y="107" text-anchor="middle" fill="white" font-size="18">1</text>
+                            <text x="160" y="47" text-anchor="middle" fill="white" font-size="18">2</text>
+                            <text x="100" y="107" text-anchor="middle" fill="white" font-size="18">2</text>
+                            <text x="160" y="107" text-anchor="middle" fill="#777" font-size="18">-</text>
+                            <text x="40" y="167" text-anchor="middle" fill="#777" font-size="18">-</text>
+                            <text x="100" y="167" text-anchor="middle" fill="white" font-size="18">3</text>
+                            <text x="160" y="167" text-anchor="middle" fill="white" font-size="18">4</text>
+                        </svg>
+                        <ul style="font-size: 0.75em; text-align: left;">
+                            <li class="fragment">в клетках - <mark>минута заражения</mark></li>
+                            <li class="fragment">все гнилые кладём в очередь <mark>сразу</mark>, до начала обхода</li>
+                            <li class="fragment">у всех них <code>dist = 0</code></li>
+                            <li class="fragment">волна идёт от всех стартов одновременно</li>
+                            <li class="fragment">один BFS, а не отдельный запуск от каждого апельсина</li>
+                        </ul>
+                    </div>
+                </section>
+
+                <!-- почему счётчик минут = номер слоя BFS, а не отдельный таймер; типичная ошибка ученика -->
+                <section>
+                    <h2>Минуты - это номер слоя</h2>
+                    <p class="fragment">Отдельный таймер не нужен: <code>dist[клетка]</code> и есть минута, когда она
+                        сгниёт. Ответ - <mark>максимум по всем dist</mark>.</p>
+                    <div class="compare" style="margin-top: 0.4em;">
+                        <div class="compare-block fragment">
+                            <h4>❌ Ошибка раз</h4>
+                            <p style="font-size: 0.72em;">Вернуть число слоёв или число шагов очереди. Слоёв на единицу
+                                больше, чем минут: нулевой слой - это <mark>начало</mark>, а не первая минута</p>
+                        </div>
+                        <div class="compare-block fragment">
+                            <h4>❌ Ошибка два</h4>
+                            <p style="font-size: 0.72em;">Забыть проверку в конце: если до какого-то свежего апельсина
+                                волна не дошла - ответ <code>-1</code>, а не максимум dist</p>
+                        </div>
+                    </div>
+                    <div class="fragment opinion" style="font-size: 0.85em; margin-top: 0.3em;">
+                        Оставшиеся свежие удобно считать счётчиком: посчитали в начале, уменьшаем при каждом заражении.
+                        В конце счётчик не ноль - возвращаем <code>-1</code>
+                    </div>
+                </section>
+
+            </section>
+
+            <!-- ЧАСТЬ 1: Как выбрать обход -->
+            <section>
+
+                <section style="font-size: 70px; height: 100%; width: 100%">
+                    <div class="lesson-time">8</div>
+                    <div class="fragment">
+                        <h1 style="font-size: 1.3em;">Какой обход выбрать</h1>
+                        <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">признаки задачи и одна общая
+                            схема</p>
+                    </div>
+                </section>
+
+                <!-- цель занятия: три готовых обхода в голове, задача - выбрать нужный -->
+                <section>
+                    <h2>Что мы уже умеем</h2>
+                    <p class="fragment">За прошлые занятия набрались <mark>три готовых каркаса</mark>. Нового алгоритма
+                        сегодня не будет - будет умение выбирать.</p>
+                    <div class="timeline" style="margin-top: 0.4em;">
+                        <div class="timeline-item fragment">
+                            <div class="timeline-marker">1</div>
+                            <div class="timeline-content"><strong>DFS</strong> - рекурсия или стек, обходит всё
+                                достижимое</div>
+                        </div>
+                        <div class="timeline-item fragment">
+                            <div class="timeline-marker">2</div>
+                            <div class="timeline-content"><strong>BFS</strong> - очередь, обходит по слоям и попутно
+                                считает <code>dist</code></div>
+                        </div>
+                        <div class="timeline-item fragment">
+                            <div class="timeline-marker">3</div>
+                            <div class="timeline-content"><strong>Multi-source BFS</strong> - то же самое, но стартов в
+                                очереди сразу много</div>
+                        </div>
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 0.4em;">
+                        Навык занятия: прочитать условие и <mark>за 10 секунд понять</mark>, какой из трёх брать
+                    </div>
+                </section>
+
+                <!-- DFS vs BFS: один рисунок графа, две картинки порядка посещения (в глубину и по слоям) -->
+                <section>
+                    <h2>Один граф, два порядка</h2>
+                    <div style="display: flex; justify-content: center; gap: 0.8em;">
+                        <div class="fragment">
+                            <p style="font-size: 0.6em; margin: 0; color: #f7a;">DFS - вглубь</p>
+                            <svg width="330" height="190">
+                                <line x1="35" y1="95" x2="115" y2="45" stroke="#888" stroke-width="1.6" />
+                                <line x1="35" y1="95" x2="115" y2="145" stroke="#888" stroke-width="1.6" />
+                                <line x1="115" y1="45" x2="210" y2="45" stroke="#888" stroke-width="1.6" />
+                                <line x1="115" y1="145" x2="210" y2="45" stroke="#888" stroke-width="1.6" />
+                                <line x1="115" y1="145" x2="210" y2="145" stroke="#888" stroke-width="1.6" />
+                                <line x1="210" y1="45" x2="295" y2="95" stroke="#888" stroke-width="1.6" />
+                                <line x1="210" y1="145" x2="295" y2="95" stroke="#888" stroke-width="1.6" />
+                                <circle cx="35" cy="95" r="17" fill="rgba(255,120,180,0.22)" stroke="#f7a"
+                                    stroke-width="2" />
+                                <circle cx="115" cy="45" r="17" fill="rgba(255,120,180,0.22)" stroke="#f7a"
+                                    stroke-width="2" />
+                                <circle cx="115" cy="145" r="17" fill="rgba(255,120,180,0.22)" stroke="#f7a"
+                                    stroke-width="2" />
+                                <circle cx="210" cy="45" r="17" fill="rgba(255,120,180,0.22)" stroke="#f7a"
+                                    stroke-width="2" />
+                                <circle cx="210" cy="145" r="17" fill="rgba(255,120,180,0.22)" stroke="#f7a"
+                                    stroke-width="2" />
+                                <circle cx="295" cy="95" r="17" fill="rgba(255,120,180,0.22)" stroke="#f7a"
+                                    stroke-width="2" />
+                                <text x="35" y="101" text-anchor="middle" fill="white" font-size="14">A</text>
+                                <text x="115" y="51" text-anchor="middle" fill="white" font-size="14">B</text>
+                                <text x="115" y="151" text-anchor="middle" fill="white" font-size="14">C</text>
+                                <text x="210" y="51" text-anchor="middle" fill="white" font-size="14">D</text>
+                                <text x="210" y="151" text-anchor="middle" fill="white" font-size="14">E</text>
+                                <text x="295" y="101" text-anchor="middle" fill="white" font-size="14">F</text>
+                                <text x="35" y="68" text-anchor="middle" fill="#f7a" font-size="13">1</text>
+                                <text x="138" y="35" text-anchor="middle" fill="#f7a" font-size="13">2</text>
+                                <text x="138" y="172" text-anchor="middle" fill="#f7a" font-size="13">4</text>
+                                <text x="233" y="35" text-anchor="middle" fill="#f7a" font-size="13">3</text>
+                                <text x="233" y="172" text-anchor="middle" fill="#f7a" font-size="13">5</text>
+                                <text x="295" y="68" text-anchor="middle" fill="#f7a" font-size="13">6</text>
+                            </svg>
+                        </div>
+                        <div class="fragment">
+                            <p style="font-size: 0.6em; margin: 0; color: #99f;">BFS - по слоям</p>
+                            <svg width="330" height="190">
+                                <line x1="35" y1="95" x2="115" y2="45" stroke="#888" stroke-width="1.6" />
+                                <line x1="35" y1="95" x2="115" y2="145" stroke="#888" stroke-width="1.6" />
+                                <line x1="115" y1="45" x2="210" y2="45" stroke="#888" stroke-width="1.6" />
+                                <line x1="115" y1="145" x2="210" y2="45" stroke="#888" stroke-width="1.6" />
+                                <line x1="115" y1="145" x2="210" y2="145" stroke="#888" stroke-width="1.6" />
+                                <line x1="210" y1="45" x2="295" y2="95" stroke="#888" stroke-width="1.6" />
+                                <line x1="210" y1="145" x2="295" y2="95" stroke="#888" stroke-width="1.6" />
+                                <circle cx="35" cy="95" r="17" fill="rgba(99,99,255,0.3)" stroke="#99f"
+                                    stroke-width="2" />
+                                <circle cx="115" cy="45" r="17" fill="rgba(99,99,255,0.3)" stroke="#99f"
+                                    stroke-width="2" />
+                                <circle cx="115" cy="145" r="17" fill="rgba(99,99,255,0.3)" stroke="#99f"
+                                    stroke-width="2" />
+                                <circle cx="210" cy="45" r="17" fill="rgba(99,99,255,0.3)" stroke="#99f"
+                                    stroke-width="2" />
+                                <circle cx="210" cy="145" r="17" fill="rgba(99,99,255,0.3)" stroke="#99f"
+                                    stroke-width="2" />
+                                <circle cx="295" cy="95" r="17" fill="rgba(99,99,255,0.3)" stroke="#99f"
+                                    stroke-width="2" />
+                                <text x="35" y="101" text-anchor="middle" fill="white" font-size="14">A</text>
+                                <text x="115" y="51" text-anchor="middle" fill="white" font-size="14">B</text>
+                                <text x="115" y="151" text-anchor="middle" fill="white" font-size="14">C</text>
+                                <text x="210" y="51" text-anchor="middle" fill="white" font-size="14">D</text>
+                                <text x="210" y="151" text-anchor="middle" fill="white" font-size="14">E</text>
+                                <text x="295" y="101" text-anchor="middle" fill="white" font-size="14">F</text>
+                                <text x="35" y="68" text-anchor="middle" fill="#99f" font-size="13">1</text>
+                                <text x="138" y="35" text-anchor="middle" fill="#99f" font-size="13">2</text>
+                                <text x="138" y="172" text-anchor="middle" fill="#99f" font-size="13">3</text>
+                                <text x="233" y="35" text-anchor="middle" fill="#99f" font-size="13">4</text>
+                                <text x="233" y="172" text-anchor="middle" fill="#99f" font-size="13">5</text>
+                                <text x="295" y="68" text-anchor="middle" fill="#99f" font-size="13">6</text>
+                            </svg>
+                        </div>
+                    </div>
+                    <p class="fragment" style="font-size: 0.78em; opacity: 0.85;">Оба посетят <mark>все шесть</mark>
+                        вершин. Разница - в порядке и в том, что BFS попутно знает расстояние до каждой</p>
+                </section>
+
+                <!-- таблица-решалка: "нужен кратчайший путь по рёбрам" -> BFS; "нужна связность/компоненты/цикл" -> DFS; "нужен порядок выхода" -> DFS -->
+                <section>
+                    <h2>Таблица-решалка</h2>
+                    <table style="font-size: 0.75em; width: 100%; margin-top: 0.4em;">
+                        <tr>
+                            <td><strong>Что спрашивают</strong></td>
+                            <td><strong>Чем решаем</strong></td>
+                        </tr>
+                        <tr class="fragment">
+                            <td>Кратчайший путь по числу рёбер или шагов</td>
+                            <td><mark class="green">BFS</mark> + <code>dist</code></td>
+                        </tr>
+                        <tr class="fragment">
+                            <td>Есть ли путь, достижима ли вершина</td>
+                            <td>любой, проще <mark>DFS</mark></td>
+                        </tr>
+                        <tr class="fragment">
+                            <td>Компоненты связности, число островов</td>
+                            <td>любой, проще <mark>DFS</mark></td>
+                        </tr>
+                        <tr class="fragment">
+                            <td>Есть ли цикл, мосты, двудольность</td>
+                            <td><mark>DFS</mark> + <code>parent</code></td>
+                        </tr>
+                        <tr class="fragment">
+                            <td>Расстояния сразу от многих источников</td>
+                            <td><mark class="green">multi-source BFS</mark></td>
+                        </tr>
+                        <tr class="fragment">
+                            <td>Порядок выхода из вершин, компоненты сильной связности</td>
+                            <td><mark>DFS</mark> (только он)</td>
+                        </tr>
+                    </table>
+                </section>
+
+                <!-- маркеры в условии задачи: слова "минимум шагов", "все достижимые", "существует ли путь" - что каждое означает -->
+                <section>
+                    <h2>Слова-маркеры в условии</h2>
+                    <ul style="font-size: 0.85em;">
+                        <li class="fragment">"<mark>минимальное число</mark> ходов, шагов, минут, пересадок" - только
+                            BFS. DFS найдёт какой-то путь, но не самый короткий</li>
+                        <li class="fragment">"<mark>сколько групп</mark>, островов, компонент" - обход всего графа с
+                            внешним циклом по вершинам, годится DFS</li>
+                        <li class="fragment">"<mark>можно ли</mark> добраться, существует ли путь" - один запуск, всё
+                            равно какой обход</li>
+                        <li class="fragment">"<mark>ближайший</mark> выход, ближайшая единица" - снова BFS, часто
+                            multi-source</li>
+                    </ul>
+                    <div class="fragment opinion" style="margin-top: 0.3em;">
+                        Слово <mark>"минимальное"</mark> рядом с невзвешенным графом - почти всегда BFS
+                    </div>
+                </section>
+
+                <!-- что общего: visited, очередь vs стек/рекурсия - одна схема с двумя контейнерами -->
+                <section>
+                    <h2>Одна схема, два контейнера</h2>
+                    <p class="fragment" style="font-size: 0.85em;">Разница между DFS и BFS - <mark>одна строчка</mark>:
+                        с какого конца достаём следующую вершину.</p>
+                    <div class="compare">
+                        <div class="compare-block fragment">
+                            <h4>DFS - стек</h4>
+                            <div class="code-block">
+                                <pre class="python size-s" data-hl-line="8"><code>from collections import deque
+
+def dfs(adj, start):
+    visited = {start}
+    todo = deque([start])
+    order = []
+    while todo:
+        v = todo.pop()
+        order.append(v)
+        for to in adj[v]:
+            if to not in visited:
+                visited.add(to)
+                todo.append(to)
+    return order</code></pre>
+                            </div>
+                            <p style="font-size: 0.6em;"><code>pop()</code> берёт <mark>последнюю</mark> добавленную -
+                                уходим вглубь</p>
+                        </div>
+                        <div class="compare-block fragment">
+                            <h4>BFS - очередь</h4>
+                            <div class="code-block">
+                                <pre class="python size-s" data-hl-line="8"><code>from collections import deque
+
+def bfs(adj, start):
+    visited = {start}
+    todo = deque([start])
+    order = []
+    while todo:
+        v = todo.popleft()
+        order.append(v)
+        for to in adj[v]:
+            if to not in visited:
+                visited.add(to)
+                todo.append(to)
+    return order</code></pre>
+                            </div>
+                            <p style="font-size: 0.6em;"><code>popleft()</code> берёт <mark>первую</mark> добавленную -
+                                идём по слоям</p>
+                        </div>
+                    </div>
+                    <div class="fragment opinion" style="font-size: 0.75em; margin-top: 0.3em;">
+                        Всё остальное совпадает построчно: <code>visited</code>, цикл по соседям, проверка перед
+                        добавлением. Помнить надо один каркас, а не два
+                    </div>
+                </section>
+
+            </section>
+
+            <!-- ЧАСТЬ 2: Практика на сетке -->
+            <section>
+
+                <section style="font-size: 70px; height: 100%; width: 100%">
+                    <div class="lesson-time">25</div>
+                    <div class="fragment">
+                        <h1 style="font-size: 1.3em;">Сетка</h1>
+                        <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">острова и кратчайший путь</p>
+                    </div>
+                </section>
+
+                <!-- задача 1: 200. Number of Islands - условие + картинка сетки, ссылка на LeetCode -->
+                <section>
+                    <h2><a href="https://leetcode.com/problems/number-of-islands/" target="_blank" rel="noopener">200.
+                            Number of Islands</a></h2>
+                    <div style="display: flex; align-items: center; justify-content: center; gap: 1.2em;">
+                        <svg width="210" height="170" class="fragment">
+                            <g stroke="#556" stroke-width="1" fill="none">
+                                <rect x="5" y="5" width="40" height="40" />
+                                <rect x="45" y="5" width="40" height="40" />
+                                <rect x="85" y="5" width="40" height="40" />
+                                <rect x="125" y="5" width="40" height="40" />
+                                <rect x="165" y="5" width="40" height="40" />
+                                <rect x="5" y="45" width="40" height="40" />
+                                <rect x="45" y="45" width="40" height="40" />
+                                <rect x="85" y="45" width="40" height="40" />
+                                <rect x="125" y="45" width="40" height="40" />
+                                <rect x="165" y="45" width="40" height="40" />
+                                <rect x="5" y="85" width="40" height="40" />
+                                <rect x="45" y="85" width="40" height="40" />
+                                <rect x="85" y="85" width="40" height="40" />
+                                <rect x="125" y="85" width="40" height="40" />
+                                <rect x="165" y="85" width="40" height="40" />
+                                <rect x="5" y="125" width="40" height="40" />
+                                <rect x="45" y="125" width="40" height="40" />
+                                <rect x="85" y="125" width="40" height="40" />
+                                <rect x="125" y="125" width="40" height="40" />
+                                <rect x="165" y="125" width="40" height="40" />
+                            </g>
+                            <g fill="rgba(120,255,140,0.28)">
+                                <rect x="5" y="5" width="40" height="40" />
+                                <rect x="45" y="5" width="40" height="40" />
+                                <rect x="5" y="45" width="40" height="40" />
+                                <rect x="45" y="45" width="40" height="40" />
+                            </g>
+                            <g fill="rgba(255,213,79,0.3)">
+                                <rect x="85" y="85" width="40" height="40" />
+                            </g>
+                            <g fill="rgba(255,120,180,0.28)">
+                                <rect x="125" y="125" width="40" height="40" />
+                                <rect x="165" y="125" width="40" height="40" />
+                            </g>
+                            <text x="25" y="31" text-anchor="middle" fill="white" font-size="15">1</text>
+                            <text x="65" y="31" text-anchor="middle" fill="white" font-size="15">1</text>
+                            <text x="25" y="71" text-anchor="middle" fill="white" font-size="15">1</text>
+                            <text x="65" y="71" text-anchor="middle" fill="white" font-size="15">1</text>
+                            <text x="105" y="111" text-anchor="middle" fill="white" font-size="15">1</text>
+                            <text x="145" y="151" text-anchor="middle" fill="white" font-size="15">1</text>
+                            <text x="185" y="151" text-anchor="middle" fill="white" font-size="15">1</text>
+                        </svg>
+                        <ul style="font-size: 0.75em; text-align: left;">
+                            <li class="fragment"><code>1</code> - суша, <code>0</code> - вода</li>
+                            <li class="fragment">остров - клетки суши, связанные по <mark>4 сторонам</mark></li>
+                            <li class="fragment">на картинке <mark class="green">3 острова</mark></li>
+                            <li class="fragment">вопрос: сколько островов всего</li>
+                        </ul>
+                    </div>
+                    <div class="fragment opinion" style="font-size: 0.8em; margin-top: 0.2em;">
+                        "Сколько групп" - это <mark>компоненты связности</mark>, задача с занятия 20 в новой обёртке
+                    </div>
+                </section>
+
+                <!-- разбор словами: сетка как граф, сосед = 4 направления; почему тут годится и DFS, и BFS -->
+                <section>
+                    <h2>Как решаем</h2>
+                    <div class="timeline" style="font-size: 0.9em;">
+                        <div class="timeline-item fragment">
+                            <div class="timeline-marker">1</div>
+                            <div class="timeline-content">Идём по всем клеткам сетки двойным циклом</div>
+                        </div>
+                        <div class="timeline-item fragment">
+                            <div class="timeline-marker">2</div>
+                            <div class="timeline-content">Встретили сушу, которой нет в <code>visited</code> - нашли
+                                <mark>новый остров</mark>, увеличиваем счётчик
+                            </div>
+                        </div>
+                        <div class="timeline-item fragment">
+                            <div class="timeline-marker">3</div>
+                            <div class="timeline-content">Запускаем обход от этой клетки и помечаем <mark>весь
+                                    остров</mark> целиком</div>
+                        </div>
+                        <div class="timeline-item fragment">
+                            <div class="timeline-marker">4</div>
+                            <div class="timeline-content">Остальные клетки того же острова внешний цикл уже пропустит
+                            </div>
+                        </div>
+                    </div>
+                    <div class="fragment opinion" style="font-size: 0.85em; margin-top: 0.3em;">
+                        Годится и DFS, и BFS: нам важно <mark>какие</mark> клетки достижимы, а не за сколько шагов.
+                        Порядок обхода на ответ не влияет
+                    </div>
+                </section>
+
+                <!-- задача 2: 1091. Shortest Path in Binary Matrix - почему здесь DFS не подходит, только BFS -->
+                <section>
+                    <h2><a href="https://leetcode.com/problems/shortest-path-in-binary-matrix/" target="_blank"
+                            rel="noopener">1091. Shortest Path in Binary Matrix</a></h2>
+                    <div style="display: flex; align-items: center; justify-content: center; gap: 1.2em;">
+                        <svg width="180" height="180" class="fragment">
+                            <g stroke="#556" stroke-width="1" fill="none">
+                                <rect x="30" y="30" width="40" height="40" />
+                                <rect x="70" y="30" width="40" height="40" />
+                                <rect x="110" y="30" width="40" height="40" />
+                                <rect x="30" y="70" width="40" height="40" />
+                                <rect x="70" y="70" width="40" height="40" />
+                                <rect x="110" y="70" width="40" height="40" />
+                                <rect x="30" y="110" width="40" height="40" />
+                                <rect x="70" y="110" width="40" height="40" />
+                                <rect x="110" y="110" width="40" height="40" />
+                            </g>
+                            <rect x="70" y="70" width="40" height="40" fill="rgba(255,213,79,0.35)" />
+                            <g fill="rgba(99,99,255,0.28)">
+                                <rect x="30" y="30" width="40" height="40" />
+                                <rect x="70" y="30" width="40" height="40" />
+                                <rect x="110" y="30" width="40" height="40" />
+                                <rect x="30" y="70" width="40" height="40" />
+                                <rect x="110" y="70" width="40" height="40" />
+                                <rect x="30" y="110" width="40" height="40" />
+                                <rect x="70" y="110" width="40" height="40" />
+                                <rect x="110" y="110" width="40" height="40" />
+                            </g>
+                            <text x="90" y="96" text-anchor="middle" fill="white" font-size="15">o</text>
+                        </svg>
+                        <ul style="font-size: 0.75em; text-align: left;">
+                            <li class="fragment">путь из левого верхнего в правый нижний угол</li>
+                            <li class="fragment">ходить можно только по нулям</li>
+                            <li class="fragment">соседей <mark>восемь</mark>, а не четыре - по диагонали тоже можно</li>
+                            <li class="fragment">длина пути - число посещённых клеток</li>
+                        </ul>
+                    </div>
+                    <div class="fragment opinion" style="font-size: 0.8em; margin-top: 0.2em;">
+                        Тут просят <mark>минимум</mark>, значит DFS отпадает: он найдёт какой-нибудь путь через полсетки
+                        и остановится на нём. Нужен BFS
+                    </div>
+                </section>
+
+            </section>
+
+            <!-- ЧАСТЬ 3: Практика на списке смежности -->
+            <section>
+
+                <section style="font-size: 70px; height: 100%; width: 100%">
+                    <div class="lesson-time">50</div>
+                    <div class="fragment">
+                        <h1 style="font-size: 1.3em;">Обычный граф</h1>
+                        <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">циклы, достижимость, расстояния
+                        </p>
+                    </div>
+                </section>
+
+                <!-- задача 4: 1971. Find if Path Exists in Graph - тот же каркас, другой вопрос -->
+                <section>
+                    <h2><a href="https://leetcode.com/problems/find-if-path-exists-in-graph/" target="_blank"
+                            rel="noopener">1971. Find if Path Exists in Graph</a></h2>
+                    <p class="fragment">Дан список рёбер, вершины <code>start</code> и <code>end</code>. Вопрос: есть ли
+                        путь между ними.</p>
+                    <ul style="font-size: 0.85em; margin-top: 0.3em;">
+                        <li class="fragment">сначала <mark>строим список смежности</mark> из списка рёбер - ребро
+                            добавляем в обе стороны</li>
+                        <li class="fragment">один запуск обхода от <code>start</code></li>
+                        <li class="fragment">ответ: попал ли <code>end</code> в <code>visited</code></li>
+                    </ul>
+                    <div class="fragment opinion" style="font-size: 0.82em; margin-top: 0.3em;">
+                        Каркас тот же, что в задаче про цикл, но <mark>вопрос другой</mark>. Один обход - десяток разных
+                        задач
+                    </div>
+                </section>
+            </section>
+
+            <!-- ЧАСТЬ 4: Смешанные задачи -->
+            <section>
+
+                <section style="font-size: 70px; height: 100%; width: 100%">
+                    <div class="lesson-time">70</div>
+                    <div class="fragment">
+                        <h1 style="font-size: 1.3em;">Блиц</h1>
+                        <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">условие - и сразу ответ, чем
+                            решать</p>
+                    </div>
+                </section>
+
+                <!-- блиц: 5 условий задач, для каждого ученик называет DFS или BFS и почему (по одному фрагменту) -->
+                <section>
+                    <h2>DFS или BFS?</h2>
+                    <ul style="font-size: 0.8em;">
+                        <li class="fragment">Лабиринт, найти <mark>минимальное</mark> число шагов до выхода
+                            <span class="fragment">- <mark class="green">BFS</mark></span>
+                        </li>
+                        <li class="fragment">Сколько друзей в социальной сети связаны с Петей напрямую или через знакомых
+                            <span class="fragment">- <mark>DFS</mark>, это компонента</span>
+                        </li>
+                        <li class="fragment">Метро: минимум пересадок между станциями
+                            <span class="fragment">- <mark class="green">BFS</mark>, рёбра невзвешенные</span>
+                        </li>
+                        <li class="fragment">Можно ли расставить курсы так, чтобы не было противоречий
+                            <span class="fragment">- <mark>DFS</mark>, это поиск цикла</span>
+                        </li>
+                        <li class="fragment">Для каждой клетки - расстояние до ближайшей воды
+                            <span class="fragment">- <mark class="green">multi-source BFS</mark> от всех клеток воды</span>
+                        </li>
+                    </ul>
+                    <div class="fragment opinion" style="font-size: 0.82em; margin-top: 0.3em;">
+                        Проговаривай выбор <mark>вслух перед кодом</mark>: "минимум шагов - значит BFS". Это экономит
+                        полчаса переписывания
+                    </div>
+                </section>
+
+                <!-- задача 6 (если остаётся время): 133. Clone Graph - обход + словарь соответствий -->
+                <section>
+                    <h2><a href="https://leetcode.com/problems/clone-graph/" target="_blank" rel="noopener">133. Clone
+                            Graph</a></h2>
+                    <p class="fragment">Дан граф из объектов-вершин. Построить <mark>его копию</mark>: новые объекты,
+                        те же связи.</p>
+                    <ul style="font-size: 0.82em; margin-top: 0.3em;">
+                        <li class="fragment">обходим граф любым обходом</li>
+                        <li class="fragment">заводим словарь <code>старая вершина -&gt; новая вершина</code></li>
+                        <li class="fragment">этот словарь <mark>работает и как visited</mark>: вершина есть в нём -
+                            копия уже создана</li>
+                        <li class="fragment">для каждого соседа берём его копию из словаря и связываем</li>
+                    </ul>
+                    <div class="fragment opinion" style="font-size: 0.82em; margin-top: 0.3em;">
+                        Тот же приём, что с <code>dist</code> и <code>parent</code>: <mark>словарь вместо
+                            visited</mark>, только хранит не число, а объект
+                    </div>
+                </section>
+
+            </section>
+
+            <!-- ИТОГ -->
+            <section>
+
+                <!-- итог: что запомнить, 3-4 пункта -->
+                <section>
+                    <div class="lesson-time">85</div>
+                    <h2>Что запомнить</h2>
+                    <ul>
+                        <li class="fragment">Просят <mark>минимум шагов</mark> - BFS. Просят связность, компоненты или
+                            цикл - DFS. Просят порядок выхода - только DFS</li>
+                        <li class="fragment">DFS и BFS - <mark>один каркас</mark>, разница в контейнере:
+                            <code>pop()</code> против <code>popleft()</code>
+                        </li>
+                        <li class="fragment">Помечать вершину нужно <mark>при добавлении</mark> в очередь, иначе в
+                            очереди заводятся дубли</li>
+                        <li class="fragment">Несвязный граф - обход запускаем <mark>из внешнего цикла</mark> по всем
+                            вершинам</li>
+                        <li class="fragment">Словарь <code>dist</code> или <code>parent</code> часто заменяет
+                            <code>visited</code> и заодно хранит ответ
+                        </li>
+                    </ul>
+                </section>
+
+                <!-- домашнее задание с ссылкой на LeetCode -->
+                <section>
+                    <h2>Домашнее задание</h2>
+                    <p class="fragment"><a href="https://leetcode.com/problems/surrounded-regions/" target="_blank"
+                            rel="noopener">130. Surrounded Regions</a></p>
+                    <p class="fragment" style="font-size: 0.85em;">На доске из <code>'X'</code> и <code>'O'</code>
+                        заменить на <code>'X'</code> все области из <code>'O'</code>, которые <mark>полностью
+                            окружены</mark>. Область, касающаяся края доски, остаётся.</p>
+                    <div class="fragment opinion" style="font-size: 0.85em; margin-top: 0.3em;">
+                        Подсказка: не ищи окружённые области. Проще <mark>от края</mark> отметить обходом всё, что
+                        уцелеет, а остальные <code>'O'</code> заменить
+                    </div>
+                    <p class="fragment" style="font-size: 0.8em; opacity: 0.85;">Главный вопрос задачи не "каким
+                        обходом", а <mark>откуда его запускать</mark></p>
+                </section>
+
+            </section>
+
+        </div>
+    </div>
+
+    <script src="/utils/lib/js/head.min.js"></script>
+    <script src="/utils/js/reveal.js"></script>
+    <script>
+        Reveal.initialize({
+            controls: true,
+            progress: true,
+            history: true,
+            center: true,
+            transition: 'fade',
+            transitionSpeed: 'fast',
+            dependencies: [
+                { src: '/utils/lib/js/classList.js', condition: function () { return !document.body.classList; } },
+                { src: '/utils/plugin/markdown/marked.js', condition: function () { return !!document.querySelector('[data-markdown]'); } },
+                { src: '/utils/plugin/markdown/markdown.js', condition: function () { return !!document.querySelector('[data-markdown]'); } },
+                {
+                    src: '/utils/plugin/highlight/highlight.js', async: true, callback: function () {
+                        // выделение строки кода: <pre data-hl-line="8"> (номера с 1, можно через запятую)
+                        hljs.addPlugin({
+                            'after:highlightElement': function (data) {
+                                var pre = data.el.parentElement;
+                                if (!pre || !pre.hasAttribute('data-hl-line')) return;
+                                var marks = pre.getAttribute('data-hl-line').split(',').map(Number);
+                                data.el.innerHTML = data.el.innerHTML.split('\n').map(function (line, i) {
+                                    return marks.indexOf(i + 1) !== -1 ? '<span class="hl-line">' + line + '</span>' : line;
+                                }).join('\n');
+                            }
+                        });
+                        hljs.initHighlightingOnLoad();
+                    }
+                },
+                { src: '/utils/plugin/zoom-js/zoom.js', async: true },
+                { src: '/utils/plugin/notes/notes.js', async: true }
+            ]
+        });
+        Reveal.configure({ slideNumber: 'c/t' });
+    </script>
+</body>
+
+</html>

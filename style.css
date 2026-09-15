@@ -91,6 +91,15 @@ h1 {
   transition: background 0.15s, border-color 0.15s;
 }
 
+button.course-link {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.lesson-card {
+  scroll-margin-top: 1rem;
+}
+
 .course-link:hover {
   background: var(--accent-border);
   border-color: var(--accent);

@@ -1,0 +1,9 @@
+/* Занятие 29 - Практика: обход графов (BFS/DFS вперемешку) */
+
+/* выделенная строка в блоке кода: <pre data-hl-line="N">, разметку ставит плагин в Reveal.initialize */
+.reveal pre code .hl-line {
+    display: inline-block;
+    width: 100%;
+    background: rgba(255, 213, 79, 0.22);
+    box-shadow: inset 3px 0 0 #ffd54f;
+}

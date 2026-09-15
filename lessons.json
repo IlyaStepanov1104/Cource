@@ -550,8 +550,20 @@
       "title": "Практика: обход графов (BFS/DFS вперемешку)",
       "date": "2026-09-15T15:00:00",
       "duration": 60,
-      "presentations": [],
-      "homeworks": []
+      "presentations": [
+        {
+          "title": "Презентация",
+          "link": "/lessons/29-traversal-practice/",
+          "order": 1
+        }
+      ],
+      "homeworks": [
+        {
+          "title": "130. Surrounded Regions",
+          "description": "Заменить на X все области из O, полностью окружённые. Подсказка: запускать обход от края доски.",
+          "link": "https://leetcode.com/problems/surrounded-regions/"
+        }
+      ]
     },
     {
       "number": 30,

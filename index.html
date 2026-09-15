@@ -106,13 +106,26 @@
         visiblePast.forEach(lesson => list.appendChild(renderLessonCard(lesson, true, now)));
 
         // из будущих показываем первый как coming-soon, остальные скрываем (если не viewAll)
+        let nextCard = null;
         future.forEach((lesson, idx) => {
             const isAvailable = !lesson.date || viewAll;
             if (!isAvailable && !viewAll && idx > 0) return;
-            list.appendChild(renderLessonCard(lesson, isAvailable, now));
+            const card = renderLessonCard(lesson, isAvailable, now);
+            if (idx === 0) nextCard = card;
+            list.appendChild(card);
         });
 
         root.appendChild(list);
+
+        // при просмотре всего - кнопка прокрутки к ближайшему уроку
+        if (viewAll && nextCard) {
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'course-link';
+            btn.textContent = 'К следующему уроку';
+            btn.addEventListener('click', () => nextCard.scrollIntoView({ behavior: 'smooth', block: 'start' }));
+            document.querySelector('.course-links').appendChild(btn);
+        }
     }
 
     function renderLessonCard(lesson, isAvailable, now) {
