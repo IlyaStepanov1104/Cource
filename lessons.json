@@ -568,7 +568,7 @@
     {
       "number": 30,
       "title": "0-1 BFS + задачи",
-      "date": "2026-09-17T15:00:00",
+      "date": "2026-09-21T18:00:00",
       "duration": 90,
       "presentations": [
         {
@@ -579,19 +579,31 @@
       ],
       "homeworks": [
         {
-          "title": "1091. Shortest Path in Binary Matrix",
-          "description": "BFS по клеткам: найди кратчайший путь из угла в угол по свободным клеткам. Движение по 8 направлениям.",
-          "link": "https://leetcode.com/problems/shortest-path-in-binary-matrix/"
+          "title": "2290. Minimum Obstacle Removal to Reach Corner",
+          "description": "Сетка из 0 (свободная клетка) и 1 (обструкция, которую можно убрать). Ходить можно вверх, вниз, влево, вправо. Нужно вернуть минимальное число обструкций, которые надо убрать, чтобы дойти из верхнего левого угла в нижний правый.",
+          "link": "https://leetcode.com/problems/minimum-obstacle-removal-to-reach-corner/"
         }
       ]
     },
     {
       "number": 31,
-      "title": "Практика: взвешенные графы",
+      "title": "Задачи на взвешенные графы",
       "date": "2026-09-22T15:00:00",
       "duration": 60,
-      "presentations": [],
-      "homeworks": []
+      "presentations": [
+        {
+          "title": "Презентация",
+          "link": "/lessons/31-weighted-graphs/",
+          "order": 1
+        }
+      ],
+      "homeworks": [
+        {
+          "title": "1466. Reorder Routes to Make All Paths Lead to the City Zero",
+          "description": "n городов и n-1 односторонняя дорога. Если не смотреть на направления, из любого города можно доехать в любой. Разреши развернуть любую дорогу и найди минимальное число разворотов, после которых из каждого города можно доехать в город 0.",
+          "link": "https://leetcode.com/problems/reorder-routes-to-make-all-paths-lead-to-the-city-zero/"
+        }
+      ]
     },
     {
       "number": 32,

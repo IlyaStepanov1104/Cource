@@ -1,0 +1,636 @@
+<!doctype html>
+<html lang="ru">
+
+<head>
+    <meta charset="utf-8">
+    <title>Занятие 30 - 0-1 BFS</title>
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+
+    <link rel="stylesheet" href="/utils/css/reveal.css">
+    <link rel="stylesheet" href="/utils/lib/css/animate.css">
+    <link rel="stylesheet" href="/utils/css/theme/night.css" id="theme">
+    <link rel="stylesheet" href="/utils/lib/css/zenburn.css">
+    <link rel="stylesheet" href="/utils/css/custom-base.css">
+    <link rel="stylesheet" href="css-custom/custom.css">
+
+    <script>
+        var link = document.createElement('link');
+        link.rel = 'stylesheet'; link.type = 'text/css';
+        link.href = window.location.search.match(/print-pdf/gi)
+            ? '/utils/css/print/pdf.css'
+            : '/utils/css/print/paper.css';
+        document.getElementsByTagName('head')[0].appendChild(link);
+    </script>
+</head>
+
+<body>
+    <div class="reveal">
+        <div class="slides">
+
+            <!-- титульный слайд -->
+            <section style="font-size: 70px; height: 100%; width: 100%">
+                <div class="lesson-time">0</div>
+                <div class="fragment">
+                    <h1 class="animated" style="font-size: 1.5em;">0-1 BFS</h1>
+                    <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">Занятие 30</p>
+                </div>
+            </section>
+
+            <section>
+
+                <!-- разбор ДЗ 130. Surrounded Regions: почему запуск от края, а не изнутри -->
+                <section>
+                    <h2>Разбор ДЗ: <a href="https://leetcode.com/problems/surrounded-regions/" target="_blank"
+                            rel="noopener">130. Surrounded Regions</a></h2>
+                    <p class="fragment">Доска из <code>'X'</code> и <code>'O'</code>. Все области из <code>'O'</code>,
+                        <mark>полностью окружённые</mark> <code>'X'</code>, закрасить в <code>'X'</code>.
+                    </p>
+                    <div class="fragment opinion" style="margin-top: 0.5em;">
+                        Область выживает <mark>только если касается края</mark> доски. Других способов не быть
+                        окружённой у неё нет
+                    </div>
+                    <p class="fragment" style="font-size: 0.85em; opacity: 0.85;">Если идти изнутри, для каждой области
+                        придётся отдельно выяснять, дошли мы до края или нет. Если идти <mark class="green">от
+                            края</mark> - это один multi-source обход: все <code>'O'</code> на границе в очередь, что
+                        обход задел - живое, остальное закрашиваем.</p>
+                </section>
+
+                <!-- разбор ДЗ: картинка доски, помечаем O, связанные с краем, остальные в X -->
+                <section>
+                    <h2>Что помечает обход</h2>
+                    <div style="display: flex; align-items: center; justify-content: center; gap: 1.5em;">
+                        <svg width="200" height="200" class="fragment">
+                            <g stroke="#556" stroke-width="1" fill="none">
+                                <rect x="4" y="4" width="48" height="48" />
+                                <rect x="52" y="4" width="48" height="48" />
+                                <rect x="100" y="4" width="48" height="48" />
+                                <rect x="148" y="4" width="48" height="48" />
+                                <rect x="4" y="52" width="48" height="48" />
+                                <rect x="52" y="52" width="48" height="48" />
+                                <rect x="100" y="52" width="48" height="48" />
+                                <rect x="148" y="52" width="48" height="48" />
+                                <rect x="4" y="100" width="48" height="48" />
+                                <rect x="52" y="100" width="48" height="48" />
+                                <rect x="100" y="100" width="48" height="48" />
+                                <rect x="148" y="100" width="48" height="48" />
+                                <rect x="4" y="148" width="48" height="48" />
+                                <rect x="52" y="148" width="48" height="48" />
+                                <rect x="100" y="148" width="48" height="48" />
+                                <rect x="148" y="148" width="48" height="48" />
+                            </g>
+                            <rect x="52" y="52" width="48" height="48" fill="rgba(255,120,180,0.22)" />
+                            <rect x="100" y="52" width="48" height="48" fill="rgba(255,120,180,0.22)" />
+                            <rect x="100" y="100" width="48" height="48" fill="rgba(255,120,180,0.22)" />
+                            <rect x="52" y="148" width="48" height="48" fill="rgba(120,255,140,0.25)" />
+                            <text x="28" y="35" text-anchor="middle" fill="#888" font-size="20">X</text>
+                            <text x="76" y="35" text-anchor="middle" fill="#888" font-size="20">X</text>
+                            <text x="124" y="35" text-anchor="middle" fill="#888" font-size="20">X</text>
+                            <text x="172" y="35" text-anchor="middle" fill="#888" font-size="20">X</text>
+                            <text x="28" y="83" text-anchor="middle" fill="#888" font-size="20">X</text>
+                            <text x="76" y="83" text-anchor="middle" fill="#f7a" font-size="20">O</text>
+                            <text x="124" y="83" text-anchor="middle" fill="#f7a" font-size="20">O</text>
+                            <text x="172" y="83" text-anchor="middle" fill="#888" font-size="20">X</text>
+                            <text x="28" y="131" text-anchor="middle" fill="#888" font-size="20">X</text>
+                            <text x="76" y="131" text-anchor="middle" fill="#888" font-size="20">X</text>
+                            <text x="124" y="131" text-anchor="middle" fill="#f7a" font-size="20">O</text>
+                            <text x="172" y="131" text-anchor="middle" fill="#888" font-size="20">X</text>
+                            <text x="28" y="179" text-anchor="middle" fill="#888" font-size="20">X</text>
+                            <text x="76" y="179" text-anchor="middle" fill="#8f8" font-size="20">O</text>
+                            <text x="124" y="179" text-anchor="middle" fill="#888" font-size="20">X</text>
+                            <text x="172" y="179" text-anchor="middle" fill="#888" font-size="20">X</text>
+                        </svg>
+                        <ul style="font-size: 0.72em; text-align: left;">
+                            <li class="fragment"><mark class="green">зелёная</mark> <code>O</code> стоит на нижнем краю
+                            </li>
+                            <li class="fragment">обход стартует с неё и остаётся на месте - соседей <code>O</code> нет
+                            </li>
+                            <li class="fragment"><mark>розовые</mark> <code>O</code> обход не задел</li>
+                            <li class="fragment">значит, они окружены - закрашиваем в <code>X</code></li>
+                            <li class="fragment">BFS или DFS - без разницы, порядок обхода тут не важен</li>
+                        </ul>
+                    </div>
+                </section>
+
+            </section>
+
+            <!-- ЧАСТЬ 1: у рёбер появилась цена -->
+            <section>
+
+                <section style="font-size: 70px; height: 100%; width: 100%">
+                    <div class="lesson-time">8</div>
+                    <div class="fragment">
+                        <h1 style="font-size: 1.3em;">У рёбер появилась цена</h1>
+                        <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">веса, поломка BFS, частный случай
+                            0 и 1</p>
+                    </div>
+                </section>
+
+                <!-- SVG: тот же граф, но рёбра разной "стоимости" - шаг бесплатный или платный -->
+                <section>
+                    <h2>Рёбра перестали быть равными</h2>
+                    <p class="fragment">До сих пор все рёбра стоили одинаково: <mark>один переход = один шаг</mark>.
+                        Теперь у каждого ребра своя цена.</p>
+                    <svg width="420" height="200" style="display: block; margin: 0.3em auto;" class="fragment">
+                        <line x1="45" y1="100" x2="175" y2="40" stroke="#888" stroke-width="1.8" />
+                        <line x1="45" y1="100" x2="175" y2="160" stroke="#888" stroke-width="1.8" />
+                        <line x1="175" y1="40" x2="375" y2="100" stroke="#888" stroke-width="1.8" />
+                        <line x1="175" y1="160" x2="375" y2="100" stroke="#888" stroke-width="1.8" />
+                        <line x1="175" y1="40" x2="175" y2="160" stroke="#888" stroke-width="1.8" />
+                        <circle cx="45" cy="100" r="20" fill="rgba(120,255,140,0.25)" stroke="#8f8" stroke-width="2" />
+                        <circle cx="175" cy="40" r="20" fill="rgba(99,99,255,0.35)" stroke="#99f" stroke-width="2" />
+                        <circle cx="175" cy="160" r="20" fill="rgba(99,99,255,0.35)" stroke="#99f" stroke-width="2" />
+                        <circle cx="375" cy="100" r="20" fill="rgba(255,213,79,0.3)" stroke="#ffd54f"
+                            stroke-width="2" />
+                        <text x="45" y="106" text-anchor="middle" fill="white" font-size="15">S</text>
+                        <text x="175" y="46" text-anchor="middle" fill="white" font-size="15">A</text>
+                        <text x="175" y="166" text-anchor="middle" fill="white" font-size="15">B</text>
+                        <text x="375" y="106" text-anchor="middle" fill="white" font-size="15">T</text>
+                        <text x="100" y="58" text-anchor="middle" fill="#ffd54f" font-size="15">5</text>
+                        <text x="100" y="148" text-anchor="middle" fill="#ffd54f" font-size="15">1</text>
+                        <text x="285" y="48" text-anchor="middle" fill="#ffd54f" font-size="15">2</text>
+                        <text x="285" y="152" text-anchor="middle" fill="#ffd54f" font-size="15">1</text>
+                        <text x="195" y="105" text-anchor="middle" fill="#ffd54f" font-size="15">3</text>
+                    </svg>
+                    <p class="fragment" style="text-align: center; font-size: 0.82em; opacity: 0.85;">Число у ребра -
+                        его
+                        <mark>вес</mark>. Длина пути теперь не количество рёбер, а <mark>сумма весов</mark>
+                    </p>
+                </section>
+
+                <!-- что такое вес ребра: длина дороги, цена билета, время перехода -->
+                <section>
+                    <h2>Откуда берутся веса</h2>
+                    <div class="compare">
+                        <div class="compare-block fragment">
+                            <h4>Расстояние</h4>
+                            <p style="font-size: 0.75em;">города и дороги между ними: вес - километры</p>
+                        </div>
+                        <div class="compare-block fragment">
+                            <h4>Деньги</h4>
+                            <p style="font-size: 0.75em;">пересадки и билеты: вес - цена перехода</p>
+                        </div>
+                        <div class="compare-block fragment">
+                            <h4>Время</h4>
+                            <p style="font-size: 0.75em;">перегоны метро: вес - минуты в пути</p>
+                        </div>
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 0.6em;">
+                        Невзвешенный граф - это тот же взвешенный, где <mark>у всех рёбер вес 1</mark>. Поэтому там
+                        количество рёбер и сумма весов - одно и то же число
+                    </div>
+                </section>
+
+                <!-- SVG-контрпример: обычный BFS находит путь из 1 ребра ценой 5, а путь из 3 рёбер стоит 3 -->
+                <section>
+                    <h2>Здесь обычный BFS ошибётся</h2>
+                    <svg width="420" height="200" style="display: block; margin: 0.2em auto;" class="fragment">
+                        <line x1="45" y1="150" x2="375" y2="150" stroke="#f7a" stroke-width="2.5" />
+                        <line x1="45" y1="150" x2="150" y2="50" stroke="#8f8" stroke-width="2.5" />
+                        <line x1="150" y1="50" x2="270" y2="50" stroke="#8f8" stroke-width="2.5" />
+                        <line x1="270" y1="50" x2="375" y2="150" stroke="#8f8" stroke-width="2.5" />
+                        <circle cx="45" cy="150" r="18" fill="rgba(255,213,79,0.3)" stroke="#ffd54f" stroke-width="2" />
+                        <circle cx="375" cy="150" r="18" fill="rgba(255,213,79,0.3)" stroke="#ffd54f"
+                            stroke-width="2" />
+                        <circle cx="150" cy="50" r="14" fill="rgba(99,99,255,0.35)" stroke="#99f" stroke-width="2" />
+                        <circle cx="270" cy="50" r="14" fill="rgba(99,99,255,0.35)" stroke="#99f" stroke-width="2" />
+                        <text x="45" y="156" text-anchor="middle" fill="white" font-size="14">S</text>
+                        <text x="375" y="156" text-anchor="middle" fill="white" font-size="14">T</text>
+                        <text x="210" y="178" text-anchor="middle" fill="#f7a" font-size="14">вес 5</text>
+                        <text x="88" y="90" text-anchor="middle" fill="#8f8" font-size="14">1</text>
+                        <text x="210" y="38" text-anchor="middle" fill="#8f8" font-size="14">1</text>
+                        <text x="335" y="90" text-anchor="middle" fill="#8f8" font-size="14">1</text>
+                    </svg>
+                    <p class="fragment" style="font-size: 0.85em;">BFS доберётся до <code>T</code> за <mark
+                            class="yellow">одно ребро</mark> по розовому пути и остановится: <code>dist[T] = 1</code>
+                    </p>
+                    <p class="fragment" style="font-size: 0.85em;">А по цене розовый путь стоит <mark>5</mark>, зелёный
+                        из трёх рёбер - всего <mark class="green">3</mark></p>
+                </section>
+
+                <!-- вывод: BFS считает количество рёбер, а не сумму весов -->
+                <section>
+                    <h2>В чём именно поломка</h2>
+                    <p class="fragment">BFS держится на одном обещании: <mark>первая извлечённая из очереди вершина уже
+                            имеет минимальный путь</mark>.</p>
+                    <p class="fragment">Обещание работает, пока <mark class="green">каждый шаг одинаковый</mark>. Тогда
+                        порядок по слоям и есть порядок по стоимости.</p>
+                    <div class="fragment opinion" style="margin-top: 0.5em;">
+                        С разными весами <mark>длинный путь может оказаться дешёвым</mark>. Очередь этого не знает - она
+                        считает шаги, а не рубли
+                    </div>
+                    <p class="fragment" style="font-size: 0.8em; opacity: 0.8;">Чинить в полном виде будем на занятии 32
+                        (Дейкстра). Сегодня разберём случай, где чинится <mark>почти бесплатно</mark>.</p>
+                </section>
+
+                <!-- частный случай: веса только 0 и 1 (бесплатный переход / платный) -->
+                <section>
+                    <h2>Частный случай: только 0 и 1</h2>
+                    <p class="fragment">Очень часто веса бывают всего двух видов: переход либо <mark
+                            class="green">бесплатный</mark>, либо стоит <mark>ровно один</mark>.</p>
+                    <ul style="margin-top: 0.3em;">
+                        <li class="fragment">идти по коридору - <code>0</code>, сломать стену - <code>1</code></li>
+                        <li class="fragment">ехать дальше по своей ветке - <code>0</code>, пересадка - <code>1</code>
+                        </li>
+                        <li class="fragment">двигаться по стрелке на полу - <code>0</code>, развернуть стрелку -
+                            <code>1</code>
+                        </li>
+                    </ul>
+                    <div class="fragment opinion" style="margin-top: 0.4em;">
+                        Тут вопрос не в длине пути, а в том, <mark>сколько раз пришлось заплатить</mark>
+                    </div>
+                </section>
+
+                <!-- SVG: ребро веса 0 не двигает вершину в другой слой, она остаётся в текущем -->
+                <section>
+                    <h2>Ноль не переводит в новый слой</h2>
+                    <svg width="440" height="210" style="display: block; margin: 0.2em auto;" class="fragment">
+                        <rect x="20" y="20" width="200" height="170" fill="rgba(120,255,140,0.07)" stroke="#8f8"
+                            stroke-width="1" stroke-dasharray="5 4" />
+                        <rect x="240" y="20" width="180" height="170" fill="rgba(99,99,255,0.08)" stroke="#99f"
+                            stroke-width="1" stroke-dasharray="5 4" />
+                        <text x="120" y="42" text-anchor="middle" fill="#8f8" font-size="14">расстояние 0</text>
+                        <text x="330" y="42" text-anchor="middle" fill="#99f" font-size="14">расстояние 1</text>
+                        <line x1="70" y1="110" x2="170" y2="110" stroke="#8f8" stroke-width="2.5" />
+                        <line x1="170" y1="110" x2="330" y2="110" stroke="#f7a" stroke-width="2.5" />
+                        <circle cx="70" cy="110" r="20" fill="rgba(120,255,140,0.25)" stroke="#8f8" stroke-width="2" />
+                        <circle cx="170" cy="110" r="20" fill="rgba(120,255,140,0.25)" stroke="#8f8" stroke-width="2" />
+                        <circle cx="330" cy="110" r="20" fill="rgba(99,99,255,0.35)" stroke="#99f" stroke-width="2" />
+                        <text x="70" y="116" text-anchor="middle" fill="white" font-size="15">S</text>
+                        <text x="170" y="116" text-anchor="middle" fill="white" font-size="15">C</text>
+                        <text x="330" y="116" text-anchor="middle" fill="white" font-size="15">B</text>
+                        <text x="120" y="95" text-anchor="middle" fill="#8f8" font-size="14">0</text>
+                        <text x="250" y="95" text-anchor="middle" fill="#f7a" font-size="14">1</text>
+                    </svg>
+                    <p class="fragment" style="text-align: center; font-size: 0.82em; opacity: 0.85;">Вершина
+                        <code>C</code> досталась нам <mark class="green">даром</mark> - она в том же слое, что и старт.
+                        Значит, обрабатывать её надо <mark>не в конце, а прямо сейчас</mark>
+                    </p>
+                </section>
+
+            </section>
+
+            <!-- ЧАСТЬ 2: дек и правило вставки -->
+            <section>
+
+                <section style="font-size: 70px; height: 100%; width: 100%">
+                    <div class="lesson-time">20</div>
+                    <div class="fragment">
+                        <h1 style="font-size: 1.3em;">Дек и правило вставки</h1>
+                        <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">две стороны очереди, трассировка,
+                            каркас</p>
+                    </div>
+                </section>
+
+                <!-- дек как очередь с двумя концами: SVG со стрелками вставки слева и справа -->
+                <section>
+                    <h2>Дек - очередь с двумя концами</h2>
+                    <p class="fragment">В обычную очередь кладут только в конец. В <mark>дек</mark> (deque, double-ended
+                        queue) можно класть <mark>с любой стороны</mark>.</p>
+                    <svg width="480" height="180" style="display: block; margin: 0.2em auto;" class="fragment">
+                        <defs>
+                            <marker id="ag" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6"
+                                orient="auto-start-reverse">
+                                <path d="M0,0 L10,5 L0,10 z" fill="#8f8" />
+                            </marker>
+                            <marker id="ap" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6"
+                                orient="auto-start-reverse">
+                                <path d="M0,0 L10,5 L0,10 z" fill="#f7a" />
+                            </marker>
+                            <marker id="ay" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6"
+                                orient="auto-start-reverse">
+                                <path d="M0,0 L10,5 L0,10 z" fill="#ffd54f" />
+                            </marker>
+                        </defs>
+                        <g stroke="#556" stroke-width="1.4" fill="rgba(99,99,255,0.18)">
+                            <rect x="150" y="75" width="46" height="46" />
+                            <rect x="196" y="75" width="46" height="46" />
+                            <rect x="242" y="75" width="46" height="46" />
+                            <rect x="288" y="75" width="46" height="46" />
+                        </g>
+                        <line x1="70" y1="98" x2="142" y2="98" stroke="#8f8" stroke-width="2.5" marker-end="url(#ag)" />
+                        <line x1="412" y1="98" x2="342" y2="98" stroke="#f7a" stroke-width="2.5"
+                            marker-end="url(#ap)" />
+                        <line x1="173" y1="68" x2="173" y2="30" stroke="#ffd54f" stroke-width="2.5"
+                            marker-end="url(#ay)" />
+                        <text x="70" y="130" text-anchor="middle" fill="#8f8" font-size="13">appendleft</text>
+                        <text x="412" y="130" text-anchor="middle" fill="#f7a" font-size="13">append</text>
+                        <text x="173" y="20" text-anchor="middle" fill="#ffd54f" font-size="13">popleft</text>
+                        <text x="242" y="160" text-anchor="middle" fill="#888" font-size="13">берём всегда слева</text>
+                    </svg>
+                    <p class="fragment" style="text-align: center; font-size: 0.82em; opacity: 0.85;">Мы им уже
+                        пользовались как обычной очередью - просто не трогали левый конец</p>
+                </section>
+
+                <!-- новый API: deque, appendleft, append, popleft - только сигнатуры -->
+                <section>
+                    <h2>Что умеет <code>deque</code></h2>
+                    <div class="code-block fragment">
+                        <pre class="python size-m"><code>from collections import deque
+
+d = deque()
+
+d.append(x)       # положить в конец
+d.appendleft(x)   # положить в начало
+d.popleft()       # взять из начала
+d.pop()           # взять из конца</code></pre>
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 0.5em;">
+                        Все четыре операции - <mark>за константу</mark>. Именно поэтому дек, а не список:
+                        <code>list.insert(0, x)</code> сдвигает весь массив
+                    </div>
+                </section>
+
+                <!-- правило 0-1 BFS: вес 0 - в начало, вес 1 - в конец -->
+                <section>
+                    <h2>Всё правило целиком</h2>
+                    <div class="compare">
+                        <div class="compare-block fragment">
+                            <h4>Ребро веса 0</h4>
+                            <p style="font-size: 0.8em;">расстояние <mark class="green">не выросло</mark></p>
+                            <p style="font-size: 0.8em;">кладём в <mark>начало</mark> дека</p>
+                            <p style="font-size: 0.75em; opacity: 0.8;"><code>appendleft</code></p>
+                        </div>
+                        <div class="compare-block fragment">
+                            <h4>Ребро веса 1</h4>
+                            <p style="font-size: 0.8em;">расстояние <mark class="yellow">стало на 1 больше</mark></p>
+                            <p style="font-size: 0.8em;">кладём в <mark>конец</mark> дека</p>
+                            <p style="font-size: 0.75em; opacity: 0.8;"><code>append</code></p>
+                        </div>
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 0.6em;">
+                        Это <mark>весь</mark> 0-1 BFS. Тот же обход, что и раньше, только очередь заменили на дек и
+                        научились класть с двух сторон
+                    </div>
+                </section>
+
+                <!-- SVG: почему в деке всегда не больше двух разных расстояний подряд -->
+                <section>
+                    <h2>Почему дек остаётся отсортированным</h2>
+                    <svg width="470" height="150" style="display: block; margin: 0.2em auto;" class="fragment">
+                        <g stroke="#556" stroke-width="1.4">
+                            <rect x="60" y="50" width="52" height="46" fill="rgba(120,255,140,0.22)" />
+                            <rect x="112" y="50" width="52" height="46" fill="rgba(120,255,140,0.22)" />
+                            <rect x="164" y="50" width="52" height="46" fill="rgba(120,255,140,0.22)" />
+                            <rect x="216" y="50" width="52" height="46" fill="rgba(255,213,79,0.25)" />
+                            <rect x="268" y="50" width="52" height="46" fill="rgba(255,213,79,0.25)" />
+                            <rect x="320" y="50" width="52" height="46" fill="rgba(255,213,79,0.25)" />
+                        </g>
+                        <text x="86" y="80" text-anchor="middle" fill="white" font-size="15">d</text>
+                        <text x="138" y="80" text-anchor="middle" fill="white" font-size="15">d</text>
+                        <text x="190" y="80" text-anchor="middle" fill="white" font-size="15">d</text>
+                        <text x="242" y="80" text-anchor="middle" fill="white" font-size="14">d+1</text>
+                        <text x="294" y="80" text-anchor="middle" fill="white" font-size="14">d+1</text>
+                        <text x="346" y="80" text-anchor="middle" fill="white" font-size="14">d+1</text>
+                        <text x="138" y="120" text-anchor="middle" fill="#8f8" font-size="13">сюда падают нули</text>
+                        <text x="294" y="120" text-anchor="middle" fill="#ffd54f" font-size="13">сюда падают единицы
+                        </text>
+                    </svg>
+                    <p class="fragment" style="font-size: 0.82em;">Достали вершину с расстоянием <code>d</code>. Её
+                        соседи получают либо <code>d</code>, либо <code>d + 1</code>. Больше в деке взяться неоткуда.
+                    </p>
+                    <div class="fragment opinion" style="font-size: 0.85em; margin-top: 0.3em;">
+                        В деке одновременно живут <mark>максимум два разных расстояния</mark>, и меньшее всегда слева.
+                        Значит, <code>popleft</code> по-прежнему отдаёт <mark>самую дешёвую</mark> вершину
+                    </div>
+                </section>
+
+                <!-- трассировка на графе из 5 вершин: SVG-граф + таблица dist и содержимое дека по шагам -->
+                <section>
+                    <h2>Трассировка от A</h2>
+                    <svg width="400" height="170" style="display: block; margin: 0.1em auto;">
+                        <line x1="40" y1="85" x2="150" y2="35" stroke="#888" stroke-width="1.6" />
+                        <line x1="40" y1="85" x2="150" y2="135" stroke="#888" stroke-width="1.6" />
+                        <line x1="150" y1="35" x2="150" y2="135" stroke="#888" stroke-width="1.6" />
+                        <line x1="150" y1="35" x2="265" y2="35" stroke="#888" stroke-width="1.6" />
+                        <line x1="150" y1="135" x2="265" y2="135" stroke="#888" stroke-width="1.6" />
+                        <line x1="265" y1="35" x2="265" y2="135" stroke="#888" stroke-width="1.6" />
+                        <circle cx="40" cy="85" r="17" fill="rgba(120,255,140,0.25)" stroke="#8f8" stroke-width="2" />
+                        <circle cx="150" cy="35" r="17" fill="rgba(99,99,255,0.3)" stroke="#99f" stroke-width="2" />
+                        <circle cx="150" cy="135" r="17" fill="rgba(99,99,255,0.3)" stroke="#99f" stroke-width="2" />
+                        <circle cx="265" cy="35" r="17" fill="rgba(99,99,255,0.3)" stroke="#99f" stroke-width="2" />
+                        <circle cx="265" cy="135" r="17" fill="rgba(99,99,255,0.3)" stroke="#99f" stroke-width="2" />
+                        <text x="40" y="91" text-anchor="middle" fill="white" font-size="14">A</text>
+                        <text x="150" y="41" text-anchor="middle" fill="white" font-size="14">B</text>
+                        <text x="150" y="141" text-anchor="middle" fill="white" font-size="14">C</text>
+                        <text x="265" y="41" text-anchor="middle" fill="white" font-size="14">D</text>
+                        <text x="265" y="141" text-anchor="middle" fill="white" font-size="14">E</text>
+                        <text x="88" y="48" text-anchor="middle" fill="#ffd54f" font-size="14">1</text>
+                        <text x="88" y="128" text-anchor="middle" fill="#8f8" font-size="14">0</text>
+                        <text x="167" y="90" text-anchor="middle" fill="#8f8" font-size="14">0</text>
+                        <text x="207" y="24" text-anchor="middle" fill="#ffd54f" font-size="14">1</text>
+                        <text x="207" y="155" text-anchor="middle" fill="#ffd54f" font-size="14">1</text>
+                        <text x="282" y="90" text-anchor="middle" fill="#8f8" font-size="14">0</text>
+                    </svg>
+                    <div class="fragment opinion" style="font-size: 0.7em; margin-top: 0.1em;">достали <mark>A</mark>
+                        (0): B по весу 1 в конец, C по весу 0 в начало. Дек <code>[C, B]</code>, dist: A=0, B=1, C=0
+                    </div>
+                    <div class="fragment opinion" style="font-size: 0.7em;">достали <mark>C</mark> (0): до B через C
+                        стоит <mark class="green">0</mark> - это лучше единицы. Чиним dist[B]=0 и кладём B в начало. E
+                        за
+                        1 в конец. Дек <code>[B, B, E]</code></div>
+                    <div class="fragment opinion" style="font-size: 0.7em;">достали <mark>B</mark> (0): D за 1 в конец.
+                        Дек <code>[B, E, D]</code></div>
+                    <div class="fragment opinion" style="font-size: 0.7em;">достали <mark>B</mark> второй раз - это
+                        вторая копия, оставшаяся в деке. Улучшать уже нечего. Дальше E и D тоже ничего не меняют</div>
+                    <div class="fragment opinion" style="font-size: 0.7em;">Итог: <mark>A=0, B=0, C=0, D=1, E=1</mark>.
+                        Обычный BFS оставил бы B=1</div>
+                </section>
+
+                <!-- каркас алгоритма словами: взять слева, перебрать соседей, вставить по весу -->
+                <section>
+                    <h2>Каркас обхода</h2>
+                    <div class="timeline">
+                        <div class="timeline-item fragment">
+                            <div class="timeline-marker">1</div>
+                            <div class="timeline-content"><strong>Старт</strong> - <code>dist[start] = 0</code>,
+                                остальным бесконечность, дек из одного старта</div>
+                        </div>
+                        <div class="timeline-item fragment">
+                            <div class="timeline-marker">2</div>
+                            <div class="timeline-content"><strong>Берём слева</strong> - <code>popleft</code> даёт самую
+                                дешёвую вершину</div>
+                        </div>
+                        <div class="timeline-item fragment">
+                            <div class="timeline-marker">3</div>
+                            <div class="timeline-content"><strong>Проверяем свежесть</strong> - если записанное
+                                <code>dist</code> уже меньше, это устаревшая копия, пропускаем
+                            </div>
+                        </div>
+                        <div class="timeline-item fragment">
+                            <div class="timeline-marker">4</div>
+                            <div class="timeline-content"><strong>Смотрим соседей</strong> - считаем
+                                <code>dist[v] + вес</code>; если получилось меньше записанного, записываем
+                            </div>
+                        </div>
+                        <div class="timeline-item fragment">
+                            <div class="timeline-marker">5</div>
+                            <div class="timeline-content"><strong>Кладём по весу</strong> - ноль в начало, единица в
+                                конец. Повторяем, пока дек не опустеет</div>
+                        </div>
+                    </div>
+                </section>
+
+            </section>
+
+            <!-- ЧАСТЬ 3: задачи -->
+            <section>
+
+                <section style="font-size: 70px; height: 100%; width: 100%">
+                    <div class="lesson-time">38</div>
+                    <div class="fragment">
+                        <h1 style="font-size: 1.3em;">Задачи</h1>
+                        <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">сетки, стены, стрелки и граница
+                            применимости</p>
+                    </div>
+                </section>
+                <!-- SVG-сетка: путь в обход длиннее, но дешевле, чем пробить стену -->
+                <section>
+                    <h2>Длинный путь может быть дешевле</h2>
+                    <svg width="440" height="180" style="display: block; margin: 0.2em auto;" class="fragment">
+                        <g stroke="#556" stroke-width="1.2" fill="none">
+                            <rect x="110" y="20" width="44" height="44" />
+                            <rect x="154" y="20" width="44" height="44" />
+                            <rect x="198" y="20" width="44" height="44" />
+                            <rect x="242" y="20" width="44" height="44" />
+                            <rect x="286" y="20" width="44" height="44" />
+                            <rect x="110" y="64" width="44" height="44" />
+                            <rect x="154" y="64" width="44" height="44" />
+                            <rect x="198" y="64" width="44" height="44" />
+                            <rect x="242" y="64" width="44" height="44" />
+                            <rect x="286" y="64" width="44" height="44" />
+                            <rect x="110" y="108" width="44" height="44" />
+                            <rect x="154" y="108" width="44" height="44" />
+                            <rect x="198" y="108" width="44" height="44" />
+                            <rect x="242" y="108" width="44" height="44" />
+                            <rect x="286" y="108" width="44" height="44" />
+                        </g>
+                        <rect x="198" y="20" width="44" height="44" fill="rgba(136,136,136,0.45)" />
+                        <rect x="198" y="64" width="44" height="44" fill="rgba(136,136,136,0.45)" />
+                        <polyline points="132,42 132,130 308,130 308,42" fill="none" stroke="#8f8" stroke-width="2.5" />
+                        <line x1="132" y1="42" x2="308" y2="42" stroke="#f7a" stroke-width="2.5"
+                            stroke-dasharray="6 4" />
+                        <circle cx="132" cy="42" r="13" fill="rgba(255,213,79,0.3)" stroke="#ffd54f" stroke-width="2" />
+                        <circle cx="308" cy="42" r="13" fill="rgba(255,213,79,0.3)" stroke="#ffd54f" stroke-width="2" />
+                        <text x="132" y="47" text-anchor="middle" fill="white" font-size="13">S</text>
+                        <text x="308" y="47" text-anchor="middle" fill="white" font-size="13">T</text>
+                        <text x="220" y="90" text-anchor="middle" fill="#ccc" font-size="12">стена</text>
+                        <text x="220" y="172" text-anchor="middle" fill="#8f8" font-size="13">8 шагов, цена 0</text>
+                        <text x="220" y="14" text-anchor="middle" fill="#f7a" font-size="13">4 шага, цена 1</text>
+                    </svg>
+                    <p class="fragment" style="text-align: center; font-size: 0.82em; opacity: 0.85;">Обычный BFS выбрал
+                        бы <mark>розовый</mark> путь - он короче. Нам нужен <mark class="green">зелёный</mark>: он
+                        длиннее, но не стоит ничего</p>
+                </section>
+
+                <!-- 1368. Minimum Cost to Make at Least One Valid Path in a Grid со ссылкой на LeetCode -->
+                <section>
+                    <h2><a href="https://leetcode.com/problems/minimum-cost-to-make-at-least-one-valid-path-in-a-grid/"
+                            target="_blank" rel="noopener">1368. Minimum Cost to Make at Least One Valid Path</a></h2>
+                    <p class="fragment">В каждой клетке нарисована <mark>стрелка</mark>. Стоя на клетке, ты обязан идти
+                        туда, куда она показывает.</p>
+                    <p class="fragment">За <mark class="yellow">1 монету</mark> можно развернуть стрелку одной клетки в
+                        любую сторону. Разворачивать можно сколько угодно клеток.</p>
+                    <p class="fragment">Нужно добраться из левого верхнего угла в правый нижний, потратив <mark>минимум
+                            монет</mark>.</p>
+                </section>
+
+                <!-- как свести 1368 к 0-1: идти по стрелке стоит 0, повернуть стоит 1 -->
+                <section>
+                    <h2>Как это становится 0-1</h2>
+                    <div class="compare">
+                        <div class="compare-block fragment">
+                            <h4>Идём по стрелке</h4>
+                            <p style="font-size: 0.8em;">клетка уже показывает туда, куда нам надо</p>
+                            <p style="font-size: 0.8em;">монет не тратим - <mark class="green">вес 0</mark></p>
+                        </div>
+                        <div class="compare-block fragment">
+                            <h4>Идём против стрелки</h4>
+                            <p style="font-size: 0.8em;">любой из трёх остальных соседей</p>
+                            <p style="font-size: 0.8em;">разворот стрелки - <mark class="yellow">вес 1</mark></p>
+                        </div>
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 0.5em;">
+                        Каждая клетка - вершина, у неё <mark>четыре ребра</mark>: одно нулевое и три единичных. Дальше
+                        просто запускаем 0-1 BFS и смотрим <code>dist</code> у правого нижнего угла
+                    </div>
+                    <p class="fragment" style="font-size: 0.8em; opacity: 0.8;">Самое сложное в таких задачах -
+                        <mark>увидеть граф</mark>. Сам алгоритм ты уже знаешь целиком.
+                    </p>
+                </section>
+
+                <!-- когда 0-1 BFS не подходит: веса 2, 3, 5 - анонс Дейкстры на занятии 32 -->
+                <section>
+                    <h2>Где приём заканчивается</h2>
+                    <p class="fragment">Вся конструкция держится на том, что в деке живут <mark>только два соседних
+                            расстояния</mark>.</p>
+                    <p class="fragment">Появился вес <code>2</code> - и в деке уже <code>d</code>, <code>d+1</code>,
+                        <code>d+2</code>. Класть такую вершину <mark>некуда</mark>: ни в начало, ни в конец не
+                        правильно.
+                    </p>
+                    <div class="fragment opinion" style="margin-top: 0.5em;">
+                        Нужен контейнер, который всегда отдаёт минимум при <mark>любых</mark> весах. Это куча, и
+                        алгоритм на ней - <mark>Дейкстра</mark>, занятие 32
+                    </div>
+                    <p class="fragment" style="font-size: 0.82em; opacity: 0.8;">0-1 BFS - не упрощённая Дейкстра, а
+                        честно более быстрый алгоритм для своего случая. Поэтому его и держат отдельно.</p>
+                </section>
+
+            </section>
+
+            <!-- итог: что запомнить, 3-4 пункта -->
+            <section>
+                <section>
+                    <div class="lesson-time">52</div>
+                    <h2>Что запомнить</h2>
+                    <ul>
+                        <li class="fragment">С весами обычный BFS ломается: он считает <mark>рёбра</mark>, а нужна
+                            <mark>сумма весов</mark>
+                        </li>
+                        <li class="fragment">Если веса только <code>0</code> и <code>1</code> - берём <mark>дек</mark>:
+                            ноль кладём в начало, единицу в конец</li>
+                        <li class="fragment">В деке всегда максимум два разных расстояния, поэтому
+                            <code>popleft</code> по-прежнему отдаёт самую дешёвую вершину
+                        </li>
+                        <li class="fragment">Веса крупнее единицы - это уже <mark>Дейкстра</mark> (занятие 32)</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h2>Домашнее задание</h2>
+                    <p class="fragment"><a
+                            href="https://leetcode.com/problems/minimum-obstacle-removal-to-reach-corner/"
+                            target="_blank" rel="noopener">2290. Minimum Obstacle Removal to Reach Corner</a></p>
+                    <p class="fragment" style="font-size: 0.85em;">Сетка из 0 (свободная клетка) и 1 (обструкция,
+                        которую можно убрать). Ходить можно вверх, вниз, влево, вправо. Нужно вернуть минимальное число
+                        обструкций, которые надо убрать, чтобы дойти из верхнего левого угла в нижний правый.</p>
+                </section>
+            </section>
+
+        </div>
+    </div>
+
+    <script src="/utils/lib/js/head.min.js"></script>
+    <script src="/utils/js/reveal.js"></script>
+    <script>
+        Reveal.initialize({
+            controls: true,
+            progress: true,
+            history: true,
+            center: true,
+            transition: 'fade',
+            transitionSpeed: 'fast',
+            dependencies: [
+                { src: '/utils/lib/js/classList.js', condition: function () { return !document.body.classList; } },
+                { src: '/utils/plugin/markdown/marked.js', condition: function () { return !!document.querySelector('[data-markdown]'); } },
+                { src: '/utils/plugin/markdown/markdown.js', condition: function () { return !!document.querySelector('[data-markdown]'); } },
+                { src: '/utils/plugin/highlight/highlight.js', async: true, callback: function () { hljs.initHighlightingOnLoad(); } },
+                { src: '/utils/plugin/zoom-js/zoom.js', async: true },
+                { src: '/utils/plugin/notes/notes.js', async: true }
+            ]
+        });
+        Reveal.configure({ slideNumber: 'c/t' });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,863 @@
+<!doctype html>
+<html lang="ru">
+
+<head>
+    <meta charset="utf-8">
+    <title>Занятие 31 - Задачи на взвешенные графы</title>
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+
+    <link rel="stylesheet" href="/utils/css/reveal.css">
+    <link rel="stylesheet" href="/utils/lib/css/animate.css">
+    <link rel="stylesheet" href="/utils/css/theme/night.css" id="theme">
+    <link rel="stylesheet" href="/utils/lib/css/zenburn.css">
+    <link rel="stylesheet" href="/utils/css/custom-base.css">
+    <link rel="stylesheet" href="css-custom/custom.css">
+
+    <script>
+        var link = document.createElement('link');
+        link.rel = 'stylesheet'; link.type = 'text/css';
+        link.href = window.location.search.match(/print-pdf/gi)
+            ? '/utils/css/print/pdf.css'
+            : '/utils/css/print/paper.css';
+        document.getElementsByTagName('head')[0].appendChild(link);
+    </script>
+</head>
+
+<body>
+    <div class="reveal">
+        <div class="slides">
+
+            <!-- титульный слайд -->
+            <section style="font-size: 70px; height: 100%; width: 100%">
+                <div class="lesson-time">0</div>
+                <div class="fragment">
+                    <h1 class="animated" style="font-size: 1.5em;">Разрезание рёбер</h1>
+                    <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">Занятие 31</p>
+                </div>
+            </section>
+
+            <!-- РАЗБОР ДЗ -->
+            <section>
+
+                <!-- разбор ДЗ 2290: условие в двух строках -->
+                <section>
+                    <div class="lesson-time">0</div>
+                    <h2>Разбор ДЗ: <a href="https://leetcode.com/problems/minimum-obstacle-removal-to-reach-corner/"
+                            target="_blank" rel="noopener">2290. Minimum Obstacle Removal</a></h2>
+                    <p class="fragment">Сетка из <code>0</code> (свободно) и <code>1</code> (препятствие). Идём из
+                        левого верхнего угла в правый нижний, ходы по четырём направлениям.</p>
+                    <p class="fragment">Препятствие можно <mark>убрать</mark>. Сколько минимум придётся убрать?</p>
+                    <div class="fragment opinion" style="margin-top: 0.6em;">
+                        Соблазн: искать путь, который вообще не задевает препятствий. Но такого пути может не быть,
+                        а ответ существует всегда - в худшем случае пробьём всё насквозь
+                    </div>
+                </section>
+
+                <!-- почему это 0-1 BFS: цена сидит на переходе в клетку -->
+                <section>
+                    <h2>Почему это 0-1 BFS</h2>
+                    <p class="fragment">Вес живёт не на клетке, а на <mark>переходе в неё</mark>.</p>
+                    <div class="compare fragment" style="margin-top: 0.6em;">
+                        <div class="compare-block">
+                            <h3>Входим в <code>0</code></h3>
+                            <p style="font-size: 0.75em;">убирать нечего, переход стоит <mark class="green">0</mark>,
+                                вершина уходит <code>appendleft</code></p>
+                        </div>
+                        <div class="compare-block">
+                            <h3>Входим в <code>1</code></h3>
+                            <p style="font-size: 0.75em;">убрали одно препятствие, переход стоит <mark>1</mark>,
+                                вершина уходит <code>append</code></p>
+                        </div>
+                    </div>
+                    <p class="fragment" style="font-size: 0.8em; opacity: 0.85; margin-top: 0.6em;">Вся работа была в
+                        одном предложении: понять, что "убрать препятствие" - это <mark>цена ребра</mark>, а не
+                        отдельное действие.</p>
+                </section>
+
+            </section>
+
+            <!-- ЧАСТЬ 1: разрезание ребра -->
+            <section>
+
+                <section style="font-size: 70px; height: 100%; width: 100%">
+                    <div class="lesson-time">7</div>
+                    <div class="fragment">
+                        <h1 style="font-size: 1.3em;">Разрезание ребра</h1>
+                        <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">что делать, когда весов больше
+                            двух</p>
+                    </div>
+                </section>
+
+                <!-- напоминание: дек, appendleft и append -->
+                <section>
+                    <h2>Что делали на прошлом занятии</h2>
+                    <p class="fragment" style="font-size: 0.85em;">Веса только <code>0</code> и <code>1</code>. Вместо
+                        очереди - <mark>дек</mark>, и два способа положить вершину.</p>
+                    <svg width="420" height="150" class="fragment">
+                        <g fill="#1c2030" stroke="#8ab" stroke-width="2">
+                            <rect x="90" y="55" width="44" height="40" rx="5" />
+                            <rect x="140" y="55" width="44" height="40" rx="5" />
+                            <rect x="190" y="55" width="44" height="40" rx="5" />
+                            <rect x="240" y="55" width="44" height="40" rx="5" />
+                        </g>
+                        <line x1="24" y1="75" x2="72" y2="75" stroke="#8f8" stroke-width="2" />
+                        <polygon points="84,75 70,69 70,81" fill="#8f8" />
+                        <line x1="360" y1="75" x2="302" y2="75" stroke="#ffd54f" stroke-width="2" />
+                        <polygon points="290,75 304,69 304,81" fill="#ffd54f" />
+                        <text x="50" y="42" text-anchor="middle" fill="#8f8" font-size="15">вес 0</text>
+                        <text x="50" y="112" text-anchor="middle" fill="#8f8" font-size="14">appendleft</text>
+                        <text x="332" y="42" text-anchor="middle" fill="#ffd54f" font-size="15">вес 1</text>
+                        <text x="332" y="112" text-anchor="middle" fill="#ffd54f" font-size="14">append</text>
+                        <text x="187" y="135" text-anchor="middle" fill="#888" font-size="14">popleft берём отсюда
+                            -&gt;</text>
+                    </svg>
+                    <ul style="font-size: 0.7em; text-align: left; display: inline-block;">
+                        <li class="fragment">вес <code>0</code> - вершина <mark class="green">остаётся в текущем
+                                слое</mark>, кладём в начало</li>
+                        <li class="fragment">вес <code>1</code> - вершина <mark>уходит в следующий слой</mark>, кладём
+                            в конец</li>
+                    </ul>
+                </section>
+
+                <!-- почему деку хватает двух концов -->
+                <section>
+                    <h2>Почему двух концов хватало</h2>
+                    <p class="fragment" style="font-size: 0.85em;">В деке одновременно лежат расстояния
+                        <mark>только двух видов</mark>: <code>d_1</code> и <code>d_2</code>.
+                    </p>
+                    <svg width="440" height="130" class="fragment">
+                        <g stroke="#8f8" stroke-width="2" fill="rgba(120,255,140,0.15)">
+                            <rect x="40" y="40" width="50" height="42" rx="5" />
+                            <rect x="96" y="40" width="50" height="42" rx="5" />
+                            <rect x="152" y="40" width="50" height="42" rx="5" />
+                        </g>
+                        <g stroke="#ffd54f" stroke-width="2" fill="rgba(255,213,79,0.13)">
+                            <rect x="238" y="40" width="50" height="42" rx="5" />
+                            <rect x="294" y="40" width="50" height="42" rx="5" />
+                            <rect x="350" y="40" width="50" height="42" rx="5" />
+                        </g>
+                        <g font-size="18" text-anchor="middle" fill="#8f8">
+                            <text x="65" y="67">5</text>
+                            <text x="121" y="67">5</text>
+                            <text x="177" y="67">5</text>
+                        </g>
+                        <g font-size="18" text-anchor="middle" fill="#ffd54f">
+                            <text x="263" y="67">7</text>
+                            <text x="319" y="67">7</text>
+                            <text x="375" y="67">7</text>
+                        </g>
+                        <text x="121" y="108" text-anchor="middle" fill="#8f8" font-size="15">слой d_1</text>
+                        <text x="319" y="108" text-anchor="middle" fill="#ffd54f" font-size="15">слой d_2</text>
+                        <text x="220" y="30" text-anchor="middle" fill="#888" font-size="14">граница</text>
+                        <line x1="220" y1="36" x2="220" y2="90" stroke="#888" stroke-width="1" stroke-dasharray="3 3" />
+                    </svg>
+                    <ul style="font-size: 0.7em; text-align: left; display: inline-block;">
+                        <li class="fragment">все <code>d_1</code> стоят раньше всех <code>d_2</code></li>
+                        <li class="fragment">значит слева всегда лежит <mark class="green">минимум</mark></li>
+                        <li class="fragment">два значения - два конца, и места ровно хватает</li>
+                    </ul>
+                </section>
+
+                <!-- слом: появилось ребро веса 2 -->
+                <section>
+                    <h2>А теперь ребро веса 6</h2>
+                    <svg width="460" height="175" class="fragment">
+                        <g stroke="#8f8" stroke-width="2" fill="rgba(120,255,140,0.15)">
+                            <rect x="70" y="45" width="50" height="42" rx="5" />
+                            <rect x="126" y="45" width="50" height="42" rx="5" />
+                        </g>
+                        <g stroke="#8f8" stroke-width="2" fill="rgba(120,255,140,0.15)">
+                            <rect x="182" y="45" width="50" height="42" rx="5" />
+                            <rect x="238" y="45" width="50" height="42" rx="5" />
+                        </g>
+                        <rect x="294" y="45" width="50" height="42" rx="5" stroke="#f7a" stroke-width="2"
+                            fill="rgba(255,120,180,0.15)" />
+                        <g font-size="18" text-anchor="middle">
+                            <text x="95" y="72" fill="#8f8">5</text>
+                            <text x="151" y="72" fill="#8f8">5</text>
+                            <text x="207" y="72" fill="#8f8">5</text>
+                            <text x="263" y="72" fill="#8f8">5</text>
+                            <text x="319" y="72" fill="#f7a">7</text>
+                        </g>
+                        <text x="319" y="112" text-anchor="middle" fill="#f7a" font-size="14">третий слой</text>
+                        <text x="40" y="72" text-anchor="middle" fill="#e55" font-size="26">X</text>
+                        <text x="380" y="72" text-anchor="middle" fill="#e55" font-size="26">X</text>
+                        <text x="40" y="112" text-anchor="middle" fill="#e55" font-size="13">рано</text>
+                        <text x="380" y="112" text-anchor="middle" fill="#e55" font-size="13">поздно</text>
+                        <line x1="291" y1="150" x2="291" y2="100" stroke="#8f8" stroke-width="2" />
+                        <polygon points="291,92 285,104 297,104" fill="#8f8" />
+                        <text x="291" y="168" text-anchor="middle" fill="#8f8" font-size="14">6 нужна сюда</text>
+                    </svg>
+                    <div class="fragment opinion" style="margin-top: 0.3em;">
+                        Как только появился третий слой, нужное место оказывается <mark>в середине</mark>.
+                        А середины у дека нет
+                    </div>
+                </section>
+
+                <!-- вывод: дек это инструмент ровно на два веса -->
+                <section>
+                    <h2>Что это значит</h2>
+                    <div class="compare fragment" style="margin-top: 0.5em;">
+                        <div class="compare-block">
+                            <h3>Дек</h3>
+                            <ul class="opinion" style="font-size: 0.72em;">
+                                <li class="plus">кладёт за <code>O(1)</code></li>
+                                <li class="minus">умеет ровно <mark>два</mark> разных веса</li>
+                                <li class="minus">на третьем весе ломается</li>
+                            </ul>
+                        </div>
+                        <div class="compare-block">
+                            <h3>Что нужно</h3>
+                            <ul class="opinion" style="font-size: 0.72em;">
+                                <li class="circle">работает при любом наборе весов</li>
+                                <li class="circle">не зависит от того, сколько их</li>
+                                <li class="circle">и желательно без новых структур данных</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 0.7em;">
+                        Есть неожиданный ход: не чинить алгоритм, а <mark>починить граф</mark> -
+                        так, чтобы обычный BFS снова стал правильным
+                    </div>
+                </section>
+
+                <!-- идея: растянуть ребро веса w в цепочку из w единичных -->
+                <section>
+                    <h2>Идея: подогнать граф под BFS</h2>
+                    <p class="fragment" style="font-size: 0.82em;">BFS умеет искать кратчайший путь только в графе с
+                        одинаковыми рёбрами. Значит сделаем их
+                        одинаковыми: ребро веса <code>w</code> растянем в <mark>цепочку из w рёбер веса 1</mark>.</p>
+                    <div style="display: flex; align-items: center; justify-content: center; gap: 0.5em;">
+                        <svg width="195" height="180" class="fragment">
+                            <g stroke="#667" stroke-width="2">
+                                <line x1="49" y1="35" x2="131" y2="35" />
+                                <line x1="30" y1="54" x2="30" y2="126" />
+                                <line x1="49" y1="145" x2="131" y2="145" />
+                                <line x1="150" y1="126" x2="150" y2="54" />
+                            </g>
+                            <g fill="#1c2030" stroke="#8ab" stroke-width="2">
+                                <circle cx="30" cy="35" r="19" />
+                                <circle cx="150" cy="35" r="19" />
+                                <circle cx="30" cy="145" r="19" />
+                                <circle cx="150" cy="145" r="19" />
+                            </g>
+                            <g fill="#dde" font-size="17" text-anchor="middle">
+                                <text x="30" y="41">A</text>
+                                <text x="150" y="41">B</text>
+                                <text x="30" y="151">C</text>
+                                <text x="150" y="151">D</text>
+                            </g>
+                            <g font-size="16" text-anchor="middle">
+                                <text x="90" y="24" fill="#f7a">5</text>
+                                <text x="14" y="95" fill="#8f8">1</text>
+                                <text x="90" y="166" fill="#8f8">1</text>
+                                <text x="168" y="95" fill="#8f8">1</text>
+                            </g>
+                        </svg>
+                        <span style="font-size: 0.6em; opacity: 0.6;" class="fragment">--&gt;</span>
+                        <svg width="340" height="180" class="fragment">
+                            <g stroke="#667" stroke-width="2">
+                                <line x1="46" y1="35" x2="72" y2="35" />
+                                <line x1="92" y1="35" x2="128" y2="35" />
+                                <line x1="148" y1="35" x2="184" y2="35" />
+                                <line x1="204" y1="35" x2="240" y2="35" />
+                                <line x1="260" y1="35" x2="286" y2="35" />
+                                <line x1="27" y1="54" x2="27" y2="126" />
+                                <line x1="46" y1="145" x2="286" y2="145" />
+                                <line x1="305" y1="126" x2="305" y2="54" />
+                            </g>
+                            <g fill="#2a2030" stroke="#f7a" stroke-width="2" stroke-dasharray="4 3">
+                                <circle cx="82" cy="35" r="10" />
+                                <circle cx="138" cy="35" r="10" />
+                                <circle cx="194" cy="35" r="10" />
+                                <circle cx="250" cy="35" r="10" />
+                            </g>
+                            <g fill="#1c2030" stroke="#8ab" stroke-width="2">
+                                <circle cx="27" cy="35" r="19" />
+                                <circle cx="305" cy="35" r="19" />
+                                <circle cx="27" cy="145" r="19" />
+                                <circle cx="305" cy="145" r="19" />
+                            </g>
+                            <g fill="#dde" font-size="17" text-anchor="middle">
+                                <text x="27" y="41">A</text>
+                                <text x="305" y="41">B</text>
+                                <text x="27" y="151">C</text>
+                                <text x="305" y="151">D</text>
+                            </g>
+                            <g font-size="14" text-anchor="middle" fill="#888">
+                                <text x="59" y="22">1</text>
+                                <text x="110" y="22">1</text>
+                                <text x="166" y="22">1</text>
+                                <text x="222" y="22">1</text>
+                                <text x="273" y="22">1</text>
+                                <text x="12" y="95">1</text>
+                                <text x="166" y="166">1</text>
+                                <text x="322" y="95">1</text>
+                            </g>
+                        </svg>
+                    </div>
+                    <p class="fragment" style="font-size: 0.72em; opacity: 0.85;">Розовых вершин нет в изначальном графе
+                        - мы
+                        придумали их сами. Их ровно <code>w - 1</code> штука на каждое ребро.</p>
+                </section>
+
+                <!-- почему это честно: у фиктивной вершины ровно два соседа -->
+                <section>
+                    <h2>Почему это честно</h2>
+                    <p class="fragment" style="font-size: 0.85em;">Главный вопрос: не появилось ли в графе
+                        <mark>новых маршрутов</mark>, которых раньше не было?
+                    </p>
+                    <ul style="font-size: 0.78em; text-align: left; margin-top: 0.4em;">
+                        <li class="fragment">у каждой розовой вершины ровно <mark>два соседа</mark></li>
+                        <li class="fragment">зашёл в цепочку - сворачивать некуда, только идти до конца</li>
+                        <li class="fragment">значит цепочка это <mark>не развилка</mark>, а растянутое ребро</li>
+                        <li class="fragment">пути старого и нового графа отвечают друг другу один в один</li>
+                    </ul>
+                    <div class="fragment opinion" style="margin-top: 0.7em;">
+                        Сумма весов в старом графе = число рёбер в новом.
+                        А число рёбер BFS считать <mark class="green">умеет</mark>
+                    </div>
+                </section>
+
+                <!-- трассировка: расстояния BFS по разрезанному графу -->
+                <section>
+                    <h2>Что насчитает BFS</h2>
+                    <svg width="400" height="200" class="fragment">
+                        <g stroke="#667" stroke-width="2">
+                            <line x1="52" y1="45" x2="88" y2="45" />
+                            <line x1="112" y1="45" x2="148" y2="45" />
+                            <line x1="172" y1="45" x2="208" y2="45" />
+                            <line x1="232" y1="45" x2="268" y2="45" />
+                            <line x1="292" y1="45" x2="328" y2="45" />
+                        </g>
+                        <g stroke="#8f8" stroke-width="3" opacity="0.85">
+                            <line x1="30" y1="67" x2="30" y2="143" />
+                            <line x1="52" y1="165" x2="328" y2="165" />
+                            <line x1="350" y1="143" x2="350" y2="67" />
+                        </g>
+                        <g fill="#2a2030" stroke="#f7a" stroke-width="2" stroke-dasharray="4 3">
+                            <circle cx="100" cy="45" r="12" />
+                            <circle cx="160" cy="45" r="12" />
+                            <circle cx="220" cy="45" r="12" />
+                            <circle cx="280" cy="45" r="12" />
+                        </g>
+                        <g fill="#1c2030" stroke="#8ab" stroke-width="2">
+                            <circle cx="30" cy="45" r="22" />
+                            <circle cx="30" cy="165" r="22" />
+                            <circle cx="350" cy="165" r="22" />
+                        </g>
+                        <circle cx="350" cy="45" r="22" fill="#1c2030" stroke="#8f8" stroke-width="3" />
+                        <g fill="#dde" font-size="19" text-anchor="middle">
+                            <text x="30" y="52">A</text>
+                            <text x="350" y="52">B</text>
+                            <text x="30" y="172">C</text>
+                            <text x="350" y="172">D</text>
+                        </g>
+                        <g font-size="15" text-anchor="middle" fill="#ffd54f">
+                            <text x="100" y="24">1</text>
+                            <text x="160" y="24">2</text>
+                            <text x="220" y="24">3</text>
+                            <text x="280" y="24">4</text>
+                            <text x="30" y="14">0</text>
+                            <text x="30" y="197">1</text>
+                            <text x="350" y="197">2</text>
+                        </g>
+                        <text x="350" y="20" text-anchor="middle" font-size="19" fill="#8f8">3</text>
+                    </svg>
+                    <ul style="font-size: 0.68em; text-align: left; display: inline-block;">
+                        <li class="fragment">по низу BFS добирается до <code>B</code> за <mark class="green">3</mark>
+                            шага</li>
+                        <li class="fragment">по верху он был бы там только на шаге <mark>5</mark></li>
+                        <li class="fragment">но к тому моменту <code>B</code> давно посещена, повторно её не берут</li>
+                        <li class="fragment">ответ <mark class="green">3</mark> - ровно то, что мы и хотели</li>
+                    </ul>
+                </section>
+
+                <!-- цена приёма: таблица было/стало -->
+                <section>
+                    <h2>Сколько это стоит</h2>
+                    <table style="font-size: 0.82em; width: 100%; margin-top: 0.5em;">
+                        <tr>
+                            <td></td>
+                            <td><strong>было</strong></td>
+                            <td><strong>стало</strong></td>
+                        </tr>
+                        <tr class="fragment">
+                            <td>вершин</td>
+                            <td><code>V</code></td>
+                            <td><code>V</code> плюс сумма <code>(w - 1)</code></td>
+                        </tr>
+                        <tr class="fragment">
+                            <td>рёбер</td>
+                            <td><code>E</code></td>
+                            <td>сумма всех <code>w</code></td>
+                        </tr>
+                    </table>
+                    <div class="fragment opinion" style="margin-top: 0.8em;">
+                        Время работы упирается не в количество рёбер и не в самый большой вес,
+                        а в <mark>сумму всех весов</mark> графа
+                    </div>
+                    <p class="fragment" style="font-size: 0.78em; opacity: 0.85; margin-top: 0.5em;">В нашем примере
+                        было 4 вершины и 4 ребра, стало 8 вершин и 8 рёбер. Сумма весов как раз 8.</p>
+                </section>
+
+                <!-- когда применимо: timeline по сумме весов -->
+                <section>
+                    <h2>Когда так можно</h2>
+                    <div class="timeline" style="margin-top: 0.5em;">
+                        <div class="timeline-item fragment">
+                            <div class="timeline-label">сумма 10⁴</div>
+                            <div class="timeline-arrow">-&gt;</div>
+                            <div class="timeline-desc">мгновенно, даже думать не надо</div>
+                        </div>
+                        <div class="timeline-item fragment">
+                            <div class="timeline-label">сумма 10⁶</div>
+                            <div class="timeline-arrow">-&gt;</div>
+                            <div class="timeline-desc">нормально, BFS по миллиону рёбер это доли секунды</div>
+                        </div>
+                        <div class="timeline-item fragment">
+                            <div class="timeline-label">сумма 10⁸</div>
+                            <div class="timeline-arrow">-&gt;</div>
+                            <div class="timeline-desc">уже не влезет в память</div>
+                        </div>
+                        <div class="timeline-item fragment">
+                            <div class="timeline-label">один вес 10⁹</div>
+                            <div class="timeline-arrow">-&gt;</div>
+                            <div class="timeline-desc">всё, приём мёртв</div>
+                        </div>
+                    </div>
+                    <p class="fragment" style="font-size: 0.8em; margin-top: 0.7em;">Поэтому первым делом в задаче
+                        смотрим не на алгоритм, а на <mark>ограничения</mark>: сколько рёбер и какой максимальный вес.
+                    </p>
+                </section>
+
+                <!-- замыкаем круг: дек это то же разрезание, сделанное на лету -->
+                <section>
+                    <h2>Вернёмся к деку</h2>
+                    <p class="fragment" style="font-size: 0.85em;">Теперь видно, что дек и разрезание - это
+                        <mark>одно и то же</mark>, просто с разных сторон.
+                    </p>
+                    <table style="font-size: 0.8em; width: 100%; margin-top: 0.5em;">
+                        <tr>
+                            <td><strong>вес</strong></td>
+                            <td><strong>что делает с вершиной</strong></td>
+                            <td><strong>в деке</strong></td>
+                        </tr>
+                        <tr class="fragment">
+                            <td><code>0</code></td>
+                            <td><mark class="green">склеивает</mark> с текущей, тот же слой</td>
+                            <td><code>appendleft</code></td>
+                        </tr>
+                        <tr class="fragment">
+                            <td><code>1</code></td>
+                            <td>растягивает ровно на один шаг</td>
+                            <td><code>append</code></td>
+                        </tr>
+                        <tr class="fragment">
+                            <td><code>w</code></td>
+                            <td>растягивает на <mark>w</mark> шагов</td>
+                            <td>нет такой операции</td>
+                        </tr>
+                    </table>
+                    <div class="fragment opinion" style="margin-top: 0.7em;">
+                        Дек - это разрезание, сделанное <mark>на лету</mark> для двух частных весов.
+                        Ребро веса 0 поэтому и не режется: резать на ноль кусков нечего
+                    </div>
+                </section>
+
+            </section>
+
+            <!-- ЧАСТЬ 2: боевая задача, 743 без Дейкстры -->
+            <section>
+
+                <section style="font-size: 70px; height: 100%; width: 100%">
+                    <div class="lesson-time">28</div>
+                    <div class="fragment">
+                        <h1 style="font-size: 1.3em;">Боевая задача</h1>
+                    </div>
+                </section>
+
+                <!-- 743 Network Delay Time: условие и ссылка -->
+                <section>
+                    <h2><a href="https://leetcode.com/problems/network-delay-time/" target="_blank" rel="noopener">743.
+                            Network Delay Time</a></h2>
+                    <p class="fragment" style="font-size: 0.85em;">Сеть из <code>n</code> узлов. Сигнал идёт по проводу
+                        из <code>u</code> в <code>v</code> за <code>w</code> единиц времени.</p>
+                    <p class="fragment" style="font-size: 0.85em;">Пустили сигнал из узла <code>k</code>. За сколько он
+                        дойдёт <mark>до всех</mark>? Если дойдёт не до всех - вернуть <code>-1</code>.</p>
+                    <div class="fragment opinion" style="margin-top: 0.6em;">
+                        Задача лежит в разделе "кратчайшие пути" и официально решается Дейкстрой,
+                        которую мы пройдём <mark>послезавтра</mark>. Попробуем обойтись тем, что уже есть
+                    </div>
+                </section>
+
+                <!-- читаем ограничения: сумма весов 600 000 -->
+                <section>
+                    <h2>Сначала читаем ограничения</h2>
+                    <table style="font-size: 0.82em; width: 100%; margin-top: 0.4em;">
+                        <tr class="fragment">
+                            <td>узлов</td>
+                            <td><code>n</code> не больше <mark>100</mark></td>
+                        </tr>
+                        <tr class="fragment">
+                            <td>проводов</td>
+                            <td>не больше <mark>6000</mark></td>
+                        </tr>
+                        <tr class="fragment">
+                            <td>вес провода</td>
+                            <td>от 1 до <mark>100</mark></td>
+                        </tr>
+                    </table>
+                    <p class="fragment" style="font-size: 0.85em; margin-top: 0.8em;">Худший случай суммы весов:
+                        <code>6000</code> умножить на <code>100</code>, то есть <mark class="green">600 000</mark>.
+                    </p>
+                    <div class="fragment opinion" style="margin-top: 0.5em;">
+                        Шестьсот тысяч рёбер для BFS - это ничто.
+                        Значит разрезание <mark class="green">проходит</mark>
+                    </div>
+                </section>
+
+                <!-- SVG: сеть K, B, C с весами 5, 2, 3 -->
+                <section>
+                    <h2>Как выглядит разрезанная сеть</h2>
+                    <div style="display: flex; align-items: center; justify-content: center; gap: 1em;">
+                        <svg width="200" height="200" class="fragment">
+                            <g stroke="#667" stroke-width="2">
+                                <line x1="60" y1="45" x2="130" y2="45" />
+                                <line x1="40" y1="65" x2="40" y2="135" />
+                                <line x1="58" y1="142" x2="136" y2="62" />
+                            </g>
+                            <g fill="#1c2030" stroke="#8ab" stroke-width="2">
+                                <circle cx="40" cy="45" r="20" />
+                                <circle cx="150" cy="45" r="20" />
+                                <circle cx="40" cy="155" r="20" />
+                            </g>
+                            <g fill="#dde" font-size="18" text-anchor="middle">
+                                <text x="40" y="51">K</text>
+                                <text x="150" y="51">B</text>
+                                <text x="40" y="161">C</text>
+                            </g>
+                            <g font-size="17" text-anchor="middle">
+                                <text x="95" y="30" fill="#f7a">5</text>
+                                <text x="22" y="105" fill="#f7a">2</text>
+                                <text x="118" y="122" fill="#f7a">3</text>
+                            </g>
+                        </svg>
+                        <ul style="font-size: 0.68em; text-align: left;">
+                            <li class="fragment">ребро <code>K-B</code> веса 5 даёт <mark>4</mark> розовые вершины</li>
+                            <li class="fragment">ребро <code>K-C</code> веса 2 даёт <mark>1</mark> розовую</li>
+                            <li class="fragment">ребро <code>C-B</code> веса 3 даёт <mark>2</mark> розовые</li>
+                            <li class="fragment">итого 3 настоящих вершины и <mark>7 придуманных</mark></li>
+                            <li class="fragment">BFS: и <code>K-B</code>, и <code>K-C-B</code> стоят <mark
+                                    class="green">5</mark></li>
+                        </ul>
+                    </div>
+                    <p class="fragment" style="font-size: 0.75em; opacity: 0.85; margin-top: 0.4em;">Обрати внимание:
+                        провода <mark>односторонние</mark>, значит и цепочки делаем односторонними.</p>
+                </section>
+
+                <!-- каркас решения словами -->
+                <section>
+                    <h2>Каркас решения</h2>
+                    <div class="timeline" style="margin-top: 0.4em;">
+                        <div class="timeline-item fragment">
+                            <div class="timeline-label">1</div>
+                            <div class="timeline-arrow">-&gt;</div>
+                            <div class="timeline-desc">новые вершины нумеруем подряд, начиная с <code>n</code></div>
+                        </div>
+                        <div class="timeline-item fragment">
+                            <div class="timeline-label">2</div>
+                            <div class="timeline-arrow">-&gt;</div>
+                            <div class="timeline-desc">для каждого провода веса <code>w</code> тянем цепочку из
+                                <code>w</code> единичных рёбер
+                            </div>
+                        </div>
+                        <div class="timeline-item fragment">
+                            <div class="timeline-label">3</div>
+                            <div class="timeline-arrow">-&gt;</div>
+                            <div class="timeline-desc">обычный BFS из <code>k</code> по всему раздутому графу</div>
+                        </div>
+                        <div class="timeline-item fragment">
+                            <div class="timeline-label">4</div>
+                            <div class="timeline-arrow">-&gt;</div>
+                            <div class="timeline-desc">ответ собираем <mark>только по настоящим</mark> вершинам,
+                                розовые игнорируем</div>
+                        </div>
+                        <div class="timeline-item fragment">
+                            <div class="timeline-label">5</div>
+                            <div class="timeline-arrow">-&gt;</div>
+                            <div class="timeline-desc">берём максимум расстояний; если хоть одна не посещена -
+                                <code>-1</code>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="fragment" style="font-size: 0.8em; margin-top: 0.6em;">Шаг 4 - главная ловушка. Розовых
+                        вершин больше, чем настоящих, и максимум по ним даст <mark>неправильный ответ</mark>.</p>
+                </section>
+
+            </section>
+
+            <!-- ЧАСТЬ 3: где приём ломается + задачи на логику -->
+            <section>
+
+                <section style="font-size: 70px; height: 100%; width: 100%">
+                    <div class="lesson-time">43</div>
+                    <div class="fragment">
+                        <h1 style="font-size: 1.3em;">Где приём ломается</h1>
+                        <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">три разных способа, и каждый
+                            ведёт в свою сторону</p>
+                    </div>
+                </section>
+
+                <!-- слом 1: вес 10^9 -->
+                <section>
+                    <h2>Слом 1: большие веса</h2>
+                    <svg width="440" height="110" class="fragment">
+                        <line x1="62" y1="55" x2="139" y2="55" stroke="#667" stroke-width="2" />
+                        <line x1="301" y1="55" x2="378" y2="55" stroke="#667" stroke-width="2" />
+                        <g fill="#2a2030" stroke="#f7a" stroke-width="2" stroke-dasharray="4 3">
+                            <circle cx="150" cy="55" r="11" />
+                            <circle cx="190" cy="55" r="11" />
+                            <circle cx="290" cy="55" r="11" />
+                        </g>
+                        <text x="240" y="62" text-anchor="middle" fill="#f7a" font-size="22">...</text>
+                        <circle cx="40" cy="55" r="22" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+                        <circle cx="400" cy="55" r="22" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+                        <text x="40" y="62" text-anchor="middle" fill="#dde" font-size="19">A</text>
+                        <text x="400" y="62" text-anchor="middle" fill="#dde" font-size="19">B</text>
+                        <text x="220" y="24" text-anchor="middle" fill="#f7a" font-size="16">миллиард вершин</text>
+                    </svg>
+                    <p class="fragment" style="font-size: 0.85em;">Одна дорога длиной <code>10⁹</code> метров - и
+                        разрезание требует миллиард вершин. Программа падает <mark>ещё до первого шага BFS</mark>.</p>
+                    <div class="fragment opinion" style="margin-top: 0.6em;">
+                        Нужен способ шагать <mark>сразу на весь вес</mark>, а не по метру.
+                        Это <mark class="green">Дейкстра</mark>, занятие 32
+                    </div>
+                </section>
+
+                <!-- слом 2: отрицательные веса -->
+                <section>
+                    <h2>Слом 2: отрицательные веса</h2>
+                    <p class="fragment" style="font-size: 0.85em;">Ребро веса <code>-3</code>. На сколько кусков его
+                        резать?</p>
+                    <ul style="font-size: 0.78em; text-align: left; margin-top: 0.4em;">
+                        <li class="fragment">на <code>-3</code> ребра резать нечего</li>
+                        <li class="fragment">BFS вообще не умеет "отойти назад" по расстоянию</li>
+                        <li class="fragment">и даже Дейкстра тут сломается - увидим на занятии 34</li>
+                    </ul>
+                    <div class="fragment opinion" style="margin-top: 0.7em;">
+                        Отрицательные веса не бывают "чуть сложнее". Это <mark>другая задача</mark>
+                        с другим алгоритмом: <mark class="green">Bellman-Ford</mark>, занятие 34
+                    </div>
+                </section>
+
+                <!-- слом 3: цена пути не сумма, а максимум -->
+                <section>
+                    <h2>Слом 3: цена пути не сумма</h2>
+                    <p class="fragment" style="font-size: 0.78em;"><a
+                            href="https://leetcode.com/problems/path-with-minimum-effort/" target="_blank"
+                            rel="noopener">1631. Path With Minimum Effort</a>: цена пути это <mark>самый тяжёлый
+                            подъём</mark> на нём, а не сумма подъёмов.</p>
+                    <div style="display: flex; align-items: center; justify-content: center; gap: 1.2em;">
+                        <svg width="320" height="180" class="fragment">
+                            <g stroke="#8f8" stroke-width="3" opacity="0.85">
+                                <line x1="50" y1="52" x2="98" y2="42" />
+                                <line x1="122" y1="40" x2="188" y2="40" />
+                                <line x1="212" y1="42" x2="258" y2="52" />
+                            </g>
+                            <g stroke="#f7a" stroke-width="3" opacity="0.85">
+                                <line x1="50" y1="80" x2="98" y2="128" />
+                                <line x1="122" y1="135" x2="188" y2="135" />
+                                <line x1="212" y1="128" x2="258" y2="80" />
+                            </g>
+                            <g fill="#2a2030" stroke="#667" stroke-width="2">
+                                <circle cx="110" cy="40" r="12" />
+                                <circle cx="200" cy="40" r="12" />
+                                <circle cx="110" cy="135" r="12" />
+                                <circle cx="200" cy="135" r="12" />
+                            </g>
+                            <g fill="#1c2030" stroke="#8ab" stroke-width="2">
+                                <circle cx="30" cy="65" r="22" />
+                                <circle cx="280" cy="65" r="22" />
+                            </g>
+                            <g fill="#dde" font-size="19" text-anchor="middle">
+                                <text x="30" y="72">S</text>
+                                <text x="280" y="72">T</text>
+                            </g>
+                            <g font-size="16" text-anchor="middle" fill="#8f8">
+                                <text x="72" y="32">4</text>
+                                <text x="155" y="28">4</text>
+                                <text x="238" y="32">4</text>
+                            </g>
+                            <g font-size="16" text-anchor="middle" fill="#f7a">
+                                <text x="64" y="118">1</text>
+                                <text x="155" y="158">1</text>
+                                <text x="246" y="118">9</text>
+                            </g>
+                        </svg>
+                        <ul style="font-size: 0.66em; text-align: left;">
+                            <li class="fragment"><mark class="green">верх</mark>: сумма 12, максимум <mark
+                                    class="green">4</mark></li>
+                            <li class="fragment"><mark>низ</mark>: сумма 11, максимум <mark>9</mark></li>
+                            <li class="fragment">по сумме выигрывает низ</li>
+                            <li class="fragment">по максимуму - верх</li>
+                            <li class="fragment">разрезание считает сумму, значит ответит <mark>не на тот
+                                    вопрос</mark></li>
+                        </ul>
+                    </div>
+                </section>
+
+                <!-- 2492: веса есть, кратчайший путь не нужен -->
+                <section>
+                    <h2><a href="https://leetcode.com/problems/minimum-score-of-a-path-between-two-cities/"
+                            target="_blank" rel="noopener">2492. Minimum Score of a Path</a></h2>
+                    <div style="display: flex; align-items: center; justify-content: center; gap: 1.2em;">
+                        <svg width="240" height="190" class="fragment">
+                            <g stroke="#667" stroke-width="2">
+                                <line x1="52" y1="45" x2="168" y2="45" />
+                                <line x1="190" y1="67" x2="190" y2="123" />
+                                <line x1="168" y1="152" x2="72" y2="155" />
+                                <line x1="34" y1="67" x2="46" y2="133" />
+                            </g>
+                            <g fill="#1c2030" stroke="#8ab" stroke-width="2">
+                                <circle cx="30" cy="45" r="22" />
+                                <circle cx="190" cy="45" r="22" />
+                                <circle cx="190" cy="145" r="22" />
+                                <circle cx="50" cy="155" r="22" />
+                            </g>
+                            <g fill="#dde" font-size="19" text-anchor="middle">
+                                <text x="30" y="52">1</text>
+                                <text x="190" y="52">2</text>
+                                <text x="190" y="152">4</text>
+                                <text x="50" y="162">3</text>
+                            </g>
+                            <g font-size="17" text-anchor="middle">
+                                <text x="110" y="32" fill="#888">9</text>
+                                <text x="210" y="100" fill="#8f8">5</text>
+                                <text x="120" y="176" fill="#888">6</text>
+                                <text x="18" y="105" fill="#888">7</text>
+                            </g>
+                        </svg>
+                        <ul style="font-size: 0.66em; text-align: left;">
+                            <li class="fragment">идём из города <code>1</code> в город <code>4</code></li>
+                            <li class="fragment">цена маршрута это <mark>минимальное</mark> ребро на нём</li>
+                            <li class="fragment">по рёбрам можно ходить <mark>сколько угодно раз</mark></li>
+                            <li class="fragment">значит доступна вся компонента целиком</li>
+                            <li class="fragment">ответ - минимум по всем её рёбрам: <mark class="green">5</mark></li>
+                        </ul>
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 0.4em;">
+                        Веса есть, а алгоритма на кратчайший путь <mark>не нужно вообще</mark>.
+                        Обычный DFS, чтобы понять, кто с кем в одной компоненте
+                    </div>
+                </section>
+
+                <!-- 2101: графа в условии нет, строим из геометрии -->
+                <section>
+                    <h2><a href="https://leetcode.com/problems/detonate-the-maximum-bombs/" target="_blank"
+                            rel="noopener">2101. Detonate the Maximum Bombs</a></h2>
+                    <div style="display: flex; align-items: center; justify-content: center; gap: 1.2em;">
+                        <svg width="250" height="190" class="fragment">
+                            <circle cx="75" cy="75" r="58" fill="rgba(255,120,180,0.10)" stroke="#f7a" stroke-width="1"
+                                stroke-dasharray="4 3" />
+                            <circle cx="165" cy="60" r="26" fill="rgba(120,255,140,0.10)" stroke="#8f8" stroke-width="1"
+                                stroke-dasharray="4 3" />
+                            <circle cx="180" cy="145" r="20" fill="rgba(150,150,255,0.10)" stroke="#88f"
+                                stroke-width="1" stroke-dasharray="4 3" />
+                            <circle cx="75" cy="75" r="7" fill="#f7a" />
+                            <circle cx="165" cy="60" r="7" fill="#8f8" />
+                            <circle cx="180" cy="145" r="7" fill="#88f" />
+                            <text x="75" y="98" text-anchor="middle" fill="#f7a" font-size="15">A</text>
+                            <text x="165" y="42" text-anchor="middle" fill="#8f8" font-size="15">B</text>
+                            <text x="180" y="172" text-anchor="middle" fill="#88f" font-size="15">C</text>
+                        </svg>
+                        <ul style="font-size: 0.66em; text-align: left;">
+                            <li class="fragment"><code>A</code> достаёт до <code>B</code>: <code>B</code> внутри круга
+                                <code>A</code>
+                            </li>
+                            <li class="fragment"><code>B</code> до <code>A</code> не достаёт - радиус мал</li>
+                            <li class="fragment">значит ребро <mark>одностороннее</mark></li>
+                            <li class="fragment">графа в условии нет, мы строим его <mark>из геометрии</mark></li>
+                            <li class="fragment">дальше обычный DFS из каждой бомбы</li>
+                        </ul>
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 0.4em;">
+                        Главный навык урока - не алгоритм, а умение <mark>увидеть граф</mark> там,
+                        где его не дали
+                    </div>
+                </section>
+
+            </section>
+
+            <!-- итог: что запомнить -->
+            <section>
+                <div class="lesson-time">57</div>
+                <h2>Что запомнить</h2>
+                <ul style="font-size: 0.82em;">
+                    <li class="fragment">Дек умеет ровно <mark>два</mark> разных веса - на третьем нужное место
+                        оказывается в середине</li>
+                    <li class="fragment">Ребро веса <code>w</code> можно растянуть в <mark>цепочку из w единичных</mark>
+                        и пустить обычный BFS</li>
+                    <li class="fragment">Цена приёма - <mark>сумма всех весов</mark> графа, а не число рёбер</li>
+                    <li class="fragment">Разрезание работает, только когда цена пути это <mark>сумма</mark></li>
+                    <li class="fragment">Если в условии есть веса, это ещё <mark>не значит</mark>, что нужен кратчайший
+                        путь</li>
+                </ul>
+                <div class="fragment opinion" style="margin-top: 0.8em;">На следующем занятии: как пройти ребро веса
+                    <code>10⁹</code> за один шаг вместо миллиарда </div>
+            </section>
+
+            <!-- домашнее задание: условие 1466 текстом, без картинки -->
+            <section>
+                <div class="lesson-time">59</div>
+                <h2>Домашнее задание</h2>
+                <h3 style="font-size: 0.75em;"><a
+                        href="https://leetcode.com/problems/reorder-routes-to-make-all-paths-lead-to-the-city-zero/"
+                        target="_blank" rel="noopener">1466. Reorder Routes to Make All Paths Lead to the City
+                        Zero</a></h3>
+                <div style="font-size: 0.78em; text-align: left; margin-top: 0.6em;">
+                    <p class="fragment">Есть <code>n</code> городов с номерами от <code>0</code> до
+                        <code>n - 1</code> и <code>n - 1</code> дорога. Между любыми двумя городами есть ровно один
+                        маршрут.
+                    </p>
+                    <p class="fragment">В прошлом году все дороги сделали <mark>односторонними</mark> - они слишком
+                        узкие, разъехаться нельзя.</p>
+                    <p class="fragment">В этом году в столице, городе <code>0</code>, большое событие, и туда хотят
+                        приехать <mark class="green">из всех городов</mark> сразу.</p>
+                    <p class="fragment">Разрешили развернуть любые дороги. Найди <mark>минимальное</mark> число
+                        разворотов, после которых из каждого города можно доехать до города <code>0</code>.</p>
+                </div>
+                <div class="fragment opinion" style="margin-top: 0.7em;">
+                    Городов до <code>50 000</code>, так что перебирать варианты разворотов не выйдет -
+                    нужен <mark>один проход</mark> по графу
+                </div>
+            </section>
+
+        </div>
+    </div>
+
+    <script src="/utils/lib/js/head.min.js"></script>
+    <script src="/utils/js/reveal.js"></script>
+    <script>
+        Reveal.initialize({
+            controls: true,
+            progress: true,
+            history: true,
+            center: true,
+            transition: 'fade',
+            transitionSpeed: 'fast',
+            dependencies: [
+                { src: '/utils/lib/js/classList.js', condition: function () { return !document.body.classList; } },
+                { src: '/utils/plugin/markdown/marked.js', condition: function () { return !!document.querySelector('[data-markdown]'); } },
+                { src: '/utils/plugin/markdown/markdown.js', condition: function () { return !!document.querySelector('[data-markdown]'); } },
+                { src: '/utils/plugin/highlight/highlight.js', async: true, callback: function () { hljs.initHighlightingOnLoad(); } },
+                { src: '/utils/plugin/zoom-js/zoom.js', async: true },
+                { src: '/utils/plugin/notes/notes.js', async: true }
+            ]
+        });
+        Reveal.configure({ slideNumber: 'c/t' });
+    </script>
+</body>
+
+</html>
