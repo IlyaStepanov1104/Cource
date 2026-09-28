@@ -1,43 +1,1156 @@
 <!doctype html>
 <html lang="ru">
+
 <head>
     <meta charset="utf-8">
-    <title>Занятие 31 - Алгоритм Дейкстры</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+    <title>Занятие 32 - Алгоритм Дейкстры</title>
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+
     <link rel="stylesheet" href="/utils/css/reveal.css">
     <link rel="stylesheet" href="/utils/lib/css/animate.css">
     <link rel="stylesheet" href="/utils/css/theme/night.css" id="theme">
     <link rel="stylesheet" href="/utils/lib/css/zenburn.css">
     <link rel="stylesheet" href="/utils/css/custom-base.css">
     <link rel="stylesheet" href="css-custom/custom.css">
+
     <script>
         var link = document.createElement('link');
         link.rel = 'stylesheet'; link.type = 'text/css';
-        link.href = window.location.search.match(/print-pdf/gi) ? '/utils/css/print/pdf.css' : '/utils/css/print/paper.css';
+        link.href = window.location.search.match(/print-pdf/gi)
+            ? '/utils/css/print/pdf.css'
+            : '/utils/css/print/paper.css';
         document.getElementsByTagName('head')[0].appendChild(link);
     </script>
 </head>
+
 <body>
     <div class="reveal">
         <div class="slides">
+
+            <!-- титульный слайд: "Алгоритм Дейкстры", занятие 32 -->
             <section style="font-size: 70px; height: 100%; width: 100%">
                 <div class="lesson-time">0</div>
                 <div class="fragment">
                     <h1 class="animated" style="font-size: 1.6em;">Алгоритм Дейкстры</h1>
-                    <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">Занятие 31</p>
+                    <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">Занятие 32</p>
                 </div>
             </section>
+
+            <!-- РАЗБОР ДЗ -->
+            <section>
+
+                <!-- разбор ДЗ 2290: условие и решение через 0-1 BFS -->
+                <section>
+                    <div class="lesson-time">0</div>
+                    <h2>Разбор ДЗ: <a href="https://leetcode.com/problems/minimum-obstacle-removal-to-reach-corner/"
+                            target="_blank" rel="noopener">2290. Minimum Obstacle Removal</a></h2>
+                    <p class="fragment">Сетка из <code>0</code> (свободно) и <code>1</code> (препятствие). Идём из
+                        левого верхнего угла в правый нижний, ходы по четырём направлениям.</p>
+                    <p class="fragment">Препятствие можно <mark>убрать</mark>. Сколько минимум придётся убрать?</p>
+                    <div class="fragment opinion" style="margin-top: 0.6em;">
+                        Решение - 0-1 BFS: переход в <code>0</code> стоит <mark class="green">0</mark>, переход в
+                        <code>1</code> стоит <mark>1</mark>
+                    </div>
+                </section>
+
+                <!-- разбор ДЗ 1466: условие и решение через DFS с флагом обратного ребра -->
+                <section>
+                    <h2>Разбор ДЗ:
+                        <a href="https://leetcode.com/problems/reorder-routes-to-make-all-paths-lead-to-the-city-zero/"
+                            target="_blank" rel="noopener">1466. Reorder Routes</a>
+                    </h2>
+                    <p class="fragment"><code>n</code> городов, <code>n - 1</code> односторонняя дорога. Нужно
+                        доехать из любого города до города <code>0</code>.</p>
+                    <p class="fragment">Разрешили развернуть любые дороги. Найти <mark>минимальное</mark> число
+                        разворотов.</p>
+                    <div class="fragment opinion" style="margin-top: 0.6em;">
+                        DFS от города <code>0</code> по неориентированному варианту графа: если ребро изначально
+                        <mark>смотрело от нас</mark> - плюс один разворот
+                    </div>
+                </section>
+
+            </section>
+
+            <!-- ЧАСТЬ 1: Постановка задачи кратчайшего пути -->
+            <section>
+
+                <section style="font-size: 70px; height: 100%; width: 100%">
+                    <div class="lesson-time">7</div>
+                    <div class="fragment">
+                        <h1 style="font-size: 1.3em;">Когда прошлые приёмы не работают</h1>
+                        <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">и что делать дальше</p>
+                    </div>
+                </section>
+
+                <!-- напоминание: на прошлом занятии разобрали 2 подхода - 0-1 BFS и разбиение ребра на единичные -->
+                <section>
+                    <h2>На прошлом занятии было два приёма</h2>
+                    <div class="compare fragment" style="margin-top: 0.6em;">
+                        <div class="compare-block">
+                            <h3>0-1 BFS</h3>
+                            <p style="font-size: 0.75em;">дек вместо очереди, <code>appendleft</code> для веса 0,
+                                <code>append</code> для веса 1
+                            </p>
+                        </div>
+                        <div class="compare-block">
+                            <h3>Разрезание рёбер</h3>
+                            <p style="font-size: 0.75em;">ребро веса <code>w</code> растягиваем в цепочку из
+                                <code>w</code> единичных рёбер, дальше обычный BFS
+                            </p>
+                        </div>
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 0.7em;">
+                        Оба приёма - <mark class="green">рабочие</mark>. Вопрос в том, при каких условиях
+                    </div>
+                </section>
+
+                <!-- показываем, что оба подхода перестают работать при произвольных положительных весах -->
+                <section>
+                    <h2>Сегодня оба перестают работать</h2>
+                    <p class="fragment" style="font-size: 0.85em;">Веса - произвольные положительные числа, без
+                        ограничения сверху.</p>
+                    <div class="fragment opinion" style="margin-top: 0.6em;">
+                        Ни дек, ни разрезание с этим <mark>не справляются</mark> - и причины у них разные
+                    </div>
+                </section>
+
+                <!-- почему 0-1 BFS не работает: он рассчитан только на веса 0 и 1 -->
+                <section>
+                    <h2>Почему не подходит 0-1 BFS</h2>
+                    <p class="fragment" style="font-size: 0.85em;">Дек устроен так, что в нём одновременно лежат
+                        расстояния только <mark>двух соседних</mark> значений.</p>
+                    <ul style="font-size: 0.78em; text-align: left; margin-top: 0.4em;">
+                        <li class="fragment">вес <code>0</code> - вершина остаётся в текущем слое</li>
+                        <li class="fragment">вес <code>1</code> - вершина уходит в следующий слой</li>
+                        <li class="fragment">вес <code>7</code> - а куда её класть? двух концов не хватает</li>
+                    </ul>
+                    <div class="fragment opinion" style="margin-top: 0.6em;">
+                        Дек - инструмент ровно на два веса. На произвольных весах он <mark>не определён</mark>
+                    </div>
+                </section>
+
+                <!-- почему разбиение ребра на единичные не работает: при больших весах граф взрывается по размеру (вес 10^9 -> 10^9 новых вершин) -->
+                <section>
+                    <h2>Почему не подходит разрезание</h2>
+                    <svg width="440" height="110" class="fragment">
+                        <line x1="62" y1="55" x2="139" y2="55" stroke="#667" stroke-width="2" />
+                        <line x1="301" y1="55" x2="378" y2="55" stroke="#667" stroke-width="2" />
+                        <g fill="#2a2030" stroke="#f7a" stroke-width="2" stroke-dasharray="4 3">
+                            <circle cx="150" cy="55" r="11" />
+                            <circle cx="190" cy="55" r="11" />
+                            <circle cx="290" cy="55" r="11" />
+                        </g>
+                        <text x="240" y="62" text-anchor="middle" fill="#f7a" font-size="22">...</text>
+                        <circle cx="40" cy="55" r="22" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+                        <circle cx="400" cy="55" r="22" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+                        <text x="40" y="62" text-anchor="middle" fill="#dde" font-size="19">A</text>
+                        <text x="400" y="62" text-anchor="middle" fill="#dde" font-size="19">B</text>
+                        <text x="220" y="24" text-anchor="middle" fill="#f7a" font-size="16">миллиард вершин</text>
+                    </svg>
+                    <p class="fragment" style="font-size: 0.85em;">Ребро веса <code>10⁹</code> превращается в цепочку
+                        из <code>10⁹</code> фиктивных вершин.</p>
+                    <div class="fragment opinion" style="margin-top: 0.6em;">
+                        Программа падает <mark>ещё до первого шага</mark> BFS - граф не помещается в память
+                    </div>
+                </section>
+
+                <!-- пример графа с разными весами рёбер, где оба прошлых подхода бессильны -->
+                <section>
+                    <h2>Пример</h2>
+                    <div style="display: flex; align-items: center; justify-content: center; gap: 1em;">
+                        <svg width="220" height="200" class="fragment">
+                            <g stroke="#667" stroke-width="2">
+                                <line x1="60" y1="45" x2="130" y2="45" />
+                                <line x1="40" y1="65" x2="40" y2="135" />
+                                <line x1="58" y1="142" x2="136" y2="62" />
+                            </g>
+                            <g fill="#1c2030" stroke="#8ab" stroke-width="2">
+                                <circle cx="40" cy="45" r="20" />
+                                <circle cx="150" cy="45" r="20" />
+                                <circle cx="40" cy="155" r="20" />
+                            </g>
+                            <g fill="#dde" font-size="18" text-anchor="middle">
+                                <text x="40" y="51">A</text>
+                                <text x="150" y="51">B</text>
+                                <text x="40" y="161">C</text>
+                            </g>
+                            <g font-size="17" text-anchor="middle">
+                                <text x="95" y="30" fill="#f7a">17</text>
+                                <text x="22" y="105" fill="#f7a">4</text>
+                                <text x="118" y="122" fill="#f7a">9</text>
+                            </g>
+                        </svg>
+                        <ul style="font-size: 0.72em; text-align: left;">
+                            <li class="fragment">веса <code>17</code>, <code>4</code>, <code>9</code> - не 0 и не 1
+                            </li>
+                            <li class="fragment">0-1 BFS даже не знает, что с ними делать</li>
+                            <li class="fragment">разрезание даст <mark>30 фиктивных вершин</mark> на трёх рёбрах</li>
+                            <li class="fragment">при весах порядка <code>10⁵</code>–<code>10⁹</code> это уже не
+                                работает</li>
+                        </ul>
+                    </div>
+                </section>
+
+                <!-- постановка задачи: кратчайшее расстояние от source до всех вершин при произвольных положительных весах -->
+                <section>
+                    <h2>Постановка задачи</h2>
+                    <p class="fragment" style="font-size: 0.9em;">Дан граф с <mark>произвольными положительными</mark>
+                        весами рёбер и стартовая вершина <code>source</code>.</p>
+                    <p class="fragment" style="font-size: 0.9em;">Найти кратчайшее расстояние от <code>source</code>
+                        до <mark class="green">каждой</mark> вершины графа.</p>
+                    <div class="fragment opinion" style="margin-top: 0.6em;">
+                        Нужен способ шагать <mark>сразу на весь вес</mark> ребра, а не по единице -
+                        это и есть алгоритм Дейкстры
+                    </div>
+                </section>
+
+            </section>
+
+            <!-- ЧАСТЬ 2: Идея и наивная реализация -->
+            <section>
+
+                <section style="font-size: 70px; height: 100%; width: 100%">
+                    <div class="lesson-time">20</div>
+                    <div class="fragment">
+                        <h1 style="font-size: 1.3em;">Идея алгоритма</h1>
+                    </div>
+                </section>
+
+                <!-- что такое жадный алгоритм: на каждом шаге выбираем локально лучший вариант, не пересматривая прошлые решения -->
+                <section>
+                    <h2>Что такое жадный алгоритм</h2>
+                    <p class="fragment" style="font-size: 0.85em;">На каждом шаге выбираем вариант, который выглядит
+                        <mark>лучшим прямо сейчас</mark> - и никогда не пересматриваем это решение.
+                    </p>
+                    <div class="fragment opinion" style="margin-top: 0.6em;">
+                        Звучит рискованно: а вдруг локально лучший выбор потом окажется плохим?
+                        Для некоторых задач это доказуемо <mark class="green">не страшно</mark>
+                    </div>
+                </section>
+
+                <!-- простой пример жадности вне графов (например, сдача монетами) для интуиции -->
+                <section>
+                    <h2>Пример жадности: сдача монетами</h2>
+                    <p class="fragment" style="font-size: 0.85em;">Нужно набрать сдачу <code>63</code> рубля монетами
+                        <code>50, 10, 5, 1</code>.
+                    </p>
+                    <ul style="font-size: 0.78em; text-align: left; margin-top: 0.4em;">
+                        <li class="fragment">берём самую крупную, что не превышает остаток: <code>50</code></li>
+                        <li class="fragment">остаток <code>13</code> -&gt; берём <code>10</code></li>
+                        <li class="fragment">остаток <code>3</code> -&gt; берём <code>1, 1, 1</code></li>
+                        <li class="fragment">на каждом шаге - локально лучший выбор, пересматривать не пришлось</li>
+                    </ul>
+                </section>
+
+                <!-- жадная идея Дейкстры: всегда обрабатывать ближайшую необработанную вершину -->
+                <section>
+                    <h2>Жадная идея Дейкстры</h2>
+                    <p class="fragment" style="font-size: 0.85em;">Представим, что мы стоим в <code>S</code> и по
+                        очереди "открываем" соседние города - как в BFS, только теперь у каждой дороги своя
+                        длина.</p>
+                    <div style="display: flex; align-items: center; justify-content: center; gap: 1em;">
+                        <svg width="340" height="160" class="fragment">
+                            <g stroke="#667" stroke-width="2">
+                                <line x1="54.3" y1="59.6" x2="142.7" y2="34.9" />
+                                <line x1="54.3" y1="70.4" x2="142.7" y2="95.1" />
+                                <line x1="177.3" y1="104.9" x2="262.7" y2="128.7" />
+                            </g>
+                            <g fill="#1c2030" stroke="#8ab" stroke-width="2">
+                                <circle cx="35" cy="65" r="20" />
+                            </g>
+                            <g fill="#2a2030" stroke="#f7a" stroke-width="2" stroke-dasharray="4 3">
+                                <circle cx="160" cy="30" r="18" />
+                                <circle cx="160" cy="100" r="18" />
+                                <circle cx="280" cy="133.6" r="18" />
+                            </g>
+                            <g fill="#dde" font-size="15" text-anchor="middle">
+                                <text x="35" y="71">S</text>
+                                <text x="160" y="36">B</text>
+                                <text x="160" y="106">C</text>
+                                <text x="280" y="139.6">D</text>
+                            </g>
+                            <g font-size="14" text-anchor="middle" fill="#ffd54f">
+                                <text x="101.8" y="40">7</text>
+                                <text x="93.2" y="113">2</text>
+                                <text x="215.7" y="142.2">9</text>
+                            </g>
+                        </svg>
+                        <ul style="font-size: 0.68em; text-align: left;">
+                            <li class="fragment">на очереди только соседи <code>S</code>: <code>B</code> и
+                                <code>C</code>
+                            </li>
+                            <li class="fragment">расстояния до них: <code>7</code> и <code>2</code></li>
+                            <li class="fragment">жадный выбор - берём <mark class="green">самого близкого</mark>:
+                                <code>C</code>
+                            </li>
+                            <li class="fragment">после этого в очередь добавится сосед <code>C</code> - вершина
+                                <code>D</code>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 0.5em;">
+                        Так на каждом шаге: из всех кандидатов в очереди забираем ближайшего и считаем расстояние
+                        до него окончательным
+                    </div>
+                </section>
+
+                <!-- почему жадный выбор безопасен при неотрицательных весах -->
+                <section>
+                    <h2>Почему это безопасно</h2>
+                    <p class="fragment" style="font-size: 0.82em;">Вопрос: а вдруг найдётся более короткий путь до
+                        <code>C</code> через ещё не открытую вершину <code>D</code>?
+                    </p>
+                    <div style="display: flex; align-items: center; justify-content: center; gap: 1em;">
+                        <svg width="320" height="150" class="fragment">
+                            <line x1="55" y1="55" x2="265" y2="55" stroke="#8f8" stroke-width="2" />
+                            <g stroke="#667" stroke-width="2">
+                                <line x1="52.1" y1="65.3" x2="142.9" y2="119.7" />
+                                <line x1="177.1" y1="119.7" x2="267.9" y2="65.3" />
+                            </g>
+                            <g fill="#1c2030" stroke="#8ab" stroke-width="2">
+                                <circle cx="35" cy="55" r="20" />
+                            </g>
+                            <circle cx="285" cy="55" r="20" fill="#1c2030" stroke="#8f8" stroke-width="2" />
+                            <circle cx="160" cy="130" r="20" fill="#2a2030" stroke="#f7a" stroke-width="2"
+                                stroke-dasharray="4 3" />
+                            <g fill="#dde" font-size="16" text-anchor="middle">
+                                <text x="35" y="61">S</text>
+                                <text x="285" y="61">C</text>
+                                <text x="160" y="136">D</text>
+                            </g>
+                            <g font-size="14" text-anchor="middle" fill="#8f8">
+                                <text x="160" y="42">2</text>
+                            </g>
+                            <g font-size="14" text-anchor="middle" fill="#ffd54f">
+                                <text x="90.3" y="99">5</text>
+                                <text x="229.7" y="99">6</text>
+                            </g>
+                            <text x="160" y="20" text-anchor="middle" fill="#8f8" font-size="12">прямое ребро,
+                                dist[C] = 2</text>
+                        </svg>
+                    </div>
+                    <ul style="font-size: 0.78em; text-align: left; margin-top: 0.3em;">
+                        <li class="fragment">путь до <code>C</code> через <code>D</code>: сначала <code>S-D</code>
+                            весом <code>5</code>, потом <code>D-C</code> весом <code>6</code> - итого
+                            <code>11</code></li>
+                        <li class="fragment">веса рёбер не бывают отрицательными, так что дальше путь может только
+                            <mark>стать длиннее</mark>
+                        </li>
+                        <li class="fragment">значит путь через <code>D</code> точно не короче <code>11</code></li>
+                        <li class="fragment">а прямой путь до <code>C</code> уже <code>2</code> - он <mark
+                                class="green">точно выигрывает</mark></li>
+                    </ul>
+                </section>
+
+                <!-- контрпример: длинная цепочка коротких рёбер vs короткий путь из двух рёбер до X -->
+                <section>
+                    <h2>А если путей много?</h2>
+                    <p class="fragment" style="font-size: 0.82em;">Кажется подозрительным: длинная цепочка из
+                        мелких шагов открывается раньше - вдруг она "обгонит" по времени более короткий путь?</p>
+                    <div style="display: flex; align-items: center; justify-content: center; gap: 1em;">
+                        <svg width="380" height="180" class="fragment">
+                            <g stroke="#8f8" stroke-width="2">
+                                <line x1="51.6" y1="78.9" x2="96.7" y2="48.9" />
+                                <line x1="126" y1="40" x2="169" y2="40" />
+                                <line x1="201" y1="40" x2="244" y2="40" />
+                                <line x1="273.8" y1="48.1" x2="327.8" y2="79.9" />
+                            </g>
+                            <g stroke="#f7a" stroke-width="2">
+                                <line x1="53.8" y1="96.7" x2="174" y2="139.3" />
+                                <line x1="206" y1="139.3" x2="326.2" y2="96.7" />
+                            </g>
+                            <g fill="#1c2030" stroke="#8ab" stroke-width="2">
+                                <circle cx="35" cy="90" r="20" />
+                                <circle cx="345" cy="90" r="20" />
+                            </g>
+                            <g fill="#2a2030" stroke="#8f8" stroke-width="2">
+                                <circle cx="110" cy="40" r="16" />
+                                <circle cx="185" cy="40" r="16" />
+                                <circle cx="260" cy="40" r="16" />
+                            </g>
+                            <circle cx="190" cy="145" r="17" fill="#2a2030" stroke="#f7a" stroke-width="2" />
+                            <g fill="#dde" font-size="16" text-anchor="middle">
+                                <text x="35" y="96">S</text>
+                                <text x="345" y="96">X</text>
+                            </g>
+                            <g fill="#dde" font-size="14" text-anchor="middle">
+                                <text x="110" y="45">A</text>
+                                <text x="185" y="45">B</text>
+                                <text x="260" y="45">C</text>
+                                <text x="190" y="150">D</text>
+                            </g>
+                            <g font-size="13" text-anchor="middle" fill="#8f8">
+                                <text x="64.7" y="48">2</text>
+                                <text x="147.5" y="21">2</text>
+                                <text x="222.5" y="21">2</text>
+                                <text x="309.6" y="48">2</text>
+                            </g>
+                            <g font-size="13" text-anchor="middle" fill="#f7a">
+                                <text x="107.8" y="125">3</text>
+                                <text x="272.2" y="125">3</text>
+                            </g>
+                        </svg>
+                    </div>
+                    <ul style="font-size: 0.72em; text-align: left; margin-top: 0.2em;">
+                        <li class="fragment">верхний путь <code>S-A-B-C-X</code>: четыре ребра по <code>2</code>,
+                            сумма <code>8</code></li>
+                        <li class="fragment">нижний путь <code>S-D-X</code>: два ребра по <code>3</code>, сумма
+                            <code>6</code> - он короче</li>
+                        <li class="fragment">но <code>A</code>, <code>B</code>, <code>C</code> открываются раньше
+                            <code>D</code> - у них меньше <code>dist</code>, то есть меньше накопленный путь
+                            <mark>от старта</mark>, а не вес последнего ребра</li>
+                    </ul>
+                    <div class="fragment opinion" style="margin-top: 0.5em;">
+                        Важен не порядок <mark>открытия соседей</mark>, а порядок <mark class="green">извлечения из
+                            очереди</mark> - а из очереди всегда забирают вершину с минимальным накопленным
+                        <code>dist</code> среди <mark>всех</mark> кандидатов, а не только новых
+                    </div>
+                </section>
+
+                <!-- разбор: X получит верное расстояние 6, а не 8, независимо от порядка открытия -->
+                <section>
+                    <h2>Что произойдёт с X</h2>
+                    <p class="fragment" style="font-size: 0.82em;">Важное уточнение: в очереди кандидатов хранится
+                        не вес одного ребра, а <mark>накопленное расстояние от старта</mark> - целиком весь путь
+                        до вершины.</p>
+                    <div style="display: flex; align-items: center; justify-content: center; gap: 1em;">
+                        <svg width="380" height="55" class="fragment">
+                            <g fill="#1c2030" stroke="#667" stroke-width="2">
+                                <rect x="10" y="5" width="52" height="40" rx="5" />
+                                <rect x="70" y="5" width="52" height="40" rx="5" />
+                                <rect x="130" y="5" width="52" height="40" rx="5" />
+                                <rect x="190" y="5" width="52" height="40" rx="5" />
+                                <rect x="250" y="5" width="52" height="40" rx="5" />
+                                <rect x="310" y="5" width="52" height="40" rx="5" stroke="#f7a"
+                                    stroke-dasharray="4 3" />
+                            </g>
+                            <g fill="#dde" font-size="14" text-anchor="middle">
+                                <text x="36" y="29">S(0)</text>
+                                <text x="96" y="29">A(2)</text>
+                                <text x="156" y="29">D(3)</text>
+                                <text x="216" y="29">B(4)</text>
+                                <text x="276" y="29">C(6)</text>
+                                <text x="336" y="29">X(6)</text>
+                            </g>
+                        </svg>
+                    </div>
+                    <ul style="font-size: 0.78em; text-align: left; margin-top: 0.3em;">
+                        <li class="fragment">из очереди всегда забирают запись с минимальным накопленным
+                            расстоянием - получается такой порядок извлечения: <code>S(0), A(2), D(3), B(4), C(6),
+                                X(6)</code>
+                        </li>
+                        <li class="fragment"><code>D</code> с <code>dist=3</code> извлекается раньше <code>C</code>
+                            с <code>dist=6</code>, хотя <code>C</code> открыли по цепочке раньше</li>
+                        <li class="fragment">когда обработали <code>D</code>, в очередь положили <code>X</code> с
+                            <code>dist=6</code></li>
+                        <li class="fragment"><code>X(6)</code> в очереди уже меньше, чем будущая релаксация от
+                            <code>C</code>: <code>6 + 2 = 8</code></li>
+                        <li class="fragment">поэтому <code>X</code> извлекается с расстоянием <code>6</code> первым,
+                            а запись <code>X(8)</code>, если она вообще появится, просто пропустится как
+                            устаревшая</li>
+                    </ul>
+                    <div class="fragment opinion" style="margin-top: 0.5em;">
+                        Порядок обработки задаёт не то, когда вершину впервые увидели, а то, какое накопленное
+                        расстояние у неё оказалось <mark class="green">минимальным</mark> в очереди
+                    </div>
+                </section>
+
+                <!-- понятие релаксации ребра: dist[v] = min(dist[v], dist[u] + w) -->
+                <section>
+                    <h2>Релаксация ребра</h2>
+                    <p class="fragment" style="font-size: 0.85em;">Основная операция алгоритма - попытка улучшить
+                        расстояние до соседа через текущую вершину.</p>
+                    <div style="display: flex; align-items: center; justify-content: center; gap: 1em;">
+                        <svg width="280" height="110" class="fragment">
+                            <line x1="55" y1="55" x2="205" y2="55" stroke="#667" stroke-width="2" />
+                            <g fill="#1c2030" stroke="#8ab" stroke-width="2">
+                                <circle cx="35" cy="55" r="20" />
+                                <circle cx="225" cy="55" r="20" />
+                            </g>
+                            <g fill="#dde" font-size="17" text-anchor="middle">
+                                <text x="35" y="61">u</text>
+                                <text x="225" y="61">v</text>
+                            </g>
+                            <text x="130" y="40" text-anchor="middle" fill="#f7a" font-size="16">w</text>
+                            <text x="35" y="92" text-anchor="middle" fill="#8f8" font-size="14">dist[u] = 3</text>
+                            <text x="225" y="92" text-anchor="middle" fill="#ffd54f" font-size="14">dist[v] = 9</text>
+                        </svg>
+                    </div>
+                    <ul style="font-size: 0.78em; text-align: left; margin-top: 0.3em;">
+                        <li class="fragment">до <code>u</code> уже знаем кратчайший путь длиной <code>3</code></li>
+                        <li class="fragment">ребро <code>u -&gt; v</code> весит <code>w</code>, скажем <code>4</code>
+                        </li>
+                        <li class="fragment">путь через <code>u</code> даёт <code>3 + 4 = 7</code> - это меньше
+                            текущих <code>9</code></li>
+                        <li class="fragment">значит обновляем: <code>dist[v]</code> становится <code>7</code></li>
+                    </ul>
+                    <p class="fragment" style="font-size: 0.78em; opacity: 0.85; margin-top: 0.4em;">Если бы путь
+                        через <code>u</code> оказался длиннее - оставили бы <code>dist[v]</code> как было.</p>
+                </section>
+
+                <!-- массив dist[], инициализация infinity кроме source -->
+                <section>
+                    <h2>Массив расстояний</h2>
+                    <p class="fragment" style="font-size: 0.85em;">Заводим массив <code>dist[]</code> - текущее
+                        лучшее известное расстояние от <code>source</code> до каждой вершины.</p>
+                    <div style="display: flex; align-items: center; justify-content: center; gap: 1em;">
+                        <svg width="360" height="90" class="fragment">
+                            <g fill="#1c2030" stroke="#667" stroke-width="2">
+                                <rect x="10" y="20" width="80" height="45" rx="5" />
+                                <rect x="95" y="20" width="80" height="45" rx="5" />
+                                <rect x="180" y="20" width="80" height="45" rx="5" />
+                                <rect x="265" y="20" width="80" height="45" rx="5" />
+                            </g>
+                            <g fill="#dde" font-size="13" text-anchor="middle">
+                                <text x="50" y="14">source</text>
+                                <text x="135" y="14">B</text>
+                                <text x="220" y="14">C</text>
+                                <text x="305" y="14">D</text>
+                            </g>
+                            <g font-size="16" text-anchor="middle">
+                                <text x="50" y="48" fill="#8f8">0</text>
+                                <text x="135" y="48" fill="#f7a">&#8734;</text>
+                                <text x="220" y="48" fill="#f7a">&#8734;</text>
+                                <text x="305" y="48" fill="#f7a">&#8734;</text>
+                            </g>
+                        </svg>
+                    </div>
+                    <p class="fragment" style="font-size: 0.78em; opacity: 0.85;">До самой стартовой вершины
+                        расстояние <code>0</code>. Пока вершина не достигнута - расстояние
+                        <mark>бесконечность</mark>.
+                    </p>
+                </section>
+
+                <!-- псевдокод алгоритма Дейкстры по шагам -->
+                <section>
+                    <h2>Алгоритм по шагам</h2>
+                    <div class="timeline" style="margin-top: 0.4em;">
+                        <div class="timeline-item fragment">
+                            <div class="timeline-label">1</div>
+                            <div class="timeline-arrow">-&gt;</div>
+                            <div class="timeline-desc"><code>dist[source] = 0</code>, остальные - бесконечность</div>
+                        </div>
+                        <div class="timeline-item fragment">
+                            <div class="timeline-label">2</div>
+                            <div class="timeline-arrow">-&gt;</div>
+                            <div class="timeline-desc">берём необработанную вершину с минимальным <code>dist</code>
+                            </div>
+                        </div>
+                        <div class="timeline-item fragment">
+                            <div class="timeline-label">3</div>
+                            <div class="timeline-arrow">-&gt;</div>
+                            <div class="timeline-desc">помечаем её обработанной, релаксируем все рёбра из неё</div>
+                        </div>
+                        <div class="timeline-item fragment">
+                            <div class="timeline-label">4</div>
+                            <div class="timeline-arrow">-&gt;</div>
+                            <div class="timeline-desc">повторяем, пока есть необработанные вершины</div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- пошаговая трассировка алгоритма на небольшом графе (5-6 вершин), таблица dist на каждом шаге -->
+                <section>
+                    <h2>Трассировка на графе</h2>
+                    <div style="display: flex; align-items: center; justify-content: center; gap: 1em;">
+                        <svg width="260" height="210" class="fragment">
+                            <g stroke="#667" stroke-width="2">
+                                <line x1="55" y1="45" x2="145" y2="45" />
+                                <line x1="35" y1="65" x2="35" y2="140" />
+                                <line x1="165" y1="65" x2="165" y2="140" />
+                                <line x1="55" y1="160" x2="145" y2="160" />
+                                <line x1="55" y1="50" x2="150" y2="145" />
+                            </g>
+                            <g fill="#1c2030" stroke="#8ab" stroke-width="2">
+                                <circle cx="35" cy="45" r="20" />
+                                <circle cx="165" cy="45" r="20" />
+                                <circle cx="35" cy="160" r="20" />
+                                <circle cx="165" cy="160" r="20" />
+                            </g>
+                            <g fill="#dde" font-size="17" text-anchor="middle">
+                                <text x="35" y="51">A</text>
+                                <text x="165" y="51">B</text>
+                                <text x="35" y="166">C</text>
+                                <text x="165" y="166">D</text>
+                            </g>
+                            <g font-size="15" text-anchor="middle" fill="#f7a">
+                                <text x="100" y="30">4</text>
+                                <text x="16" y="95">2</text>
+                                <text x="185" y="95">6</text>
+                                <text x="100" y="180">3</text>
+                                <text x="115" y="90">9</text>
+                            </g>
+                        </svg>
+                        <table style="font-size: 0.65em;">
+                            <tr>
+                                <td></td>
+                                <td><strong>A</strong></td>
+                                <td><strong>B</strong></td>
+                                <td><strong>C</strong></td>
+                                <td><strong>D</strong></td>
+                            </tr>
+                            <tr class="fragment">
+                                <td>старт</td>
+                                <td>0</td>
+                                <td>∞</td>
+                                <td>∞</td>
+                                <td>∞</td>
+                            </tr>
+                            <tr class="fragment">
+                                <td>после A</td>
+                                <td>0</td>
+                                <td>4</td>
+                                <td>2</td>
+                                <td>∞</td>
+                            </tr>
+                            <tr class="fragment">
+                                <td>после C</td>
+                                <td>0</td>
+                                <td>4</td>
+                                <td>2</td>
+                                <td>5</td>
+                            </tr>
+                            <tr class="fragment">
+                                <td>после B</td>
+                                <td>0</td>
+                                <td>4</td>
+                                <td>2</td>
+                                <td>5</td>
+                            </tr>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- наивный поиск минимума перебором по массиву, асимптотика O(V^2) -->
+                <section>
+                    <h2>Наивная реализация</h2>
+                    <p class="fragment" style="font-size: 0.85em;">Шаг 2 в алгоритме повторяется <code>V</code> раз,
+                        и каждый раз нужно найти вершину с минимальным <code>dist</code> среди необработанных.</p>
+                    <ul style="font-size: 0.78em; text-align: left; margin-top: 0.4em;">
+                        <li class="fragment">самый простой способ - пройтись по всем <code>V</code> вершинам и
+                            сравнить <code>dist</code></li>
+                        <li class="fragment">это перебор, то есть <code>O(V)</code> на каждый такой поиск</li>
+                        <li class="fragment">а поисков за весь алгоритм - <code>V</code> штук</li>
+                    </ul>
+                    <div class="fragment opinion" style="margin-top: 0.5em;">
+                        Итоговая асимптотика наивной реализации: <mark class="green">O(V²)</mark>
+                    </div>
+                </section>
+
+                <!-- вопрос: а можно быстрее? -->
+                <section>
+                    <h2>А можно быстрее?</h2>
+                    <p class="fragment" style="font-size: 0.9em;">При <code>V</code> в несколько тысяч вершин
+                        <code>O(V²)</code> уже <mark>миллионы операций</mark> - на многих задачах это слишком
+                        медленно.</p>
+                    <div class="fragment opinion" style="margin-top: 0.6em;">
+                        Узкое место - поиск минимума перебором. Нужна структура данных, которая отдаёт минимум
+                        <mark class="green">быстрее</mark>, чем за <code>O(V)</code>
+                    </div>
+                </section>
+
+            </section>
+
+            <!-- ЧАСТЬ 3: Куча -->
+            <section>
+
+                <section style="font-size: 70px; height: 100%; width: 100%">
+                    <div class="lesson-time">33</div>
+                    <div class="fragment">
+                        <h1 style="font-size: 1.3em;">Куча (min-heap)</h1>
+                    </div>
+                </section>
+
+                <!-- короткое введение термина "дерево" перед первым использованием: связный граф без циклов, растёт от корня вниз -->
+                <section>
+                    <h2>Что такое дерево</h2>
+                    <p class="fragment" style="font-size: 0.85em;">Дерево - это граф без циклов, где есть одна
+                        главная вершина - <mark>корень</mark> - а от неё вниз отходят остальные.</p>
+                    <div style="display: flex; align-items: center; justify-content: center; gap: 1em;">
+                        <svg width="220" height="130" class="fragment">
+                            <g stroke="#667" stroke-width="2">
+                                <line x1="110" y1="30" x2="55" y2="90" />
+                                <line x1="110" y1="30" x2="165" y2="90" />
+                            </g>
+                            <g fill="#1c2030" stroke="#8ab" stroke-width="2">
+                                <circle cx="110" cy="25" r="18" />
+                            </g>
+                            <g fill="#2a2030" stroke="#8f8" stroke-width="2">
+                                <circle cx="50" cy="95" r="16" />
+                                <circle cx="170" cy="95" r="16" />
+                            </g>
+                        </svg>
+                    </div>
+                    <ul style="font-size: 0.78em; text-align: left; margin-top: 0.3em;">
+                        <li class="fragment">у вершины ниже корня - один <mark>родитель</mark> выше неё</li>
+                        <li class="fragment">вершины ниже неё - её <mark>потомки</mark></li>
+                        <li class="fragment">если у каждой вершины не больше двух потомков - дерево называют
+                            <mark class="green">бинарным</mark></li>
+                    </ul>
+                </section>
+
+                <!-- что такое куча: бинарное дерево с инвариантом "родитель меньше потомков", хранится в массиве -->
+                <section>
+                    <h2>Что такое куча</h2>
+                    <p class="fragment" style="font-size: 0.85em;">Min-heap - это бинарное дерево с одним правилом:
+                        <mark>у родителя значение всегда меньше</mark>, чем у обоих потомков.</p>
+                    <div style="display: flex; align-items: center; justify-content: center; gap: 1em;">
+                        <svg width="260" height="175" class="fragment">
+                            <g stroke="#667" stroke-width="2">
+                                <line x1="130" y1="40" x2="70" y2="95" />
+                                <line x1="130" y1="40" x2="190" y2="95" />
+                                <line x1="70" y1="115" x2="30" y2="140" />
+                                <line x1="70" y1="115" x2="110" y2="140" />
+                            </g>
+                            <g fill="#1c2030" stroke="#8ab" stroke-width="2">
+                                <circle cx="130" cy="40" r="20" />
+                                <circle cx="70" cy="105" r="20" />
+                                <circle cx="190" cy="105" r="20" />
+                                <circle cx="30" cy="150" r="16" />
+                                <circle cx="110" cy="150" r="16" />
+                            </g>
+                            <g fill="#dde" font-size="16" text-anchor="middle">
+                                <text x="130" y="46">2</text>
+                                <text x="70" y="111">5</text>
+                                <text x="190" y="111">7</text>
+                                <text x="30" y="155" font-size="13">8</text>
+                                <text x="110" y="155" font-size="13">9</text>
+                            </g>
+                        </svg>
+                    </div>
+                    <ul style="font-size: 0.78em; text-align: left; margin-top: 0.3em;">
+                        <li class="fragment"><code>2</code> меньше <code>5</code> и <code>7</code> - корень всегда
+                            минимум всей кучи</li>
+                        <li class="fragment"><code>5</code> меньше своих потомков <code>8</code> и <code>9</code>
+                        </li>
+                        <li class="fragment">про порядок <code>8</code> и <code>9</code> между собой правило ничего
+                            не говорит</li>
+                    </ul>
+                    <div class="fragment opinion" style="margin-top: 0.5em;">
+                        Раз минимум всегда в корне - забрать его можно мгновенно.
+                        Вопрос только в том, как быстро дерево перестраивать при добавлении и удалении
+                    </div>
+                </section>
+
+                <!-- добавление элемента (push): вводный слайд -->
+                <section>
+                    <h2>Добавление элемента (push)</h2>
+                    <p class="fragment" style="font-size: 0.85em;">Новый элемент кладём в первое свободное место
+                        внизу дерева - и затем поднимаем его вверх, пока правило не выполнится.</p>
+                    <div class="fragment opinion" style="margin-top: 0.6em;">
+                        Добавим элемент <code>1</code> в кучу <code>2, 5, 7, 8, 9</code> и пройдём весь путь
+                        по шагам
+                    </div>
+                </section>
+
+                <!-- push, кадр 1: новый элемент 1 встал в свободное место под 7 -->
+                <section>
+                    <h2>Шаг 1: кладём в свободное место</h2>
+                    <div style="display: flex; align-items: center; justify-content: center; gap: 1em;">
+                        <svg width="280" height="185">
+                            <g stroke="#667" stroke-width="2">
+                                <line x1="117" y1="45.2" x2="83" y2="84.8" />
+                                <line x1="143" y1="45.2" x2="177" y2="84.8" />
+                                <line x1="58.2" y1="116.2" x2="39.4" y2="142.1" />
+                                <line x1="81.8" y1="116.2" x2="100.6" y2="142.1" />
+                                <line x1="201.8" y1="116.2" x2="220.6" y2="142.1" stroke="#f7a"
+                                    stroke-dasharray="4 3" />
+                            </g>
+                            <g fill="#1c2030" stroke="#8ab" stroke-width="2">
+                                <circle cx="130" cy="30" r="20" />
+                                <circle cx="70" cy="100" r="20" />
+                            </g>
+                            <circle cx="190" cy="100" r="20" fill="#2a2030" stroke="#f7a" stroke-width="2" />
+                            <g fill="#1c2030" stroke="#8ab" stroke-width="2">
+                                <circle cx="30" cy="155" r="16" />
+                                <circle cx="110" cy="155" r="16" />
+                            </g>
+                            <circle cx="230" cy="155" r="16" fill="#2a2030" stroke="#f7a" stroke-width="2"
+                                stroke-dasharray="4 3" />
+                            <g fill="#dde" font-size="16" text-anchor="middle">
+                                <text x="130" y="36">2</text>
+                                <text x="70" y="106">5</text>
+                                <text x="190" y="106">7</text>
+                            </g>
+                            <g fill="#dde" font-size="13" text-anchor="middle">
+                                <text x="30" y="160">8</text>
+                                <text x="110" y="160">9</text>
+                                <text x="230" y="160">1</text>
+                            </g>
+                        </svg>
+                    </div>
+                    <p style="font-size: 0.8em; text-align: center; margin-top: 0.3em;">Новый элемент <code>1</code>
+                        встал под вершиной <code>7</code> - это первое свободное место.</p>
+                </section>
+
+                <!-- push, кадр 2: сравниваем 1 с родителем 7, 1 меньше -> меняем местами -->
+                <section>
+                    <h2>Шаг 2: сравниваем с родителем</h2>
+                    <div style="display: flex; align-items: center; justify-content: center; gap: 1em;">
+                        <svg width="280" height="185">
+                            <g stroke="#667" stroke-width="2">
+                                <line x1="117" y1="45.2" x2="83" y2="84.8" />
+                                <line x1="58.2" y1="116.2" x2="39.4" y2="142.1" />
+                                <line x1="81.8" y1="116.2" x2="100.6" y2="142.1" />
+                            </g>
+                            <line x1="143" y1="45.2" x2="177" y2="84.8" stroke="#f7a" stroke-width="3" />
+                            <line x1="201.8" y1="116.2" x2="220.6" y2="142.1" stroke="#f7a" stroke-width="3" />
+                            <g fill="#1c2030" stroke="#8ab" stroke-width="2">
+                                <circle cx="130" cy="30" r="20" />
+                                <circle cx="70" cy="100" r="20" />
+                            </g>
+                            <circle cx="190" cy="100" r="20" fill="#2a2030" stroke="#f7a" stroke-width="2" />
+                            <g fill="#1c2030" stroke="#8ab" stroke-width="2">
+                                <circle cx="30" cy="155" r="16" />
+                                <circle cx="110" cy="155" r="16" />
+                            </g>
+                            <circle cx="230" cy="155" r="16" fill="#2a2030" stroke="#f7a" stroke-width="2" />
+                            <g fill="#dde" font-size="16" text-anchor="middle">
+                                <text x="130" y="36">2</text>
+                                <text x="70" y="106">5</text>
+                                <text x="190" y="106">7</text>
+                            </g>
+                            <g fill="#dde" font-size="13" text-anchor="middle">
+                                <text x="30" y="160">8</text>
+                                <text x="110" y="160">9</text>
+                                <text x="230" y="160">1</text>
+                            </g>
+                        </svg>
+                    </div>
+                    <p style="font-size: 0.8em; text-align: center; margin-top: 0.3em;"><code>1</code> меньше
+                        родителя <code>7</code> - правило нарушено, меняем их местами.</p>
+                </section>
+
+                <!-- push, кадр 3: 1 и 7 поменялись местами, сравниваем 1 с новым родителем 2 -->
+                <section>
+                    <h2>Шаг 3: продолжаем всплытие</h2>
+                    <div style="display: flex; align-items: center; justify-content: center; gap: 1em;">
+                        <svg width="280" height="185">
+                            <g stroke="#667" stroke-width="2">
+                                <line x1="117" y1="45.2" x2="83" y2="84.8" />
+                                <line x1="58.2" y1="116.2" x2="39.4" y2="142.1" />
+                                <line x1="81.8" y1="116.2" x2="100.6" y2="142.1" />
+                                <line x1="201.8" y1="116.2" x2="220.6" y2="142.1" />
+                            </g>
+                            <line x1="143" y1="45.2" x2="177" y2="84.8" stroke="#f7a" stroke-width="3" />
+                            <g fill="#1c2030" stroke="#8ab" stroke-width="2">
+                                <circle cx="130" cy="30" r="20" />
+                                <circle cx="70" cy="100" r="20" />
+                            </g>
+                            <circle cx="190" cy="100" r="20" fill="#2a2030" stroke="#f7a" stroke-width="2" />
+                            <g fill="#1c2030" stroke="#8ab" stroke-width="2">
+                                <circle cx="30" cy="155" r="16" />
+                                <circle cx="110" cy="155" r="16" />
+                                <circle cx="230" cy="155" r="16" />
+                            </g>
+                            <g fill="#dde" font-size="16" text-anchor="middle">
+                                <text x="130" y="36">2</text>
+                                <text x="70" y="106">5</text>
+                                <text x="190" y="106">1</text>
+                            </g>
+                            <g fill="#dde" font-size="13" text-anchor="middle">
+                                <text x="30" y="160">8</text>
+                                <text x="110" y="160">9</text>
+                                <text x="230" y="160">7</text>
+                            </g>
+                        </svg>
+                    </div>
+                    <p style="font-size: 0.8em; text-align: center; margin-top: 0.3em;"><code>1</code> теперь на
+                        месте <code>7</code>. Сравниваем с новым родителем - корнем <code>2</code>.</p>
+                </section>
+
+                <!-- push, кадр 4: 1 меньше 2, финальный обмен, 1 становится корнем -->
+                <section>
+                    <h2>Шаг 4: 1 становится корнем</h2>
+                    <div style="display: flex; align-items: center; justify-content: center; gap: 1em;">
+                        <svg width="280" height="185">
+                            <g stroke="#667" stroke-width="2">
+                                <line x1="117" y1="45.2" x2="83" y2="84.8" />
+                                <line x1="143" y1="45.2" x2="177" y2="84.8" />
+                                <line x1="58.2" y1="116.2" x2="39.4" y2="142.1" />
+                                <line x1="81.8" y1="116.2" x2="100.6" y2="142.1" />
+                                <line x1="201.8" y1="116.2" x2="220.6" y2="142.1" />
+                            </g>
+                            <circle cx="130" cy="30" r="20" fill="#2a2030" stroke="#8f8" stroke-width="2" />
+                            <g fill="#1c2030" stroke="#8ab" stroke-width="2">
+                                <circle cx="70" cy="100" r="20" />
+                                <circle cx="190" cy="100" r="20" />
+                                <circle cx="30" cy="155" r="16" />
+                                <circle cx="110" cy="155" r="16" />
+                                <circle cx="230" cy="155" r="16" />
+                            </g>
+                            <g fill="#dde" font-size="16" text-anchor="middle">
+                                <text x="130" y="36">1</text>
+                                <text x="70" y="106">5</text>
+                                <text x="190" y="106">2</text>
+                            </g>
+                            <g fill="#dde" font-size="13" text-anchor="middle">
+                                <text x="30" y="160">8</text>
+                                <text x="110" y="160">9</text>
+                                <text x="230" y="160">7</text>
+                            </g>
+                        </svg>
+                    </div>
+                    <p style="font-size: 0.8em; text-align: center; margin-top: 0.3em;"><code>1</code> меньше
+                        <code>2</code> - меняем ещё раз. <code>1</code> становится новым
+                        <mark class="green">корнем</mark>, дальше подниматься некуда.</p>
+                </section>
+
+                <!-- итог push -->
+                <section>
+                    <h2>Итог: всплытие</h2>
+                    <div class="fragment opinion" style="margin-top: 0.4em;">
+                        Это называется <mark>всплытие</mark>: новый элемент поднимается вверх, пока не найдёт
+                        родителя меньше себя (или не станет корнем)
+                    </div>
+                </section>
+
+                <!-- извлечение минимума (pop): вводный слайд -->
+                <section>
+                    <h2>Извлечение минимума (pop)</h2>
+                    <p class="fragment" style="font-size: 0.85em;">Минимум всегда в корне - его и забираем. Но
+                        дырку в корне надо чем-то закрыть.</p>
+                    <div class="fragment opinion" style="margin-top: 0.6em;">
+                        Возьмём кучу <code>1, 5, 2, 8, 9, 7</code> (ту, что получилась после push) и разберём
+                        <code>pop()</code> по шагам
+                    </div>
+                </section>
+
+                <!-- pop, кадр 1: забираем корень 1 -->
+                <section>
+                    <h2>Шаг 1: забираем корень</h2>
+                    <div style="display: flex; align-items: center; justify-content: center; gap: 1em;">
+                        <svg width="280" height="185">
+                            <g stroke="#667" stroke-width="2">
+                                <line x1="117" y1="45.2" x2="83" y2="84.8" />
+                                <line x1="143" y1="45.2" x2="177" y2="84.8" />
+                                <line x1="58.2" y1="116.2" x2="39.4" y2="142.1" />
+                                <line x1="81.8" y1="116.2" x2="100.6" y2="142.1" />
+                                <line x1="201.8" y1="116.2" x2="220.6" y2="142.1" />
+                            </g>
+                            <circle cx="130" cy="30" r="20" fill="#2a2030" stroke="#f7a" stroke-width="2"
+                                stroke-dasharray="4 3" />
+                            <g fill="#1c2030" stroke="#8ab" stroke-width="2">
+                                <circle cx="70" cy="100" r="20" />
+                                <circle cx="190" cy="100" r="20" />
+                                <circle cx="30" cy="155" r="16" />
+                                <circle cx="110" cy="155" r="16" />
+                                <circle cx="230" cy="155" r="16" />
+                            </g>
+                            <g fill="#dde" font-size="16" text-anchor="middle">
+                                <text x="130" y="36">1</text>
+                                <text x="70" y="106">5</text>
+                                <text x="190" y="106">2</text>
+                            </g>
+                            <g fill="#dde" font-size="13" text-anchor="middle">
+                                <text x="30" y="160">8</text>
+                                <text x="110" y="160">9</text>
+                                <text x="230" y="160">7</text>
+                            </g>
+                        </svg>
+                    </div>
+                    <p style="font-size: 0.8em; text-align: center; margin-top: 0.3em;">Забираем значение из
+                        корня - <code>1</code>. Это и есть ответ <code>pop()</code>.</p>
+                </section>
+
+                <!-- pop, кадр 2: последний элемент 7 переносится в корень -->
+                <section>
+                    <h2>Шаг 2: последний элемент - в корень</h2>
+                    <div style="display: flex; align-items: center; justify-content: center; gap: 1em;">
+                        <svg width="280" height="185">
+                            <g stroke="#667" stroke-width="2">
+                                <line x1="58.2" y1="116.2" x2="39.4" y2="142.1" />
+                                <line x1="81.8" y1="116.2" x2="100.6" y2="142.1" />
+                            </g>
+                            <line x1="117" y1="45.2" x2="83" y2="84.8" stroke="#f7a" stroke-width="3" />
+                            <line x1="143" y1="45.2" x2="177" y2="84.8" stroke="#f7a" stroke-width="3" />
+                            <circle cx="130" cy="30" r="20" fill="#2a2030" stroke="#f7a" stroke-width="2" />
+                            <g fill="#1c2030" stroke="#8ab" stroke-width="2">
+                                <circle cx="70" cy="100" r="20" />
+                                <circle cx="190" cy="100" r="20" />
+                                <circle cx="30" cy="155" r="16" />
+                                <circle cx="110" cy="155" r="16" />
+                            </g>
+                            <g fill="#dde" font-size="16" text-anchor="middle">
+                                <text x="130" y="36">7</text>
+                                <text x="70" y="106">5</text>
+                                <text x="190" y="106">2</text>
+                            </g>
+                            <g fill="#dde" font-size="13" text-anchor="middle">
+                                <text x="30" y="160">8</text>
+                                <text x="110" y="160">9</text>
+                            </g>
+                        </svg>
+                    </div>
+                    <p style="font-size: 0.8em; text-align: center; margin-top: 0.3em;">На освободившееся место
+                        ставим <mark>последний</mark> элемент дерева - <code>7</code>. Дерево снова полное, но
+                        правило могло нарушиться.</p>
+                </section>
+
+                <!-- pop, кадр 3: 7 больше меньшего потомка 2, меняем местами -->
+                <section>
+                    <h2>Шаг 3: сравниваем с потомками</h2>
+                    <div style="display: flex; align-items: center; justify-content: center; gap: 1em;">
+                        <svg width="280" height="185">
+                            <g stroke="#667" stroke-width="2">
+                                <line x1="117" y1="45.2" x2="83" y2="84.8" />
+                                <line x1="58.2" y1="116.2" x2="39.4" y2="142.1" />
+                                <line x1="81.8" y1="116.2" x2="100.6" y2="142.1" />
+                            </g>
+                            <line x1="143" y1="45.2" x2="177" y2="84.8" stroke="#f7a" stroke-width="3" />
+                            <g fill="#1c2030" stroke="#8ab" stroke-width="2">
+                                <circle cx="70" cy="100" r="20" />
+                            </g>
+                            <circle cx="130" cy="30" r="20" fill="#2a2030" stroke="#f7a" stroke-width="2" />
+                            <circle cx="190" cy="100" r="20" fill="#2a2030" stroke="#f7a" stroke-width="2" />
+                            <g fill="#1c2030" stroke="#8ab" stroke-width="2">
+                                <circle cx="30" cy="155" r="16" />
+                                <circle cx="110" cy="155" r="16" />
+                            </g>
+                            <g fill="#dde" font-size="16" text-anchor="middle">
+                                <text x="130" y="36">7</text>
+                                <text x="70" y="106">5</text>
+                                <text x="190" y="106">2</text>
+                            </g>
+                            <g fill="#dde" font-size="13" text-anchor="middle">
+                                <text x="30" y="160">8</text>
+                                <text x="110" y="160">9</text>
+                            </g>
+                        </svg>
+                    </div>
+                    <p style="font-size: 0.8em; text-align: center; margin-top: 0.3em;">У корня <code>7</code>
+                        два потомка: <code>5</code> и <code>2</code>. Меньший из них - <code>2</code>, и
+                        <code>7</code> больше него - меняем местами.</p>
+                </section>
+
+                <!-- pop, кадр 4: финальное дерево после погружения 7 -->
+                <section>
+                    <h2>Шаг 4: дерево восстановлено</h2>
+                    <div style="display: flex; align-items: center; justify-content: center; gap: 1em;">
+                        <svg width="280" height="185">
+                            <g stroke="#667" stroke-width="2">
+                                <line x1="117" y1="45.2" x2="83" y2="84.8" />
+                                <line x1="143" y1="45.2" x2="177" y2="84.8" />
+                                <line x1="58.2" y1="116.2" x2="39.4" y2="142.1" />
+                                <line x1="81.8" y1="116.2" x2="100.6" y2="142.1" />
+                            </g>
+                            <circle cx="130" cy="30" r="20" fill="#2a2030" stroke="#8f8" stroke-width="2" />
+                            <g fill="#1c2030" stroke="#8ab" stroke-width="2">
+                                <circle cx="70" cy="100" r="20" />
+                                <circle cx="190" cy="100" r="20" />
+                                <circle cx="30" cy="155" r="16" />
+                                <circle cx="110" cy="155" r="16" />
+                            </g>
+                            <g fill="#dde" font-size="16" text-anchor="middle">
+                                <text x="130" y="36">2</text>
+                                <text x="70" y="106">5</text>
+                                <text x="190" y="106">7</text>
+                            </g>
+                            <g fill="#dde" font-size="13" text-anchor="middle">
+                                <text x="30" y="160">8</text>
+                                <text x="110" y="160">9</text>
+                            </g>
+                        </svg>
+                    </div>
+                    <p style="font-size: 0.8em; text-align: center; margin-top: 0.3em;">У <code>7</code> на новом
+                        месте потомков нет - погружение остановилось. Правило кучи снова выполняется
+                        <mark class="green">везде</mark>.</p>
+                </section>
+
+                <!-- итог pop -->
+                <section>
+                    <h2>Итог: погружение</h2>
+                    <div class="fragment opinion" style="margin-top: 0.4em;">
+                        Это называется <mark>погружение</mark>: элемент из последней позиции опускается вниз,
+                        пока правило кучи снова не станет верным
+                    </div>
+                </section>
+
+                <!-- как куча хранится в массиве, и идея просеивания при push/pop -->
+                <section>
+                    <h2>Куча в массиве</h2>
+                    <p class="fragment" style="font-size: 0.85em;">Дерево не хранят указателями - его кладут в
+                        обычный список по уровням, слева направо.</p>
+                    <div style="display: flex; align-items: center; justify-content: center; gap: 1em;">
+                        <svg width="340" height="70" class="fragment">
+                            <g fill="#1c2030" stroke="#667" stroke-width="2">
+                                <rect x="10" y="10" width="52" height="45" rx="5" />
+                                <rect x="66" y="10" width="52" height="45" rx="5" />
+                                <rect x="122" y="10" width="52" height="45" rx="5" />
+                                <rect x="178" y="10" width="52" height="45" rx="5" />
+                                <rect x="234" y="10" width="52" height="45" rx="5" />
+                            </g>
+                            <g fill="#dde" font-size="16" text-anchor="middle">
+                                <text x="36" y="38">2</text>
+                                <text x="92" y="38">5</text>
+                                <text x="148" y="38">7</text>
+                                <text x="204" y="38">8</text>
+                                <text x="260" y="38">9</text>
+                            </g>
+                            <g fill="#888" font-size="11" text-anchor="middle">
+                                <text x="36" y="63">0</text>
+                                <text x="92" y="63">1</text>
+                                <text x="148" y="63">2</text>
+                                <text x="204" y="63">3</text>
+                                <text x="260" y="63">4</text>
+                            </g>
+                        </svg>
+                    </div>
+                    <ul style="font-size: 0.75em; text-align: left; margin-top: 0.3em;">
+                        <li class="fragment">потомки элемента с индексом <code>i</code> - это <code>2i + 1</code> и
+                            <code>2i + 2</code></li>
+                        <li class="fragment"><mark>push</mark>: кладём элемент в конец, потом "всплываем" -
+                            меняем местами с родителем, пока он больше</li>
+                        <li class="fragment"><mark>pop</mark>: забираем корень, на его место ставим последний
+                            элемент, потом "тонем" - меняем с меньшим потомком, пока не встанет на место</li>
+                    </ul>
+                </section>
+
+                <!-- заголовок: "Реализация кучи в Python" - далее live-coding класса Heap -->
+                <section>
+                    <h1>Реализация кучи в Python</h1>
+                </section>
+
+            </section>
+
+            <!-- итог: на чём остановились -->
+            <section>
+                <div class="lesson-time">45</div>
+                <h2>Что успели</h2>
+                <ul style="font-size: 0.82em;">
+                    <li class="fragment">разобрали, почему прошлые приёмы (0-1 BFS, разрезание рёбер) не подходят
+                        для произвольных весов</li>
+                    <li class="fragment">поняли жадную идею Дейкстры и почему она безопасна при неотрицательных
+                        весах</li>
+                    <li class="fragment">разобрали наивную реализацию за <code>O(V²)</code> и поняли, зачем нужна
+                        куча</li>
+                    <li class="fragment">написали класс <mark class="green">Heap</mark> с <code>push</code> и
+                        <code>pop</code></li>
+                </ul>
+                <div class="fragment opinion" style="margin-top: 0.8em;">На следующем занятии: пишем сам алгоритм
+                    Дейкстры на нашей куче, разбираем нюансы и решаем задачи на кратчайшие пути
+                </div>
+            </section>
+
         </div>
     </div>
+
     <script src="/utils/lib/js/head.min.js"></script>
     <script src="/utils/js/reveal.js"></script>
     <script>
         Reveal.initialize({
-            controls: true, progress: true, history: true, center: true,
-            transition: 'fade', transitionSpeed: 'fast',
+            controls: true,
+            progress: true,
+            history: true,
+            center: true,
+            transition: 'fade',
+            transitionSpeed: 'fast',
             dependencies: [
-                { src: '/utils/lib/js/classList.js', condition: function() { return !document.body.classList; } },
-                { src: '/utils/plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+                { src: '/utils/lib/js/classList.js', condition: function () { return !document.body.classList; } },
+                { src: '/utils/plugin/markdown/marked.js', condition: function () { return !!document.querySelector('[data-markdown]'); } },
+                { src: '/utils/plugin/markdown/markdown.js', condition: function () { return !!document.querySelector('[data-markdown]'); } },
+                { src: '/utils/plugin/highlight/highlight.js', async: true, callback: function () { hljs.initHighlightingOnLoad(); } },
                 { src: '/utils/plugin/zoom-js/zoom.js', async: true },
                 { src: '/utils/plugin/notes/notes.js', async: true }
             ]
@@ -45,4 +1158,5 @@
         Reveal.configure({ slideNumber: 'c/t' });
     </script>
 </body>
+
 </html>

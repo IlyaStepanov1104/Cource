@@ -1,0 +1,15 @@
+/* Занятие 33 - Дейкстра: реализация и задачи ЕГЭ/олимпиад */
+
+/* стрелка и метка timeline не должны сжиматься/переноситься при длинном описании */
+.timeline-item {
+    align-items: flex-start;
+}
+
+.timeline-item .timeline-arrow {
+    flex-shrink: 0;
+    white-space: nowrap;
+}
+
+.timeline-item .timeline-label {
+    flex-shrink: 0;
+}

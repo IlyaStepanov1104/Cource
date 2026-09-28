@@ -1,0 +1,1163 @@
+<!doctype html>
+<html lang="ru">
+
+<head>
+    <meta charset="utf-8">
+    <title>Занятие 33 - Дейкстра: реализация и задачи ЕГЭ/олимпиад</title>
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+
+    <link rel="stylesheet" href="/utils/css/reveal.css">
+    <link rel="stylesheet" href="/utils/lib/css/animate.css">
+    <link rel="stylesheet" href="/utils/css/theme/night.css" id="theme">
+    <link rel="stylesheet" href="/utils/lib/css/zenburn.css">
+    <link rel="stylesheet" href="/utils/css/custom-base.css">
+    <link rel="stylesheet" href="css-custom/custom.css">
+
+    <script>
+        var link = document.createElement('link');
+        link.rel = 'stylesheet'; link.type = 'text/css';
+        link.href = window.location.search.match(/print-pdf/gi)
+            ? '/utils/css/print/pdf.css'
+            : '/utils/css/print/paper.css';
+        document.getElementsByTagName('head')[0].appendChild(link);
+    </script>
+</head>
+
+<body>
+    <div class="reveal">
+        <div class="slides">
+
+            <!-- титульный слайд -->
+            <section style="font-size: 70px; height: 100%; width: 100%">
+                <div class="lesson-time">0</div>
+                <div class="fragment">
+                    <h1 class="animated" style="font-size: 1.5em;">Дейкстра: доделываем</h1>
+                    <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">Занятие 33</p>
+                </div>
+            </section>
+
+            <!-- напоминание с прошлого занятия -->
+            <section>
+                <div class="lesson-time">0</div>
+                <h2>На чём остановились</h2>
+                <p class="fragment" style="font-size: 0.85em;">В прошлый раз разобрали жадную идею Дейкстры,
+                    поняли, зачем нужна куча, и написали класс <code>Heap</code> с <code>push</code> и
+                    <code>pop</code>.</p>
+                <div class="fragment opinion" style="margin-top: 0.6em;">
+                    Сегодня: пишем сам алгоритм на нашей куче, разбираем нюансы и решаем задачи на кратчайшие
+                    пути
+                </div>
+            </section>
+
+            <!-- ЧАСТЬ 1: Алгоритм на куче -->
+            <section>
+
+                <section style="font-size: 70px; height: 100%; width: 100%">
+                    <div class="lesson-time">5</div>
+                    <div class="fragment">
+                        <h1 style="font-size: 1.3em;">Алгоритм на куче</h1>
+                    </div>
+                </section>
+
+                <!-- визуализация: вводный слайд, тот же граф что и раньше -->
+                <section>
+                    <h2>Тот же пример, теперь с кучей</h2>
+                    <p class="fragment" style="font-size: 0.85em;">Вернёмся к графу с прошлого занятия и пройдём
+                        Дейкстру заново - но теперь минимум будем брать из <mark class="green">кучи</mark>, а не
+                        перебором.</p>
+                    <div class="fragment opinion" style="margin-top: 0.6em;">
+                        Минимум теперь достаём не перебором, а из корня кучи - за <code>O(log V)</code> вместо
+                        <code>O(V)</code>
+                    </div>
+                </section>
+
+                <!-- кадр 1: старт, в куче только (0, A) -->
+                <section>
+                    <h2>Шаг 1: старт</h2>
+                    <div style="display: flex; align-items: center; justify-content: center; gap: 1.5em;">
+                        <svg width="260" height="210">
+                            <g stroke="#445" stroke-width="2">
+                                <line x1="55" y1="45" x2="145" y2="45" />
+                                <line x1="35" y1="65" x2="35" y2="140" />
+                                <line x1="165" y1="65" x2="165" y2="140" />
+                                <line x1="55" y1="160" x2="145" y2="160" />
+                                <line x1="50" y1="58.3" x2="150" y2="146.7" />
+                            </g>
+                            <g font-size="13" text-anchor="middle" fill="#f7a">
+                                <text x="100" y="38">4</text>
+                                <text x="20" y="105">2</text>
+                                <text x="180" y="105">6</text>
+                                <text x="100" y="175">3</text>
+                                <text x="112" y="95">9</text>
+                            </g>
+                            <circle cx="35" cy="45" r="20" fill="#2a2030" stroke="#f7a" stroke-width="2"
+                                stroke-dasharray="4 3" />
+                            <g fill="#1c2030" stroke="#556" stroke-width="2">
+                                <circle cx="165" cy="45" r="20" />
+                                <circle cx="35" cy="160" r="20" />
+                                <circle cx="165" cy="160" r="20" />
+                            </g>
+                            <g fill="#dde" font-size="17" text-anchor="middle">
+                                <text x="35" y="51">A</text>
+                            </g>
+                            <g fill="#889" font-size="17" text-anchor="middle">
+                                <text x="165" y="51">B</text>
+                                <text x="35" y="166">C</text>
+                                <text x="165" y="166">D</text>
+                            </g>
+                            <g font-size="14" text-anchor="middle" fill="#ffd54f">
+                                <text x="35" y="20">dist=0</text>
+                            </g>
+                            <g font-size="13" text-anchor="middle" fill="#667">
+                                <text x="165" y="20">∞</text>
+                                <text x="10" y="200">∞</text>
+                                <text x="190" y="200">∞</text>
+                            </g>
+                        </svg>
+                        <div>
+                            <p style="font-size: 0.65em; opacity: 0.7; margin-bottom: 0.3em;">куча</p>
+                            <svg width="140" height="60">
+                                <circle cx="70" cy="25" r="16" fill="#2a2030" stroke="#f7a" stroke-width="2"
+                                    stroke-dasharray="4 3" />
+                                <text x="70" y="30" text-anchor="middle" fill="#dde" font-size="12">0,A</text>
+                            </svg>
+                        </div>
+                    </div>
+                    <p style="font-size: 0.7em; margin-top: 0.3em;">В куче только <code>(0, A)</code></p>
+                </section>
+
+                <!-- кадр 2: обработали A, релаксация всех трёх соседей B(4), C(2), D(9) -->
+                <section>
+                    <h2>Шаг 2: обработали A</h2>
+                    <div style="display: flex; align-items: center; justify-content: center; gap: 1.5em;">
+                        <svg width="260" height="210">
+                            <g stroke="#f7a" stroke-width="3">
+                                <line x1="55" y1="45" x2="145" y2="45" />
+                                <line x1="35" y1="65" x2="35" y2="140" />
+                                <line x1="50" y1="58.3" x2="150" y2="146.7" />
+                            </g>
+                            <g stroke="#445" stroke-width="2">
+                                <line x1="165" y1="65" x2="165" y2="140" />
+                                <line x1="55" y1="160" x2="145" y2="160" />
+                            </g>
+                            <g font-size="13" text-anchor="middle" fill="#ffd54f">
+                                <text x="100" y="38">4</text>
+                                <text x="20" y="105">2</text>
+                                <text x="112" y="95">9</text>
+                            </g>
+                            <g font-size="13" text-anchor="middle" fill="#889">
+                                <text x="180" y="105">6</text>
+                                <text x="100" y="175">3</text>
+                            </g>
+                            <circle cx="35" cy="45" r="20" fill="#1c3020" stroke="#8f8" stroke-width="2" />
+                            <g fill="#2a2030" stroke="#f7a" stroke-width="2" stroke-dasharray="4 3">
+                                <circle cx="165" cy="45" r="20" />
+                                <circle cx="35" cy="160" r="20" />
+                                <circle cx="165" cy="160" r="20" />
+                            </g>
+                            <g fill="#dde" font-size="17" text-anchor="middle">
+                                <text x="35" y="51">A</text>
+                                <text x="165" y="51">B</text>
+                                <text x="35" y="166">C</text>
+                                <text x="165" y="166">D</text>
+                            </g>
+                            <g font-size="14" text-anchor="middle" fill="#8f8">
+                                <text x="35" y="20">dist=0</text>
+                            </g>
+                            <g font-size="14" text-anchor="middle" fill="#ffd54f">
+                                <text x="165" y="20">dist=4</text>
+                                <text x="10" y="200">dist=2</text>
+                                <text x="190" y="200">dist=9</text>
+                            </g>
+                        </svg>
+                        <div>
+                            <p style="font-size: 0.65em; opacity: 0.7; margin-bottom: 0.3em;">куча</p>
+                            <svg width="140" height="115">
+                                <g stroke="#667" stroke-width="2">
+                                    <line x1="61.4" y1="38.5" x2="43.6" y2="66.5" />
+                                    <line x1="78.6" y1="38.5" x2="96.4" y2="66.5" />
+                                </g>
+                                <g fill="#2a2030" stroke="#f7a" stroke-width="2">
+                                    <circle cx="70" cy="25" r="16" />
+                                    <circle cx="35" cy="80" r="16" />
+                                    <circle cx="105" cy="80" r="16" />
+                                </g>
+                                <g fill="#dde" font-size="11" text-anchor="middle">
+                                    <text x="70" y="29">2,C</text>
+                                    <text x="35" y="84">4,B</text>
+                                    <text x="105" y="84">9,D</text>
+                                </g>
+                            </svg>
+                        </div>
+                    </div>
+                    <p style="font-size: 0.7em; margin-top: 0.3em;"><code>A</code> обработана. У неё <mark>три
+                            соседа</mark> - в кучу легли <code>(4, B)</code>, <code>(2, C)</code> и <code>(9,
+                            D)</code> (прямое ребро <code>A-D</code>)</p>
+                </section>
+
+                <!-- кадр 3: обработали C (минимум в куче), релаксация C-D улучшает D до 5, старая запись (9,D) остаётся -->
+                <section>
+                    <h2>Шаг 3: обработали C</h2>
+                    <div style="display: flex; align-items: center; justify-content: center; gap: 1.5em;">
+                        <svg width="260" height="210">
+                            <g stroke="#f7a" stroke-width="3">
+                                <line x1="55" y1="160" x2="145" y2="160" />
+                            </g>
+                            <g stroke="#445" stroke-width="2">
+                                <line x1="55" y1="45" x2="145" y2="45" />
+                                <line x1="35" y1="65" x2="35" y2="140" />
+                                <line x1="165" y1="65" x2="165" y2="140" />
+                                <line x1="50" y1="58.3" x2="150" y2="146.7" />
+                            </g>
+                            <g font-size="13" text-anchor="middle" fill="#889">
+                                <text x="100" y="38">4</text>
+                                <text x="20" y="105">2</text>
+                                <text x="180" y="105">6</text>
+                                <text x="112" y="95">9</text>
+                            </g>
+                            <g font-size="13" text-anchor="middle" fill="#ffd54f">
+                                <text x="100" y="150">3</text>
+                            </g>
+                            <g fill="#1c3020" stroke="#8f8" stroke-width="2">
+                                <circle cx="35" cy="45" r="20" />
+                                <circle cx="35" cy="160" r="20" />
+                            </g>
+                            <circle cx="165" cy="45" r="20" fill="#1c2030" stroke="#556" stroke-width="2" />
+                            <circle cx="165" cy="160" r="20" fill="#2a2030" stroke="#f7a" stroke-width="2"
+                                stroke-dasharray="4 3" />
+                            <g fill="#dde" font-size="17" text-anchor="middle">
+                                <text x="35" y="51">A</text>
+                                <text x="35" y="166">C</text>
+                                <text x="165" y="166">D</text>
+                            </g>
+                            <g fill="#889" font-size="17" text-anchor="middle">
+                                <text x="165" y="51">B</text>
+                            </g>
+                            <g font-size="14" text-anchor="middle" fill="#8f8">
+                                <text x="35" y="20">dist=0</text>
+                                <text x="10" y="200">dist=2</text>
+                            </g>
+                            <g font-size="14" text-anchor="middle" fill="#556">
+                                <text x="165" y="20">dist=4</text>
+                            </g>
+                            <g font-size="14" text-anchor="middle" fill="#ffd54f">
+                                <text x="190" y="200">dist=5</text>
+                            </g>
+                        </svg>
+                        <div>
+                            <p style="font-size: 0.65em; opacity: 0.7; margin-bottom: 0.3em;">куча</p>
+                            <svg width="140" height="115">
+                                <g stroke="#667" stroke-width="2">
+                                    <line x1="61.4" y1="38.5" x2="43.6" y2="66.5" />
+                                    <line x1="78.6" y1="38.5" x2="96.4" y2="66.5" />
+                                </g>
+                                <g fill="#1c2030" stroke="#8ab" stroke-width="2">
+                                    <circle cx="70" cy="25" r="16" />
+                                </g>
+                                <g fill="#2a2030" stroke="#f7a" stroke-width="2" stroke-dasharray="4 3">
+                                    <circle cx="35" cy="80" r="16" />
+                                </g>
+                                <circle cx="105" cy="80" r="16" fill="#2a2030" stroke="#889" stroke-width="2" />
+                                <g fill="#dde" font-size="11" text-anchor="middle">
+                                    <text x="70" y="29">4,B</text>
+                                    <text x="35" y="84">5,D</text>
+                                    <text x="105" y="84">9,D</text>
+                                </g>
+                            </svg>
+                        </div>
+                    </div>
+                    <p style="font-size: 0.7em; margin-top: 0.3em;">Минимум в куче - <code>(2, C)</code>.
+                        Релаксация <code>C-D</code>: <code>2 + 3 = 5</code> меньше старых <code>9</code> -
+                        кладём новую запись <code>(5, D)</code>, старая <code>(9, D)</code> остаётся в куче</p>
+                </section>
+
+                <!-- кадр 4: достаём (4, B), релаксация B-D не улучшает (10 > 5) -->
+                <section>
+                    <h2>Шаг 4: пробуем B</h2>
+                    <div style="display: flex; align-items: center; justify-content: center; gap: 1.5em;">
+                        <svg width="260" height="210">
+                            <g stroke="#f7a" stroke-width="3" stroke-dasharray="3 3">
+                                <line x1="165" y1="65" x2="165" y2="140" />
+                            </g>
+                            <g stroke="#445" stroke-width="2">
+                                <line x1="55" y1="45" x2="145" y2="45" />
+                                <line x1="35" y1="65" x2="35" y2="140" />
+                                <line x1="55" y1="160" x2="145" y2="160" />
+                                <line x1="50" y1="58.3" x2="150" y2="146.7" />
+                            </g>
+                            <g font-size="13" text-anchor="middle" fill="#889">
+                                <text x="100" y="38">4</text>
+                                <text x="20" y="105">2</text>
+                                <text x="100" y="175">3</text>
+                                <text x="112" y="95">9</text>
+                            </g>
+                            <g font-size="13" text-anchor="middle" fill="#f7a">
+                                <text x="180" y="105">6</text>
+                            </g>
+                            <g fill="#1c3020" stroke="#8f8" stroke-width="2">
+                                <circle cx="35" cy="45" r="20" />
+                                <circle cx="35" cy="160" r="20" />
+                            </g>
+                            <circle cx="165" cy="45" r="20" fill="#2a2030" stroke="#f7a" stroke-width="2"
+                                stroke-dasharray="4 3" />
+                            <circle cx="165" cy="160" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+                            <g fill="#dde" font-size="17" text-anchor="middle">
+                                <text x="35" y="51">A</text>
+                                <text x="35" y="166">C</text>
+                                <text x="165" y="51">B</text>
+                                <text x="165" y="166">D</text>
+                            </g>
+                            <g font-size="14" text-anchor="middle" fill="#8f8">
+                                <text x="35" y="20">dist=0</text>
+                                <text x="10" y="200">dist=2</text>
+                            </g>
+                            <g font-size="14" text-anchor="middle" fill="#ffd54f">
+                                <text x="165" y="20">dist=4</text>
+                            </g>
+                            <g font-size="14" text-anchor="middle" fill="#dde">
+                                <text x="190" y="200">dist=5</text>
+                            </g>
+                        </svg>
+                        <div>
+                            <p style="font-size: 0.65em; opacity: 0.7; margin-bottom: 0.3em;">куча</p>
+                            <svg width="140" height="100">
+                                <g stroke="#667" stroke-width="2">
+                                    <line x1="61.4" y1="38.5" x2="43.6" y2="66.5" />
+                                </g>
+                                <circle cx="70" cy="25" r="16" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+                                <circle cx="35" cy="80" r="16" fill="#2a2030" stroke="#889" stroke-width="2" />
+                                <g fill="#dde" font-size="11" text-anchor="middle">
+                                    <text x="70" y="29">5,D</text>
+                                    <text x="35" y="84">9,D</text>
+                                </g>
+                            </svg>
+                        </div>
+                    </div>
+                    <p style="font-size: 0.7em; margin-top: 0.3em;">Достаём <code>(4, B)</code>. Путь через
+                        <code>B-D</code>: <code>4 + 6 = 10</code> - это <mark>больше</mark> текущих <code>5</code>,
+                        не обновляем</p>
+                </section>
+
+                <!-- кадр 5: обработали D с dist=5, куча ещё не пуста - там устаревшая (9,D) -->
+                <section>
+                    <h2>Шаг 5: обработали D</h2>
+                    <div style="display: flex; align-items: center; justify-content: center; gap: 1.5em;">
+                        <svg width="260" height="210">
+                            <g stroke="#445" stroke-width="2">
+                                <line x1="55" y1="45" x2="145" y2="45" />
+                                <line x1="35" y1="65" x2="35" y2="140" />
+                                <line x1="165" y1="65" x2="165" y2="140" />
+                                <line x1="55" y1="160" x2="145" y2="160" />
+                                <line x1="50" y1="58.3" x2="150" y2="146.7" />
+                            </g>
+                            <g font-size="13" text-anchor="middle" fill="#889">
+                                <text x="100" y="38">4</text>
+                                <text x="20" y="105">2</text>
+                                <text x="180" y="105">6</text>
+                                <text x="100" y="175">3</text>
+                                <text x="112" y="95">9</text>
+                            </g>
+                            <g fill="#1c3020" stroke="#8f8" stroke-width="2">
+                                <circle cx="35" cy="45" r="20" />
+                                <circle cx="165" cy="45" r="20" />
+                                <circle cx="35" cy="160" r="20" />
+                            </g>
+                            <circle cx="165" cy="160" r="20" fill="#2a2030" stroke="#f7a" stroke-width="2"
+                                stroke-dasharray="4 3" />
+                            <g fill="#dde" font-size="17" text-anchor="middle">
+                                <text x="35" y="51">A</text>
+                                <text x="165" y="51">B</text>
+                                <text x="35" y="166">C</text>
+                                <text x="165" y="166">D</text>
+                            </g>
+                            <g font-size="14" text-anchor="middle" fill="#8f8">
+                                <text x="35" y="20">dist=0</text>
+                                <text x="165" y="20">dist=4</text>
+                                <text x="10" y="200">dist=2</text>
+                            </g>
+                            <g font-size="14" text-anchor="middle" fill="#ffd54f">
+                                <text x="190" y="200">dist=5</text>
+                            </g>
+                        </svg>
+                        <div>
+                            <p style="font-size: 0.65em; opacity: 0.7; margin-bottom: 0.3em;">куча</p>
+                            <svg width="140" height="60">
+                                <circle cx="70" cy="25" r="16" fill="#2a2030" stroke="#889" stroke-width="2"
+                                    stroke-dasharray="4 3" />
+                                <text x="70" y="29" text-anchor="middle" fill="#dde" font-size="11">9,D</text>
+                            </svg>
+                        </div>
+                    </div>
+                    <p style="font-size: 0.7em; margin-top: 0.3em;">Достаём <code>(5, D)</code>, обрабатываем.
+                        В куче осталась старая запись <code>(9, D)</code></p>
+                </section>
+
+                <!-- кадр 6: достаём устаревшую (9,D), D уже visited - пропускаем, куча пуста, конец -->
+                <section>
+                    <h2>Шаг 6: устаревшая запись</h2>
+                    <div style="display: flex; align-items: center; justify-content: center; gap: 1.5em;">
+                        <svg width="260" height="210">
+                            <g stroke="#445" stroke-width="2">
+                                <line x1="55" y1="45" x2="145" y2="45" />
+                                <line x1="35" y1="65" x2="35" y2="140" />
+                                <line x1="165" y1="65" x2="165" y2="140" />
+                                <line x1="55" y1="160" x2="145" y2="160" />
+                                <line x1="50" y1="58.3" x2="150" y2="146.7" />
+                            </g>
+                            <g font-size="13" text-anchor="middle" fill="#889">
+                                <text x="100" y="38">4</text>
+                                <text x="20" y="105">2</text>
+                                <text x="180" y="105">6</text>
+                                <text x="100" y="175">3</text>
+                                <text x="112" y="95">9</text>
+                            </g>
+                            <g fill="#1c3020" stroke="#8f8" stroke-width="2">
+                                <circle cx="35" cy="45" r="20" />
+                                <circle cx="165" cy="45" r="20" />
+                                <circle cx="35" cy="160" r="20" />
+                                <circle cx="165" cy="160" r="20" />
+                            </g>
+                            <g fill="#dde" font-size="17" text-anchor="middle">
+                                <text x="35" y="51">A</text>
+                                <text x="165" y="51">B</text>
+                                <text x="35" y="166">C</text>
+                                <text x="165" y="166">D</text>
+                            </g>
+                            <g font-size="14" text-anchor="middle" fill="#8f8">
+                                <text x="35" y="20">dist=0</text>
+                                <text x="165" y="20">dist=4</text>
+                                <text x="10" y="200">dist=2</text>
+                                <text x="190" y="200">dist=5</text>
+                            </g>
+                        </svg>
+                        <div>
+                            <p style="font-size: 0.65em; opacity: 0.7; margin-bottom: 0.3em;">куча</p>
+                            <svg width="140" height="60">
+                                <text x="70" y="35" text-anchor="middle" fill="#667" font-size="14">пусто</text>
+                            </svg>
+                        </div>
+                    </div>
+                    <p style="font-size: 0.7em; margin-top: 0.3em;">Достаём <code>(9, D)</code> - но
+                        <code>D</code> уже <mark>обработана</mark>, пропускаем эту запись. Куча пуста - алгоритм
+                        <mark class="green">завершён</mark></p>
+                </section>
+
+                <!-- разбор кода построчно: push/pop из кучи, проверка visited, релаксация соседей -->
+                <section>
+                    <h2>Что должен делать код</h2>
+                    <div class="timeline" style="margin-top: 0.4em;">
+                        <div class="timeline-item fragment">
+                            <div class="timeline-label">достать</div>
+                            <div class="timeline-arrow">-&gt;</div>
+                            <div class="timeline-desc">вытащить из кучи запись с минимальным расстоянием</div>
+                        </div>
+                        <div class="timeline-item fragment">
+                            <div class="timeline-label">проверить</div>
+                            <div class="timeline-arrow">-&gt;</div>
+                            <div class="timeline-desc">если вершина уже обработана - пропустить эту запись</div>
+                        </div>
+                        <div class="timeline-item fragment">
+                            <div class="timeline-label">пометить</div>
+                            <div class="timeline-arrow">-&gt;</div>
+                            <div class="timeline-desc">отметить вершину обработанной</div>
+                        </div>
+                        <div class="timeline-item fragment">
+                            <div class="timeline-label">пройтись</div>
+                            <div class="timeline-arrow">-&gt;</div>
+                            <div class="timeline-desc">по всем соседям - и для каждого попробовать релаксацию</div>
+                        </div>
+                        <div class="timeline-item fragment">
+                            <div class="timeline-label">улучшил?</div>
+                            <div class="timeline-arrow">-&gt;</div>
+                            <div class="timeline-desc">если да - положить соседа в кучу с новым расстоянием</div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- обработка "устаревших" записей в куче (lazy deletion) -->
+                <section>
+                    <h2>Устаревшие записи в куче</h2>
+                    <p class="fragment" style="font-size: 0.85em;">Одна и та же вершина может попасть в кучу
+                        <mark>несколько раз</mark> - с разными расстояниями, если её путь улучшился позже.
+                    </p>
+                    <ul style="font-size: 0.78em; text-align: left; margin-top: 0.4em;">
+                        <li class="fragment">вместо удаления старой записи - просто оставляем её в куче</li>
+                        <li class="fragment">при извлечении проверяем <code>visited[u]</code></li>
+                        <li class="fragment">если уже обработана - пропускаем, <code>continue</code></li>
+                    </ul>
+                    <div class="fragment opinion" style="margin-top: 0.6em;">
+                        Это называется <mark class="green">ленивое удаление</mark> - проще, чем чинить кучу
+                        на лету, и не портит асимптотику
+                    </div>
+                </section>
+
+                <!-- нюанс: в куче лежат пары (dist, vertex), сравнение кортежей корректно, но вершины должны быть сравнимого типа -->
+                <section>
+                    <h2>Что на самом деле кладём в кучу</h2>
+                    <p class="fragment" style="font-size: 0.85em;">Наш класс <code>Heap</code> сравнивал числа. Но
+                        в Дейкстре в кучу кладём <mark>пары</mark>: <code>(dist, vertex)</code>.</p>
+                    <div class="fragment opinion" style="margin-top: 0.5em;">
+                        В Python пары (кортежи) сравниваются <mark>по порядку элементов</mark>: сначала
+                        <code>dist</code>, и только если они равны - <code>vertex</code>
+                    </div>
+                    <ul style="font-size: 0.78em; text-align: left; margin-top: 0.5em;">
+                        <li class="fragment"><code>(3, 'B')</code> меньше <code>(5, 'A')</code> - сравнили только
+                            <code>dist</code></li>
+                        <li class="fragment"><code>(5, 'A')</code> меньше <code>(5, 'B')</code> - <code>dist</code>
+                            равны, сравнили <code>vertex</code></li>
+                        <li class="fragment">значит правило кучи <mark class="green">не ломается</mark> - куча просто
+                            сортирует пары целиком</li>
+                    </ul>
+                </section>
+
+                <!-- предупреждение: сравнение вершин разных типов при равном dist даёт TypeError -->
+                <section>
+                    <h2>Подводный камень</h2>
+                    <p class="fragment" style="font-size: 0.85em;">Сравнение по <code>vertex</code> сработает, только
+                        если все вершины <mark>одного типа</mark> и их можно сравнивать между собой.</p>
+                    <ul style="font-size: 0.78em; text-align: left; margin-top: 0.4em;">
+                        <li class="fragment">вершины - числа <code>0, 1, 2, ...</code> - сравниваются как числа,
+                            всё работает</li>
+                        <li class="fragment">если бы вершины были буквами <code>'A', 'B'</code> - сравнивались бы
+                            как строки, тоже сработало бы</li>
+                        <li class="fragment">а вот если бы одна вершина была числом, а другая - строкой, при
+                            <mark>равном</mark> <code>dist</code> Python упал бы с <code>TypeError</code></li>
+                    </ul>
+                    <div class="fragment opinion" style="margin-top: 0.6em;">
+                        В наших задачах вершины всегда пронумерованы <code>0..n-1</code>, так что мы в
+                        безопасности - но в общем случае об этом нужно помнить
+                    </div>
+                </section>
+
+                <!-- заголовок: "Реализация алгоритма Дейкстры" - далее live-coding реализации -->
+                <section>
+                    <h1>Реализация алгоритма Дейкстры</h1>
+                </section>
+
+                <!-- модуль heapq: не нужно каждый раз писать свой класс Heap вручную -->
+                <section>
+                    <h2>В реальном коде - модуль heapq</h2>
+                    <p class="fragment" style="font-size: 0.85em;">Свой класс <code>Heap</code> мы написали, чтобы
+                        понять, <mark>как</mark> куча устроена внутри. В боевом коде это делать не нужно - в
+                        Python уже есть готовый модуль.</p>
+                    <ul style="font-size: 0.78em; text-align: left; margin-top: 0.4em;">
+                        <li class="fragment"><code>import heapq</code> - min-heap прямо поверх обычного списка
+                        </li>
+                        <li class="fragment"><code>heapq.heappush(heap, item)</code> вместо нашего
+                            <code>push</code></li>
+                        <li class="fragment"><code>heapq.heappop(heap)</code> вместо нашего <code>pop</code>
+                        </li>
+                    </ul>
+                    <div class="fragment opinion" style="margin-top: 0.6em;">
+                        Тот же принцип всплытия и погружения, только уже <mark class="green">написан,
+                            протестирован и оптимизирован</mark> за нас
+                    </div>
+                </section>
+
+            </section>
+
+            <!-- ЧАСТЬ 2: Нюансы, сложность, сравнение -->
+            <section>
+
+                <section style="font-size: 70px; height: 100%; width: 100%">
+                    <div class="lesson-time">25</div>
+                    <div class="fragment">
+                        <h1 style="font-size: 1.3em;">Нюансы и сравнение</h1>
+                    </div>
+                </section>
+
+                <!-- сложность алгоритма: O((V + E) log V) с бинарной кучей -->
+                <section>
+                    <h2>Сложность алгоритма</h2>
+                    <p class="fragment" style="font-size: 0.85em;">Сам алгоритм не поменялся: та же идея "взять
+                        минимум, релаксировать соседей". Поменялась только <mark>структура хранения</mark>
+                        кандидатов - а с ней и то, сколько раз выполняется цикл.</p>
+                    <div class="compare fragment" style="margin-top: 0.4em;">
+                        <div class="compare-block">
+                            <h3>Массив (было)</h3>
+                            <ul class="opinion" style="font-size: 0.7em;">
+                                <li class="circle">одна ячейка <mark>на вершину</mark> - размер всегда
+                                    <code>V</code></li>
+                                <li class="minus">цикл идёт ровно <code>V</code> раз (по разу на вершину)</li>
+                                <li class="minus">на каждой итерации - перебор всех <code>V</code> ячеек</li>
+                                <li class="minus">итого <code>V</code> шагов по <code>O(V)</code> =
+                                    <code>O(V²)</code></li>
+                            </ul>
+                        </div>
+                        <div class="compare-block">
+                            <h3>Куча (стало)</h3>
+                            <ul class="opinion" style="font-size: 0.72em;">
+                                <li class="circle">запись <mark>на каждую релаксацию</mark>, а не на вершину -
+                                    старые не удаляем</li>
+                                <li class="plus">релаксаций за весь алгоритм не больше <code>O(E)</code> - значит
+                                    и pop'ов <code>O(V+E)</code></li>
+                                <li class="plus">каждый pop/push - <code>O(log V)</code></li>
+                                <li class="plus">итого <code>O(V+E)</code> шагов по <code>O(log V)</code> =
+                                    <code>O((V+E) log V)</code></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 0.5em;">
+                        В массиве мы искусственно ограничили себя одной записью на вершину - поэтому шагов
+                        <mark>мало</mark> (<code>V</code>), но каждый <mark>дорогой</mark> (<code>O(V)</code>).
+                        В куче записей <mark>больше</mark> (<code>V+E</code>, из-за дублей), зато каждая
+                        <mark class="green">дешёвая</mark> (<code>O(log V)</code>)
+                    </div>
+                </section>
+
+                <!-- числовое сравнение количества операций для разных n на разреженном графе (E ~ 2V) -->
+                <section>
+                    <h2>Как обычно выглядит граф</h2>
+                    <p class="fragment" style="font-size: 0.82em;">В полном графе ребер - n*(n-1)/2, в дереве - n-1. На примере ниже 12 вершин и 20 ребер (1.7n)</p>
+                    <div style="display: flex; align-items: center; justify-content: center; gap: 1em;">
+                        <svg width="260" height="180" class="fragment">
+                            <g stroke="#556" stroke-width="1.5" opacity="0.8">
+                                <line x1="130" y1="20" x2="165" y2="29.4" />
+                                <line x1="165" y1="29.4" x2="190.6" y2="55" /> 
+                                <line x1="190.6" y1="55" x2="200" y2="90" />
+                                <line x1="200" y1="90" x2="190.6" y2="125" />
+                                <line x1="190.6" y1="125" x2="165" y2="150.6" />
+                                <line x1="165" y1="150.6" x2="130" y2="160" />
+                                <line x1="130" y1="160" x2="95" y2="150.6" />
+                                <line x1="95" y1="150.6" x2="69.4" y2="125" />
+                                <line x1="69.4" y1="125" x2="60" y2="90" />
+                                <line x1="60" y1="90" x2="69.4" y2="55" />
+                                <line x1="69.4" y1="55" x2="95" y2="29.4" />
+                                <line x1="95" y1="29.4" x2="130" y2="20" />
+                            </g>
+                            <g stroke="#667" stroke-width="1.2" opacity="0.6">
+                                <line x1="130" y1="20" x2="165" y2="150.6" />
+                                <line x1="165" y1="29.4" x2="130" y2="160" />
+                                <line x1="190.6" y1="55" x2="95" y2="150.6" />
+                                <line x1="200" y1="90" x2="69.4" y2="125" />
+                                <line x1="130" y1="20" x2="60" y2="90" />
+                                <line x1="190.6" y1="125" x2="95" y2="29.4" />
+                                <line x1="190.6" y1="55" x2="69.4" y2="55" />
+                                <line x1="130" y1="160" x2="60" y2="90" />
+                            </g>
+                            <g fill="#1c2030" stroke="#8ab" stroke-width="2">
+                                <circle cx="130" cy="20" r="9" />
+                                <circle cx="165" cy="29.4" r="9" />
+                                <circle cx="190.6" cy="55" r="9" />
+                                <circle cx="200" cy="90" r="9" />
+                                <circle cx="190.6" cy="125" r="9" />
+                                <circle cx="165" cy="150.6" r="9" />
+                                <circle cx="130" cy="160" r="9" />
+                                <circle cx="95" cy="150.6" r="9" />
+                                <circle cx="69.4" cy="125" r="9" />
+                                <circle cx="60" cy="90" r="9" />
+                                <circle cx="69.4" cy="55" r="9" />
+                                <circle cx="95" cy="29.4" r="9" />
+                            </g>
+                        </svg>
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 0.4em;">
+                        Именно такие графы - <mark>с рёбер в 1.5-3 раза больше, чем вершин</mark> - встречаются
+                        чаще всего: карты дорог, социальные связи, компьютерные сети
+                    </div>
+                </section>
+
+                <!-- вывод формулы отношения O(V^2) к O((V+E) log V) при E = 2V -->
+                <section>
+                    <h2>Во сколько раз куча быстрее</h2>
+                    <p class="fragment" style="font-size: 0.85em;">Возьмём типичный разреженный граф, где рёбер
+                        примерно в 2 раза больше вершин: <code>E &#8776; 2V</code>.</p>
+                    <ul style="font-size: 0.78em; text-align: left; margin-top: 0.4em;">
+                        <li class="fragment">массив: <code>O(V&sup2;)</code></li>
+                        <li class="fragment">куча: <code>O((V + E) log V)</code>, подставляем
+                            <code>E = 2V</code>: <code>O((V + 2V) log V) = O(V log V)</code> - множитель
+                            <code>3</code> в O-нотации не пишут, он не влияет на порядок роста</li>
+                        <li class="fragment">отношение порядков роста: <code>V&sup2; / (V log V) = V / log
+                                V</code></li>
+                    </ul>
+                    <div class="fragment opinion" style="margin-top: 0.5em;">
+                        Точный коэффициент ("во сколько раз быстрее") зависит от скрытых констант, которые есть
+                        у обеих сторон - а вот <mark>порядок роста</mark> отношения посчитать можно честно
+                    </div>
+                </section>
+
+                <!-- итоговая формула -->
+                <section>
+                    <h2>Формула ускорения</h2>
+                    <div class="fragment opinion" style="font-size: 1.3em; text-align: center; margin-top: 0.5em;">
+                        разрыв между массивом и кучей растёт как <b<code>V / log V</code>
+                    </div>
+                    <p class="fragment" style="font-size: 0.8em; margin-top: 0.8em;">Числитель растёт
+                        <mark>линейно</mark>, знаменатель - только <mark>логарифмически</mark>. Значит с ростом
+                        <code>V</code> разрыв увеличивается <mark class="green">без предела</mark>, даже если не
+                        знать точные константы.</p>
+                </section>
+
+                <!-- график y = x / log x, log-log шкала -->
+                <section>
+                    <h2>Как растёт разрыв</h2>
+                    <p class="fragment" style="font-size: 0.8em;">График <code>y = V / log V</code> на линейной
+                        шкале для <code>V</code> от <code>0</code> до <code>10 000</code>.</p>
+                    <div class="fragment" style="display: flex; align-items: center; justify-content: center;">
+                        <img src="assets/heap-speedup-graph.png" alt="график V / log V"
+                            style="max-width: 65%; border-radius: 0.4em;">
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 0.3em;">
+                        Кривая растёт <mark>без плато</mark> - чем больше граф, тем сильнее куча выигрывает у
+                        массива
+                    </div>
+                </section>
+
+                <!-- сравнение самих величин V^2 и V log V для разных n -->
+                <section>
+                    <h2>Сколько это на практике</h2>
+                    <p class="fragment" style="font-size: 0.82em;">Сравним сами величины <code>V&sup2;</code> и
+                        <code>V log V</code> - без точных констант, только порядок роста.</p>
+                    <table style="font-size: 0.75em; width: 100%; margin-top: 0.4em;">
+                        <tr>
+                            <td><strong>V</strong></td>
+                            <td><strong>V&sup2;</strong></td>
+                            <td><strong>V log V</strong></td>
+                        </tr>
+                        <tr class="fragment">
+                            <td>100</td>
+                            <td>10 000</td>
+                            <td>~700</td>
+                        </tr>
+                        <tr class="fragment">
+                            <td>1 000</td>
+                            <td>1 000 000</td>
+                            <td>~10 000</td>
+                        </tr>
+                        <tr class="fragment">
+                            <td>10 000</td>
+                            <td>100 000 000</td>
+                            <td>~130 000</td>
+                        </tr>
+                        <tr class="fragment">
+                            <td>100 000</td>
+                            <td>10 000 000 000</td>
+                            <td>~1 700 000</td>
+                        </tr>
+                    </table>
+                    <div class="fragment opinion" style="margin-top: 0.6em;">
+                        Это не точное число операций (константы у обеих сторон свои), но порядок разницы виден
+                        сразу - при <code>V=100 000</code> <code>V&sup2;</code> уже физически не считается за
+                        разумное время, а <code>V log V</code> - легко
+                    </div>
+                </section>
+
+                <!-- почему Дейкстра не работает с отрицательными весами: контрпример -->
+                <section>
+                    <h2>Почему не работает с отрицательными весами</h2>
+                    <div style="display: flex; align-items: center; justify-content: center; gap: 1.2em;">
+                        <svg width="260" height="150" class="fragment">
+                            <g stroke="#667" stroke-width="2">
+                                <line x1="55" y1="50" x2="145" y2="50" />
+                                <line x1="55" y1="55" x2="220" y2="115" />
+                                <line x1="165" y1="65" x2="220" y2="105" />
+                            </g>
+                            <g fill="#1c2030" stroke="#8ab" stroke-width="2">
+                                <circle cx="35" cy="50" r="20" />
+                                <circle cx="165" cy="50" r="20" />
+                                <circle cx="235" cy="115" r="20" />
+                            </g>
+                            <g fill="#dde" font-size="17" text-anchor="middle">
+                                <text x="35" y="56">A</text>
+                                <text x="165" y="56">B</text>
+                                <text x="235" y="121">C</text>
+                            </g>
+                            <g font-size="15" text-anchor="middle">
+                                <text x="100" y="35" fill="#8f8">5</text>
+                                <text x="130" y="95" fill="#8f8">8</text>
+                                <text x="215" y="70" fill="#e55">-6</text>
+                            </g>
+                        </svg>
+                        <ul style="font-size: 0.68em; text-align: left;">
+                            <li class="fragment">Дейкстра обработает <code>B</code> с <code>dist=5</code> и
+                                <mark>закроет</mark> её навсегда
+                            </li>
+                            <li class="fragment">но путь <code>A-&gt;C-&gt;B</code> = <code>8 + (-6) = 2</code> -
+                                короче!
+                            </li>
+                            <li class="fragment"><code>B</code> уже обработана, пересмотра не будет</li>
+                            <li class="fragment">ответ окажется <mark>неверным</mark></li>
+                        </ul>
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 0.5em;">
+                        Жадность работает только потому, что ближе не может стать <mark>ещё ближе</mark> -
+                        отрицательные веса это ломают
+                    </div>
+                </section>
+
+                <!-- сравнение: BFS vs 0-1 BFS vs Дейкстра - когда что применять -->
+                <section>
+                    <h2>BFS vs 0-1 BFS vs Дейкстра</h2>
+                    <table style="font-size: 0.78em; width: 100%; margin-top: 0.4em;">
+                        <tr>
+                            <td><strong>алгоритм</strong></td>
+                            <td><strong>веса</strong></td>
+                            <td><strong>сложность</strong></td>
+                        </tr>
+                        <tr class="fragment">
+                            <td>BFS</td>
+                            <td>все рёбра равны</td>
+                            <td><code>O(V + E)</code></td>
+                        </tr>
+                        <tr class="fragment">
+                            <td>0-1 BFS</td>
+                            <td>только <code>0</code> и <code>1</code></td>
+                            <td><code>O(V + E)</code></td>
+                        </tr>
+                        <tr class="fragment">
+                            <td>Дейкстра</td>
+                            <td>любые неотрицательные</td>
+                            <td><code>O((V+E) log V)</code></td>
+                        </tr>
+                    </table>
+                    <div class="fragment opinion" style="margin-top: 0.7em;">
+                        Каждый следующий алгоритм умеет строго <mark>больше</mark> предыдущего -
+                        но платит за это временем работы
+                    </div>
+                </section>
+
+                <!-- восстановление самого пути через массив parent -->
+                <section>
+                    <h2>Восстановление пути</h2>
+                    <p class="fragment" style="font-size: 0.85em;">Алгоритм находит только <mark>длину</mark>
+                        кратчайшего пути. Чтобы восстановить сам путь, при каждой удачной релаксации нужно
+                        запоминать, из какой вершины пришли.</p>
+                    <div style="display: flex; align-items: center; justify-content: center; gap: 1em;">
+                        <svg width="300" height="90" class="fragment">
+                            <g stroke="#667" stroke-width="2">
+                                <line x1="55" y1="45" x2="135" y2="45" />
+                                <line x1="165" y1="45" x2="245" y2="45" />
+                            </g>
+                            <g fill="#1c2030" stroke="#8ab" stroke-width="2">
+                                <circle cx="35" cy="45" r="20" />
+                                <circle cx="150" cy="45" r="20" />
+                                <circle cx="265" cy="45" r="20" />
+                            </g>
+                            <g fill="#dde" font-size="15" text-anchor="middle">
+                                <text x="35" y="51">source</text>
+                                <text x="150" y="51">C</text>
+                                <text x="265" y="51">B</text>
+                            </g>
+                            <g font-size="13" text-anchor="middle" fill="#ffd54f">
+                                <text x="95" y="30">parent[C] = source</text>
+                                <text x="205" y="30">parent[B] = C</text>
+                            </g>
+                        </svg>
+                    </div>
+                    <p class="fragment" style="font-size: 0.78em; opacity: 0.85;">Путь восстанавливаем от конечной
+                        вершины: смотрим её <code>parent</code>, потом <code>parent</code> этого <code>parent</code>,
+                        и так до <code>source</code>, а затем разворачиваем получившийся список.</p>
+                </section>
+
+                <!-- практические задачи, где применяется Дейкстра (карты, роутинг, игры) -->
+                <section>
+                    <h2>Где применяется на практике</h2>
+                    <ul style="font-size: 0.8em; text-align: left; display: inline-block;">
+                        <li class="fragment">навигаторы и карты - построение маршрута</li>
+                        <li class="fragment">роутинг пакетов в компьютерных сетях</li>
+                        <li class="fragment">игры - поиск пути для NPC с разной ценой клеток</li>
+                        <li class="fragment">любая задача с "минимальной ценой" при положительных весах</li>
+                    </ul>
+                </section>
+
+            </section>
+
+            <!-- ЧАСТЬ 3: ЕГЭ/олимпиады - задачи на кратчайшие пути -->
+            <section>
+
+                <section style="font-size: 70px; height: 100%; width: 100%">
+                    <div class="lesson-time">45</div>
+                    <div class="fragment">
+                        <h1 style="font-size: 1.3em;">ЕГЭ и олимпиады</h1>
+                        <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">задачи на кратчайшие пути</p>
+                    </div>
+                </section>
+
+                <!-- ЕГЭ №19 формат: таблица маршрутов вместо графа, найти кратчайший путь -->
+                <section>
+                    <h2>Формат ЕГЭ: таблица вместо графа</h2>
+                    <p class="fragment" style="font-size: 0.85em;">В задачах ЕГЭ граф часто дают не картинкой, а
+                        <mark>таблицей соединений</mark> или списком дорог с расстояниями.</p>
+                    <table style="font-size: 0.8em; width: 60%; margin: 0.6em auto 0;">
+                        <tr>
+                            <td></td>
+                            <td><strong>A</strong></td>
+                            <td><strong>B</strong></td>
+                            <td><strong>C</strong></td>
+                            <td><strong>D</strong></td>
+                        </tr>
+                        <tr class="fragment">
+                            <td><strong>A</strong></td>
+                            <td>-</td>
+                            <td>4</td>
+                            <td>-</td>
+                            <td>7</td>
+                        </tr>
+                        <tr class="fragment">
+                            <td><strong>B</strong></td>
+                            <td>4</td>
+                            <td>-</td>
+                            <td>2</td>
+                            <td>-</td>
+                        </tr>
+                        <tr class="fragment">
+                            <td><strong>C</strong></td>
+                            <td>-</td>
+                            <td>2</td>
+                            <td>-</td>
+                            <td>3</td>
+                        </tr>
+                        <tr class="fragment">
+                            <td><strong>D</strong></td>
+                            <td>7</td>
+                            <td>-</td>
+                            <td>3</td>
+                            <td>-</td>
+                        </tr>
+                    </table>
+                    <div class="fragment opinion" style="margin-top: 0.6em;">
+                        Первый шаг - <mark>перевести таблицу в список смежности</mark>, дальше это обычная
+                        Дейкстра
+                    </div>
+                </section>
+
+                <!-- ЕГЭ задача 1: кратчайший путь A -> D по таблице выше, решаем в блокноте -->
+                <section>
+                    <h2>Задача 1</h2>
+                    <p style="font-size: 0.85em;">По таблице с прошлого слайда найти длину кратчайшего пути из
+                        города <code>A</code> в город <code>D</code>.</p>
+                    <ul style="font-size: 0.75em; text-align: left; margin-top: 0.4em;">
+                        <li class="fragment">переводим таблицу в список смежности</li>
+                        <li class="fragment">заводим <code>dist[]</code> и запускаем Дейкстру из <code>A</code>
+                        </li>
+                        <li class="fragment">берём итоговое <code>dist[D]</code></li>
+                    </ul>
+                    <div class="fragment opinion" style="margin-top: 0.6em;">
+                        Ответ: <mark class="green">7</mark>
+                    </div>
+                </section>
+
+                <!-- ЕГЭ задача 2: кратчайший путь A -> C, решаем в блокноте -->
+                <section>
+                    <h2>Задача 2</h2>
+                    <p style="font-size: 0.85em;">По той же таблице найти длину кратчайшего пути из города
+                        <code>A</code> в город <code>C</code>.</p>
+                    <ul style="font-size: 0.75em; text-align: left; margin-top: 0.4em;">
+                        <li class="fragment">список смежности уже есть с прошлой задачи - функцию Дейкстры
+                            переиспользуем</li>
+                        <li class="fragment">меняем только конечную вершину при чтении ответа:
+                            <code>dist[C]</code></li>
+                    </ul>
+                    <div class="fragment opinion" style="margin-top: 0.6em;">
+                        Ответ: <mark class="green">6</mark>
+                    </div>
+                </section>
+
+                <!-- ЕГЭ задание 23: реальная задача с sdamgia, граф до 200 рёбер из текстового файла, нужна программа -->
+                <section>
+                    <h2>А если вершин 200?</h2>
+                    <p class="fragment" style="font-size: 0.85em;">Реальное <a
+                            href="https://inf-ege.sdamgia.ru/test?theme=430" target="_blank" rel="noopener">задание
+                            23 ЕГЭ</a> (№92565): граф до 200 рёбер, описание - в текстовом файле. В уме такое
+                        уже не прогонишь.</p>
+                    <ul style="font-size: 0.78em; text-align: left; margin-top: 0.4em;">
+                        <li class="fragment">каждая строка файла: <code>L M W</code> - ребро из <code>L</code> в
+                            <code>M</code> весом <code>W</code></li>
+                        <li class="fragment">граф <mark>ориентированный</mark> и <mark>ациклический</mark>,
+                            веса - вещественные числа</li>
+                        <li class="fragment">найти целую часть длины кратчайшего пути из вершины <code>1</code>
+                            в вершину <code>100</code></li>
+                    </ul>
+                    <div class="fragment opinion" style="margin-top: 0.5em;">
+                        Здесь без Дейкстры (или похожего алгоритма) и кода <mark>не обойтись</mark> - именно
+                        это мы сегодня и написали
+                    </div>
+                </section>
+
+                <!-- постановка задачи с несколькими источниками, до идеи фиктивной вершины -->
+                <section>
+                    <h2>Задача: город и пожарные станции</h2>
+                    <p class="fragment" style="font-size: 0.85em;">В городе <mark>несколько</mark> пожарных
+                        станций сразу. Для каждого дома нужно найти время, за которое доедет <mark
+                            class="green">ближайшая</mark> из них.</p>
+                    <p class="fragment" style="font-size: 0.85em;">Наивная идея: запустить Дейкстру
+                        <mark>отдельно</mark> из каждой станции, а потом взять минимум по всем запускам для
+                        каждого дома.</p>
+                    <div class="fragment opinion" style="margin-top: 0.5em;">
+                        Если станций <code>K</code>, это <code>K</code> полных запусков Дейкстры - дорого,
+                        особенно если станций много
+                    </div>
+                </section>
+
+                <!-- решение: фиктивная вершина, тот же трюк что multi-source BFS -->
+                <section>
+                    <h2>Один запуск вместо K</h2>
+                    <p class="fragment" style="font-size: 0.85em;">Хочется получить ответ <mark>за один</mark>
+                        проход Дейкстры, как будто все станции - это уже одна общая точка старта.</p>
+                    <ul style="font-size: 0.78em; text-align: left; margin-top: 0.4em;">
+                        <li class="fragment">в самом начале кладём в кучу <mark>сразу все</mark> станции, а не
+                            одну</li>
+                        <li class="fragment">у каждой из них <code>dist = 0</code> - они уже "источник"</li>
+                        <li class="fragment">дальше алгоритм не меняется: как обычно достаём минимум и
+                            релаксируем соседей</li>
+                    </ul>
+                    <div class="fragment opinion" style="margin-top: 0.6em;">
+                        Это тот же трюк, что multi-source BFS (несколько стартов сразу в очереди) - только
+                        теперь очередь <mark>с приоритетом</mark>, потому что веса не все одинаковые
+                    </div>
+                </section>
+
+                <!-- практика: конкретный граф с двумя станциями, решаем в блокноте -->
+                <section>
+                    <h2>Прогоним на конкретном графе</h2>
+                    <p style="font-size: 0.85em;">5 домов <code>A, B, C, D, E</code>, станции - в <code>A</code>
+                        и <code>E</code>. Дороги: <code>A-B=3</code>, <code>B-C=4</code>, <code>C-D=2</code>,
+                        <code>D-E=3</code>, <code>B-D=6</code>.</p>
+                    <p class="fragment" style="font-size: 0.85em;">Найти для каждого дома время до
+                        <mark>ближайшей</mark> станции.</p>
+                    <ul style="font-size: 0.75em; text-align: left; margin-top: 0.4em;">
+                        <li class="fragment">в куче сразу два старта: <code>(0, A)</code> и <code>(0, E)</code>
+                        </li>
+                        <li class="fragment"><code>dist[]</code> и <code>visited[]</code> - как обычно, по
+                            одному на весь граф, а не по одному на каждую станцию</li>
+                        <li class="fragment">дальше алгоритм ровно тот же, что уже писали</li>
+                    </ul>
+                    <div class="fragment opinion" style="margin-top: 0.6em;">
+                        Ответ: <code>A=0, B=3, C=5, D=3, E=0</code>
+                    </div>
+                </section>
+
+                <!-- постановка задачи: сеть дорог с ограничением на количество пересадок -->
+                <section>
+                    <h2>А если ограничить число пересадок?</h2>
+                    <p class="fragment" style="font-size: 0.85em;">Частый олимпиадный вариант: найти кратчайший
+                        (или дешевейший) путь, но <mark>не более K</mark> промежуточных остановок.</p>
+                    <p class="fragment" style="font-size: 0.85em;">Обычная Дейкстра про число пересадок ничего
+                        не знает - она видит только <code>dist</code> и <code>vertex</code>.</p>
+                    <div class="fragment opinion" style="margin-top: 0.5em;">
+                        Значит чего-то не хватает в том, что мы <mark>храним</mark> про каждое состояние
+                    </div>
+                </section>
+
+                <!-- разбор: расширяем состояние счётчиком пересадок -->
+                <section>
+                    <h2>Расширяем состояние</h2>
+                    <div class="compare fragment" style="margin-top: 0.4em;">
+                        <div class="compare-block">
+                            <h3>Обычная Дейкстра</h3>
+                            <ul class="opinion" style="font-size: 0.7em;">
+                                <li class="circle">в куче: <code>(dist, vertex)</code></li>
+                                <li class="circle"><code>visited[vertex]</code> - одна запись на вершину</li>
+                                <li class="circle">как только вершина обработана - к ней больше не
+                                    возвращаемся</li>
+                            </ul>
+                        </div>
+                        <div class="compare-block">
+                            <h3>С ограничением пересадок</h3>
+                            <ul class="opinion" style="font-size: 0.7em;">
+                                <li class="circle">в куче: <code>(dist, vertex, stops)</code></li>
+                                <li class="circle"><code>visited[vertex][stops]</code> - на пару</li>
+                                <li class="circle">к вершине можно вернуться с <mark>другим</mark> числом
+                                    пересадок</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 0.5em;">
+                        Разница ровно в одном - что мы считаем <mark class="green">"состоянием"</mark>: не
+                        только вершина, а вершина плюс число пересадок, с которым мы в неё пришли
+                    </div>
+                </section>
+
+                <!-- пошаговый план модифицированного алгоритма -->
+                <section>
+                    <h2>Алгоритм по шагам</h2>
+                    <div class="timeline" style="margin-top: 0.4em;">
+                        <div class="timeline-item fragment">
+                            <div class="timeline-label">старт</div>
+                            <div class="timeline-arrow">-&gt;</div>
+                            <div class="timeline-desc">в кучу кладём <code>(0, src, 0)</code> - расстояние,
+                                вершина, пересадок пока 0</div>
+                        </div>
+                        <div class="timeline-item fragment">
+                            <div class="timeline-label">достать</div>
+                            <div class="timeline-arrow">-&gt;</div>
+                            <div class="timeline-desc">вытащить из кучи запись с минимальным <code>dist</code>
+                            </div>
+                        </div>
+                        <div class="timeline-item fragment">
+                            <div class="timeline-label">проверить</div>
+                            <div class="timeline-arrow">-&gt;</div>
+                            <div class="timeline-desc">если для этой пары <code>(vertex, stops)</code> уже
+                                нашли путь не хуже - пропустить запись</div>
+                        </div>
+                        <div class="timeline-item fragment">
+                            <div class="timeline-label">пересадки?</div>
+                            <div class="timeline-arrow">-&gt;</div>
+                            <div class="timeline-desc">если <code>stops == K</code> - дальше идти нельзя,
+                                соседей не трогаем</div>
+                        </div>
+                        <div class="timeline-item fragment">
+                            <div class="timeline-label">иначе</div>
+                            <div class="timeline-arrow">-&gt;</div>
+                            <div class="timeline-desc">для каждого соседа кладём в кучу <code>(dist + w,
+                                    neighbor, stops + 1)</code></div>
+                        </div>
+                        <div class="timeline-item fragment">
+                            <div class="timeline-label">ответ</div>
+                            <div class="timeline-arrow">-&gt;</div>
+                            <div class="timeline-desc">первая извлечённая из кучи запись с <code>vertex ==
+                                    dst</code> и даёт минимальную цену</div>
+                        </div>
+                    </div>
+                </section>
+
+            </section>
+
+            <!-- домашнее задание: условие 787 текстом, без картинки -->
+            <section>
+                <div class="lesson-time">88</div>
+                <h2>Домашнее задание</h2>
+                <h3 style="font-size: 0.75em;"><a
+                        href="https://leetcode.com/problems/cheapest-flights-within-k-stops/" target="_blank"
+                        rel="noopener">787. Cheapest Flights Within K Stops</a></h3>
+                <div style="font-size: 0.78em; text-align: left; margin-top: 0.6em;">
+                    <p class="fragment"><code>n</code> городов, пронумерованных от <code>0</code> до
+                        <code>n - 1</code>, соединены рейсами с ценой. Дан список рейсов <code>[from, to,
+                            price]</code>.
+                    </p>
+                    <p class="fragment">Дан город вылета <code>src</code>, город прилёта <code>dst</code> и
+                        число <code>K</code> - максимум пересадок.</p>
+                    <p class="fragment">Найди <mark>самую дешёвую</mark> цену перелёта из <code>src</code> в
+                        <code>dst</code> не более чем с <code>K</code> пересадками. Если такого маршрута нет -
+                        верни <code>-1</code>.</p>
+                </div>
+            </section>
+
+        </div>
+    </div>
+
+    <script src="/utils/lib/js/head.min.js"></script>
+    <script src="/utils/js/reveal.js"></script>
+    <script>
+        Reveal.initialize({
+            controls: true,
+            progress: true,
+            history: true,
+            center: true,
+            transition: 'fade',
+            transitionSpeed: 'fast',
+            dependencies: [
+                { src: '/utils/lib/js/classList.js', condition: function () { return !document.body.classList; } },
+                { src: '/utils/plugin/markdown/marked.js', condition: function () { return !!document.querySelector('[data-markdown]'); } },
+                { src: '/utils/plugin/markdown/markdown.js', condition: function () { return !!document.querySelector('[data-markdown]'); } },
+                { src: '/utils/plugin/highlight/highlight.js', async: true, callback: function () { hljs.initHighlightingOnLoad(); } },
+                { src: '/utils/plugin/zoom-js/zoom.js', async: true },
+                { src: '/utils/plugin/notes/notes.js', async: true }
+            ]
+        });
+        Reveal.configure({ slideNumber: 'c/t' });
+    </script>
+</body>
+
+</html>

@@ -608,8 +608,8 @@
     {
       "number": 32,
       "title": "Алгоритм Дейкстры",
-      "date": "2026-09-24T15:00:00",
-      "duration": 90,
+      "date": "2026-09-27T11:00:00",
+      "duration": 60,
       "presentations": [
         {
           "title": "Презентация",
@@ -619,25 +619,42 @@
       ],
       "homeworks": [
         {
-          "title": "743. Network Delay Time",
-          "description": "Классическая задача на Дейкстру: найди время, за которое сигнал дойдёт до всех узлов сети.",
-          "link": "https://leetcode.com/problems/network-delay-time/"
+          "title": "Визуализатор кучи",
+          "description": "Поиграть и изучить визуализатор кучи - как устроены push и pop, как куча хранится в массиве.",
+          "link": "https://cuuduongthancong.com/~galles/visualization/Heap.html"
+        },
+        {
+          "title": "Визуализатор кучи (2)",
+          "description": "Ещё один визуализатор кучи - для сравнения и закрепления.",
+          "link": "https://coddy.tech/visualize/data-structures/heap"
         }
       ]
     },
     {
       "number": 33,
       "title": "ЕГЭ/олимпиады: кратчайшие пути",
-      "date": "2026-09-29T15:00:00",
-      "duration": 60,
-      "presentations": [],
-      "homeworks": []
+      "date": "2026-09-28T18:00:00",
+      "duration": 90,
+      "presentations": [
+        {
+          "title": "Презентация",
+          "link": "/lessons/33-dijkstra-continued/",
+          "order": 1
+        }
+      ],
+      "homeworks": [
+        {
+          "title": "787. Cheapest Flights Within K Stops",
+          "description": "Дейкстра с расширенным состоянием: в очередь кладём не просто (dist, vertex), а ещё и число оставшихся пересадок. Найти самый дешёвый перелёт из src в dst не более чем с K пересадками.",
+          "link": "https://leetcode.com/problems/cheapest-flights-within-k-stops/"
+        }
+      ]
     },
     {
       "number": 34,
       "title": "Bellman-Ford + отрицательные веса",
-      "date": "2026-10-01T15:00:00",
-      "duration": 90,
+      "date": "2026-10-04T11:00:00",
+      "duration": 60,
       "presentations": [
         {
           "title": "Презентация",
@@ -645,19 +662,13 @@
           "order": 1
         }
       ],
-      "homeworks": [
-        {
-          "title": "787. Cheapest Flights Within K Stops",
-          "description": "Найди самый дешёвый перелёт из A в B с не более чем K пересадками. Bellman-Ford с ограничением на количество рёбер.",
-          "link": "https://leetcode.com/problems/cheapest-flights-within-k-stops/"
-        }
-      ]
+      "homeworks": []
     },
     {
       "number": 35,
       "title": "Практика: сравнение алгоритмов кратчайших путей",
       "date": "2026-10-06T15:00:00",
-      "duration": 60,
+      "duration": 90,
       "presentations": [],
       "homeworks": []
     },
@@ -665,7 +676,7 @@
       "number": 36,
       "title": "Floyd-Warshall",
       "date": "2026-10-08T15:00:00",
-      "duration": 90,
+      "duration": 60,
       "presentations": [
         {
           "title": "Презентация",
@@ -685,7 +696,7 @@
       "number": 37,
       "title": "Практика: DSU на задачах",
       "date": "2026-10-13T15:00:00",
-      "duration": 60,
+      "duration": 90,
       "presentations": [],
       "homeworks": []
     },
@@ -693,7 +704,7 @@
       "number": 38,
       "title": "Union-Find (DSU)",
       "date": "2026-10-15T15:00:00",
-      "duration": 90,
+      "duration": 60,
       "presentations": [
         {
           "title": "Презентация",
@@ -713,7 +724,7 @@
       "number": 39,
       "title": "Практика: MST",
       "date": "2026-10-20T15:00:00",
-      "duration": 60,
+      "duration": 90,
       "presentations": [],
       "homeworks": []
     },
@@ -721,7 +732,7 @@
       "number": 40,
       "title": "Минимальное остовное дерево",
       "date": "2026-10-22T15:00:00",
-      "duration": 90,
+      "duration": 60,
       "presentations": [
         {
           "title": "Презентация",
@@ -741,7 +752,7 @@
       "number": 41,
       "title": "ЕГЭ №23/27: перебор и эффективные алгоритмы",
       "date": "2026-10-27T15:00:00",
-      "duration": 60,
+      "duration": 90,
       "presentations": [],
       "homeworks": []
     },
@@ -749,7 +760,7 @@
       "number": 42,
       "title": "DP на графах",
       "date": "2026-10-29T15:00:00",
-      "duration": 90,
+      "duration": 60,
       "presentations": [
         {
           "title": "Презентация",
@@ -769,7 +780,7 @@
       "number": 43,
       "title": "Практика: потоки",
       "date": "2026-11-03T15:00:00",
-      "duration": 60,
+      "duration": 90,
       "presentations": [],
       "homeworks": []
     },
@@ -777,7 +788,7 @@
       "number": 44,
       "title": "Поток в сети (Ford-Fulkerson)",
       "date": "2026-11-05T15:00:00",
-      "duration": 90,
+      "duration": 60,
       "presentations": [
         {
           "title": "Презентация",
@@ -791,7 +802,7 @@
       "number": 45,
       "title": "ЕГЭ №19-21: теория игр",
       "date": "2026-11-10T15:00:00",
-      "duration": 60,
+      "duration": 90,
       "presentations": [],
       "homeworks": []
     },
@@ -799,7 +810,7 @@
       "number": 46,
       "title": "Игры на графах",
       "date": "2026-11-12T15:00:00",
-      "duration": 90,
+      "duration": 60,
       "presentations": [
         {
           "title": "Презентация",
@@ -819,7 +830,7 @@
       "number": 47,
       "title": "LeetCode-марафон по графам",
       "date": "2026-11-17T15:00:00",
-      "duration": 60,
+      "duration": 90,
       "presentations": [],
       "homeworks": []
     },
@@ -827,7 +838,7 @@
       "number": 48,
       "title": "Итоги раздела: графы + что дальше",
       "date": "2026-11-19T15:00:00",
-      "duration": 90,
+      "duration": 60,
       "presentations": [],
       "homeworks": []
     },
@@ -835,7 +846,7 @@
       "number": 49,
       "title": "Практика: деревья",
       "date": "2026-11-24T15:00:00",
-      "duration": 60,
+      "duration": 90,
       "presentations": [],
       "homeworks": []
     },
@@ -843,7 +854,7 @@
       "number": 50,
       "title": "Деревья: термины и обходы (DFS/BFS на деревьях)",
       "date": "2026-11-26T15:00:00",
-      "duration": 90,
+      "duration": 60,
       "presentations": [],
       "homeworks": []
     },
@@ -851,7 +862,7 @@
       "number": 51,
       "title": "ЕГЭ №16-17: обработка массивов и таблиц",
       "date": "2026-12-01T15:00:00",
-      "duration": 60,
+      "duration": 90,
       "presentations": [],
       "homeworks": []
     },
@@ -859,7 +870,7 @@
       "number": 52,
       "title": "Бинарные деревья поиска (BST)",
       "date": "2026-12-03T15:00:00",
-      "duration": 90,
+      "duration": 60,
       "presentations": [],
       "homeworks": []
     },
@@ -867,7 +878,7 @@
       "number": 53,
       "title": "Практика: LCA",
       "date": "2026-12-08T15:00:00",
-      "duration": 60,
+      "duration": 90,
       "presentations": [],
       "homeworks": []
     },
@@ -875,7 +886,7 @@
       "number": 54,
       "title": "LCA и техники на деревьях",
       "date": "2026-12-10T15:00:00",
-      "duration": 90,
+      "duration": 60,
       "presentations": [],
       "homeworks": []
     },
@@ -883,7 +894,7 @@
       "number": 55,
       "title": "Олимпиадная практика: перебор и backtracking (РОШ/ВОШ 1-2 уровень)",
       "date": "2026-12-15T15:00:00",
-      "duration": 60,
+      "duration": 90,
       "presentations": [],
       "homeworks": []
     },
@@ -891,7 +902,7 @@
       "number": 56,
       "title": "Рекурсия и backtracking: генерация комбинаций и перестановок",
       "date": "2026-12-17T15:00:00",
-      "duration": 90,
+      "duration": 60,
       "presentations": [],
       "homeworks": []
     },
@@ -899,7 +910,7 @@
       "number": 57,
       "title": "Практика: DP основы",
       "date": "2026-12-22T15:00:00",
-      "duration": 60,
+      "duration": 90,
       "presentations": [],
       "homeworks": []
     },
@@ -907,7 +918,7 @@
       "number": 58,
       "title": "Динамическое программирование: основы (1D DP)",
       "date": "2026-12-24T15:00:00",
-      "duration": 90,
+      "duration": 60,
       "presentations": [],
       "homeworks": []
     },
@@ -915,7 +926,7 @@
       "number": 59,
       "title": "ЕГЭ №22-23: подсчёт вариантов и DP",
       "date": "2026-12-29T15:00:00",
-      "duration": 60,
+      "duration": 90,
       "presentations": [],
       "homeworks": []
     },
@@ -923,7 +934,7 @@
       "number": 60,
       "title": "DP: рюкзак (Knapsack)",
       "date": "2026-12-31T15:00:00",
-      "duration": 90,
+      "duration": 60,
       "presentations": [],
       "homeworks": []
     },
@@ -931,7 +942,7 @@
       "number": 61,
       "title": "Практика: LIS/LCS",
       "date": "2027-01-05T15:00:00",
-      "duration": 60,
+      "duration": 90,
       "presentations": [],
       "homeworks": []
     },
@@ -939,7 +950,7 @@
       "number": 62,
       "title": "DP: LIS и LCS",
       "date": "2027-01-07T15:00:00",
-      "duration": 90,
+      "duration": 60,
       "presentations": [],
       "homeworks": []
     },
@@ -947,7 +958,7 @@
       "number": 63,
       "title": "Практика: строки и хэширование",
       "date": "2027-01-12T15:00:00",
-      "duration": 60,
+      "duration": 90,
       "presentations": [],
       "homeworks": []
     },
@@ -955,7 +966,7 @@
       "number": 64,
       "title": "Строки: базовые алгоритмы и хэширование",
       "date": "2027-01-14T15:00:00",
-      "duration": 90,
+      "duration": 60,
       "presentations": [],
       "homeworks": []
     },
@@ -963,7 +974,7 @@
       "number": 65,
       "title": "ЕГЭ №24: обработка символьных строк",
       "date": "2027-01-19T15:00:00",
-      "duration": 60,
+      "duration": 90,
       "presentations": [],
       "homeworks": []
     },
@@ -971,7 +982,7 @@
       "number": 66,
       "title": "Строки: KMP и Z-функция",
       "date": "2027-01-21T15:00:00",
-      "duration": 90,
+      "duration": 60,
       "presentations": [],
       "homeworks": []
     },
@@ -979,7 +990,7 @@
       "number": 67,
       "title": "Практика: жадные алгоритмы",
       "date": "2027-01-26T15:00:00",
-      "duration": 60,
+      "duration": 90,
       "presentations": [],
       "homeworks": []
     },
@@ -987,7 +998,7 @@
       "number": 68,
       "title": "Жадные алгоритмы (Greedy)",
       "date": "2027-01-28T15:00:00",
-      "duration": 90,
+      "duration": 60,
       "presentations": [],
       "homeworks": []
     },
@@ -995,7 +1006,7 @@
       "number": 69,
       "title": "Практика: два указателя и скользящее окно",
       "date": "2027-02-02T15:00:00",
-      "duration": 60,
+      "duration": 90,
       "presentations": [],
       "homeworks": []
     },
@@ -1003,7 +1014,7 @@
       "number": 70,
       "title": "Два указателя и скользящее окно",
       "date": "2027-02-04T15:00:00",
-      "duration": 90,
+      "duration": 60,
       "presentations": [],
       "homeworks": []
     },
@@ -1011,7 +1022,7 @@
       "number": 71,
       "title": "ЕГЭ №25-26: программирование и обработка данных",
       "date": "2027-02-09T15:00:00",
-      "duration": 60,
+      "duration": 90,
       "presentations": [],
       "homeworks": []
     },
@@ -1019,7 +1030,7 @@
       "number": 72,
       "title": "Бинарный поиск по ответу",
       "date": "2027-02-11T15:00:00",
-      "duration": 90,
+      "duration": 60,
       "presentations": [],
       "homeworks": []
     },
@@ -1027,7 +1038,7 @@
       "number": 73,
       "title": "Олимпиадная практика: битовые маски (РОШ/ВОШ)",
       "date": "2027-02-16T15:00:00",
-      "duration": 60,
+      "duration": 90,
       "presentations": [],
       "homeworks": []
     },
@@ -1035,7 +1046,7 @@
       "number": 74,
       "title": "Битовые маски и битовые операции",
       "date": "2027-02-18T15:00:00",
-      "duration": 90,
+      "duration": 60,
       "presentations": [],
       "homeworks": []
     },
@@ -1043,7 +1054,7 @@
       "number": 75,
       "title": "Практика: теория чисел",
       "date": "2027-02-23T15:00:00",
-      "duration": 60,
+      "duration": 90,
       "presentations": [],
       "homeworks": []
     },
@@ -1051,7 +1062,7 @@
       "number": 76,
       "title": "Основы теории чисел (НОД, простые числа, модулярная арифметика)",
       "date": "2027-02-25T15:00:00",
-      "duration": 90,
+      "duration": 60,
       "presentations": [],
       "homeworks": []
     },
@@ -1059,7 +1070,7 @@
       "number": 77,
       "title": "ЕГЭ №27: эффективный алгоритм обработки большого объёма данных",
       "date": "2027-03-02T15:00:00",
-      "duration": 60,
+      "duration": 90,
       "presentations": [],
       "homeworks": []
     },
@@ -1067,7 +1078,7 @@
       "number": 78,
       "title": "Дерево Фенвика и Sparse Table (продвинутые структуры)",
       "date": "2027-03-04T15:00:00",
-      "duration": 90,
+      "duration": 60,
       "presentations": [],
       "homeworks": []
     },
@@ -1075,7 +1086,7 @@
       "number": 79,
       "title": "Практика проекта: постановка задачи",
       "date": "2027-03-09T15:00:00",
-      "duration": 60,
+      "duration": 90,
       "presentations": [],
       "homeworks": []
     },
@@ -1083,7 +1094,7 @@
       "number": 80,
       "title": "Мини-проект: выбор темы и старт (API/данные/консольный инструмент)",
       "date": "2027-03-11T15:00:00",
-      "duration": 90,
+      "duration": 60,
       "presentations": [],
       "homeworks": []
     },
@@ -1091,7 +1102,7 @@
       "number": 81,
       "title": "Практика проекта",
       "date": "2027-03-16T15:00:00",
-      "duration": 60,
+      "duration": 90,
       "presentations": [],
       "homeworks": []
     },
@@ -1099,7 +1110,7 @@
       "number": 82,
       "title": "Мини-проект: продолжение",
       "date": "2027-03-18T15:00:00",
-      "duration": 90,
+      "duration": 60,
       "presentations": [],
       "homeworks": []
     },
@@ -1107,7 +1118,7 @@
       "number": 83,
       "title": "Практика: Segment Tree/Fenwick на задачах",
       "date": "2027-03-23T15:00:00",
-      "duration": 60,
+      "duration": 90,
       "presentations": [],
       "homeworks": []
     },
@@ -1115,7 +1126,7 @@
       "number": 84,
       "title": "Дерево отрезков (Segment Tree)",
       "date": "2027-03-25T15:00:00",
-      "duration": 90,
+      "duration": 60,
       "presentations": [],
       "homeworks": []
     },
@@ -1123,7 +1134,7 @@
       "number": 85,
       "title": "ЕГЭ: разбор реального варианта №1 (часть с программированием)",
       "date": "2027-03-30T15:00:00",
-      "duration": 60,
+      "duration": 90,
       "presentations": [],
       "homeworks": []
     },
@@ -1131,7 +1142,7 @@
       "number": 86,
       "title": "Разбор сложных LeetCode Hard задач (микс тем)",
       "date": "2027-04-01T15:00:00",
-      "duration": 90,
+      "duration": 60,
       "presentations": [],
       "homeworks": []
     },
@@ -1139,7 +1150,7 @@
       "number": 87,
       "title": "Олимпиадный марафон: РОШ/ВОШ подборка",
       "date": "2027-04-06T15:00:00",
-      "duration": 60,
+      "duration": 90,
       "presentations": [],
       "homeworks": []
     },
@@ -1147,7 +1158,7 @@
       "number": 88,
       "title": "Олимпиадный марафон: разбор решений",
       "date": "2027-04-08T15:00:00",
-      "duration": 90,
+      "duration": 60,
       "presentations": [],
       "homeworks": []
     },
@@ -1155,7 +1166,7 @@
       "number": 89,
       "title": "ЕГЭ: разбор реального варианта №2",
       "date": "2027-04-13T15:00:00",
-      "duration": 60,
+      "duration": 90,
       "presentations": [],
       "homeworks": []
     },
@@ -1163,7 +1174,7 @@
       "number": 90,
       "title": "Разбор сложных LeetCode Hard задач (микс тем) 2",
       "date": "2027-04-15T15:00:00",
-      "duration": 90,
+      "duration": 60,
       "presentations": [],
       "homeworks": []
     },
@@ -1171,7 +1182,7 @@
       "number": 91,
       "title": "Практика: повторение слабых мест (по итогам разборов)",
       "date": "2027-04-20T15:00:00",
-      "duration": 60,
+      "duration": 90,
       "presentations": [],
       "homeworks": []
     },
@@ -1179,7 +1190,7 @@
       "number": 92,
       "title": "Повторение: динамическое программирование (сборный урок)",
       "date": "2027-04-22T15:00:00",
-      "duration": 90,
+      "duration": 60,
       "presentations": [],
       "homeworks": []
     },
@@ -1187,7 +1198,7 @@
       "number": 93,
       "title": "ЕГЭ: разбор реального варианта №3",
       "date": "2027-04-27T15:00:00",
-      "duration": 60,
+      "duration": 90,
       "presentations": [],
       "homeworks": []
     },
@@ -1195,7 +1206,7 @@
       "number": 94,
       "title": "Повторение: графы (сборный урок)",
       "date": "2027-04-29T15:00:00",
-      "duration": 90,
+      "duration": 60,
       "presentations": [],
       "homeworks": []
     },
@@ -1203,7 +1214,7 @@
       "number": 95,
       "title": "ЕГЭ-интенсив: пробник №1 (таймированный прогон)",
       "date": "2027-05-04T15:00:00",
-      "duration": 60,
+      "duration": 90,
       "presentations": [],
       "homeworks": []
     },
@@ -1211,7 +1222,7 @@
       "number": 96,
       "title": "ЕГЭ-интенсив: разбор пробника №1",
       "date": "2027-05-06T15:00:00",
-      "duration": 90,
+      "duration": 60,
       "presentations": [],
       "homeworks": []
     },
@@ -1219,7 +1230,7 @@
       "number": 97,
       "title": "ЕГЭ-интенсив: пробник №2",
       "date": "2027-05-11T15:00:00",
-      "duration": 60,
+      "duration": 90,
       "presentations": [],
       "homeworks": []
     },
@@ -1227,7 +1238,7 @@
       "number": 98,
       "title": "ЕГЭ-интенсив: разбор пробника №2",
       "date": "2027-05-13T15:00:00",
-      "duration": 90,
+      "duration": 60,
       "presentations": [],
       "homeworks": []
     },
@@ -1235,7 +1246,7 @@
       "number": 99,
       "title": "ЕГЭ-интенсив: пробник №3",
       "date": "2027-05-18T15:00:00",
-      "duration": 60,
+      "duration": 90,
       "presentations": [],
       "homeworks": []
     },
@@ -1243,7 +1254,7 @@
       "number": 100,
       "title": "ЕГЭ-интенсив: разбор пробника №3",
       "date": "2027-05-20T15:00:00",
-      "duration": 90,
+      "duration": 60,
       "presentations": [],
       "homeworks": []
     },
@@ -1251,7 +1262,7 @@
       "number": 101,
       "title": "Повторение слабых мест (финал)",
       "date": "2027-05-25T15:00:00",
-      "duration": 60,
+      "duration": 90,
       "presentations": [],
       "homeworks": []
     },
@@ -1259,7 +1270,7 @@
       "number": 102,
       "title": "Итоги курса: карта знаний + что дальше",
       "date": "2027-05-27T15:00:00",
-      "duration": 90,
+      "duration": 60,
       "presentations": [],
       "homeworks": []
     }
