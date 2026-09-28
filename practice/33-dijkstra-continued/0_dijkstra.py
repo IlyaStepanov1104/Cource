@@ -1,8 +1,8 @@
 class Heap:
-    def __init__(self) -> None:
-        self.data: list[int] = []
+    def __init__(self):
+        self.data = []
 
-    def push(self, value: int) -> None:
+    def push(self, value):
         self.data.append(value)
         i = len(self.data) - 1
         while i > 0:
@@ -12,7 +12,10 @@ class Heap:
             self.data[parent], self.data[i] = self.data[i], self.data[parent]
             i = parent
 
-    def pop(self) -> int:
+    def pop(self):
+        if not self.data:
+            return None
+        
         top = self.data[0]
         last = self.data.pop()
         if self.data:
@@ -33,14 +36,35 @@ class Heap:
                 i = smallest
         return top
 
+    def __len__(self):
+        return len(self.data)
+
+    def __bool__(self):
+        return bool(self.data)
 
 # Алгоритм Дейкстры: кратчайшее расстояние от source до всех вершин
 # графа с неотрицательными весами рёбер.
 # graph - список смежности: graph[u] = [(v, w), ...]
+# w <= 10**5
 
+def dijkstra(graph: list[list[tuple[int, int]]], source: int, n: int) -> list[float]:
+    dist = [float('inf')] * n
+    dist[source] = 0
+    visited = [False] * n #visited[i] - посещена ли вершина i
+    heap = Heap()
+    heap.push((0, source))
 
-def dijkstra(graph: list[list[tuple[int, int]]], source: int, n: int) -> list[int]:
-    pass
+    while heap:
+        d, v = heap.pop() # type: ignore
+        if visited[v]:
+            continue
+        visited[v] = True
+        for to, w in graph[v]:
+            if d + w < dist[to]:
+                dist[to] = d + w
+                heap.push((dist[to], to))
+
+    return dist
 
 
 graph = [

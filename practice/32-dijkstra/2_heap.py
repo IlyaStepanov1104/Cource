@@ -17,7 +17,10 @@ class Heap:
             self.data[parent], self.data[i] = self.data[i], self.data[parent]
             i = parent
 
-    def pop(self) -> int:
+    def pop(self) -> int | None:
+        if not self.data:
+            return None
+        
         top = self.data[0]
         last = self.data.pop()
         if self.data:
@@ -44,3 +47,4 @@ for x in [5, 3, 8, 1, 9, 2]:
 
 result = [h.pop() for _ in range(6)]
 print(result, [1, 2, 3, 5, 8, 9])
+print(h.pop())
