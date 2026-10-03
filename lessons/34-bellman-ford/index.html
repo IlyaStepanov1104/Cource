@@ -1,0 +1,938 @@
+<!doctype html>
+<html lang="ru">
+
+<head>
+    <meta charset="utf-8">
+    <title>Занятие 34 - Bellman-Ford и отрицательные веса</title>
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+
+    <link rel="stylesheet" href="/utils/css/reveal.css">
+    <link rel="stylesheet" href="/utils/lib/css/animate.css">
+    <link rel="stylesheet" href="/utils/css/theme/night.css" id="theme">
+    <link rel="stylesheet" href="/utils/lib/css/zenburn.css">
+    <link rel="stylesheet" href="/utils/css/custom-base.css">
+    <link rel="stylesheet" href="css-custom/custom.css">
+
+    <script>
+        var link = document.createElement('link');
+        link.rel = 'stylesheet'; link.type = 'text/css';
+        link.href = window.location.search.match(/print-pdf/gi)
+            ? '/utils/css/print/pdf.css'
+            : '/utils/css/print/paper.css';
+        document.getElementsByTagName('head')[0].appendChild(link);
+    </script>
+</head>
+
+<body>
+    <div class="reveal">
+        <div class="slides">
+
+            <!-- титульный слайд -->
+            <section style="font-size: 70px; height: 100%; width: 100%">
+                <div class="lesson-time">0</div>
+                <div class="fragment">
+                    <h1 class="animated" style="font-size: 1.5em;">Bellman-Ford</h1>
+                    <p style="text-align: center; font-size: 0.45em; opacity: 0.6;">кратчайшие пути с отрицательными весами</p>
+                    <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">Занятие 34</p>
+                </div>
+            </section>
+
+            <!-- ЧАСТЬ 0: разбор ДЗ (787. Cheapest Flights Within K Stops) -->
+            <section>
+
+                <section style="font-size: 70px; height: 100%; width: 100%">
+                    <div class="lesson-time">0</div>
+                    <div class="fragment">
+                        <h1 style="font-size: 1.3em;">Разбор ДЗ</h1>
+                        <p style="text-align: center; font-size: 0.4em; opacity: 0.5;"><a
+                                href="https://leetcode.com/problems/cheapest-flights-within-k-stops/"
+                                target="_blank" rel="noopener">787. Cheapest Flights Within K Stops</a></p>
+                    </div>
+                </section>
+
+                <!-- условие 787 в двух словах + картинка графа перелётов (SVG) -->
+                <section>
+                    <h2>Условие в двух словах</h2>
+                    <div style="display: flex; align-items: center; justify-content: center; gap: 1.2em;">
+                        <div class="fragment">
+<svg width="429" height="318" viewBox="0 0 330 245">
+<defs>
+<marker id="g1n" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#667" /></marker>
+<marker id="g1h" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#f7a" /></marker>
+<marker id="g1r" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#e55" /></marker>
+</defs>
+<line x1="57.1" y1="104.7" x2="147.0" y2="50.8" stroke="#667" stroke-width="2" marker-end="url(#g1n)" />
+<text x="109.7" y="94.5" fill="#8f8" font-size="15" text-anchor="middle">100</text>
+<line x1="165.0" y1="60.0" x2="165.0" y2="169.0" stroke="#667" stroke-width="2" marker-end="url(#g1n)" />
+<text x="151.0" y="120.0" fill="#8f8" font-size="15" text-anchor="middle">100</text>
+<line x1="147.9" y1="179.7" x2="58.0" y2="125.8" stroke="#667" stroke-width="2" marker-end="url(#g1n)" />
+<text x="109.7" y="145.5" fill="#8f8" font-size="15" text-anchor="middle">100</text>
+<line x1="182.1" y1="50.3" x2="272.0" y2="104.2" stroke="#667" stroke-width="2" marker-end="url(#g1n)" />
+<text x="220.3" y="94.5" fill="#8f8" font-size="15" text-anchor="middle">600</text>
+<line x1="182.1" y1="179.7" x2="272.0" y2="125.8" stroke="#667" stroke-width="2" marker-end="url(#g1n)" />
+<text x="220.3" y="145.5" fill="#8f8" font-size="15" text-anchor="middle">200</text>
+<circle cx="40" cy="115" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="40" y="121" fill="#dde" font-size="17" text-anchor="middle">0</text>
+<circle cx="165" cy="40" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="165" y="46" fill="#dde" font-size="17" text-anchor="middle">1</text>
+<circle cx="165" cy="190" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="165" y="196" fill="#dde" font-size="17" text-anchor="middle">2</text>
+<circle cx="290" cy="115" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="290" y="121" fill="#dde" font-size="17" text-anchor="middle">3</text>
+</svg>
+                        </div>
+                        <ul style="font-size: 1em; text-align: left;">
+                            <li class="fragment">города и рейсы с ценой, рейсы <mark>в одну сторону</mark></li>
+                            <li class="fragment">из <code>0</code> в <code>3</code></li>
+                            <li class="fragment">не больше <code>K = 1</code> пересадки</li>
+                            <li class="fragment">найти самый дешёвый маршрут</li>
+                        </ul>
+                    </div>
+                </section>
+
+                <!-- почему обычная Дейкстра даёт неверный ответ: дешёвый путь с лишними пересадками -->
+                <section>
+                    <h2>Дейкстра в лоб не подходит</h2>
+                    <div style="display: flex; align-items: center; justify-content: center; gap: 1.2em;">
+<svg width="429" height="318" viewBox="0 0 330 245">
+<defs>
+<marker id="g2n" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#667" /></marker>
+<marker id="g2h" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#f7a" /></marker>
+<marker id="g2r" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#e55" /></marker>
+</defs>
+<line x1="57.1" y1="104.7" x2="147.0" y2="50.8" stroke="#f7a" stroke-width="3" marker-end="url(#g2h)" />
+<text x="109.7" y="94.5" fill="#8f8" font-size="15" text-anchor="middle">100</text>
+<line x1="165.0" y1="60.0" x2="165.0" y2="169.0" stroke="#f7a" stroke-width="3" marker-end="url(#g2h)" />
+<text x="151.0" y="120.0" fill="#8f8" font-size="15" text-anchor="middle">100</text>
+<line x1="147.9" y1="179.7" x2="58.0" y2="125.8" stroke="#667" stroke-width="2" marker-end="url(#g2n)" />
+<text x="109.7" y="145.5" fill="#8f8" font-size="15" text-anchor="middle">100</text>
+<line x1="182.1" y1="50.3" x2="272.0" y2="104.2" stroke="#667" stroke-width="2" marker-end="url(#g2n)" />
+<text x="220.3" y="94.5" fill="#8f8" font-size="15" text-anchor="middle">600</text>
+<line x1="182.1" y1="179.7" x2="272.0" y2="125.8" stroke="#f7a" stroke-width="3" marker-end="url(#g2h)" />
+<text x="220.3" y="145.5" fill="#8f8" font-size="15" text-anchor="middle">200</text>
+<circle cx="40" cy="115" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="40" y="121" fill="#dde" font-size="17" text-anchor="middle">0</text>
+<circle cx="165" cy="40" r="20" fill="#1c2030" stroke="#f7a" stroke-width="2" />
+<text x="165" y="46" fill="#dde" font-size="17" text-anchor="middle">1</text>
+<circle cx="165" cy="190" r="20" fill="#1c2030" stroke="#f7a" stroke-width="2" />
+<text x="165" y="196" fill="#dde" font-size="17" text-anchor="middle">2</text>
+<circle cx="290" cy="115" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="290" y="121" fill="#dde" font-size="17" text-anchor="middle">3</text>
+</svg>
+                        <ul style="font-size: 1em; text-align: left;">
+                            <li class="fragment">Дейкстра найдёт <code>0-1-2-3</code> за <mark class="green">400</mark></li>
+                            <li class="fragment">но это <mark>2 пересадки</mark>, а можно только 1</li>
+                            <li class="fragment">правильный ответ: <code>0-1-3</code> за <mark class="yellow">700</mark></li>
+                        </ul>
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 0.4em;">
+                        Дейкстра помнит только цену, а здесь важно ещё и <mark>сколько рёбер</mark> мы прошли
+                    </div>
+                </section>
+
+                <!-- решение через состояние (вершина, пересадки): трассировка на картинке -->
+                <section>
+                    <h2>Состояние = (город, пересадки)</h2>
+                    <div style="display: flex; align-items: center; justify-content: center; gap: 1.2em;">
+<svg width="429" height="318" viewBox="0 0 330 245">
+<defs>
+<marker id="g3n" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#667" /></marker>
+<marker id="g3h" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#f7a" /></marker>
+<marker id="g3r" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#e55" /></marker>
+</defs>
+<line x1="57.1" y1="104.7" x2="147.0" y2="50.8" stroke="#f7a" stroke-width="3" marker-end="url(#g3h)" />
+<text x="109.7" y="94.5" fill="#8f8" font-size="15" text-anchor="middle">100</text>
+<line x1="165.0" y1="60.0" x2="165.0" y2="169.0" stroke="#667" stroke-width="2" marker-end="url(#g3n)" />
+<text x="151.0" y="120.0" fill="#8f8" font-size="15" text-anchor="middle">100</text>
+<line x1="147.9" y1="179.7" x2="58.0" y2="125.8" stroke="#667" stroke-width="2" marker-end="url(#g3n)" />
+<text x="109.7" y="145.5" fill="#8f8" font-size="15" text-anchor="middle">100</text>
+<line x1="182.1" y1="50.3" x2="272.0" y2="104.2" stroke="#f7a" stroke-width="3" marker-end="url(#g3h)" />
+<text x="220.3" y="94.5" fill="#8f8" font-size="15" text-anchor="middle">600</text>
+<line x1="182.1" y1="179.7" x2="272.0" y2="125.8" stroke="#667" stroke-width="2" marker-end="url(#g3n)" />
+<text x="220.3" y="145.5" fill="#8f8" font-size="15" text-anchor="middle">200</text>
+<circle cx="40" cy="115" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="40" y="121" fill="#dde" font-size="17" text-anchor="middle">0</text>
+<circle cx="165" cy="40" r="20" fill="#1c2030" stroke="#f7a" stroke-width="2" />
+<text x="165" y="46" fill="#dde" font-size="17" text-anchor="middle">1</text>
+<circle cx="165" cy="190" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="165" y="196" fill="#dde" font-size="17" text-anchor="middle">2</text>
+<circle cx="290" cy="115" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="290" y="121" fill="#dde" font-size="17" text-anchor="middle">3</text>
+</svg>
+                        <ul style="font-size: 1em; text-align: left;">
+                            <li class="fragment"><code>(0, 0 пересадок)</code> цена 0</li>
+                            <li class="fragment">летим в <code>1</code>: цена 100, пересадок пока 0</li>
+                            <li class="fragment">из <code>1</code> в <code>3</code>: цена 700, 1 пересадка - <mark class="green">можно</mark></li>
+                            <li class="fragment">из <code>1</code> в <code>2</code> и дальше в <code>3</code>: уже 2 пересадки - <mark>нельзя</mark></li>
+                        </ul>
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 0.4em;">
+                        Ответ <code>700</code>: к одному городу можно прийти несколько раз с разным числом пересадок
+                    </div>
+                </section>
+
+                <!-- зацепка: "есть способ проще - K+1 раз пройти по всем рёбрам", вернёмся в конце урока -->
+                <section>
+                    <h2>А можно проще?</h2>
+                    <p class="fragment" style="font-size: 0.85em;">Дейкстра с расширенным состоянием работает,
+                        но выглядит громоздко: куча, тройки, <code>visited</code> на пары.</p>
+                    <p class="fragment" style="font-size: 0.85em;">Есть способ, где не нужна даже куча:
+                        <mark class="green">K + 1 раз</mark> пройтись по всем рёбрам.</p>
+                    <div class="fragment opinion" style="margin-top: 0.5em;">
+                        Это и есть сегодняшний алгоритм. К задаче вернёмся в конце урока
+                    </div>
+                </section>
+
+            </section>
+
+            <!-- ЧАСТЬ 1: откуда берутся отрицательные веса -->
+            <section>
+
+                <section style="font-size: 70px; height: 100%; width: 100%">
+                    <div class="lesson-time">5</div>
+                    <div class="fragment">
+                        <h1 style="font-size: 1.3em;">Отрицательные веса</h1>
+                        <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">откуда берутся и чем мешают</p>
+                    </div>
+                </section>
+
+                <!-- примеры из жизни: кэшбэк за перелёт, обмен валют, выигрыш/проигрыш в игре -->
+                <section>
+                    <h2>Где вес бывает меньше нуля</h2>
+                    <div class="compare" style="grid-template-columns: 1fr 1fr 1fr; margin-top: 0.5em;">
+                        <div class="compare-block fragment">
+                            <h3>Перелёты</h3>
+                            <p style="font-size: 0.8em;">рейс с кэшбэком: авиакомпания <mark class="green">доплачивает</mark>
+                                тебе за неудобный маршрут</p>
+                        </div>
+                        <div class="compare-block fragment">
+                            <h3>Игры</h3>
+                            <p style="font-size: 0.8em;">переход между уровнями: где-то теряешь здоровье, а где-то
+                                аптечка <mark class="green">возвращает</mark> его</p>
+                        </div>
+                        <div class="compare-block fragment">
+                            <h3>Деньги</h3>
+                            <p style="font-size: 0.8em;">обмен валют, доходы и расходы: шаг может не стоить, а
+                                <mark class="green">приносить</mark></p>
+                        </div>
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 0.6em;">
+                        Вес ребра - это не обязательно расстояние. Это "сколько стоит шаг", и стоимость бывает
+                        выгодой
+                    </div>
+                </section>
+
+                <!-- напоминание: контрпример A-B-C, где Дейкстра закрывает вершину слишком рано (SVG из урока 33) -->
+                <section>
+                    <h2>Вспоминаем: Дейкстра ломается</h2>
+                    <div style="display: flex; align-items: center; justify-content: center; gap: 1.2em;">
+<svg width="377" height="247" viewBox="0 0 290 190">
+<defs>
+<marker id="g4n" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#667" /></marker>
+<marker id="g4h" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#f7a" /></marker>
+<marker id="g4r" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#e55" /></marker>
+</defs>
+<line x1="60.0" y1="55.0" x2="159.0" y2="55.0" stroke="#667" stroke-width="2" marker-end="url(#g4n)" />
+<text x="110.0" y="74.0" fill="#8f8" font-size="15" text-anchor="middle">5</text>
+<line x1="58.2" y1="63.2" x2="230.9" y2="141.3" stroke="#667" stroke-width="2" marker-end="url(#g4n)" />
+<text x="150.8" y="94.7" fill="#8f8" font-size="15" text-anchor="middle">8</text>
+<line x1="238.1" y1="133.9" x2="192.5" y2="71.9" stroke="#e55" stroke-width="2" marker-end="url(#g4r)" />
+<text x="226.3" y="99.2" fill="#e55" font-size="15" text-anchor="middle">-6</text>
+<circle cx="40" cy="55" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="40" y="61" fill="#dde" font-size="17" text-anchor="middle">A</text>
+<circle cx="180" cy="55" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="180" y="61" fill="#dde" font-size="17" text-anchor="middle">B</text>
+<circle cx="250" cy="150" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="250" y="156" fill="#dde" font-size="17" text-anchor="middle">C</text>
+</svg>
+                        <ul style="font-size: 1em; text-align: left;">
+                            <li class="fragment">Дейкстра берёт <code>B</code> с <code>dist = 5</code> и
+                                <mark>закрывает</mark> её</li>
+                            <li class="fragment">путь <code>A-C-B</code> = <code>8 + (-6) = 2</code> - короче</li>
+                            <li class="fragment">но к закрытой <code>B</code> никто не вернётся</li>
+                        </ul>
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 0.4em;">
+                        Проблема в слове "закрывает": Дейкстра уверена, что дальше будет только дороже
+                    </div>
+                </section>
+
+                <!-- вопрос классу: а если просто не закрывать вершины и проверять все рёбра снова и снова? -->
+                <section>
+                    <h2>Вопрос</h2>
+                    <p class="fragment" style="font-size: 0.9em;">А что если вообще <mark>ничего не
+                            закрывать</mark>?</p>
+                    <p class="fragment" style="font-size: 0.9em;">Просто снова и снова проверять
+                        <mark class="green">все рёбра</mark> подряд, пока расстояния улучшаются.</p>
+                    <p class="fragment" style="font-size: 0.9em;">Сработает ли? И сколько раз придётся
+                        проверять?</p>
+                    <div class="fragment opinion" style="margin-top: 0.5em;">
+                        Сработает. Это ровно алгоритм Bellman-Ford, а "сколько раз" - главный вопрос урока
+                    </div>
+                </section>
+
+            </section>
+
+            <!-- ЧАСТЬ 2: идея Bellman-Ford и трассировка -->
+            <section>
+
+                <section style="font-size: 70px; height: 100%; width: 100%">
+                    <div class="lesson-time">12</div>
+                    <div class="fragment">
+                        <h1 style="font-size: 1.3em;">Идея Bellman-Ford</h1>
+                        <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">раунды по всем рёбрам</p>
+                    </div>
+                </section>
+
+                <!-- идея: один "раунд" = пройти по ВСЕМ рёбрам и попробовать релаксацию каждого -->
+                <section>
+                    <h2>Один раунд</h2>
+                    <div class="timeline" style="margin-top: 0.4em;">
+                        <div class="timeline-item fragment">
+                            <div class="timeline-label">старт</div>
+                            <div class="timeline-arrow">-&gt;</div>
+                            <div class="timeline-desc"><code>dist[start] = 0</code>, у остальных <code>∞</code></div>
+                        </div>
+                        <div class="timeline-item fragment">
+                            <div class="timeline-label">раунд</div>
+                            <div class="timeline-arrow">-&gt;</div>
+                            <div class="timeline-desc">пройти по <mark>всем рёбрам</mark> графа в любом порядке</div>
+                        </div>
+                        <div class="timeline-item fragment">
+                            <div class="timeline-label">каждое ребро</div>
+                            <div class="timeline-arrow">-&gt;</div>
+                            <div class="timeline-desc">попробовать улучшить расстояние до его конца</div>
+                        </div>
+                        <div class="timeline-item fragment">
+                            <div class="timeline-label">повторить</div>
+                            <div class="timeline-arrow">-&gt;</div>
+                            <div class="timeline-desc">делать раунды, пока что-то меняется</div>
+                        </div>
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 0.5em;">
+                        Никакой кучи, никакого "закрыли вершину". Просто много раз одно и то же
+                    </div>
+                </section>
+
+                <!-- напоминание: что такое релаксация ребра (картинка: dist[u] + w < dist[v]) -->
+                <section>
+                    <h2>Релаксация ребра</h2>
+                    <div class="fragment">
+<svg width="390" height="143" viewBox="0 0 300 110">
+<defs>
+<marker id="g5n" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#667" /></marker>
+<marker id="g5h" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#f7a" /></marker>
+<marker id="g5r" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#e55" /></marker>
+</defs>
+<line x1="80.0" y1="70.0" x2="219.0" y2="70.0" stroke="#667" stroke-width="2" marker-end="url(#g5n)" />
+<text x="150.0" y="89.0" fill="#8f8" font-size="15" text-anchor="middle">2</text>
+<circle cx="60" cy="70" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="60" y="76" fill="#dde" font-size="17" text-anchor="middle">u</text>
+<text x="60" y="38" fill="#ffd54f" font-size="15" text-anchor="middle">dist = 3</text>
+<circle cx="240" cy="70" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="240" y="76" fill="#dde" font-size="17" text-anchor="middle">v</text>
+<text x="240" y="38" fill="#ffd54f" font-size="15" text-anchor="middle">dist = 7</text>
+</svg>
+                    </div>
+                    <ul style="font-size: 1em;">
+                        <li class="fragment">дошли до <code>u</code> за 3, ребро стоит 2</li>
+                        <li class="fragment">значит до <code>v</code> можно дойти за <code>3 + 2 = 5</code></li>
+                        <li class="fragment">5 меньше 7 - записываем <code>dist[v] = 5</code></li>
+                    </ul>
+                    <div class="fragment opinion" style="margin-top: 0.3em;">
+                        То же самое, что делала Дейкстра. Новое только то, <mark>в каком порядке</mark> и
+                        <mark>сколько раз</mark>
+                    </div>
+                </section>
+
+                <!-- пример: граф на 5 вершин с одним отрицательным ребром (SVG) + список рёбер -->
+                <section>
+                    <h2>Пример</h2>
+                    <div style="display: flex; align-items: center; justify-content: center; gap: 1.5em;">
+                        <div class="fragment">
+<svg width="416" height="312" viewBox="0 0 320 240">
+<defs>
+<marker id="g6n" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#667" /></marker>
+<marker id="g6h" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#f7a" /></marker>
+<marker id="g6r" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#e55" /></marker>
+</defs>
+<line x1="170.0" y1="54.0" x2="249.0" y2="54.0" stroke="#e55" stroke-width="2" marker-end="url(#g6r)" />
+<text x="210.0" y="45.0" fill="#e55" font-size="15" text-anchor="middle">-3</text>
+<line x1="270.0" y1="74.0" x2="270.0" y2="173.0" stroke="#667" stroke-width="2" marker-end="url(#g6n)" />
+<text x="284.0" y="129.0" fill="#8f8" font-size="15" text-anchor="middle">2</text>
+<line x1="56.9" y1="113.3" x2="132.3" y2="65.3" stroke="#667" stroke-width="2" marker-end="url(#g6n)" />
+<text x="102.5" y="105.8" fill="#8f8" font-size="15" text-anchor="middle">4</text>
+<line x1="56.9" y1="134.7" x2="132.3" y2="182.7" stroke="#667" stroke-width="2" marker-end="url(#g6n)" />
+<text x="102.5" y="152.2" fill="#8f8" font-size="15" text-anchor="middle">2</text>
+<line x1="170.0" y1="194.0" x2="249.0" y2="194.0" stroke="#667" stroke-width="2" marker-end="url(#g6n)" />
+<text x="210.0" y="185.0" fill="#8f8" font-size="15" text-anchor="middle">7</text>
+<line x1="150.0" y1="174.0" x2="150.0" y2="75.0" stroke="#667" stroke-width="2" marker-end="url(#g6n)" />
+<text x="136.0" y="129.0" fill="#8f8" font-size="15" text-anchor="middle">1</text>
+<circle cx="40" cy="124" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="40" y="130" fill="#dde" font-size="17" text-anchor="middle">S</text>
+<text x="40" y="166" fill="#ffd54f" font-size="15" text-anchor="middle">0</text>
+<circle cx="150" cy="54" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="150" y="60" fill="#dde" font-size="17" text-anchor="middle">A</text>
+<text x="150" y="27" fill="#778" font-size="20" text-anchor="middle">∞</text>
+<circle cx="150" cy="194" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="150" y="200" fill="#dde" font-size="17" text-anchor="middle">B</text>
+<text x="150" y="234" fill="#778" font-size="20" text-anchor="middle">∞</text>
+<circle cx="270" cy="54" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="270" y="60" fill="#dde" font-size="17" text-anchor="middle">C</text>
+<text x="270" y="27" fill="#778" font-size="20" text-anchor="middle">∞</text>
+<circle cx="270" cy="194" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="270" y="200" fill="#dde" font-size="17" text-anchor="middle">D</text>
+<text x="270" y="234" fill="#778" font-size="20" text-anchor="middle">∞</text>
+</svg>
+                        </div>
+                        <div>
+                            <p class="fragment" style="font-size: 0.6em; opacity: 0.7;">порядок рёбер в раунде</p>
+                            <ol style="font-size: 1em;">
+                                <li class="fragment"><code>A -&gt; C</code>, вес <code>-3</code></li><li class="fragment"><code>C -&gt; D</code>, вес <code>2</code></li><li class="fragment"><code>S -&gt; A</code>, вес <code>4</code></li><li class="fragment"><code>S -&gt; B</code>, вес <code>2</code></li><li class="fragment"><code>B -&gt; D</code>, вес <code>7</code></li><li class="fragment"><code>B -&gt; A</code>, вес <code>1</code></li>
+                            </ol>
+                        </div>
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 0.3em;">
+                        Порядок взяли нарочно неудачный, чтобы увидеть несколько раундов
+                    </div>
+                </section>
+
+                <!-- трассировка: раунд 1 - таблица dist, подсветка изменившихся -->
+                <section>
+                    <h2>Раунд 1</h2>
+                    <div style="display: flex; align-items: center; justify-content: center; gap: 1.2em;">
+<svg width="416" height="312" viewBox="0 0 320 240">
+<defs>
+<marker id="g7n" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#667" /></marker>
+<marker id="g7h" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#f7a" /></marker>
+<marker id="g7r" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#e55" /></marker>
+</defs>
+<line x1="170.0" y1="54.0" x2="249.0" y2="54.0" stroke="#e55" stroke-width="2" marker-end="url(#g7r)" />
+<text x="210.0" y="45.0" fill="#e55" font-size="15" text-anchor="middle">-3</text>
+<line x1="270.0" y1="74.0" x2="270.0" y2="173.0" stroke="#667" stroke-width="2" marker-end="url(#g7n)" />
+<text x="284.0" y="129.0" fill="#8f8" font-size="15" text-anchor="middle">2</text>
+<line x1="56.9" y1="113.3" x2="132.3" y2="65.3" stroke="#667" stroke-width="2" marker-end="url(#g7n)" />
+<text x="102.5" y="105.8" fill="#8f8" font-size="15" text-anchor="middle">4</text>
+<line x1="56.9" y1="134.7" x2="132.3" y2="182.7" stroke="#f7a" stroke-width="3" marker-end="url(#g7h)" />
+<text x="102.5" y="152.2" fill="#8f8" font-size="15" text-anchor="middle">2</text>
+<line x1="170.0" y1="194.0" x2="249.0" y2="194.0" stroke="#f7a" stroke-width="3" marker-end="url(#g7h)" />
+<text x="210.0" y="185.0" fill="#8f8" font-size="15" text-anchor="middle">7</text>
+<line x1="150.0" y1="174.0" x2="150.0" y2="75.0" stroke="#f7a" stroke-width="3" marker-end="url(#g7h)" />
+<text x="136.0" y="129.0" fill="#8f8" font-size="15" text-anchor="middle">1</text>
+<circle cx="40" cy="124" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="40" y="130" fill="#dde" font-size="17" text-anchor="middle">S</text>
+<text x="40" y="166" fill="#ffd54f" font-size="15" text-anchor="middle">0</text>
+<circle cx="150" cy="54" r="20" fill="#1c2030" stroke="#f7a" stroke-width="2" />
+<text x="150" y="60" fill="#dde" font-size="17" text-anchor="middle">A</text>
+<text x="150" y="27" fill="#ffd54f" font-size="15" text-anchor="middle">3</text>
+<circle cx="150" cy="194" r="20" fill="#1c2030" stroke="#f7a" stroke-width="2" />
+<text x="150" y="200" fill="#dde" font-size="17" text-anchor="middle">B</text>
+<text x="150" y="234" fill="#ffd54f" font-size="15" text-anchor="middle">2</text>
+<circle cx="270" cy="54" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="270" y="60" fill="#dde" font-size="17" text-anchor="middle">C</text>
+<text x="270" y="27" fill="#778" font-size="20" text-anchor="middle">∞</text>
+<circle cx="270" cy="194" r="20" fill="#1c2030" stroke="#f7a" stroke-width="2" />
+<text x="270" y="200" fill="#dde" font-size="17" text-anchor="middle">D</text>
+<text x="270" y="234" fill="#ffd54f" font-size="15" text-anchor="middle">9</text>
+</svg>
+                        <ul style="font-size: 1em; text-align: left;">
+                            <li class="fragment"><code>A-&gt;C</code>, <code>C-&gt;D</code>: начало в <code>∞</code>, пропуск</li>
+                            <li class="fragment"><code>S-&gt;A</code>: <code>A = 0 + 4 = 4</code></li>
+                            <li class="fragment"><code>S-&gt;B</code>: <code>B = 0 + 2 = 2</code></li>
+                            <li class="fragment"><code>B-&gt;D</code>: <code>D = 2 + 7 = 9</code></li>
+                            <li class="fragment"><code>B-&gt;A</code>: <code>2 + 1 = 3 &lt; 4</code>, <code>A = 3</code></li>
+                        </ul>
+                    </div>
+                    <div class="fragment">
+<table style="font-size: 0.85em; margin: 0.4em auto 0;"><tr><td>dist</td><td><strong>S</strong></td><td><strong>A</strong></td><td><strong>B</strong></td><td><strong>C</strong></td><td><strong>D</strong></td></tr><tr><td></td><td>0</td><td><mark class="yellow">3</mark></td><td><mark class="yellow">2</mark></td><td>∞</td><td><mark class="yellow">9</mark></td></tr></table>
+                    </div>
+                </section>
+
+                <!-- трассировка: раунд 2 -->
+                <section>
+                    <h2>Раунд 2</h2>
+                    <div style="display: flex; align-items: center; justify-content: center; gap: 1.2em;">
+<svg width="416" height="312" viewBox="0 0 320 240">
+<defs>
+<marker id="g8n" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#667" /></marker>
+<marker id="g8h" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#f7a" /></marker>
+<marker id="g8r" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#e55" /></marker>
+</defs>
+<line x1="170.0" y1="54.0" x2="249.0" y2="54.0" stroke="#f7a" stroke-width="3" marker-end="url(#g8h)" />
+<text x="210.0" y="45.0" fill="#e55" font-size="15" text-anchor="middle">-3</text>
+<line x1="270.0" y1="74.0" x2="270.0" y2="173.0" stroke="#f7a" stroke-width="3" marker-end="url(#g8h)" />
+<text x="284.0" y="129.0" fill="#8f8" font-size="15" text-anchor="middle">2</text>
+<line x1="56.9" y1="113.3" x2="132.3" y2="65.3" stroke="#667" stroke-width="2" marker-end="url(#g8n)" />
+<text x="102.5" y="105.8" fill="#8f8" font-size="15" text-anchor="middle">4</text>
+<line x1="56.9" y1="134.7" x2="132.3" y2="182.7" stroke="#667" stroke-width="2" marker-end="url(#g8n)" />
+<text x="102.5" y="152.2" fill="#8f8" font-size="15" text-anchor="middle">2</text>
+<line x1="170.0" y1="194.0" x2="249.0" y2="194.0" stroke="#667" stroke-width="2" marker-end="url(#g8n)" />
+<text x="210.0" y="185.0" fill="#8f8" font-size="15" text-anchor="middle">7</text>
+<line x1="150.0" y1="174.0" x2="150.0" y2="75.0" stroke="#667" stroke-width="2" marker-end="url(#g8n)" />
+<text x="136.0" y="129.0" fill="#8f8" font-size="15" text-anchor="middle">1</text>
+<circle cx="40" cy="124" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="40" y="130" fill="#dde" font-size="17" text-anchor="middle">S</text>
+<text x="40" y="166" fill="#ffd54f" font-size="15" text-anchor="middle">0</text>
+<circle cx="150" cy="54" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="150" y="60" fill="#dde" font-size="17" text-anchor="middle">A</text>
+<text x="150" y="27" fill="#ffd54f" font-size="15" text-anchor="middle">3</text>
+<circle cx="150" cy="194" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="150" y="200" fill="#dde" font-size="17" text-anchor="middle">B</text>
+<text x="150" y="234" fill="#ffd54f" font-size="15" text-anchor="middle">2</text>
+<circle cx="270" cy="54" r="20" fill="#1c2030" stroke="#f7a" stroke-width="2" />
+<text x="270" y="60" fill="#dde" font-size="17" text-anchor="middle">C</text>
+<text x="270" y="27" fill="#ffd54f" font-size="15" text-anchor="middle">0</text>
+<circle cx="270" cy="194" r="20" fill="#1c2030" stroke="#f7a" stroke-width="2" />
+<text x="270" y="200" fill="#dde" font-size="17" text-anchor="middle">D</text>
+<text x="270" y="234" fill="#ffd54f" font-size="15" text-anchor="middle">2</text>
+</svg>
+                        <ul style="font-size: 1em; text-align: left;">
+                            <li class="fragment"><code>A-&gt;C</code>: <code>C = 3 + (-3) = 0</code></li>
+                            <li class="fragment"><code>C-&gt;D</code>: <code>0 + 2 = 2 &lt; 9</code>, <code>D = 2</code></li>
+                            <li class="fragment">остальные рёбра ничего не улучшают</li>
+                        </ul>
+                    </div>
+                    <div class="fragment">
+<table style="font-size: 0.85em; margin: 0.4em auto 0;"><tr><td>dist</td><td><strong>S</strong></td><td><strong>A</strong></td><td><strong>B</strong></td><td><strong>C</strong></td><td><strong>D</strong></td></tr><tr><td></td><td>0</td><td>3</td><td>2</td><td><mark class="yellow">0</mark></td><td><mark class="yellow">2</mark></td></tr></table>
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 0.3em;">
+                        <code>D</code> было 9, стало 2 - сработало благодаря отрицательному ребру
+                    </div>
+                </section>
+
+                <!-- трассировка: раунд 3 - изменений нет, можно остановиться -->
+                <section>
+                    <h2>Раунд 3</h2>
+                    <div style="display: flex; align-items: center; justify-content: center; gap: 1.2em;">
+<svg width="416" height="312" viewBox="0 0 320 240">
+<defs>
+<marker id="g9n" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#667" /></marker>
+<marker id="g9h" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#f7a" /></marker>
+<marker id="g9r" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#e55" /></marker>
+</defs>
+<line x1="170.0" y1="54.0" x2="249.0" y2="54.0" stroke="#e55" stroke-width="2" marker-end="url(#g9r)" />
+<text x="210.0" y="45.0" fill="#e55" font-size="15" text-anchor="middle">-3</text>
+<line x1="270.0" y1="74.0" x2="270.0" y2="173.0" stroke="#667" stroke-width="2" marker-end="url(#g9n)" />
+<text x="284.0" y="129.0" fill="#8f8" font-size="15" text-anchor="middle">2</text>
+<line x1="56.9" y1="113.3" x2="132.3" y2="65.3" stroke="#667" stroke-width="2" marker-end="url(#g9n)" />
+<text x="102.5" y="105.8" fill="#8f8" font-size="15" text-anchor="middle">4</text>
+<line x1="56.9" y1="134.7" x2="132.3" y2="182.7" stroke="#667" stroke-width="2" marker-end="url(#g9n)" />
+<text x="102.5" y="152.2" fill="#8f8" font-size="15" text-anchor="middle">2</text>
+<line x1="170.0" y1="194.0" x2="249.0" y2="194.0" stroke="#667" stroke-width="2" marker-end="url(#g9n)" />
+<text x="210.0" y="185.0" fill="#8f8" font-size="15" text-anchor="middle">7</text>
+<line x1="150.0" y1="174.0" x2="150.0" y2="75.0" stroke="#667" stroke-width="2" marker-end="url(#g9n)" />
+<text x="136.0" y="129.0" fill="#8f8" font-size="15" text-anchor="middle">1</text>
+<circle cx="40" cy="124" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="40" y="130" fill="#dde" font-size="17" text-anchor="middle">S</text>
+<text x="40" y="166" fill="#ffd54f" font-size="15" text-anchor="middle">0</text>
+<circle cx="150" cy="54" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="150" y="60" fill="#dde" font-size="17" text-anchor="middle">A</text>
+<text x="150" y="27" fill="#ffd54f" font-size="15" text-anchor="middle">3</text>
+<circle cx="150" cy="194" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="150" y="200" fill="#dde" font-size="17" text-anchor="middle">B</text>
+<text x="150" y="234" fill="#ffd54f" font-size="15" text-anchor="middle">2</text>
+<circle cx="270" cy="54" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="270" y="60" fill="#dde" font-size="17" text-anchor="middle">C</text>
+<text x="270" y="27" fill="#ffd54f" font-size="15" text-anchor="middle">0</text>
+<circle cx="270" cy="194" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="270" y="200" fill="#dde" font-size="17" text-anchor="middle">D</text>
+<text x="270" y="234" fill="#ffd54f" font-size="15" text-anchor="middle">2</text>
+</svg>
+                        <ul style="font-size: 1em; text-align: left;">
+                            <li class="fragment">проверили все 6 рёбер</li>
+                            <li class="fragment">ни одно расстояние <mark>не изменилось</mark></li>
+                            <li class="fragment">значит и в следующих раундах ничего не изменится</li>
+                        </ul>
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 0.4em;">
+                        Ответ: <code>S=0, A=3, B=2, C=0, D=2</code>
+                    </div>
+                </section>
+
+                <!-- почему хватит V-1 раундов: кратчайший путь проходит не больше V-1 ребра (картинка цепочки) -->
+                <section>
+                    <h2>Сколько нужно раундов?</h2>
+                    <div class="fragment">
+<svg width="546" height="130" viewBox="0 0 420 100">
+<defs>
+<marker id="g10n" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#667" /></marker>
+<marker id="g10h" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#f7a" /></marker>
+<marker id="g10r" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#e55" /></marker>
+</defs>
+<line x1="60.0" y1="50.0" x2="104.0" y2="50.0" stroke="#667" stroke-width="2" marker-end="url(#g10n)" />
+<text x="82.5" y="69.0" fill="#8f8" font-size="15" text-anchor="middle"></text>
+<line x1="145.0" y1="50.0" x2="189.0" y2="50.0" stroke="#667" stroke-width="2" marker-end="url(#g10n)" />
+<text x="167.5" y="69.0" fill="#8f8" font-size="15" text-anchor="middle"></text>
+<line x1="230.0" y1="50.0" x2="274.0" y2="50.0" stroke="#667" stroke-width="2" marker-end="url(#g10n)" />
+<text x="252.5" y="69.0" fill="#8f8" font-size="15" text-anchor="middle"></text>
+<line x1="315.0" y1="50.0" x2="359.0" y2="50.0" stroke="#667" stroke-width="2" marker-end="url(#g10n)" />
+<text x="337.5" y="69.0" fill="#8f8" font-size="15" text-anchor="middle"></text>
+<circle cx="40" cy="50" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="40" y="56" fill="#dde" font-size="17" text-anchor="middle">S</text>
+<circle cx="125" cy="50" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="125" y="56" fill="#dde" font-size="17" text-anchor="middle">x</text>
+<circle cx="210" cy="50" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="210" y="56" fill="#dde" font-size="17" text-anchor="middle">y</text>
+<circle cx="295" cy="50" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="295" y="56" fill="#dde" font-size="17" text-anchor="middle">z</text>
+<circle cx="380" cy="50" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="380" y="56" fill="#dde" font-size="17" text-anchor="middle">D</text>
+</svg>
+                    </div>
+                    <ul style="font-size: 1em;">
+                        <li class="fragment">кратчайший путь не ходит по кругу - каждая вершина в нём не больше раза</li>
+                        <li class="fragment">5 вершин - максимум <mark>4 ребра</mark></li>
+                        <li class="fragment">в общем случае: <code>V</code> вершин - не больше <code>V - 1</code> ребра</li>
+                    </ul>
+                    <div class="fragment opinion" style="margin-top: 0.3em;">
+                        Значит хватит <mark class="green">V - 1</mark> раунда. Осталось понять почему
+                    </div>
+                </section>
+
+                <!-- после раунда k известны все кратчайшие пути из не более чем k рёбер -->
+                <section>
+                    <h2>Каждый раунд - ещё одно ребро</h2>
+                    <div style="font-size: 0.7em; margin-top: 0.4em;">
+                        <svg width="600" height="170" viewBox="0 0 460 130">
+                            <defs>
+                                <marker id="chainArr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9"
+                                    markerHeight="9" markerUnits="userSpaceOnUse" orient="auto">
+                                    <path d="M0,0 L10,5 L0,10 z" fill="#f7a" />
+                                </marker>
+                            </defs>
+                            <g fill="#1c2030" stroke="#8ab" stroke-width="2">
+                                <circle cx="40" cy="50" r="20" />
+                                <circle cx="135" cy="50" r="20" />
+                                <circle cx="230" cy="50" r="20" />
+                                <circle cx="325" cy="50" r="20" />
+                                <circle cx="420" cy="50" r="20" />
+                            </g>
+                            <g fill="#dde" font-size="17" text-anchor="middle">
+                                <text x="40" y="56">S</text>
+                                <text x="135" y="56">x</text>
+                                <text x="230" y="56">y</text>
+                                <text x="325" y="56">z</text>
+                                <text x="420" y="56">D</text>
+                            </g>
+                            <g class="fragment"><line x1="60" y1="50" x2="114" y2="50" stroke="#f7a" stroke-width="3" marker-end="url(#chainArr)" />
+                                <text x="87" y="100" fill="#ffd54f" font-size="14" text-anchor="middle">раунд 1</text></g>
+                            <g class="fragment"><line x1="155" y1="50" x2="209" y2="50" stroke="#f7a" stroke-width="3" marker-end="url(#chainArr)" />
+                                <text x="182" y="100" fill="#ffd54f" font-size="14" text-anchor="middle">раунд 2</text></g>
+                            <g class="fragment"><line x1="250" y1="50" x2="304" y2="50" stroke="#f7a" stroke-width="3" marker-end="url(#chainArr)" />
+                                <text x="277" y="100" fill="#ffd54f" font-size="14" text-anchor="middle">раунд 3</text></g>
+                            <g class="fragment"><line x1="345" y1="50" x2="399" y2="50" stroke="#f7a" stroke-width="3" marker-end="url(#chainArr)" />
+                                <text x="372" y="100" fill="#ffd54f" font-size="14" text-anchor="middle">раунд 4</text></g>
+                        </svg>
+                    </div>
+                    <p class="fragment" style="font-size: 0.75em;">Даже при самом неудачном порядке рёбер каждый
+                        раунд продвигает правильный ответ <mark>хотя бы на одно ребро</mark> дальше по пути.</p>
+                    <div class="fragment opinion" style="margin-top: 0.3em;">
+                        После раунда <code>k</code> верны все кратчайшие пути, в которых не больше <code>k</code>
+                        рёбер
+                    </div>
+                </section>
+
+                <!-- оптимизация: если за раунд ничего не поменялось - стоп -->
+                <section>
+                    <h2>Ранняя остановка</h2>
+                    <p class="fragment" style="font-size: 0.85em;"><code>V - 1</code> раундов - это худший
+                        случай. В нашем примере хватило <mark class="green">двух</mark> (третий только проверил).</p>
+                    <p class="fragment" style="font-size: 0.85em;">Если за целый раунд ни одно расстояние не
+                        изменилось - следующий раунд будет точно таким же.</p>
+                    <div class="fragment opinion" style="margin-top: 0.5em;">
+                        Правило: раунд прошёл без изменений - останавливаемся, не дожидаясь <code>V - 1</code>
+                    </div>
+                </section>
+
+            </section>
+
+            <!-- ЧАСТЬ 3: отрицательные циклы -->
+            <section>
+
+                <section style="font-size: 70px; height: 100%; width: 100%">
+                    <div class="lesson-time">32</div>
+                    <div class="fragment">
+                        <h1 style="font-size: 1.3em;">Отрицательные циклы</h1>
+                        <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">когда кратчайшего пути нет</p>
+                    </div>
+                </section>
+
+                <!-- что такое отрицательный цикл: картинка, обход по кругу уменьшает сумму бесконечно -->
+                <section>
+                    <h2>Отрицательный цикл</h2>
+                    <div style="display: flex; align-items: center; justify-content: center; gap: 1.2em;">
+<svg width="416" height="325" viewBox="0 0 320 250">
+<defs>
+<marker id="g11n" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#667" /></marker>
+<marker id="g11h" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#f7a" /></marker>
+<marker id="g11r" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#e55" /></marker>
+</defs>
+<line x1="60.0" y1="120.0" x2="129.0" y2="120.0" stroke="#667" stroke-width="2" marker-end="url(#g11n)" />
+<text x="95.0" y="111.0" fill="#8f8" font-size="15" text-anchor="middle">2</text>
+<line x1="167.0" y1="109.4" x2="252.2" y2="56.1" stroke="#f7a" stroke-width="3" marker-end="url(#g11h)" />
+<text x="202.6" y="75.6" fill="#8f8" font-size="15" text-anchor="middle">1</text>
+<line x1="270.0" y1="65.0" x2="270.0" y2="174.0" stroke="#f7a" stroke-width="3" marker-end="url(#g11h)" />
+<text x="284.0" y="125.0" fill="#e55" font-size="15" text-anchor="middle">-3</text>
+<line x1="253.0" y1="184.4" x2="167.8" y2="131.1" stroke="#f7a" stroke-width="3" marker-end="url(#g11h)" />
+<text x="202.6" y="174.4" fill="#8f8" font-size="15" text-anchor="middle">1</text>
+<circle cx="40" cy="120" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="40" y="126" fill="#dde" font-size="17" text-anchor="middle">S</text>
+<circle cx="150" cy="120" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="150" y="126" fill="#dde" font-size="17" text-anchor="middle">A</text>
+<circle cx="270" cy="45" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="270" y="51" fill="#dde" font-size="17" text-anchor="middle">B</text>
+<circle cx="270" cy="195" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="270" y="201" fill="#dde" font-size="17" text-anchor="middle">C</text>
+</svg>
+                        <ul style="font-size: 1em; text-align: left;">
+                            <li class="fragment">круг <code>A-B-C-A</code>: <code>1 + (-3) + 1 = -1</code></li>
+                            <li class="fragment">каждый проход по кругу <mark>дешевле на 1</mark></li>
+                            <li class="fragment">можно крутиться бесконечно и уходить всё ниже</li>
+                        </ul>
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 0.4em;">
+                        Отрицательный цикл - круг, сумма весов которого меньше нуля
+                    </div>
+                </section>
+
+                <!-- кратчайшего пути больше нет: ответ "минус бесконечность" -->
+                <section>
+                    <h2>Кратчайшего пути больше нет</h2>
+                    <p class="fragment" style="font-size: 0.85em;">Какой путь из <code>S</code> в <code>A</code>
+                        самый короткий? <code>2</code>? <code>1</code>? <code>0</code>? <code>-100</code>?</p>
+                    <p class="fragment" style="font-size: 0.85em;">На любой ответ можно сделать ещё один круг и
+                        получить меньше.</p>
+                    <p class="fragment" style="font-size: 0.85em;">Говорят: расстояние равно
+                        <mark>минус бесконечности</mark>, или "кратчайшего пути не существует".</p>
+                    <div class="fragment opinion" style="margin-top: 0.4em;">
+                        Задача алгоритма здесь - не найти ответ, а <mark class="yellow">заметить</mark>, что
+                        его нет
+                    </div>
+                </section>
+
+                <!-- как обнаружить: сделать V-й раунд, если что-то улучшилось - цикл есть -->
+                <section>
+                    <h2>Как заметить цикл</h2>
+                    <ul style="font-size: 1em;">
+                        <li class="fragment">без отрицательных циклов всё готово за <code>V - 1</code> раундов</li>
+                        <li class="fragment">значит раунд номер <code>V</code> уже ничего не должен менять</li>
+                        <li class="fragment">а если поменял - какой-то путь продолжает дешеветь</li>
+                    </ul>
+                    <div class="fragment opinion" style="margin-top: 0.5em;">
+                        Правило: делаем <mark>один лишний раунд</mark>. Что-то улучшилось - в графе есть
+                        отрицательный цикл
+                    </div>
+                </section>
+
+                <!-- трассировка на маленьком графе с циклом: значения продолжают падать -->
+                <section>
+                    <h2>Смотрим на раунды</h2>
+                    <div style="display: flex; align-items: center; justify-content: center; gap: 1.2em;">
+<svg width="416" height="325" viewBox="0 0 320 250">
+<defs>
+<marker id="g12n" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#667" /></marker>
+<marker id="g12h" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#f7a" /></marker>
+<marker id="g12r" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#e55" /></marker>
+</defs>
+<line x1="60.0" y1="120.0" x2="129.0" y2="120.0" stroke="#667" stroke-width="2" marker-end="url(#g12n)" />
+<text x="95.0" y="111.0" fill="#8f8" font-size="15" text-anchor="middle">2</text>
+<line x1="167.0" y1="109.4" x2="252.2" y2="56.1" stroke="#667" stroke-width="2" marker-end="url(#g12n)" />
+<text x="202.6" y="75.6" fill="#8f8" font-size="15" text-anchor="middle">1</text>
+<line x1="270.0" y1="65.0" x2="270.0" y2="174.0" stroke="#e55" stroke-width="2" marker-end="url(#g12r)" />
+<text x="284.0" y="125.0" fill="#e55" font-size="15" text-anchor="middle">-3</text>
+<line x1="253.0" y1="184.4" x2="167.8" y2="131.1" stroke="#667" stroke-width="2" marker-end="url(#g12n)" />
+<text x="202.6" y="174.4" fill="#8f8" font-size="15" text-anchor="middle">1</text>
+<circle cx="40" cy="120" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="40" y="126" fill="#dde" font-size="17" text-anchor="middle">S</text>
+<circle cx="150" cy="120" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="150" y="126" fill="#dde" font-size="17" text-anchor="middle">A</text>
+<circle cx="270" cy="45" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="270" y="51" fill="#dde" font-size="17" text-anchor="middle">B</text>
+<circle cx="270" cy="195" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="270" y="201" fill="#dde" font-size="17" text-anchor="middle">C</text>
+</svg>
+                        <table style="font-size: 0.85em;">
+                            <tr><td><strong>раунд</strong></td><td><strong>A</strong></td><td><strong>B</strong></td><td><strong>C</strong></td></tr>
+                            <tr class="fragment"><td>1</td><td>1</td><td>3</td><td>0</td></tr>
+                            <tr class="fragment"><td>2</td><td>0</td><td>2</td><td>-1</td></tr>
+                            <tr class="fragment"><td>3</td><td>-1</td><td>1</td><td>-2</td></tr>
+                            <tr class="fragment"><td><mark>4 = V</mark></td><td>-2</td><td>0</td><td>-3</td></tr>
+                        </table>
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 0.4em;">
+                        Вершин 4, а раунд 4 всё ещё что-то меняет - цикл найден
+                    </div>
+                </section>
+
+                <!-- применение: арбитраж валют (обмен по кругу приносит прибыль) - картинка трёх валют -->
+                <section>
+                    <h2>Где это нужно: обмен валют</h2>
+                    <div style="display: flex; align-items: center; justify-content: center; gap: 1.2em;">
+<svg width="455" height="292" viewBox="0 0 350 225">
+<defs>
+<marker id="g13n" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#667" /></marker>
+<marker id="g13h" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#f7a" /></marker>
+<marker id="g13r" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#e55" /></marker>
+</defs>
+<line x1="77.2" y1="155.5" x2="157.1" y2="65.2" stroke="#667" stroke-width="2" marker-end="url(#g13n)" />
+<text x="99.5" y="99.1" fill="#8f8" font-size="15" text-anchor="middle">x0.9</text>
+<line x1="192.2" y1="64.5" x2="272.1" y2="154.8" stroke="#667" stroke-width="2" marker-end="url(#g13n)" />
+<text x="250.5" y="99.1" fill="#8f8" font-size="15" text-anchor="middle">x100</text>
+<line x1="264.0" y1="175.0" x2="87.0" y2="175.0" stroke="#667" stroke-width="2" marker-end="url(#g13n)" />
+<text x="175.0" y="204.0" fill="#8f8" font-size="15" text-anchor="middle">x0.0115</text>
+<circle cx="60" cy="175" r="26" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="60" y="181" fill="#dde" font-size="14" text-anchor="middle">USD</text>
+<circle cx="175" cy="45" r="26" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="175" y="51" fill="#dde" font-size="14" text-anchor="middle">EUR</text>
+<circle cx="290" cy="175" r="26" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="290" y="181" fill="#dde" font-size="14" text-anchor="middle">RUB</text>
+</svg>
+                        <ul style="font-size: 1em; text-align: left;">
+                            <li class="fragment">1 доллар = 0.9 евро</li>
+                            <li class="fragment">0.9 евро = 90 рублей</li>
+                            <li class="fragment">90 рублей = <mark class="green">1.035</mark> доллара</li>
+                            <li class="fragment">круг принёс прибыль, и его можно крутить снова</li>
+                        </ul>
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 0.4em;">
+                        Если курсы перевести в веса (с помощью логарифма), такой круг - ровно отрицательный
+                        цикл. Bellman-Ford ищет его у трейдеров
+                    </div>
+                </section>
+
+            </section>
+
+            <!-- ЧАСТЬ 4: место в арсенале -->
+            <section>
+
+                <section style="font-size: 70px; height: 100%; width: 100%">
+                    <div class="lesson-time">45</div>
+                    <div class="fragment">
+                        <h1 style="font-size: 1.3em;">Когда что брать</h1>
+                        <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">Bellman-Ford среди других алгоритмов</p>
+                    </div>
+                </section>
+
+                <!-- сложность O(V * E) против O(E log V) у Дейкстры: что медленнее и насколько -->
+                <section>
+                    <h2>Цена простоты</h2>
+                    <ul style="font-size: 1em;">
+                        <li class="fragment">раунд = проход по всем <code>E</code> рёбрам</li>
+                        <li class="fragment">раундов до <code>V - 1</code> - итого <mark>O(V * E)</mark></li>
+                        <li class="fragment">у Дейкстры с кучей <mark class="green">O(E log V)</mark></li>
+                    </ul>
+                    <table class="fragment" style="font-size: 0.85em; margin-top: 0.4em;">
+                        <tr><td><code>V = 10 000</code>, <code>E = 100 000</code></td><td><strong>операций</strong></td></tr>
+                        <tr><td>Bellman-Ford</td><td>~1 000 000 000</td></tr>
+                        <tr><td>Дейкстра</td><td>~1 300 000</td></tr>
+                    </table>
+                    <div class="fragment opinion" style="margin-top: 0.4em;">
+                        Bellman-Ford берём, только когда без него нельзя: есть отрицательные веса или нужен
+                        поиск цикла
+                    </div>
+                </section>
+
+                <!-- связь с ДЗ 787: K+1 раундов = пути из не более K+1 рёбер; нюанс - копия dist на каждый раунд -->
+                <section>
+                    <h2>Возвращаемся к 787</h2>
+                    <ul style="font-size: 1em;">
+                        <li class="fragment"><code>K</code> пересадок = не больше <code>K + 1</code> рейса (ребра)</li>
+                        <li class="fragment">после раунда <code>k</code> верны пути из <code>k</code> рёбер - значит
+                            делаем ровно <mark class="green">K + 1 раунд</mark></li>
+                        <li class="fragment">но вспомни раунд 1 в нашем примере: <code>A</code> стало 3 через
+                            <code>S-B-A</code> - это уже <mark>2 ребра</mark> за один раунд</li>
+                    </ul>
+                    <div class="fragment opinion" style="margin-top: 0.4em;">
+                        Поэтому в 787 каждый раунд читает расстояния из <mark class="yellow">копии</mark>,
+                        сделанной до раунда, а пишет в новую. Тогда раунд добавляет ровно одно ребро
+                    </div>
+                </section>
+
+                <!-- итоговая таблица: BFS / 0-1 BFS / Дейкстра / Bellman-Ford - веса, сложность, когда брать -->
+                <section>
+                    <h2>Шпаргалка</h2>
+                    <table style="font-size: 0.85em; width: 100%; margin-top: 0.4em;">
+                        <tr><td><strong>алгоритм</strong></td><td><strong>веса</strong></td><td><strong>сложность</strong></td></tr>
+                        <tr class="fragment"><td>BFS</td><td>все рёбра равны</td><td><code>O(V + E)</code></td></tr>
+                        <tr class="fragment"><td>0-1 BFS</td><td>только 0 и 1</td><td><code>O(V + E)</code></td></tr>
+                        <tr class="fragment"><td>Дейкстра</td><td>любые <mark class="green">неотрицательные</mark></td><td><code>O(E log V)</code></td></tr>
+                        <tr class="fragment"><td>Bellman-Ford</td><td>любые, <mark>даже отрицательные</mark></td><td><code>O(V * E)</code></td></tr>
+                    </table>
+                    <div class="fragment opinion" style="margin-top: 0.5em;">
+                        Берём самый простой алгоритм, который подходит под веса
+                    </div>
+                </section>
+
+                <!-- вопрос-разминка: по условию задачи выбрать алгоритм (3-4 коротких условия) -->
+                <section>
+                    <h2>Что выбрать?</h2>
+                    <table style="font-size: 0.85em; width: 100%;">
+                        <tr class="fragment"><td>лабиринт, каждый шаг стоит 1</td><td class="fragment"><mark class="green">BFS</mark></td></tr>
+                        <tr class="fragment"><td>100 000 городов, дороги с длинами</td><td class="fragment"><mark class="green">Дейкстра</mark></td></tr>
+                        <tr class="fragment"><td>100 городов, у некоторых рейсов кэшбэк больше цены</td><td class="fragment"><mark class="green">Bellman-Ford</mark></td></tr>
+                        <tr class="fragment"><td>можно ли бесконечно богатеть на обмене валют?</td><td class="fragment"><mark class="green">Bellman-Ford, раунд V</mark></td></tr>
+                    </table>
+                </section>
+
+            </section>
+
+            <!-- ИТОГ -->
+            <section>
+
+                <!-- итог: что запомнить, 3-4 пункта -->
+                <section>
+                    <div class="lesson-time">55</div>
+                    <h2>Что запомнить</h2>
+                    <ul style="font-size: 1em;">
+                        <li class="fragment">Bellman-Ford: раунд за раундом релаксируем <mark>все рёбра</mark></li>
+                        <li class="fragment">хватает <code>V - 1</code> раунда, раунд без изменений - стоп</li>
+                        <li class="fragment">работает с отрицательными весами, но медленнее: <code>O(V * E)</code></li>
+                        <li class="fragment">лишний <code>V</code>-й раунд что-то улучшил - есть отрицательный цикл</li>
+                    </ul>
+                </section>
+
+                <!-- домашнее задание -->
+                <section>
+                    <h2>Домашнее задание</h2>
+                    <h3 style="font-size: 0.75em;"><a href="https://visualgo.net/en/sssp" target="_blank"
+                            rel="noopener">VisuAlgo: Single-Source Shortest Paths</a></h3>
+                    <ol style="font-size: 1em; text-align: left;">
+                        <li class="fragment">выбрать алгоритм Bellman-Ford и прогнать его по шагам на готовом
+                            примере, следить за таблицей расстояний</li>
+                        <li class="fragment">нарисовать свой граф на 5 вершин с одним отрицательным ребром и
+                            запустить на нём сначала Дейкстру, потом Bellman-Ford - найти, где Дейкстра ошибётся</li>
+                        <li class="fragment">добавить в граф отрицательный цикл и посмотреть, как Bellman-Ford
+                            сообщает о нём</li>
+                    </ol>
+                </section>
+
+            </section>
+
+        </div>
+    </div>
+
+    <script src="/utils/lib/js/head.min.js"></script>
+    <script src="/utils/js/reveal.js"></script>
+    <script>
+        Reveal.initialize({
+            controls: true,
+            progress: true,
+            history: true,
+            center: true,
+            transition: 'fade',
+            transitionSpeed: 'fast',
+            dependencies: [
+                { src: '/utils/lib/js/classList.js', condition: function () { return !document.body.classList; } },
+                { src: '/utils/plugin/markdown/marked.js', condition: function () { return !!document.querySelector('[data-markdown]'); } },
+                { src: '/utils/plugin/markdown/markdown.js', condition: function () { return !!document.querySelector('[data-markdown]'); } },
+                { src: '/utils/plugin/highlight/highlight.js', async: true, callback: function () { hljs.initHighlightingOnLoad(); } },
+                { src: '/utils/plugin/zoom-js/zoom.js', async: true },
+                { src: '/utils/plugin/notes/notes.js', async: true }
+            ]
+        });
+        Reveal.configure({ slideNumber: 'c/t' });
+    </script>
+</body>
+
+</html>
