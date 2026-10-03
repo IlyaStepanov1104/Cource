@@ -1118,41 +1118,136 @@
                     </div>
                 </section>
 
-                <!-- применение: арбитраж валют (обмен по кругу приносит прибыль) - картинка трёх валют -->
+                <!-- применение: курсы обмена валют в обе стороны -->
                 <section>
                     <h2>Где это нужно: обмен валют</h2>
+                    <table style="font-size: 0.85em; margin-top: 0.4em;">
+                        <tr><td><strong>меняем 1</strong></td><td><strong>получаем</strong></td></tr>
+                        <tr class="fragment" data-fragment-index="0"><td>доллар</td><td>0.9 евро</td></tr>
+                        <tr class="fragment" data-fragment-index="0"><td>евро</td><td>1.1 доллара</td></tr>
+                        <tr class="fragment" data-fragment-index="1"><td>евро</td><td>100 рублей</td></tr>
+                        <tr class="fragment" data-fragment-index="1"><td>рубль</td><td>0.0099 евро</td></tr>
+                        <tr class="fragment" data-fragment-index="2"><td>рубль</td><td>0.0115 доллара</td></tr>
+                        <tr class="fragment" data-fragment-index="2"><td>доллар</td><td>85 рублей</td></tr>
+                    </table>
+                    <div class="fragment opinion" data-fragment-index="3" style="margin-top: 0.5em;">
+                        Можно ли, меняя деньги по кругу, вернуться с суммой <mark>больше</mark>, чем была?
+                    </div>
+                </section>
+
+                <!-- граф обменов: выгодный круг USD-EUR-RUB-USD и убыточный обратный -->
+                <section>
+                    <h2>Граф обменов</h2>
                     <div style="display: flex; align-items: center; justify-content: center; gap: 1.2em;">
-<svg width="455" height="292" viewBox="0 0 350 225">
+<div style="flex-shrink: 0;">
+<svg width="546" height="351" viewBox="0 0 420 270">
 <defs>
 <marker id="g19n" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#667" /></marker>
 <marker id="g19h" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#f7a" /></marker>
 <marker id="g19r" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#e55" /></marker>
 </defs>
-<line x1="77.2" y1="155.5" x2="157.1" y2="65.2" stroke="#667" stroke-width="2" marker-end="url(#g19n)" />
-<text x="99.5" y="99.1" fill="#8f8" font-size="15" text-anchor="middle">x0.9</text>
-<line x1="192.2" y1="64.5" x2="272.1" y2="154.8" stroke="#667" stroke-width="2" marker-end="url(#g19n)" />
-<text x="250.5" y="99.1" fill="#8f8" font-size="15" text-anchor="middle">x100</text>
-<line x1="264.0" y1="175.0" x2="87.0" y2="175.0" stroke="#667" stroke-width="2" marker-end="url(#g19n)" />
-<text x="175.0" y="204.0" fill="#8f8" font-size="15" text-anchor="middle">x0.0115</text>
-<circle cx="60" cy="175" r="26" fill="#1c2030" stroke="#8ab" stroke-width="2" />
-<text x="60" y="181" fill="#dde" font-size="14" text-anchor="middle">USD</text>
-<circle cx="175" cy="45" r="26" fill="#1c2030" stroke="#8ab" stroke-width="2" />
-<text x="175" y="51" fill="#dde" font-size="14" text-anchor="middle">EUR</text>
-<circle cx="290" cy="175" r="26" fill="#1c2030" stroke="#8ab" stroke-width="2" />
-<text x="290" y="181" fill="#dde" font-size="14" text-anchor="middle">RUB</text>
+<line x1="92.2" y1="199.7" x2="197.9" y2="75.1" stroke="#f7a" stroke-width="3" marker-end="url(#g19h)" />
+<text x="160.6" y="155.0" fill="#8f8" font-size="15" text-anchor="middle">x0.9</text>
+<line x1="187.8" y1="65.3" x2="82.1" y2="189.9" stroke="#667" stroke-width="2" marker-end="url(#g19n)" />
+<text x="119.4" y="120.0" fill="#8f8" font-size="15" text-anchor="middle">x1.1</text>
+<line x1="221.5" y1="74.4" x2="327.2" y2="198.9" stroke="#f7a" stroke-width="3" marker-end="url(#g19h)" />
+<text x="259.4" y="155.0" fill="#8f8" font-size="15" text-anchor="middle">x100</text>
+<line x1="338.5" y1="190.6" x2="232.8" y2="66.1" stroke="#667" stroke-width="2" marker-end="url(#g19n)" />
+<text x="300.6" y="120.0" fill="#8f8" font-size="15" text-anchor="middle">x0.0099</text>
+<line x1="324.0" y1="208.0" x2="97.0" y2="208.0" stroke="#f7a" stroke-width="3" marker-end="url(#g19h)" />
+<text x="210.0" y="193.0" fill="#8f8" font-size="15" text-anchor="middle">x0.0115</text>
+<line x1="96.0" y1="222.0" x2="323.0" y2="222.0" stroke="#667" stroke-width="2" marker-end="url(#g19n)" />
+<text x="210.0" y="247.0" fill="#8f8" font-size="15" text-anchor="middle">x85</text>
+<circle cx="70" cy="215" r="26" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="70" y="221" fill="#dde" font-size="14" text-anchor="middle">USD</text>
+<circle cx="210" cy="50" r="26" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="210" y="56" fill="#dde" font-size="14" text-anchor="middle">EUR</text>
+<circle cx="350" cy="215" r="26" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="350" y="221" fill="#dde" font-size="14" text-anchor="middle">RUB</text>
 </svg>
+                        </div>
                         <ul style="font-size: 1em; text-align: left;">
-                            <li class="fragment">1 доллар = 0.9 евро</li>
-                            <li class="fragment">0.9 евро = 90 рублей</li>
-                            <li class="fragment">90 рублей = <mark class="green">1.035</mark> доллара</li>
-                            <li class="fragment">круг принёс прибыль, и его можно крутить снова</li>
+                            <li class="fragment">1 доллар -&gt; 0.9 евро</li>
+                            <li class="fragment">0.9 евро -&gt; 90 рублей</li>
+                            <li class="fragment">90 рублей -&gt; <mark class="green">1.035</mark> доллара</li>
+                            <li class="fragment">обратный круг: 1 доллар -&gt; ... -&gt; <mark>0.93</mark></li>
                         </ul>
                     </div>
                     <div class="fragment opinion" style="margin-top: 0.4em;">
-                        Если курсы перевести в веса (с помощью логарифма), такой круг - ровно отрицательный
-                        цикл. Bellman-Ford ищет его у трейдеров
+                        Круг выгоден, если <mark class="green">произведение</mark> курсов больше 1. Его можно
+                        крутить снова и снова
                     </div>
                 </section>
+
+                <!-- как свести к Bellman-Ford: логарифм превращает умножение в сложение, вес = -log(курс) -->
+                <section>
+                    <h2>Как это превратить в Bellman-Ford</h2>
+                    <ul style="font-size: 1em; text-align: left;">
+                        <li class="fragment">в обмене курсы <mark>умножаются</mark>, а Bellman-Ford <mark>складывает</mark> веса</li>
+                        <li class="fragment">логарифм превращает умножение в сложение: <code>log(a * b) = log a + log b</code></li>
+                        <li class="fragment">берём вес ребра <code>= -log(курс)</code></li>
+                    </ul>
+                    <table class="fragment" style="font-size: 0.8em; margin-top: 0.3em;">
+                        <tr><td><strong>ребро</strong></td><td><strong>курс</strong></td><td><strong>log10 курса</strong></td><td><strong>вес = -log</strong></td></tr>
+                        <tr><td>USD -&gt; EUR</td><td>0.9</td><td>-0.046</td><td>0.046</td></tr>
+                        <tr><td>EUR -&gt; RUB</td><td>100</td><td>2</td><td>-2</td></tr>
+                        <tr><td>RUB -&gt; USD</td><td>0.0115</td><td>-1.939</td><td>1.939</td></tr>
+                        <tr><td><strong>круг</strong></td><td>произведение <mark class="green">1.035</mark></td><td>сумма 0.015</td><td>сумма <mark>-0.015</mark></td></tr>
+                    </table>
+                    <div class="fragment opinion" style="margin-top: 0.4em;">
+                        Выгодный круг = отрицательный цикл. Bellman-Ford находит его лишним <code>V</code>-м раундом
+                    </div>
+                </section>
+
+                <!-- тот же граф обменов с весами -log10(курс): расстояния после V-1 раундов и проверочный раунд V -->
+                <section>
+                    <h2>Запускаем Bellman-Ford</h2>
+                    <div style="display: flex; align-items: center; justify-content: center; gap: 1.2em;">
+                        <div style="flex-shrink: 0;">
+<svg width="546" height="377" viewBox="0 0 420 290">
+<defs>
+<marker id="g20n" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#667" /></marker>
+<marker id="g20h" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#f7a" /></marker>
+<marker id="g20r" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#e55" /></marker>
+</defs>
+<line x1="91.9" y1="214.4" x2="198.2" y2="85.3" stroke="#f7a" stroke-width="3" marker-end="url(#g20h)" />
+<text x="162.4" y="168.4" fill="#8f8" font-size="15" text-anchor="middle">0.046</text>
+<line x1="188.1" y1="75.6" x2="81.8" y2="204.7" stroke="#e55" stroke-width="2" marker-end="url(#g20r)" />
+<text x="117.6" y="131.6" fill="#e55" font-size="15" text-anchor="middle">-0.041</text>
+<line x1="221.1" y1="84.5" x2="327.4" y2="213.6" stroke="#f7a" stroke-width="3" marker-end="url(#g20h)" />
+<text x="257.6" y="168.4" fill="#e55" font-size="15" text-anchor="middle">-2</text>
+<line x1="338.9" y1="205.5" x2="232.6" y2="76.4" stroke="#667" stroke-width="2" marker-end="url(#g20n)" />
+<text x="302.4" y="131.6" fill="#8f8" font-size="15" text-anchor="middle">2.004</text>
+<line x1="324.0" y1="223.0" x2="97.0" y2="223.0" stroke="#f7a" stroke-width="3" marker-end="url(#g20h)" />
+<text x="210.0" y="206.0" fill="#8f8" font-size="15" text-anchor="middle">1.939</text>
+<line x1="96.0" y1="237.0" x2="323.0" y2="237.0" stroke="#e55" stroke-width="2" marker-end="url(#g20r)" />
+<text x="210.0" y="264.0" fill="#e55" font-size="15" text-anchor="middle">-1.929</text>
+<circle cx="70" cy="230" r="26" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="70" y="236" fill="#dde" font-size="14" text-anchor="middle">USD</text>
+<text x="70" y="280" fill="#ffd54f" font-size="15" text-anchor="middle">-0.030</text>
+<circle cx="210" cy="60" r="26" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="210" y="66" fill="#dde" font-size="14" text-anchor="middle">EUR</text>
+<text x="210" y="24" fill="#ffd54f" font-size="15" text-anchor="middle">0.031</text>
+<circle cx="350" cy="230" r="26" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="350" y="236" fill="#dde" font-size="14" text-anchor="middle">RUB</text>
+<text x="350" y="280" fill="#ffd54f" font-size="15" text-anchor="middle">-1.969</text>
+</svg>
+                        </div>
+                        <table class="fragment" style="font-size: 0.8em;">
+                            <tr><td><strong>раунд</strong></td><td><strong>USD</strong></td><td><strong>EUR</strong></td><td><strong>RUB</strong></td></tr>
+                            <tr><td>старт</td><td>0</td><td>∞</td><td>∞</td></tr>
+                            <tr class="fragment"><td>1</td><td>-0.015</td><td>0.046</td><td>-1.954</td></tr>
+                            <tr class="fragment"><td style="white-space: nowrap;">2 = V-1</td><td>-0.030</td><td>0.031</td><td>-1.969</td></tr>
+                            <tr class="fragment"><td><mark>3 = V</mark></td><td>-0.045</td><td>0.016</td><td>-1.984</td></tr>
+                        </table>
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 0.4em;">
+                        Раунд <code>V</code> снова всё уменьшил - отрицательный цикл найден. А <code>dist[USD] &lt; 0</code>:
+                        из 1 доллара вернулись в доллары с прибылью
+                    </div>
+                </section>
+
+            </section>
 
             </section>
 
