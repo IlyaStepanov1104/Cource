@@ -1,0 +1,7 @@
+/* Занятие 35 - DP на графах */
+
+/* поле-таблица для DP на клетках: используется на 4 слайдах, в custom-base.css аналога нет */
+.reveal table.cells { margin: 0 auto; border-collapse: collapse; font-size: 0.75em; }
+.reveal table.cells td { width: 1.8em; height: 1.8em; padding: 0; text-align: center; vertical-align: middle; border: 2px solid #556; background: #1c2030; }
+.reveal table.cells td.wall { background: #556; }
+.reveal table.cells td.hl { background: rgba(255, 119, 170, 0.35); }

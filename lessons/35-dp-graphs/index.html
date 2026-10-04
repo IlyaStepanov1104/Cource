@@ -1,0 +1,1425 @@
+<!doctype html>
+<html lang="ru">
+
+<head>
+    <meta charset="utf-8">
+    <title>Занятие 35 - DP на графах</title>
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+
+    <link rel="stylesheet" href="/utils/css/reveal.css">
+    <link rel="stylesheet" href="/utils/lib/css/animate.css">
+    <link rel="stylesheet" href="/utils/css/theme/night.css" id="theme">
+    <link rel="stylesheet" href="/utils/lib/css/zenburn.css">
+    <link rel="stylesheet" href="/utils/css/custom-base.css">
+    <link rel="stylesheet" href="css-custom/custom.css">
+
+    <script>
+        var link = document.createElement('link');
+        link.rel = 'stylesheet'; link.type = 'text/css';
+        link.href = window.location.search.match(/print-pdf/gi)
+            ? '/utils/css/print/pdf.css'
+            : '/utils/css/print/paper.css';
+        document.getElementsByTagName('head')[0].appendChild(link);
+    </script>
+</head>
+
+<body>
+    <div class="reveal">
+        <div class="slides">
+
+            <!-- титульный слайд -->
+            <section style="font-size: 70px; height: 100%; width: 100%">
+                <div class="lesson-time">0</div>
+                <div class="fragment">
+                    <h1 class="animated" style="font-size: 1.5em;">DP на графах</h1>
+                    <p style="text-align: center; font-size: 0.45em; opacity: 0.6;">считаем ответ по порядку, а не перебором</p>
+                    <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">Занятие 35</p>
+                </div>
+            </section>
+
+            <!-- ЧАСТЬ 0: разбор ДЗ (VisuAlgo, Bellman-Ford) -->
+            <section>
+
+                <section style="font-size: 70px; height: 100%; width: 100%">
+                    <div class="lesson-time">0</div>
+                    <div class="fragment">
+                        <h1 style="font-size: 1.3em;">Разбор ДЗ</h1>
+                        <p style="text-align: center; font-size: 0.4em; opacity: 0.5;"><a href="https://visualgo.net/en/sssp" target="_blank" rel="noopener">VisuAlgo: Single-Source Shortest Paths</a></p>
+                    </div>
+                </section>
+
+                <!-- разбор ДЗ: граф ученика с отрицательным ребром - где ошиблась Дейкстра (SVG) -->
+                <section>
+                    <h2>Где ошиблась Дейкстра</h2>
+<div style="display: flex; align-items: center; justify-content: center; gap: 1.2em;">
+<div class="fragment">
+<svg width="484" height="242" viewBox="0 -10 440 230">
+<defs>
+<marker id="h1n" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#667" /></marker>
+<marker id="h1h" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#f7a" /></marker>
+<marker id="h1r" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#e55" /></marker>
+<marker id="h1y" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#fd6" /></marker>
+<marker id="h1g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#7d7" /></marker>
+</defs>
+<line x1="57.6" y1="100.5" x2="151.5" y2="50.0" stroke="#667" stroke-width="2" marker-end="url(#h1n)" />
+<text x="111.2" y="91.4" fill="#8f8" font-size="15" text-anchor="middle">2</text>
+<line x1="57.6" y1="119.5" x2="151.5" y2="170.0" stroke="#667" stroke-width="2" marker-end="url(#h1n)" />
+<text x="111.2" y="138.6" fill="#8f8" font-size="15" text-anchor="middle">5</text>
+<line x1="170.0" y1="160.0" x2="170.0" y2="61.0" stroke="#f7a" stroke-width="3" marker-end="url(#h1h)" />
+<text x="183.0" y="115.0" fill="#f88" font-size="15" text-anchor="middle">-4</text>
+<line x1="190.0" y1="40.0" x2="279.0" y2="40.0" stroke="#667" stroke-width="2" marker-end="url(#h1n)" />
+<text x="235.0" y="58.0" fill="#8f8" font-size="15" text-anchor="middle">1</text>
+<line x1="316.4" y1="51.5" x2="382.8" y2="98.0" stroke="#667" stroke-width="2" marker-end="url(#h1n)" />
+<text x="342.5" y="90.7" fill="#8f8" font-size="15" text-anchor="middle">2</text>
+<circle cx="40" cy="110" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="40" y="116" fill="#dde" font-size="17" text-anchor="middle">S</text>
+<circle cx="170" cy="40" r="20" fill="#1c2030" stroke="#f7a" stroke-width="2" />
+<text x="170" y="46" fill="#dde" font-size="17" text-anchor="middle">A</text>
+<circle cx="170" cy="180" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="170" y="186" fill="#dde" font-size="17" text-anchor="middle">B</text>
+<circle cx="300" cy="40" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="300" y="46" fill="#dde" font-size="17" text-anchor="middle">C</text>
+<circle cx="400" cy="110" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="400" y="116" fill="#dde" font-size="17" text-anchor="middle">T</text>
+<text x="170" y="12" fill="#fd6" font-size="16" font-weight="bold" text-anchor="middle">2 / 1</text>
+<text x="300" y="12" fill="#fd6" font-size="16" font-weight="bold" text-anchor="middle">3 / 2</text>
+<text x="400" y="82" fill="#fd6" font-size="16" font-weight="bold" text-anchor="middle">5 / 4</text>
+</svg>
+</div>
+<ul style="font-size: 0.75em; text-align: left;">
+    <li class="fragment">Дейкстра закрыла <code>A</code> с расстоянием <mark>2</mark></li>
+    <li class="fragment">потом дошла до <code>B</code>: ребро <code>B -&gt; A</code> с весом <code>-4</code> даёт <mark class="green">1</mark></li>
+    <li class="fragment">но <code>A</code> уже закрыта, и <code>C</code>, <code>T</code> посчитаны от старого значения</li>
+    <li class="fragment">над вершинами: ответ Дейкстры / правильный ответ</li>
+</ul>
+</div>
+                </section>
+
+                <!-- разбор ДЗ: как Bellman-Ford сообщил об отрицательном цикле -->
+                <section>
+                    <h2>Отрицательный цикл</h2>
+<div style="display: flex; align-items: center; justify-content: center; gap: 1.2em;">
+<div class="fragment">
+<svg width="484" height="242" viewBox="0 0 440 220">
+<defs>
+<marker id="h2n" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#667" /></marker>
+<marker id="h2h" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#f7a" /></marker>
+<marker id="h2r" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#e55" /></marker>
+<marker id="h2y" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#fd6" /></marker>
+<marker id="h2g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#7d7" /></marker>
+</defs>
+<line x1="57.6" y1="100.5" x2="151.5" y2="50.0" stroke="#667" stroke-width="2" marker-end="url(#h2n)" />
+<text x="111.2" y="91.4" fill="#8f8" font-size="15" text-anchor="middle">2</text>
+<line x1="57.6" y1="119.5" x2="151.5" y2="170.0" stroke="#667" stroke-width="2" marker-end="url(#h2n)" />
+<text x="111.2" y="138.6" fill="#8f8" font-size="15" text-anchor="middle">5</text>
+<line x1="170.0" y1="160.0" x2="170.0" y2="61.0" stroke="#e55" stroke-width="3" marker-end="url(#h2r)" />
+<text x="183.0" y="115.0" fill="#f88" font-size="15" text-anchor="middle">-4</text>
+<line x1="190.0" y1="40.0" x2="279.0" y2="40.0" stroke="#e55" stroke-width="3" marker-end="url(#h2r)" />
+<text x="235.0" y="58.0" fill="#8f8" font-size="15" text-anchor="middle">1</text>
+<line x1="286.4" y1="54.7" x2="184.3" y2="164.6" stroke="#e55" stroke-width="3" marker-end="url(#h2r)" />
+<text x="244.5" y="123.8" fill="#8f8" font-size="15" text-anchor="middle">1</text>
+<line x1="316.4" y1="51.5" x2="382.8" y2="98.0" stroke="#667" stroke-width="2" marker-end="url(#h2n)" />
+<text x="342.5" y="90.7" fill="#8f8" font-size="15" text-anchor="middle">2</text>
+<circle cx="40" cy="110" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="40" y="116" fill="#dde" font-size="17" text-anchor="middle">S</text>
+<circle cx="170" cy="40" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="170" y="46" fill="#dde" font-size="17" text-anchor="middle">A</text>
+<circle cx="170" cy="180" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="170" y="186" fill="#dde" font-size="17" text-anchor="middle">B</text>
+<circle cx="300" cy="40" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="300" y="46" fill="#dde" font-size="17" text-anchor="middle">C</text>
+<circle cx="400" cy="110" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="400" y="116" fill="#dde" font-size="17" text-anchor="middle">T</text>
+</svg>
+</div>
+<ul style="font-size: 0.75em; text-align: left;">
+    <li class="fragment">добавили ребро <code>C -&gt; B</code>: цикл <code>A - C - B - A</code></li>
+    <li class="fragment">его вес: <code>1 + 1 - 4 = -2</code></li>
+    <li class="fragment">после <code>V - 1 = 4</code> раундов делаем ещё один, и расстояния снова уменьшаются</li>
+</ul>
+</div>
+<div class="fragment opinion" style="margin-top: 0.6em;">
+    Значит, есть отрицательный цикл: кратчайшего пути до <code>A</code>, <code>B</code>, <code>C</code>, <code>T</code> не существует
+</div>
+                </section>
+
+            </section>
+
+            <!-- ЧАСТЬ 1: что такое динамика - на знакомом примере -->
+            <section>
+
+                <section style="font-size: 70px; height: 100%; width: 100%">
+                    <div class="lesson-time">5</div>
+                    <div class="fragment">
+                        <h1 style="font-size: 1.3em;">Что такое динамика</h1>
+                        <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">на уже знакомом примере</p>
+                    </div>
+                </section>
+
+                <!-- вспоминаем занятие 26: число путей в ациклическом графе, SVG графа с подписанными числами -->
+                <section>
+                    <h2>Вспоминаем занятие 26</h2>
+<p class="fragment" style="font-size: 0.8em;">Сколько путей из <code>S</code> в <code>T</code>?</p>
+<div class="fragment">
+<svg width="420" height="220" viewBox="0 0 420 220">
+<defs>
+<marker id="d1n" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#667" /></marker>
+<marker id="d1h" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#f7a" /></marker>
+<marker id="d1r" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#e55" /></marker>
+<marker id="d1y" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#fd6" /></marker>
+<marker id="d1g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#7d7" /></marker>
+</defs>
+<line x1="57.6" y1="100.4" x2="131.6" y2="60.1" stroke="#667" stroke-width="2" marker-end="url(#d1n)" />
+<line x1="57.6" y1="119.6" x2="131.6" y2="159.9" stroke="#667" stroke-width="2" marker-end="url(#d1n)" />
+<line x1="170.0" y1="50.0" x2="249.0" y2="50.0" stroke="#667" stroke-width="2" marker-end="url(#d1n)" />
+<line x1="164.1" y1="64.1" x2="255.2" y2="155.2" stroke="#667" stroke-width="2" marker-end="url(#d1n)" />
+<line x1="170.0" y1="170.0" x2="249.0" y2="170.0" stroke="#667" stroke-width="2" marker-end="url(#d1n)" />
+<line x1="287.6" y1="59.6" x2="361.6" y2="99.9" stroke="#667" stroke-width="2" marker-end="url(#d1n)" />
+<line x1="287.6" y1="160.4" x2="361.6" y2="120.1" stroke="#667" stroke-width="2" marker-end="url(#d1n)" />
+<circle cx="40" cy="110" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="40" y="116" fill="#dde" font-size="17" text-anchor="middle">S</text>
+<circle cx="150" cy="50" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="150" y="56" fill="#dde" font-size="17" text-anchor="middle">A</text>
+<circle cx="150" cy="170" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="150" y="176" fill="#dde" font-size="17" text-anchor="middle">B</text>
+<circle cx="270" cy="50" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="270" y="56" fill="#dde" font-size="17" text-anchor="middle">C</text>
+<circle cx="270" cy="170" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="270" y="176" fill="#dde" font-size="17" text-anchor="middle">D</text>
+<circle cx="380" cy="110" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="380" y="116" fill="#dde" font-size="17" text-anchor="middle">T</text>
+</svg>
+</div>
+<table style="font-size: 0.75em; margin: 0 auto;">
+<tr><td><strong>S</strong></td><td><strong>A</strong></td><td><strong>B</strong></td><td><strong>C</strong></td><td><strong>D</strong></td><td><strong>T</strong></td></tr>
+<tr><td class="fragment">1</td><td class="fragment">1</td><td class="fragment">1</td><td class="fragment">1</td><td class="fragment">1 + 1 = 2</td><td class="fragment">1 + 2 = <mark class="green">3</mark></td></tr>
+</table>
+                </section>
+
+                <!-- вопрос: почему мы ни разу не считали одно и то же дважды? -->
+                <section>
+                    <h2>Вопрос</h2>
+<ul style="font-size: 0.9em; text-align: left;">
+    <li class="fragment">Сколько раз мы считали число путей до <code>D</code>?</li>
+    <li class="fragment"><mark class="green">Один раз</mark>: записали 2 и дальше просто брали готовое число</li>
+    <li class="fragment">а перебор маршрутов целиком проходил бы кусок <code>S ... D</code> заново для каждого продолжения</li>
+</ul>
+<div class="fragment opinion" style="margin-top: 0.6em;">
+    Поле 20 на 20 клеток: маршрутов из угла в угол больше <mark>35 миллиардов</mark>, а клеток всего 400
+</div>
+                </section>
+
+                <!-- идея: ответ для вершины собирается из ответов соседей, которые уже посчитаны -->
+                <section>
+                    <h2>Ответ из готовых ответов</h2>
+<div style="display: flex; align-items: center; justify-content: center; gap: 1.2em;">
+<div class="fragment">
+<svg width="330" height="286" viewBox="-20 0 320 260">
+<defs>
+<marker id="inn" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#667" /></marker>
+<marker id="inh" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#f7a" /></marker>
+<marker id="inr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#e55" /></marker>
+<marker id="iny" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#fd6" /></marker>
+<marker id="ing" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#7d7" /></marker>
+</defs>
+<line x1="58.1" y1="48.6" x2="211.0" y2="121.0" stroke="#667" stroke-width="2" marker-end="url(#inn)" />
+<line x1="60.0" y1="130.0" x2="209.0" y2="130.0" stroke="#667" stroke-width="2" marker-end="url(#inn)" />
+<line x1="58.1" y1="211.4" x2="211.0" y2="139.0" stroke="#667" stroke-width="2" marker-end="url(#inn)" />
+<circle cx="40" cy="40" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="40" y="46" fill="#dde" font-size="17" text-anchor="middle">X</text>
+<circle cx="40" cy="130" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="40" y="136" fill="#dde" font-size="17" text-anchor="middle">Y</text>
+<circle cx="40" cy="220" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="40" y="226" fill="#dde" font-size="17" text-anchor="middle">Z</text>
+<circle cx="230" cy="130" r="20" fill="#1c2030" stroke="#7d7" stroke-width="2" />
+<text x="230" y="136" fill="#dde" font-size="17" text-anchor="middle">v</text>
+<text x="4" y="46" fill="#fd6" font-size="16" font-weight="bold" text-anchor="middle">2</text>
+<text x="4" y="136" fill="#fd6" font-size="16" font-weight="bold" text-anchor="middle">5</text>
+<text x="4" y="226" fill="#fd6" font-size="16" font-weight="bold" text-anchor="middle">1</text>
+<text x="230" y="100" fill="#7d7" font-size="16" font-weight="bold" text-anchor="middle">2 + 5 + 1 = 8</text>
+</svg>
+</div>
+<ul style="font-size: 0.8em; text-align: left;">
+    <li class="fragment">в <code>v</code> ведут стрелки из <code>X</code>, <code>Y</code>, <code>Z</code></li>
+    <li class="fragment">для них ответы <mark>уже посчитаны</mark>: 2, 5, 1</li>
+    <li class="fragment">любой путь в <code>v</code> - это путь в одну из них плюс одна стрелка</li>
+    <li class="fragment">значит, путей в <code>v</code>: <mark class="green">8</mark></li>
+</ul>
+</div>
+                </section>
+
+                <!-- это и есть динамическое программирование: название и откуда оно взялось -->
+                <section>
+                    <h2>Динамическое программирование</h2>
+<ul style="font-size: 0.85em; text-align: left;">
+    <li class="fragment">храним ответы для маленьких задач в таблице</li>
+    <li class="fragment">большой ответ собираем из маленьких, ничего не пересчитывая</li>
+    <li class="fragment">придумал Ричард Беллман в 1950-х - тот самый Беллман из <mark>Bellman-Ford</mark></li>
+    <li class="fragment">"программирование" здесь значит "составление плана, таблицы", а не написание кода</li>
+</ul>
+                </section>
+
+                <!-- три вопроса динамики: что храним (состояние), как считаем (переход), в каком порядке -->
+                <section>
+                    <h2>Три вопроса динамики</h2>
+<div class="timeline">
+    <div class="timeline-item fragment">
+        <div class="timeline-marker">1</div>
+        <div class="timeline-content"><strong>Что храним?</strong> <mark>Состояние</mark>: "число путей из S до вершины v"</div>
+    </div>
+    <div class="timeline-item fragment">
+        <div class="timeline-marker">2</div>
+        <div class="timeline-content"><strong>Как считаем?</strong> <mark>Переход</mark>: сумма ответов по стрелкам, входящим в v</div>
+    </div>
+    <div class="timeline-item fragment">
+        <div class="timeline-marker">3</div>
+        <div class="timeline-content"><strong>В каком порядке?</strong> Так, чтобы всё нужное было уже посчитано</div>
+    </div>
+</div>
+<div class="fragment opinion" style="margin-top: 0.6em;">
+    Ответили на три вопроса - алгоритм готов
+</div>
+                </section>
+
+                <!-- порядок = топологический (занятие 20): картинка графа, вытянутого в линию слева направо -->
+                <section>
+                    <h2>Порядок = топологический</h2>
+<div class="fragment">
+<svg width="575" height="275" viewBox="0 0 460 220">
+<defs>
+<marker id="d2n" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#667" /></marker>
+<marker id="d2h" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#f7a" /></marker>
+<marker id="d2r" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#e55" /></marker>
+<marker id="d2y" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#fd6" /></marker>
+<marker id="d2g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#7d7" /></marker>
+</defs>
+<line x1="60.0" y1="110.0" x2="94.0" y2="110.0" stroke="#667" stroke-width="2" marker-end="url(#d2n)" />
+<path d="M56.1,98.2 Q115.0,55.0 173.1,97.6" fill="none" stroke="#667" stroke-width="2" marker-end="url(#d2n)" />
+<path d="M131.1,121.8 Q190.0,165.0 248.1,122.4" fill="none" stroke="#667" stroke-width="2" marker-end="url(#d2n)" />
+<path d="M131.3,98.4 Q227.5,30.0 322.9,97.8" fill="none" stroke="#667" stroke-width="2" marker-end="url(#d2n)" />
+<path d="M206.1,121.8 Q265.0,165.0 323.1,122.4" fill="none" stroke="#667" stroke-width="2" marker-end="url(#d2n)" />
+<path d="M281.1,98.2 Q340.0,55.0 398.1,97.6" fill="none" stroke="#667" stroke-width="2" marker-end="url(#d2n)" />
+<line x1="360.0" y1="110.0" x2="394.0" y2="110.0" stroke="#667" stroke-width="2" marker-end="url(#d2n)" />
+<circle cx="40" cy="110" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="40" y="116" fill="#dde" font-size="17" text-anchor="middle">S</text>
+<circle cx="115" cy="110" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="115" y="116" fill="#dde" font-size="17" text-anchor="middle">A</text>
+<circle cx="190" cy="110" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="190" y="116" fill="#dde" font-size="17" text-anchor="middle">B</text>
+<circle cx="265" cy="110" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="265" y="116" fill="#dde" font-size="17" text-anchor="middle">C</text>
+<circle cx="340" cy="110" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="340" y="116" fill="#dde" font-size="17" text-anchor="middle">D</text>
+<circle cx="415" cy="110" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="415" y="116" fill="#dde" font-size="17" text-anchor="middle">T</text>
+</svg>
+</div>
+<ul style="font-size: 0.8em; text-align: left;">
+    <li class="fragment">тот же граф, вершины выстроены в топологическом порядке (занятие 20)</li>
+    <li class="fragment">все стрелки идут <mark>слева направо</mark></li>
+    <li class="fragment">идём слева направо: к каждой вершине все, кто ведёт в неё, уже готовы</li>
+</ul>
+                </section>
+
+                <!-- а если в графе цикл: картинка, вершина ждёт сама себя - динамика ломается -->
+                <section>
+                    <h2>А если есть цикл?</h2>
+<div style="display: flex; align-items: center; justify-content: center; gap: 1.2em;">
+<div class="fragment">
+<svg width="384" height="264" viewBox="0 0 320 220">
+<defs>
+<marker id="cyn" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#667" /></marker>
+<marker id="cyh" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#f7a" /></marker>
+<marker id="cyr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#e55" /></marker>
+<marker id="cyy" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#fd6" /></marker>
+<marker id="cyg" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#7d7" /></marker>
+</defs>
+<line x1="60.0" y1="110.0" x2="139.0" y2="110.0" stroke="#667" stroke-width="2" marker-end="url(#cyn)" />
+<line x1="177.3" y1="99.9" x2="261.9" y2="50.6" stroke="#e55" stroke-width="3" marker-end="url(#cyr)" />
+<line x1="280.0" y1="60.0" x2="280.0" y2="159.0" stroke="#e55" stroke-width="3" marker-end="url(#cyr)" />
+<line x1="262.7" y1="169.9" x2="178.1" y2="120.6" stroke="#e55" stroke-width="3" marker-end="url(#cyr)" />
+<circle cx="40" cy="110" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="40" y="116" fill="#dde" font-size="17" text-anchor="middle">S</text>
+<circle cx="160" cy="110" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="160" y="116" fill="#dde" font-size="17" text-anchor="middle">A</text>
+<circle cx="280" cy="40" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="280" y="46" fill="#dde" font-size="17" text-anchor="middle">B</text>
+<circle cx="280" cy="180" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="280" y="186" fill="#dde" font-size="17" text-anchor="middle">C</text>
+</svg>
+</div>
+<ul style="font-size: 0.8em; text-align: left;">
+    <li class="fragment">чтобы посчитать <code>A</code>, нужен ответ для <code>C</code></li>
+    <li class="fragment">для <code>C</code> нужен <code>B</code>, а для <code>B</code> - сам <code>A</code></li>
+    <li class="fragment">вершина <mark>ждёт сама себя</mark>: подходящего порядка нет</li>
+</ul>
+</div>
+<div class="fragment opinion" style="margin-top: 0.6em;">
+    Динамика по вершинам работает на графе <mark class="green">без циклов</mark> (DAG)
+</div>
+                </section>
+
+                <!-- неожиданно: Bellman-Ford тоже динамика - "лучший путь не длиннее k рёбер" -->
+                <section>
+                    <h2>Bellman-Ford - тоже динамика</h2>
+<div class="timeline">
+    <div class="timeline-item fragment">
+        <div class="timeline-marker">1</div>
+        <div class="timeline-content"><strong>Состояние:</strong> самый дешёвый путь до v, в котором <mark>не больше k рёбер</mark></div>
+    </div>
+    <div class="timeline-item fragment">
+        <div class="timeline-marker">2</div>
+        <div class="timeline-content"><strong>Переход:</strong> путь из k рёбер = путь из k - 1 ребра + ещё одно ребро</div>
+    </div>
+    <div class="timeline-item fragment">
+        <div class="timeline-marker">3</div>
+        <div class="timeline-content"><strong>Порядок:</strong> k = 1, 2, 3, ... - это и есть раунды</div>
+    </div>
+</div>
+<div class="fragment opinion" style="margin-top: 0.6em;">
+    Цикл в графе есть, но k только растёт - по кругу таблица не пойдёт
+</div>
+                </section>
+
+            </section>
+
+            <!-- ЧАСТЬ 2: кратчайший и длиннейший путь в DAG -->
+            <section>
+
+                <section style="font-size: 70px; height: 100%; width: 100%">
+                    <div class="lesson-time">25</div>
+                    <div class="fragment">
+                        <h1 style="font-size: 1.3em;">Самый длинный путь</h1>
+                        <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">кратчайший и длиннейший путь в графе без циклов</p>
+                    </div>
+                </section>
+
+                <!-- задача: план дел / курсов с зависимостями, сколько минимум дней на всё (SVG) -->
+                <section>
+                    <h2>Сколько дней на проект?</h2>
+<div style="display: flex; align-items: center; justify-content: center; gap: 1.2em;">
+<div class="fragment">
+<svg width="473" height="269" viewBox="0 -5 430 250">
+<defs>
+<marker id="p1n" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#667" /></marker>
+<marker id="p1h" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#f7a" /></marker>
+<marker id="p1r" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#e55" /></marker>
+<marker id="p1y" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#fd6" /></marker>
+<marker id="p1g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#7d7" /></marker>
+</defs>
+<line x1="56.9" y1="109.3" x2="132.3" y2="61.3" stroke="#667" stroke-width="2" marker-end="url(#p1n)" />
+<text x="102.0" y="101.0" fill="#8f8" font-size="15" text-anchor="middle">3</text>
+<line x1="56.9" y1="130.7" x2="132.3" y2="178.7" stroke="#667" stroke-width="2" marker-end="url(#p1n)" />
+<text x="102.0" y="149.0" fill="#8f8" font-size="15" text-anchor="middle">2</text>
+<line x1="170.0" y1="50.0" x2="259.0" y2="50.0" stroke="#667" stroke-width="2" marker-end="url(#p1n)" />
+<text x="215.0" y="68.0" fill="#8f8" font-size="15" text-anchor="middle">4</text>
+<line x1="163.6" y1="175.3" x2="265.7" y2="65.4" stroke="#667" stroke-width="2" marker-end="url(#p1n)" />
+<text x="179.5" y="144.2" fill="#8f8" font-size="15" text-anchor="middle">1</text>
+<line x1="163.6" y1="64.7" x2="265.7" y2="174.6" stroke="#667" stroke-width="2" marker-end="url(#p1n)" />
+<text x="179.5" y="105.8" fill="#8f8" font-size="15" text-anchor="middle">2</text>
+<line x1="170.0" y1="190.0" x2="259.0" y2="190.0" stroke="#667" stroke-width="2" marker-end="url(#p1n)" />
+<text x="215.0" y="182.0" fill="#8f8" font-size="15" text-anchor="middle">5</text>
+<line x1="296.9" y1="60.7" x2="372.3" y2="108.7" stroke="#667" stroke-width="2" marker-end="url(#p1n)" />
+<text x="328.0" y="101.0" fill="#8f8" font-size="15" text-anchor="middle">3</text>
+<line x1="296.9" y1="179.3" x2="372.3" y2="131.3" stroke="#667" stroke-width="2" marker-end="url(#p1n)" />
+<text x="328.0" y="149.0" fill="#8f8" font-size="15" text-anchor="middle">2</text>
+<circle cx="40" cy="120" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="40" y="126" fill="#dde" font-size="17" text-anchor="middle">S</text>
+<circle cx="150" cy="50" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="150" y="56" fill="#dde" font-size="17" text-anchor="middle">A</text>
+<circle cx="150" cy="190" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="150" y="196" fill="#dde" font-size="17" text-anchor="middle">B</text>
+<circle cx="280" cy="50" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="280" y="56" fill="#dde" font-size="17" text-anchor="middle">C</text>
+<circle cx="280" cy="190" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="280" y="196" fill="#dde" font-size="17" text-anchor="middle">D</text>
+<circle cx="390" cy="120" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="390" y="126" fill="#dde" font-size="17" text-anchor="middle">T</text>
+</svg>
+</div>
+<ul style="font-size: 0.7em; text-align: left;">
+    <li class="fragment">команда делает игру</li>
+    <li class="fragment">стрелка - работа, число - сколько дней она идёт</li>
+    <li class="fragment">вершина - момент "всё, что в неё входит, готово", дальше можно начинать следующие работы</li>
+    <li class="fragment">людей много: независимые работы идут <mark>одновременно</mark></li>
+</ul>
+</div>
+<div class="fragment opinion" style="margin-top: 0.6em;">
+    Через сколько дней наступит <code>T</code> - игра готова?
+</div>
+                </section>
+
+                <!-- это длиннейший путь в ациклическом графе, вопрос: подойдёт ли Дейкстра? -->
+                <section>
+                    <h2>Это самый длинный путь</h2>
+<ul style="font-size: 0.9em; text-align: left;">
+    <li class="fragment"><code>T</code> наступит, когда закончится <mark>самая долгая</mark> цепочка работ</li>
+    <li class="fragment">значит, ответ - длиннейший путь из <code>S</code> в <code>T</code></li>
+    <li class="fragment">подойдёт ли Дейкстра, если заменить min на max?</li>
+    <li class="fragment">нет: Дейкстра закрывает вершину навсегда, а более длинный путь до неё может найтись позже</li>
+</ul>
+                </section>
+
+                <!-- длиннейший путь в обычном графе - очень трудная задача, в DAG - лёгкая (картинка с циклом vs без) -->
+                <section>
+                    <h2>С циклами трудно, без них легко</h2>
+<div class="compare">
+<div class="compare-block fragment">
+<h4>Граф с циклами</h4>
+<svg width="225" height="216" viewBox="0 0 250 240">
+<defs>
+<marker id="chn" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#667" /></marker>
+<marker id="chh" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#f7a" /></marker>
+<marker id="chr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#e55" /></marker>
+<marker id="chy" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#fd6" /></marker>
+<marker id="chg" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#7d7" /></marker>
+</defs>
+<line x1="70.0" y1="50.0" x2="179.0" y2="50.0" stroke="#667" stroke-width="2" marker-end="url(#chn)" />
+<line x1="200.0" y1="70.0" x2="200.0" y2="169.0" stroke="#667" stroke-width="2" marker-end="url(#chn)" />
+<line x1="180.0" y1="190.0" x2="71.0" y2="190.0" stroke="#667" stroke-width="2" marker-end="url(#chn)" />
+<line x1="50.0" y1="170.0" x2="50.0" y2="71.0" stroke="#667" stroke-width="2" marker-end="url(#chn)" />
+<line x1="64.6" y1="63.6" x2="184.6" y2="175.7" stroke="#667" stroke-width="2" marker-end="url(#chn)" />
+<line x1="64.6" y1="176.4" x2="184.6" y2="64.3" stroke="#667" stroke-width="2" marker-end="url(#chn)" />
+<circle cx="50" cy="50" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="50" y="56" fill="#dde" font-size="17" text-anchor="middle">A</text>
+<circle cx="200" cy="50" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="200" y="56" fill="#dde" font-size="17" text-anchor="middle">B</text>
+<circle cx="200" cy="190" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="200" y="196" fill="#dde" font-size="17" text-anchor="middle">C</text>
+<circle cx="50" cy="190" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="50" y="196" fill="#dde" font-size="17" text-anchor="middle">D</text>
+</svg>
+<p style="font-size: 0.6em;">путь может ходить по кругу, а если запретить повторять вершины, задача становится <mark>очень трудной</mark>: быстрого алгоритма не знает никто</p>
+</div>
+<div class="compare-block fragment">
+<h4>Граф без циклов</h4>
+<svg width="258" height="147" viewBox="0 0 430 245">
+<defs>
+<marker id="den" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#667" /></marker>
+<marker id="deh" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#f7a" /></marker>
+<marker id="der" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#e55" /></marker>
+<marker id="dey" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#fd6" /></marker>
+<marker id="deg" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#7d7" /></marker>
+</defs>
+<line x1="56.9" y1="109.3" x2="132.3" y2="61.3" stroke="#667" stroke-width="2" marker-end="url(#den)" />
+<text x="102.0" y="101.0" fill="#8f8" font-size="15" text-anchor="middle">3</text>
+<line x1="56.9" y1="130.7" x2="132.3" y2="178.7" stroke="#667" stroke-width="2" marker-end="url(#den)" />
+<text x="102.0" y="149.0" fill="#8f8" font-size="15" text-anchor="middle">2</text>
+<line x1="170.0" y1="50.0" x2="259.0" y2="50.0" stroke="#667" stroke-width="2" marker-end="url(#den)" />
+<text x="215.0" y="68.0" fill="#8f8" font-size="15" text-anchor="middle">4</text>
+<line x1="163.6" y1="175.3" x2="265.7" y2="65.4" stroke="#667" stroke-width="2" marker-end="url(#den)" />
+<text x="179.5" y="144.2" fill="#8f8" font-size="15" text-anchor="middle">1</text>
+<line x1="163.6" y1="64.7" x2="265.7" y2="174.6" stroke="#667" stroke-width="2" marker-end="url(#den)" />
+<text x="179.5" y="105.8" fill="#8f8" font-size="15" text-anchor="middle">2</text>
+<line x1="170.0" y1="190.0" x2="259.0" y2="190.0" stroke="#667" stroke-width="2" marker-end="url(#den)" />
+<text x="215.0" y="182.0" fill="#8f8" font-size="15" text-anchor="middle">5</text>
+<line x1="296.9" y1="60.7" x2="372.3" y2="108.7" stroke="#667" stroke-width="2" marker-end="url(#den)" />
+<text x="328.0" y="101.0" fill="#8f8" font-size="15" text-anchor="middle">3</text>
+<line x1="296.9" y1="179.3" x2="372.3" y2="131.3" stroke="#667" stroke-width="2" marker-end="url(#den)" />
+<text x="328.0" y="149.0" fill="#8f8" font-size="15" text-anchor="middle">2</text>
+<circle cx="40" cy="120" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="40" y="126" fill="#dde" font-size="17" text-anchor="middle">S</text>
+<circle cx="150" cy="50" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="150" y="56" fill="#dde" font-size="17" text-anchor="middle">A</text>
+<circle cx="150" cy="190" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="150" y="196" fill="#dde" font-size="17" text-anchor="middle">B</text>
+<circle cx="280" cy="50" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="280" y="56" fill="#dde" font-size="17" text-anchor="middle">C</text>
+<circle cx="280" cy="190" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="280" y="196" fill="#dde" font-size="17" text-anchor="middle">D</text>
+<circle cx="390" cy="120" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="390" y="126" fill="#dde" font-size="17" text-anchor="middle">T</text>
+</svg>
+<p style="font-size: 0.6em;">повторить вершину невозможно в принципе: хватает <mark class="green">одного прохода</mark> в топологическом порядке</p>
+</div>
+</div>
+                </section>
+
+                <!-- состояние и переход: best[v] = лучшее из best[u] + вес по входящим рёбрам -->
+                <section>
+                    <h2>Состояние и переход</h2>
+<div style="display: flex; align-items: center; justify-content: center; gap: 1.2em;">
+<div class="fragment">
+<svg width="308" height="264" viewBox="0 -10 280 255">
+<defs>
+<marker id="fmn" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#667" /></marker>
+<marker id="fmh" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#f7a" /></marker>
+<marker id="fmr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#e55" /></marker>
+<marker id="fmy" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#fd6" /></marker>
+<marker id="fmg" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#7d7" /></marker>
+</defs>
+<line x1="58.8" y1="56.9" x2="210.3" y2="112.7" stroke="#667" stroke-width="2" marker-end="url(#fmn)" />
+<text x="130.5" y="102.2" fill="#8f8" font-size="15" text-anchor="middle">4</text>
+<line x1="58.8" y1="183.1" x2="210.3" y2="127.3" stroke="#667" stroke-width="2" marker-end="url(#fmn)" />
+<text x="130.5" y="147.8" fill="#8f8" font-size="15" text-anchor="middle">1</text>
+<circle cx="40" cy="50" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="40" y="56" fill="#dde" font-size="17" text-anchor="middle">A</text>
+<circle cx="40" cy="190" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="40" y="196" fill="#dde" font-size="17" text-anchor="middle">B</text>
+<circle cx="230" cy="120" r="20" fill="#1c2030" stroke="#7d7" stroke-width="2" />
+<text x="230" y="126" fill="#dde" font-size="17" text-anchor="middle">C</text>
+<text x="40" y="22" fill="#fd6" font-size="16" font-weight="bold" text-anchor="middle">3</text>
+<text x="40" y="234" fill="#fd6" font-size="16" font-weight="bold" text-anchor="middle">2</text>
+<text x="230" y="90" fill="#7d7" font-size="16" font-weight="bold" text-anchor="middle">?</text>
+</svg>
+</div>
+<div class="timeline">
+    <div class="timeline-item fragment">
+        <div class="timeline-marker">1</div>
+        <div class="timeline-content"><code>best[v]</code> - самый долгий путь из S до v; <code>best[S] = 0</code></div>
+    </div>
+    <div class="timeline-item fragment">
+        <div class="timeline-marker">2</div>
+        <div class="timeline-content"><code>best[v]</code> = max из <code>best[u] + вес</code> по всем стрелкам <code>u -&gt; v</code></div>
+    </div>
+    <div class="timeline-item fragment">
+        <div class="timeline-marker">3</div>
+        <div class="timeline-content">на картинке: <code>max(3 + 4, 2 + 1) = 7</code></div>
+    </div>
+</div>
+</div>
+                </section>
+
+                <!-- трассировка: шаг 1 - топологический порядок вершин -->
+                <section>
+                    <h2>Шаг 1: топологический порядок</h2>
+<div class="fragment">
+<svg width="575" height="287" viewBox="0 0 460 230">
+<defs>
+<marker id="pln" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#667" /></marker>
+<marker id="plh" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#f7a" /></marker>
+<marker id="plr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#e55" /></marker>
+<marker id="ply" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#fd6" /></marker>
+<marker id="plg" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#7d7" /></marker>
+</defs>
+<line x1="60.0" y1="115.0" x2="94.0" y2="115.0" stroke="#667" stroke-width="2" marker-end="url(#pln)" />
+<text x="77.5" y="133.0" fill="#8f8" font-size="15" text-anchor="middle">3</text>
+<path d="M55.6,102.5 Q115.0,55.0 173.6,101.9" fill="none" stroke="#667" stroke-width="2" marker-end="url(#pln)" />
+<text x="114.8" y="72.6" fill="#8f8" font-size="15" text-anchor="middle">2</text>
+<path d="M130.6,102.5 Q190.0,55.0 248.6,101.9" fill="none" stroke="#667" stroke-width="2" marker-end="url(#pln)" />
+<text x="189.8" y="72.6" fill="#8f8" font-size="15" text-anchor="middle">4</text>
+<line x1="210.0" y1="115.0" x2="244.0" y2="115.0" stroke="#667" stroke-width="2" marker-end="url(#pln)" />
+<text x="227.5" y="133.0" fill="#8f8" font-size="15" text-anchor="middle">1</text>
+<path d="M131.3,126.6 Q227.5,195.0 322.9,127.2" fill="none" stroke="#667" stroke-width="2" marker-end="url(#pln)" />
+<text x="227.3" y="176.9" fill="#8f8" font-size="15" text-anchor="middle">2</text>
+<path d="M206.1,126.8 Q265.0,170.0 323.1,127.4" fill="none" stroke="#667" stroke-width="2" marker-end="url(#pln)" />
+<text x="264.8" y="164.6" fill="#8f8" font-size="15" text-anchor="middle">5</text>
+<path d="M280.6,102.5 Q340.0,55.0 398.6,101.9" fill="none" stroke="#667" stroke-width="2" marker-end="url(#pln)" />
+<text x="339.8" y="72.6" fill="#8f8" font-size="15" text-anchor="middle">3</text>
+<line x1="360.0" y1="115.0" x2="394.0" y2="115.0" stroke="#667" stroke-width="2" marker-end="url(#pln)" />
+<text x="377.5" y="133.0" fill="#8f8" font-size="15" text-anchor="middle">2</text>
+<circle cx="40" cy="115" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="40" y="121" fill="#dde" font-size="17" text-anchor="middle">S</text>
+<circle cx="115" cy="115" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="115" y="121" fill="#dde" font-size="17" text-anchor="middle">A</text>
+<circle cx="190" cy="115" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="190" y="121" fill="#dde" font-size="17" text-anchor="middle">B</text>
+<circle cx="265" cy="115" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="265" y="121" fill="#dde" font-size="17" text-anchor="middle">C</text>
+<circle cx="340" cy="115" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="340" y="121" fill="#dde" font-size="17" text-anchor="middle">D</text>
+<circle cx="415" cy="115" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="415" y="121" fill="#dde" font-size="17" text-anchor="middle">T</text>
+</svg>
+</div>
+<ul style="font-size: 0.85em; text-align: left;">
+    <li class="fragment">порядок: <code>S, A, B, C, D, T</code></li>
+    <li class="fragment">все стрелки идут слева направо</li>
+</ul>
+<div class="fragment opinion" style="margin-top: 0.6em;">
+    <code>A</code> и <code>B</code> можно поменять местами - ответ не изменится
+</div>
+                </section>
+
+                <!-- трассировка: шаги по вершинам, таблица best заполняется (fragment на каждую вершину) -->
+                <section>
+                    <h2>Шаг 2: заполняем best</h2>
+<div style="display: flex; align-items: center; justify-content: center; gap: 1.2em;">
+<svg width="408" height="232" viewBox="0 -5 430 250">
+<defs>
+<marker id="p2n" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#667" /></marker>
+<marker id="p2h" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#f7a" /></marker>
+<marker id="p2r" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#e55" /></marker>
+<marker id="p2y" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#fd6" /></marker>
+<marker id="p2g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#7d7" /></marker>
+</defs>
+<line x1="56.9" y1="109.3" x2="132.3" y2="61.3" stroke="#667" stroke-width="2" marker-end="url(#p2n)" />
+<text x="102.0" y="101.0" fill="#8f8" font-size="15" text-anchor="middle">3</text>
+<line x1="56.9" y1="130.7" x2="132.3" y2="178.7" stroke="#667" stroke-width="2" marker-end="url(#p2n)" />
+<text x="102.0" y="149.0" fill="#8f8" font-size="15" text-anchor="middle">2</text>
+<line x1="170.0" y1="50.0" x2="259.0" y2="50.0" stroke="#667" stroke-width="2" marker-end="url(#p2n)" />
+<text x="215.0" y="68.0" fill="#8f8" font-size="15" text-anchor="middle">4</text>
+<line x1="163.6" y1="175.3" x2="265.7" y2="65.4" stroke="#667" stroke-width="2" marker-end="url(#p2n)" />
+<text x="179.5" y="144.2" fill="#8f8" font-size="15" text-anchor="middle">1</text>
+<line x1="163.6" y1="64.7" x2="265.7" y2="174.6" stroke="#667" stroke-width="2" marker-end="url(#p2n)" />
+<text x="179.5" y="105.8" fill="#8f8" font-size="15" text-anchor="middle">2</text>
+<line x1="170.0" y1="190.0" x2="259.0" y2="190.0" stroke="#667" stroke-width="2" marker-end="url(#p2n)" />
+<text x="215.0" y="182.0" fill="#8f8" font-size="15" text-anchor="middle">5</text>
+<line x1="296.9" y1="60.7" x2="372.3" y2="108.7" stroke="#667" stroke-width="2" marker-end="url(#p2n)" />
+<text x="328.0" y="101.0" fill="#8f8" font-size="15" text-anchor="middle">3</text>
+<line x1="296.9" y1="179.3" x2="372.3" y2="131.3" stroke="#667" stroke-width="2" marker-end="url(#p2n)" />
+<text x="328.0" y="149.0" fill="#8f8" font-size="15" text-anchor="middle">2</text>
+<circle cx="40" cy="120" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="40" y="126" fill="#dde" font-size="17" text-anchor="middle">S</text>
+<circle cx="150" cy="50" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="150" y="56" fill="#dde" font-size="17" text-anchor="middle">A</text>
+<circle cx="150" cy="190" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="150" y="196" fill="#dde" font-size="17" text-anchor="middle">B</text>
+<circle cx="280" cy="50" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="280" y="56" fill="#dde" font-size="17" text-anchor="middle">C</text>
+<circle cx="280" cy="190" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="280" y="196" fill="#dde" font-size="17" text-anchor="middle">D</text>
+<circle cx="390" cy="120" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="390" y="126" fill="#dde" font-size="17" text-anchor="middle">T</text>
+</svg>
+<table style="font-size: 0.55em; margin: 0 auto;">
+<tr><td><strong>вершина</strong></td><td><strong>откуда</strong></td><td><strong>best</strong></td></tr>
+<tr class="fragment"><td>S</td><td>старт</td><td>0</td></tr>
+<tr class="fragment"><td>A</td><td>S + 3</td><td>3</td></tr>
+<tr class="fragment"><td>B</td><td>S + 2</td><td>2</td></tr>
+<tr class="fragment"><td>C</td><td>max(A + 4, B + 1) = max(7, 3)</td><td>7</td></tr>
+<tr class="fragment"><td>D</td><td>max(A + 2, B + 5) = max(5, 7)</td><td>7</td></tr>
+<tr class="fragment"><td>T</td><td>max(C + 3, D + 2) = max(10, 9)</td><td><mark class="green">10</mark></td></tr>
+</table>
+</div>
+                </section>
+
+                <!-- трассировка: итоговая таблица, ответ задачи -->
+                <section>
+                    <h2>Ответ: 10 дней</h2>
+<div style="display: flex; align-items: center; justify-content: center; gap: 1.2em;">
+<div class="fragment">
+<svg width="473" height="269" viewBox="0 -5 430 250">
+<defs>
+<marker id="p3n" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#667" /></marker>
+<marker id="p3h" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#f7a" /></marker>
+<marker id="p3r" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#e55" /></marker>
+<marker id="p3y" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#fd6" /></marker>
+<marker id="p3g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#7d7" /></marker>
+</defs>
+<line x1="56.9" y1="109.3" x2="132.3" y2="61.3" stroke="#f7a" stroke-width="3" marker-end="url(#p3h)" />
+<text x="102.0" y="101.0" fill="#8f8" font-size="15" text-anchor="middle">3</text>
+<line x1="56.9" y1="130.7" x2="132.3" y2="178.7" stroke="#667" stroke-width="2" marker-end="url(#p3n)" />
+<text x="102.0" y="149.0" fill="#8f8" font-size="15" text-anchor="middle">2</text>
+<line x1="170.0" y1="50.0" x2="259.0" y2="50.0" stroke="#f7a" stroke-width="3" marker-end="url(#p3h)" />
+<text x="215.0" y="68.0" fill="#8f8" font-size="15" text-anchor="middle">4</text>
+<line x1="163.6" y1="175.3" x2="265.7" y2="65.4" stroke="#667" stroke-width="2" marker-end="url(#p3n)" />
+<text x="179.5" y="144.2" fill="#8f8" font-size="15" text-anchor="middle">1</text>
+<line x1="163.6" y1="64.7" x2="265.7" y2="174.6" stroke="#667" stroke-width="2" marker-end="url(#p3n)" />
+<text x="179.5" y="105.8" fill="#8f8" font-size="15" text-anchor="middle">2</text>
+<line x1="170.0" y1="190.0" x2="259.0" y2="190.0" stroke="#667" stroke-width="2" marker-end="url(#p3n)" />
+<text x="215.0" y="182.0" fill="#8f8" font-size="15" text-anchor="middle">5</text>
+<line x1="296.9" y1="60.7" x2="372.3" y2="108.7" stroke="#f7a" stroke-width="3" marker-end="url(#p3h)" />
+<text x="328.0" y="101.0" fill="#8f8" font-size="15" text-anchor="middle">3</text>
+<line x1="296.9" y1="179.3" x2="372.3" y2="131.3" stroke="#667" stroke-width="2" marker-end="url(#p3n)" />
+<text x="328.0" y="149.0" fill="#8f8" font-size="15" text-anchor="middle">2</text>
+<circle cx="40" cy="120" r="20" fill="#1c2030" stroke="#f7a" stroke-width="2" />
+<text x="40" y="126" fill="#dde" font-size="17" text-anchor="middle">S</text>
+<circle cx="150" cy="50" r="20" fill="#1c2030" stroke="#f7a" stroke-width="2" />
+<text x="150" y="56" fill="#dde" font-size="17" text-anchor="middle">A</text>
+<circle cx="150" cy="190" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="150" y="196" fill="#dde" font-size="17" text-anchor="middle">B</text>
+<circle cx="280" cy="50" r="20" fill="#1c2030" stroke="#f7a" stroke-width="2" />
+<text x="280" y="56" fill="#dde" font-size="17" text-anchor="middle">C</text>
+<circle cx="280" cy="190" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="280" y="196" fill="#dde" font-size="17" text-anchor="middle">D</text>
+<circle cx="390" cy="120" r="20" fill="#1c2030" stroke="#f7a" stroke-width="2" />
+<text x="390" y="126" fill="#dde" font-size="17" text-anchor="middle">T</text>
+<text x="40" y="90" fill="#fd6" font-size="16" font-weight="bold" text-anchor="middle">0</text>
+<text x="150" y="20" fill="#fd6" font-size="16" font-weight="bold" text-anchor="middle">3</text>
+<text x="150" y="234" fill="#fd6" font-size="16" font-weight="bold" text-anchor="middle">2</text>
+<text x="280" y="20" fill="#fd6" font-size="16" font-weight="bold" text-anchor="middle">7</text>
+<text x="280" y="234" fill="#fd6" font-size="16" font-weight="bold" text-anchor="middle">7</text>
+<text x="390" y="90" fill="#fd6" font-size="16" font-weight="bold" text-anchor="middle">10</text>
+</svg>
+</div>
+<ul style="font-size: 0.75em; text-align: left;">
+    <li class="fragment">самая долгая цепочка: <code>S - A - C - T</code></li>
+    <li class="fragment">её называют <mark>критический путь</mark>: задержится любая работа на нём - сдвинется вся игра</li>
+    <li class="fragment">работу <code>B -&gt; D</code> можно задержать на день, и ничего не изменится</li>
+</ul>
+</div>
+                </section>
+
+                <!-- восстановление пути: запоминаем, откуда пришли (стрелки parent на SVG) -->
+                <section>
+                    <h2>Откуда пришли</h2>
+<div style="display: flex; align-items: center; justify-content: center; gap: 1.2em;">
+<div class="fragment">
+<svg width="473" height="269" viewBox="0 -5 430 250">
+<defs>
+<marker id="p4n" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#667" /></marker>
+<marker id="p4h" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#f7a" /></marker>
+<marker id="p4r" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#e55" /></marker>
+<marker id="p4y" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#fd6" /></marker>
+<marker id="p4g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#7d7" /></marker>
+</defs>
+<line x1="56.9" y1="109.3" x2="132.3" y2="61.3" stroke="#fd6" stroke-width="3" stroke-dasharray="6,4" marker-end="url(#p4y)" />
+<text x="102.0" y="101.0" fill="#8f8" font-size="15" text-anchor="middle">3</text>
+<line x1="56.9" y1="130.7" x2="132.3" y2="178.7" stroke="#fd6" stroke-width="3" stroke-dasharray="6,4" marker-end="url(#p4y)" />
+<text x="102.0" y="149.0" fill="#8f8" font-size="15" text-anchor="middle">2</text>
+<line x1="170.0" y1="50.0" x2="259.0" y2="50.0" stroke="#fd6" stroke-width="3" stroke-dasharray="6,4" marker-end="url(#p4y)" />
+<text x="215.0" y="68.0" fill="#8f8" font-size="15" text-anchor="middle">4</text>
+<line x1="163.6" y1="175.3" x2="265.7" y2="65.4" stroke="#667" stroke-width="2" marker-end="url(#p4n)" />
+<text x="179.5" y="144.2" fill="#8f8" font-size="15" text-anchor="middle">1</text>
+<line x1="163.6" y1="64.7" x2="265.7" y2="174.6" stroke="#667" stroke-width="2" marker-end="url(#p4n)" />
+<text x="179.5" y="105.8" fill="#8f8" font-size="15" text-anchor="middle">2</text>
+<line x1="170.0" y1="190.0" x2="259.0" y2="190.0" stroke="#fd6" stroke-width="3" stroke-dasharray="6,4" marker-end="url(#p4y)" />
+<text x="215.0" y="182.0" fill="#8f8" font-size="15" text-anchor="middle">5</text>
+<line x1="296.9" y1="60.7" x2="372.3" y2="108.7" stroke="#fd6" stroke-width="3" stroke-dasharray="6,4" marker-end="url(#p4y)" />
+<text x="328.0" y="101.0" fill="#8f8" font-size="15" text-anchor="middle">3</text>
+<line x1="296.9" y1="179.3" x2="372.3" y2="131.3" stroke="#667" stroke-width="2" marker-end="url(#p4n)" />
+<text x="328.0" y="149.0" fill="#8f8" font-size="15" text-anchor="middle">2</text>
+<circle cx="40" cy="120" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="40" y="126" fill="#dde" font-size="17" text-anchor="middle">S</text>
+<circle cx="150" cy="50" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="150" y="56" fill="#dde" font-size="17" text-anchor="middle">A</text>
+<circle cx="150" cy="190" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="150" y="196" fill="#dde" font-size="17" text-anchor="middle">B</text>
+<circle cx="280" cy="50" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="280" y="56" fill="#dde" font-size="17" text-anchor="middle">C</text>
+<circle cx="280" cy="190" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="280" y="196" fill="#dde" font-size="17" text-anchor="middle">D</text>
+<circle cx="390" cy="120" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="390" y="126" fill="#dde" font-size="17" text-anchor="middle">T</text>
+</svg>
+</div>
+<ul style="font-size: 0.75em; text-align: left;">
+    <li class="fragment">вместе с <code>best[v]</code> запоминаем <code>parent[v]</code> - из какой вершины пришёл максимум</li>
+    <li class="fragment">пунктир: <code>parent</code> для каждой вершины</li>
+    <li class="fragment">идём от конца назад: <code>T &lt;- C &lt;- A &lt;- S</code></li>
+    <li class="fragment">разворачиваем - получаем путь</li>
+</ul>
+</div>
+                </section>
+
+                <!-- кратчайший путь в DAG тем же способом - и отрицательные веса не страшны -->
+                <section>
+                    <h2>Кратчайший путь тоже можно</h2>
+<div style="display: flex; align-items: center; justify-content: center; gap: 1.2em;">
+<div class="fragment">
+<svg width="473" height="269" viewBox="0 -5 430 250">
+<defs>
+<marker id="p5n" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#667" /></marker>
+<marker id="p5h" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#f7a" /></marker>
+<marker id="p5r" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#e55" /></marker>
+<marker id="p5y" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#fd6" /></marker>
+<marker id="p5g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#7d7" /></marker>
+</defs>
+<line x1="56.9" y1="109.3" x2="132.3" y2="61.3" stroke="#667" stroke-width="2" marker-end="url(#p5n)" />
+<text x="102.0" y="101.0" fill="#8f8" font-size="15" text-anchor="middle">3</text>
+<line x1="56.9" y1="130.7" x2="132.3" y2="178.7" stroke="#f7a" stroke-width="3" marker-end="url(#p5h)" />
+<text x="102.0" y="149.0" fill="#8f8" font-size="15" text-anchor="middle">2</text>
+<line x1="170.0" y1="50.0" x2="259.0" y2="50.0" stroke="#667" stroke-width="2" marker-end="url(#p5n)" />
+<text x="215.0" y="68.0" fill="#8f8" font-size="15" text-anchor="middle">4</text>
+<line x1="163.6" y1="175.3" x2="265.7" y2="65.4" stroke="#f7a" stroke-width="3" marker-end="url(#p5h)" />
+<text x="179.5" y="144.2" fill="#f88" font-size="15" text-anchor="middle">-3</text>
+<line x1="163.6" y1="64.7" x2="265.7" y2="174.6" stroke="#667" stroke-width="2" marker-end="url(#p5n)" />
+<text x="179.5" y="105.8" fill="#8f8" font-size="15" text-anchor="middle">2</text>
+<line x1="170.0" y1="190.0" x2="259.0" y2="190.0" stroke="#667" stroke-width="2" marker-end="url(#p5n)" />
+<text x="215.0" y="182.0" fill="#8f8" font-size="15" text-anchor="middle">5</text>
+<line x1="296.9" y1="60.7" x2="372.3" y2="108.7" stroke="#f7a" stroke-width="3" marker-end="url(#p5h)" />
+<text x="328.0" y="101.0" fill="#8f8" font-size="15" text-anchor="middle">3</text>
+<line x1="296.9" y1="179.3" x2="372.3" y2="131.3" stroke="#667" stroke-width="2" marker-end="url(#p5n)" />
+<text x="328.0" y="149.0" fill="#8f8" font-size="15" text-anchor="middle">2</text>
+<circle cx="40" cy="120" r="20" fill="#1c2030" stroke="#f7a" stroke-width="2" />
+<text x="40" y="126" fill="#dde" font-size="17" text-anchor="middle">S</text>
+<circle cx="150" cy="50" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="150" y="56" fill="#dde" font-size="17" text-anchor="middle">A</text>
+<circle cx="150" cy="190" r="20" fill="#1c2030" stroke="#f7a" stroke-width="2" />
+<text x="150" y="196" fill="#dde" font-size="17" text-anchor="middle">B</text>
+<circle cx="280" cy="50" r="20" fill="#1c2030" stroke="#f7a" stroke-width="2" />
+<text x="280" y="56" fill="#dde" font-size="17" text-anchor="middle">C</text>
+<circle cx="280" cy="190" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="280" y="196" fill="#dde" font-size="17" text-anchor="middle">D</text>
+<circle cx="390" cy="120" r="20" fill="#1c2030" stroke="#f7a" stroke-width="2" />
+<text x="390" y="126" fill="#dde" font-size="17" text-anchor="middle">T</text>
+<text x="40" y="90" fill="#fd6" font-size="16" font-weight="bold" text-anchor="middle">0</text>
+<text x="150" y="20" fill="#fd6" font-size="16" font-weight="bold" text-anchor="middle">3</text>
+<text x="150" y="234" fill="#fd6" font-size="16" font-weight="bold" text-anchor="middle">2</text>
+<text x="280" y="20" fill="#fd6" font-size="16" font-weight="bold" text-anchor="middle">-1</text>
+<text x="280" y="234" fill="#fd6" font-size="16" font-weight="bold" text-anchor="middle">5</text>
+<text x="390" y="90" fill="#fd6" font-size="16" font-weight="bold" text-anchor="middle">2</text>
+</svg>
+</div>
+<ul style="font-size: 0.75em; text-align: left;">
+    <li class="fragment">меняем <code>max</code> на <code>min</code></li>
+    <li class="fragment">ребро <code>B -&gt; C</code> теперь <code>-3</code>: <code>C = min(3 + 4, 2 - 3) = -1</code></li>
+    <li class="fragment">отрицательные веса <mark class="green">не мешают</mark>: вершину считаем один раз, когда всё входящее уже готово</li>
+</ul>
+</div>
+                </section>
+
+                <!-- сложность O(V + E): сравнение с Дейкстрой и Bellman-Ford, таблица -->
+                <section>
+                    <h2>Что быстрее</h2>
+<table style="font-size: 0.65em; margin: 0 auto;">
+<tr><td><strong>алгоритм</strong></td><td><strong>где работает</strong></td><td><strong>время</strong></td></tr>
+<tr class="fragment"><td>BFS</td><td>рёбра без весов</td><td><code>O(V + E)</code></td></tr>
+<tr class="fragment"><td>Дейкстра</td><td>веса &gt;= 0</td><td><code>O(E log V)</code></td></tr>
+<tr class="fragment"><td>Bellman-Ford</td><td>любые веса</td><td><code>O(V * E)</code></td></tr>
+<tr class="fragment"><td>динамика по топ. порядку</td><td>только без циклов; любые веса; и min, и max</td><td><mark class="green"><code>O(V + E)</code></mark></td></tr>
+</table>
+<div class="fragment opinion" style="margin-top: 0.6em;">
+    Граф без циклов - самый удобный случай: быстро и без ограничений на веса
+</div>
+                </section>
+
+            </section>
+
+            <!-- ЧАСТЬ 3: клетчатое поле как граф -->
+            <section>
+
+                <section style="font-size: 70px; height: 100%; width: 100%">
+                    <div class="lesson-time">50</div>
+                    <div class="fragment">
+                        <h1 style="font-size: 1.3em;">Клетчатое поле</h1>
+                        <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">тот же граф, только нарисованный сеткой</p>
+                    </div>
+                </section>
+
+                <!-- черепашка на поле ходит вправо и вниз: поле - это граф, рисуем клетки и стрелки (SVG) -->
+                <section>
+                    <h2>Поле - это граф</h2>
+<div style="display: flex; align-items: center; justify-content: center; gap: 1.2em;">
+<div class="fragment">
+<svg width="312" height="235" viewBox="0 0 284 214">
+<defs><marker id="ga" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#8ab" /></marker></defs>
+<rect x="2" y="2" width="70" height="70" fill="#24402c" stroke="#556" stroke-width="2" />
+<rect x="72" y="2" width="70" height="70" fill="#1c2030" stroke="#556" stroke-width="2" />
+<rect x="142" y="2" width="70" height="70" fill="#1c2030" stroke="#556" stroke-width="2" />
+<rect x="212" y="2" width="70" height="70" fill="#1c2030" stroke="#556" stroke-width="2" />
+<rect x="2" y="72" width="70" height="70" fill="#1c2030" stroke="#556" stroke-width="2" />
+<rect x="72" y="72" width="70" height="70" fill="#1c2030" stroke="#556" stroke-width="2" />
+<rect x="142" y="72" width="70" height="70" fill="#1c2030" stroke="#556" stroke-width="2" />
+<rect x="212" y="72" width="70" height="70" fill="#1c2030" stroke="#556" stroke-width="2" />
+<rect x="2" y="142" width="70" height="70" fill="#1c2030" stroke="#556" stroke-width="2" />
+<rect x="72" y="142" width="70" height="70" fill="#1c2030" stroke="#556" stroke-width="2" />
+<rect x="142" y="142" width="70" height="70" fill="#1c2030" stroke="#556" stroke-width="2" />
+<rect x="212" y="142" width="70" height="70" fill="#4a2438" stroke="#556" stroke-width="2" />
+<line x1="45.0" y1="37.0" x2="99.0" y2="37.0" stroke="#8ab" stroke-width="1.5" marker-end="url(#ga)" />
+<line x1="37.0" y1="45.0" x2="37.0" y2="99.0" stroke="#8ab" stroke-width="1.5" marker-end="url(#ga)" />
+<line x1="115.0" y1="37.0" x2="169.0" y2="37.0" stroke="#8ab" stroke-width="1.5" marker-end="url(#ga)" />
+<line x1="107.0" y1="45.0" x2="107.0" y2="99.0" stroke="#8ab" stroke-width="1.5" marker-end="url(#ga)" />
+<line x1="185.0" y1="37.0" x2="239.0" y2="37.0" stroke="#8ab" stroke-width="1.5" marker-end="url(#ga)" />
+<line x1="177.0" y1="45.0" x2="177.0" y2="99.0" stroke="#8ab" stroke-width="1.5" marker-end="url(#ga)" />
+<line x1="247.0" y1="45.0" x2="247.0" y2="99.0" stroke="#8ab" stroke-width="1.5" marker-end="url(#ga)" />
+<line x1="45.0" y1="107.0" x2="99.0" y2="107.0" stroke="#8ab" stroke-width="1.5" marker-end="url(#ga)" />
+<line x1="37.0" y1="115.0" x2="37.0" y2="169.0" stroke="#8ab" stroke-width="1.5" marker-end="url(#ga)" />
+<line x1="115.0" y1="107.0" x2="169.0" y2="107.0" stroke="#8ab" stroke-width="1.5" marker-end="url(#ga)" />
+<line x1="107.0" y1="115.0" x2="107.0" y2="169.0" stroke="#8ab" stroke-width="1.5" marker-end="url(#ga)" />
+<line x1="185.0" y1="107.0" x2="239.0" y2="107.0" stroke="#8ab" stroke-width="1.5" marker-end="url(#ga)" />
+<line x1="177.0" y1="115.0" x2="177.0" y2="169.0" stroke="#8ab" stroke-width="1.5" marker-end="url(#ga)" />
+<line x1="247.0" y1="115.0" x2="247.0" y2="169.0" stroke="#8ab" stroke-width="1.5" marker-end="url(#ga)" />
+<line x1="45.0" y1="177.0" x2="99.0" y2="177.0" stroke="#8ab" stroke-width="1.5" marker-end="url(#ga)" />
+<line x1="115.0" y1="177.0" x2="169.0" y2="177.0" stroke="#8ab" stroke-width="1.5" marker-end="url(#ga)" />
+<line x1="185.0" y1="177.0" x2="239.0" y2="177.0" stroke="#8ab" stroke-width="1.5" marker-end="url(#ga)" />
+</svg>
+</div>
+<ul style="font-size: 0.85em; text-align: left;">
+    <li class="fragment">черепашка стоит в <mark class="green">левом верхнем</mark> углу</li>
+    <li class="fragment">нужно в <mark>правый нижний</mark>, ходить можно только вправо и вниз</li>
+    <li class="fragment">клетка - вершина, ход - стрелка</li>
+</ul>
+</div>
+                </section>
+
+                <!-- почему такой граф ациклический: назад вернуться нельзя -->
+                <section>
+                    <h2>Почему нет циклов</h2>
+<div style="display: flex; align-items: center; justify-content: center; gap: 1.2em;">
+<div class="fragment">
+<svg width="268" height="202" viewBox="0 0 244 184">
+<rect x="2" y="2" width="60" height="60" fill="#1c2030" stroke="#556" stroke-width="2" />
+<text x="32.0" y="38.0" fill="#dde" font-size="17" text-anchor="middle">0</text>
+<rect x="62" y="2" width="60" height="60" fill="#1c2030" stroke="#556" stroke-width="2" />
+<text x="92.0" y="38.0" fill="#dde" font-size="17" text-anchor="middle">1</text>
+<rect x="122" y="2" width="60" height="60" fill="#1c2030" stroke="#556" stroke-width="2" />
+<text x="152.0" y="38.0" fill="#dde" font-size="17" text-anchor="middle">2</text>
+<rect x="182" y="2" width="60" height="60" fill="#1c2030" stroke="#556" stroke-width="2" />
+<text x="212.0" y="38.0" fill="#dde" font-size="17" text-anchor="middle">3</text>
+<rect x="2" y="62" width="60" height="60" fill="#1c2030" stroke="#556" stroke-width="2" />
+<text x="32.0" y="98.0" fill="#dde" font-size="17" text-anchor="middle">1</text>
+<rect x="62" y="62" width="60" height="60" fill="#1c2030" stroke="#556" stroke-width="2" />
+<text x="92.0" y="98.0" fill="#dde" font-size="17" text-anchor="middle">2</text>
+<rect x="122" y="62" width="60" height="60" fill="#1c2030" stroke="#556" stroke-width="2" />
+<text x="152.0" y="98.0" fill="#dde" font-size="17" text-anchor="middle">3</text>
+<rect x="182" y="62" width="60" height="60" fill="#1c2030" stroke="#556" stroke-width="2" />
+<text x="212.0" y="98.0" fill="#dde" font-size="17" text-anchor="middle">4</text>
+<rect x="2" y="122" width="60" height="60" fill="#1c2030" stroke="#556" stroke-width="2" />
+<text x="32.0" y="158.0" fill="#dde" font-size="17" text-anchor="middle">2</text>
+<rect x="62" y="122" width="60" height="60" fill="#1c2030" stroke="#556" stroke-width="2" />
+<text x="92.0" y="158.0" fill="#dde" font-size="17" text-anchor="middle">3</text>
+<rect x="122" y="122" width="60" height="60" fill="#1c2030" stroke="#556" stroke-width="2" />
+<text x="152.0" y="158.0" fill="#dde" font-size="17" text-anchor="middle">4</text>
+<rect x="182" y="122" width="60" height="60" fill="#1c2030" stroke="#556" stroke-width="2" />
+<text x="212.0" y="158.0" fill="#dde" font-size="17" text-anchor="middle">5</text>
+</svg>
+</div>
+<ul style="font-size: 0.85em; text-align: left;">
+    <li class="fragment">в клетке: номер строки + номер столбца</li>
+    <li class="fragment">любой ход увеличивает это число на 1</li>
+    <li class="fragment">вернуться туда, где уже был, <mark>нельзя</mark></li>
+</ul>
+</div>
+<div class="fragment opinion" style="margin-top: 0.6em;">
+    Значит, поле - это DAG, и динамика работает
+</div>
+                </section>
+
+                <!-- число путей из угла в угол: заполняем таблицу клетка за клеткой (fragment-ами) -->
+                <section>
+                    <h2>Сколько маршрутов</h2>
+<div style="display: flex; align-items: center; justify-content: center; gap: 1.2em;">
+<table class="cells">
+<tr class="fragment"><td>1</td><td>1</td><td>1</td><td>1</td><td>1</td></tr>
+<tr class="fragment"><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td></tr>
+<tr class="fragment"><td>1</td><td>3</td><td>6</td><td>10</td><td>15</td></tr>
+<tr class="fragment"><td>1</td><td>4</td><td>10</td><td>20</td><td class="hl">35</td></tr>
+</table>
+<ul style="font-size: 0.8em; text-align: left;">
+    <li class="fragment">в клетку можно прийти только <mark>сверху</mark> или <mark>слева</mark></li>
+    <li class="fragment">значит: клетка = сверху + слева</li>
+    <li class="fragment">верхняя строка и левый столбец: по одному пути</li>
+</ul>
+</div>
+                </section>
+
+                <!-- порядок обхода по строкам = готовый топологический порядок -->
+                <section>
+                    <h2>В каком порядке</h2>
+<div style="display: flex; align-items: center; justify-content: center; gap: 1.2em;">
+<div class="fragment">
+<svg width="268" height="202" viewBox="0 0 244 184">
+<rect x="2" y="2" width="60" height="60" fill="#1c2030" stroke="#556" stroke-width="2" />
+<text x="32.0" y="38.0" fill="#dde" font-size="17" text-anchor="middle">1</text>
+<rect x="62" y="2" width="60" height="60" fill="#1c2030" stroke="#556" stroke-width="2" />
+<text x="92.0" y="38.0" fill="#dde" font-size="17" text-anchor="middle">2</text>
+<rect x="122" y="2" width="60" height="60" fill="#1c2030" stroke="#556" stroke-width="2" />
+<text x="152.0" y="38.0" fill="#dde" font-size="17" text-anchor="middle">3</text>
+<rect x="182" y="2" width="60" height="60" fill="#1c2030" stroke="#556" stroke-width="2" />
+<text x="212.0" y="38.0" fill="#dde" font-size="17" text-anchor="middle">4</text>
+<rect x="2" y="62" width="60" height="60" fill="#1c2030" stroke="#556" stroke-width="2" />
+<text x="32.0" y="98.0" fill="#dde" font-size="17" text-anchor="middle">5</text>
+<rect x="62" y="62" width="60" height="60" fill="#1c2030" stroke="#556" stroke-width="2" />
+<text x="92.0" y="98.0" fill="#dde" font-size="17" text-anchor="middle">6</text>
+<rect x="122" y="62" width="60" height="60" fill="#1c2030" stroke="#556" stroke-width="2" />
+<text x="152.0" y="98.0" fill="#dde" font-size="17" text-anchor="middle">7</text>
+<rect x="182" y="62" width="60" height="60" fill="#1c2030" stroke="#556" stroke-width="2" />
+<text x="212.0" y="98.0" fill="#dde" font-size="17" text-anchor="middle">8</text>
+<rect x="2" y="122" width="60" height="60" fill="#1c2030" stroke="#556" stroke-width="2" />
+<text x="32.0" y="158.0" fill="#dde" font-size="17" text-anchor="middle">9</text>
+<rect x="62" y="122" width="60" height="60" fill="#1c2030" stroke="#556" stroke-width="2" />
+<text x="92.0" y="158.0" fill="#dde" font-size="17" text-anchor="middle">10</text>
+<rect x="122" y="122" width="60" height="60" fill="#1c2030" stroke="#556" stroke-width="2" />
+<text x="152.0" y="158.0" fill="#dde" font-size="17" text-anchor="middle">11</text>
+<rect x="182" y="122" width="60" height="60" fill="#1c2030" stroke="#556" stroke-width="2" />
+<text x="212.0" y="158.0" fill="#dde" font-size="17" text-anchor="middle">12</text>
+</svg>
+</div>
+<ul style="font-size: 0.8em; text-align: left;">
+    <li class="fragment">идём по строкам сверху вниз, в строке слева направо</li>
+    <li class="fragment">к клетке её верхний и левый соседи уже готовы</li>
+    <li class="fragment">это и есть топологический порядок - сортировать <mark class="green">ничего не надо</mark></li>
+</ul>
+</div>
+                </section>
+
+                <!-- препятствия на поле: клетка с нулём, как меняется таблица -->
+                <section>
+                    <h2>Стены</h2>
+<div style="display: flex; align-items: center; justify-content: center; gap: 1.2em;">
+<table class="cells">
+<tr class="fragment"><td>1</td><td>1</td><td>1</td><td>1</td><td>1</td></tr>
+<tr class="fragment"><td>1</td><td>2</td><td class="wall"></td><td>1</td><td>2</td></tr>
+<tr class="fragment"><td class="wall"></td><td>2</td><td>2</td><td>3</td><td>5</td></tr>
+<tr class="fragment"><td>0</td><td>2</td><td>4</td><td>7</td><td class="hl">12</td></tr>
+</table>
+<ul style="font-size: 0.8em; text-align: left;">
+    <li class="fragment">в стену прийти нельзя: в ней <mark>0 путей</mark></li>
+    <li class="fragment">остальные клетки - та же формула</li>
+    <li class="fragment">маршрутов стало 12 вместо 35</li>
+</ul>
+</div>
+                </section>
+
+                <!-- монеты на поле: собрать максимум, переход "лучшее из сверху и слева" -->
+                <section>
+                    <h2>Собрать больше монет</h2>
+<div style="display: flex; align-items: center; justify-content: center; gap: 3em;">
+<div class="fragment"><p style="font-size: 0.6em; margin: 0;">монеты</p>
+<table class="cells">
+<tr><td>0</td><td>3</td><td>1</td><td>2</td></tr>
+<tr><td>2</td><td>0</td><td>4</td><td>1</td></tr>
+<tr><td>1</td><td>5</td><td>0</td><td>3</td></tr>
+</table></div>
+<div class="fragment"><p style="font-size: 0.6em; margin: 0;">лучшая сумма</p>
+<table class="cells">
+<tr class="fragment"><td class="hl">0</td><td class="hl">3</td><td class="hl">4</td><td>6</td></tr>
+<tr class="fragment"><td>2</td><td>3</td><td class="hl">8</td><td class="hl">9</td></tr>
+<tr class="fragment"><td>3</td><td>8</td><td>8</td><td class="hl">12</td></tr>
+</table></div>
+</div>
+<div class="fragment opinion" style="margin-top: 0.6em;">
+    клетка = <code>max(сверху, слева)</code> + монета в ней. Ответ: <mark class="green">12</mark>
+</div>
+                </section>
+
+                <!-- задачи: LeetCode 62 Unique Paths, 63 Unique Paths II, 64 Minimum Path Sum (ссылки) -->
+                <section>
+                    <h2>Задачи на LeetCode</h2>
+<ul style="font-size: 0.85em; text-align: left;">
+    <li class="fragment"><a href="https://leetcode.com/problems/unique-paths/" target="_blank" rel="noopener">62. Unique Paths</a> - число маршрутов</li>
+    <li class="fragment"><a href="https://leetcode.com/problems/unique-paths-ii/" target="_blank" rel="noopener">63. Unique Paths II</a> - то же, но со стенами</li>
+    <li class="fragment"><a href="https://leetcode.com/problems/minimum-path-sum/" target="_blank" rel="noopener">64. Minimum Path Sum</a> - как монеты, только <code>min</code> вместо <code>max</code></li>
+</ul>
+                </section>
+
+                <!-- ЕГЭ: робот на клетчатом поле - формат задания и как узнать в нём динамику -->
+                <section>
+                    <h2>ЕГЭ: робот на поле</h2>
+<ul style="font-size: 0.85em; text-align: left;">
+    <li class="fragment">задание 18: таблица в Excel, в клетках числа</li>
+    <li class="fragment">робот идёт из угла в угол вправо и вниз, найти максимальную и минимальную сумму</li>
+    <li class="fragment">иногда на поле есть стены, через которые не пройти</li>
+    <li class="fragment">в ячейку пишем формулу <code>=МАКС(сверху; слева) + клетка</code> и растягиваем</li>
+</ul>
+<div class="fragment opinion" style="margin-top: 0.6em;">
+    Это задача про монеты, только таблицу считает Excel
+</div>
+                </section>
+
+            </section>
+
+            <!-- ЧАСТЬ 4: состояние больше, чем вершина -->
+            <section>
+
+                <section style="font-size: 70px; height: 100%; width: 100%">
+                    <div class="lesson-time">70</div>
+                    <div class="fragment">
+                        <h1 style="font-size: 1.3em;">Состояние больше, чем вершина</h1>
+                        <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">когда в графе есть циклы, а динамика всё равно нужна</p>
+                    </div>
+                </section>
+
+                <!-- задача: число путей из A в B ровно из k рёбер, граф может содержать цикл (SVG) -->
+                <section>
+                    <h2>Маршруты ровно из 3 рёбер</h2>
+<div style="display: flex; align-items: center; justify-content: center; gap: 1.2em;">
+<div class="fragment">
+<svg width="384" height="264" viewBox="0 0 320 220">
+<defs>
+<marker id="kkn" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#667" /></marker>
+<marker id="kkh" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#f7a" /></marker>
+<marker id="kkr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#e55" /></marker>
+<marker id="kky" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#fd6" /></marker>
+<marker id="kkg" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#7d7" /></marker>
+</defs>
+<line x1="57.3" y1="99.9" x2="141.9" y2="50.6" stroke="#667" stroke-width="2" marker-end="url(#kkn)" />
+<line x1="57.3" y1="120.1" x2="141.9" y2="169.4" stroke="#667" stroke-width="2" marker-end="url(#kkn)" />
+<path d="M155.0,59.4 Q142.0,110.0 154.8,159.7" fill="none" stroke="#667" stroke-width="2" marker-end="url(#kkn)" />
+<path d="M165.0,160.6 Q178.0,110.0 165.2,60.3" fill="none" stroke="#667" stroke-width="2" marker-end="url(#kkn)" />
+<line x1="177.3" y1="50.1" x2="261.9" y2="99.4" stroke="#667" stroke-width="2" marker-end="url(#kkn)" />
+<line x1="177.3" y1="169.9" x2="261.9" y2="120.6" stroke="#667" stroke-width="2" marker-end="url(#kkn)" />
+<circle cx="40" cy="110" r="20" fill="#1c2030" stroke="#7d7" stroke-width="2" />
+<text x="40" y="116" fill="#dde" font-size="17" text-anchor="middle">A</text>
+<circle cx="160" cy="40" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="160" y="46" fill="#dde" font-size="17" text-anchor="middle">B</text>
+<circle cx="160" cy="180" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="160" y="186" fill="#dde" font-size="17" text-anchor="middle">C</text>
+<circle cx="280" cy="110" r="20" fill="#1c2030" stroke="#f7a" stroke-width="2" />
+<text x="280" y="116" fill="#dde" font-size="17" text-anchor="middle">D</text>
+</svg>
+</div>
+<ul style="font-size: 0.8em; text-align: left;">
+    <li class="fragment">сколько маршрутов из <code>A</code> в <code>D</code> ровно из <mark>3 рёбер</mark>?</li>
+    <li class="fragment">вершины повторять можно</li>
+    <li class="fragment">в графе есть цикл <code>B - C - B</code>: обычная динамика по вершинам не работает</li>
+</ul>
+</div>
+                </section>
+
+                <!-- приём: состояние = (вершина, сколько шагов сделали), рисуем граф состояний по слоям -->
+                <section>
+                    <h2>Состояние = (вершина, шаги)</h2>
+<div class="fragment">
+<svg width="473" height="286" viewBox="0 0 430 260">
+<defs>
+<marker id="lyn" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#667" /></marker>
+<marker id="lyh" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#f7a" /></marker>
+<marker id="lyr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#e55" /></marker>
+<marker id="lyy" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#fd6" /></marker>
+<marker id="lyg" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#7d7" /></marker>
+</defs>
+<line x1="64.0" y1="57.7" x2="145.1" y2="101.9" stroke="#667" stroke-width="2" marker-end="url(#lyn)" />
+<line x1="60.8" y1="61.8" x2="148.5" y2="157.5" stroke="#667" stroke-width="2" marker-end="url(#lyn)" />
+<line x1="64.0" y1="117.7" x2="145.1" y2="161.9" stroke="#667" stroke-width="2" marker-end="url(#lyn)" />
+<line x1="64.0" y1="162.3" x2="145.1" y2="118.1" stroke="#667" stroke-width="2" marker-end="url(#lyn)" />
+<line x1="60.8" y1="121.8" x2="148.5" y2="217.5" stroke="#667" stroke-width="2" marker-end="url(#lyn)" />
+<line x1="64.0" y1="177.7" x2="145.1" y2="221.9" stroke="#667" stroke-width="2" marker-end="url(#lyn)" />
+<line x1="174.0" y1="57.7" x2="255.1" y2="101.9" stroke="#667" stroke-width="2" marker-end="url(#lyn)" />
+<line x1="170.8" y1="61.8" x2="258.5" y2="157.5" stroke="#667" stroke-width="2" marker-end="url(#lyn)" />
+<line x1="174.0" y1="117.7" x2="255.1" y2="161.9" stroke="#667" stroke-width="2" marker-end="url(#lyn)" />
+<line x1="174.0" y1="162.3" x2="255.1" y2="118.1" stroke="#667" stroke-width="2" marker-end="url(#lyn)" />
+<line x1="170.8" y1="121.8" x2="258.5" y2="217.5" stroke="#667" stroke-width="2" marker-end="url(#lyn)" />
+<line x1="174.0" y1="177.7" x2="255.1" y2="221.9" stroke="#667" stroke-width="2" marker-end="url(#lyn)" />
+<line x1="284.0" y1="57.7" x2="365.1" y2="101.9" stroke="#667" stroke-width="2" marker-end="url(#lyn)" />
+<line x1="280.8" y1="61.8" x2="368.5" y2="157.5" stroke="#667" stroke-width="2" marker-end="url(#lyn)" />
+<line x1="284.0" y1="117.7" x2="365.1" y2="161.9" stroke="#667" stroke-width="2" marker-end="url(#lyn)" />
+<line x1="284.0" y1="162.3" x2="365.1" y2="118.1" stroke="#667" stroke-width="2" marker-end="url(#lyn)" />
+<line x1="280.8" y1="121.8" x2="368.5" y2="217.5" stroke="#667" stroke-width="2" marker-end="url(#lyn)" />
+<line x1="284.0" y1="177.7" x2="365.1" y2="221.9" stroke="#667" stroke-width="2" marker-end="url(#lyn)" />
+<circle cx="50" cy="50" r="16" fill="#1c2030" stroke="#7d7" stroke-width="2" />
+<text x="50" y="56" fill="#dde" font-size="17" text-anchor="middle">A</text>
+<circle cx="50" cy="110" r="16" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="50" y="116" fill="#dde" font-size="17" text-anchor="middle">B</text>
+<circle cx="50" cy="170" r="16" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="50" y="176" fill="#dde" font-size="17" text-anchor="middle">C</text>
+<circle cx="50" cy="230" r="16" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="50" y="236" fill="#dde" font-size="17" text-anchor="middle">D</text>
+<circle cx="160" cy="50" r="16" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="160" y="56" fill="#dde" font-size="17" text-anchor="middle">A</text>
+<circle cx="160" cy="110" r="16" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="160" y="116" fill="#dde" font-size="17" text-anchor="middle">B</text>
+<circle cx="160" cy="170" r="16" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="160" y="176" fill="#dde" font-size="17" text-anchor="middle">C</text>
+<circle cx="160" cy="230" r="16" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="160" y="236" fill="#dde" font-size="17" text-anchor="middle">D</text>
+<circle cx="270" cy="50" r="16" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="270" y="56" fill="#dde" font-size="17" text-anchor="middle">A</text>
+<circle cx="270" cy="110" r="16" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="270" y="116" fill="#dde" font-size="17" text-anchor="middle">B</text>
+<circle cx="270" cy="170" r="16" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="270" y="176" fill="#dde" font-size="17" text-anchor="middle">C</text>
+<circle cx="270" cy="230" r="16" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="270" y="236" fill="#dde" font-size="17" text-anchor="middle">D</text>
+<circle cx="380" cy="50" r="16" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="380" y="56" fill="#dde" font-size="17" text-anchor="middle">A</text>
+<circle cx="380" cy="110" r="16" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="380" y="116" fill="#dde" font-size="17" text-anchor="middle">B</text>
+<circle cx="380" cy="170" r="16" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="380" y="176" fill="#dde" font-size="17" text-anchor="middle">C</text>
+<circle cx="380" cy="230" r="16" fill="#1c2030" stroke="#f7a" stroke-width="2" />
+<text x="380" y="236" fill="#dde" font-size="17" text-anchor="middle">D</text>
+<text x="50" y="18" fill="#aab" font-size="15" text-anchor="middle">k = 0</text><text x="160" y="18" fill="#aab" font-size="15" text-anchor="middle">k = 1</text><text x="270" y="18" fill="#aab" font-size="15" text-anchor="middle">k = 2</text><text x="380" y="18" fill="#aab" font-size="15" text-anchor="middle">k = 3</text>
+</svg>
+</div>
+<ul style="font-size: 0.75em; text-align: left;">
+    <li class="fragment">на каждый шаг k - своя копия вершин</li>
+    <li class="fragment">ребро <code>u -&gt; v</code> превращается в <code>(u, k) -&gt; (v, k + 1)</code></li>
+</ul>
+                </section>
+
+                <!-- граф состояний всегда ациклический: число шагов только растёт -->
+                <section>
+                    <h2>В графе состояний циклов нет</h2>
+<ul style="font-size: 0.9em; text-align: left;">
+    <li class="fragment">каждая стрелка ведёт из слоя <code>k</code> в слой <code>k + 1</code></li>
+    <li class="fragment">вернуться в прошлый слой нельзя</li>
+    <li class="fragment">значит, это DAG, и порядок известен: <mark class="green">слой за слоем</mark></li>
+</ul>
+<div class="fragment opinion" style="margin-top: 0.6em;">
+    Цикл был в исходном графе, а в графе состояний его нет
+</div>
+                </section>
+
+                <!-- трассировка: таблица слой за слоем для маленького графа -->
+                <section>
+                    <h2>Считаем слой за слоем</h2>
+<div style="display: flex; align-items: center; justify-content: center; gap: 1.2em;">
+<svg width="320" height="220" viewBox="0 0 320 220">
+<defs>
+<marker id="k2n" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#667" /></marker>
+<marker id="k2h" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#f7a" /></marker>
+<marker id="k2r" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#e55" /></marker>
+<marker id="k2y" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#fd6" /></marker>
+<marker id="k2g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#7d7" /></marker>
+</defs>
+<line x1="57.3" y1="99.9" x2="141.9" y2="50.6" stroke="#667" stroke-width="2" marker-end="url(#k2n)" />
+<line x1="57.3" y1="120.1" x2="141.9" y2="169.4" stroke="#667" stroke-width="2" marker-end="url(#k2n)" />
+<path d="M155.0,59.4 Q142.0,110.0 154.8,159.7" fill="none" stroke="#667" stroke-width="2" marker-end="url(#k2n)" />
+<path d="M165.0,160.6 Q178.0,110.0 165.2,60.3" fill="none" stroke="#667" stroke-width="2" marker-end="url(#k2n)" />
+<line x1="177.3" y1="50.1" x2="261.9" y2="99.4" stroke="#667" stroke-width="2" marker-end="url(#k2n)" />
+<line x1="177.3" y1="169.9" x2="261.9" y2="120.6" stroke="#667" stroke-width="2" marker-end="url(#k2n)" />
+<circle cx="40" cy="110" r="20" fill="#1c2030" stroke="#7d7" stroke-width="2" />
+<text x="40" y="116" fill="#dde" font-size="17" text-anchor="middle">A</text>
+<circle cx="160" cy="40" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="160" y="46" fill="#dde" font-size="17" text-anchor="middle">B</text>
+<circle cx="160" cy="180" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="160" y="186" fill="#dde" font-size="17" text-anchor="middle">C</text>
+<circle cx="280" cy="110" r="20" fill="#1c2030" stroke="#f7a" stroke-width="2" />
+<text x="280" y="116" fill="#dde" font-size="17" text-anchor="middle">D</text>
+</svg>
+<table style="font-size: 0.75em; margin: 0 auto;">
+<tr><td><strong>k</strong></td><td><strong>A</strong></td><td><strong>B</strong></td><td><strong>C</strong></td><td><strong>D</strong></td></tr>
+<tr class="fragment"><td>0</td><td>1</td><td>0</td><td>0</td><td>0</td></tr>
+<tr class="fragment"><td>1</td><td>0</td><td>1</td><td>1</td><td>0</td></tr>
+<tr class="fragment"><td>2</td><td>0</td><td>1</td><td>1</td><td>2</td></tr>
+<tr class="fragment"><td>3</td><td>0</td><td>1</td><td>1</td><td><mark class="green">2</mark></td></tr>
+</table>
+</div>
+<div class="fragment opinion" style="margin-top: 0.6em;">
+    Ответ: 2 маршрута, <code>A - B - C - D</code> и <code>A - C - B - D</code>
+</div>
+                </section>
+
+                <!-- узнаём знакомое: 787 Cheapest Flights Within K Stops - это ровно такое состояние (город, пересадки) -->
+                <section>
+                    <h2>Узнаём задачу 787</h2>
+<ul style="font-size: 0.85em; text-align: left;">
+    <li class="fragment">в <a href="https://leetcode.com/problems/cheapest-flights-within-k-stops/" target="_blank" rel="noopener">787. Cheapest Flights Within K Stops</a> состояние было <code>(город, пересадки)</code></li>
+    <li class="fragment">слой - число перелётов, переход - ещё один перелёт</li>
+    <li class="fragment">в каждой клетке храним <mark>минимальную цену</mark>, а не число путей</li>
+</ul>
+<div class="fragment opinion" style="margin-top: 0.6em;">
+    Мы уже решали задачу динамикой, просто не называли её так
+</div>
+                </section>
+
+                <!-- путь через обязательную вершину: состояние (вершина, прошли ли через C) -->
+                <section>
+                    <h2>Обязательно через C</h2>
+<div style="display: flex; align-items: center; justify-content: center; gap: 1.2em;">
+<div class="fragment">
+<svg width="270" height="198" viewBox="0 0 300 220">
+<defs>
+<marker id="mon" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#667" /></marker>
+<marker id="moh" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#f7a" /></marker>
+<marker id="mor" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#e55" /></marker>
+<marker id="moy" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#fd6" /></marker>
+<marker id="mog" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#7d7" /></marker>
+</defs>
+<line x1="57.2" y1="99.8" x2="131.9" y2="55.7" stroke="#667" stroke-width="2" marker-end="url(#mon)" />
+<line x1="57.2" y1="120.2" x2="131.9" y2="164.3" stroke="#667" stroke-width="2" marker-end="url(#mon)" />
+<line x1="150.0" y1="65.0" x2="150.0" y2="154.0" stroke="#667" stroke-width="2" marker-end="url(#mon)" />
+<line x1="167.2" y1="55.2" x2="241.9" y2="99.3" stroke="#667" stroke-width="2" marker-end="url(#mon)" />
+<line x1="167.2" y1="164.8" x2="241.9" y2="120.7" stroke="#667" stroke-width="2" marker-end="url(#mon)" />
+<circle cx="40" cy="110" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="40" y="116" fill="#dde" font-size="17" text-anchor="middle">S</text>
+<circle cx="150" cy="45" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="150" y="51" fill="#dde" font-size="17" text-anchor="middle">A</text>
+<circle cx="150" cy="175" r="20" fill="#1c2030" stroke="#fd6" stroke-width="2" />
+<text x="150" y="181" fill="#dde" font-size="17" text-anchor="middle">C</text>
+<circle cx="260" cy="110" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="260" y="116" fill="#dde" font-size="17" text-anchor="middle">T</text>
+</svg>
+</div>
+<div class="fragment">
+<svg width="437" height="237" viewBox="0 0 460 250">
+<defs>
+<marker id="mtn" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#667" /></marker>
+<marker id="mth" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#f7a" /></marker>
+<marker id="mtr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#e55" /></marker>
+<marker id="mty" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#fd6" /></marker>
+<marker id="mtg" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#7d7" /></marker>
+</defs>
+<line x1="60.0" y1="60.0" x2="149.0" y2="60.0" stroke="#667" stroke-width="2" marker-end="url(#mtn)" />
+<line x1="190.0" y1="60.0" x2="399.0" y2="60.0" stroke="#667" stroke-width="2" marker-end="url(#mtn)" />
+<line x1="57.9" y1="68.9" x2="281.2" y2="180.6" stroke="#667" stroke-width="2" marker-end="url(#mtn)" />
+<line x1="184.1" y1="74.1" x2="285.2" y2="175.2" stroke="#667" stroke-width="2" marker-end="url(#mtn)" />
+<line x1="320.0" y1="190.0" x2="399.0" y2="190.0" stroke="#667" stroke-width="2" marker-end="url(#mtn)" />
+<circle cx="40" cy="60" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="40" y="66" fill="#dde" font-size="17" text-anchor="middle">S</text>
+<circle cx="170" cy="60" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="170" y="66" fill="#dde" font-size="17" text-anchor="middle">A</text>
+<circle cx="420" cy="60" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="420" y="66" fill="#dde" font-size="17" text-anchor="middle">T</text>
+<circle cx="300" cy="190" r="20" fill="#1c2030" stroke="#fd6" stroke-width="2" />
+<text x="300" y="196" fill="#dde" font-size="17" text-anchor="middle">C</text>
+<circle cx="420" cy="190" r="20" fill="#1c2030" stroke="#7d7" stroke-width="2" />
+<text x="420" y="196" fill="#dde" font-size="17" text-anchor="middle">T</text>
+<text x="40" y="32" fill="#fd6" font-size="16" font-weight="bold" text-anchor="middle">1</text>
+<text x="170" y="32" fill="#fd6" font-size="16" font-weight="bold" text-anchor="middle">1</text>
+<text x="420" y="32" fill="#fd6" font-size="16" font-weight="bold" text-anchor="middle">1</text>
+<text x="330" y="196" fill="#fd6" font-size="16" font-weight="bold" text-anchor="middle">2</text>
+<text x="450" y="196" fill="#7d7" font-size="16" font-weight="bold" text-anchor="middle">2</text>
+<text x="5" y="20" fill="#aab" font-size="14">ещё не были в C</text><text x="5" y="240" fill="#aab" font-size="14">уже были в C</text><line x1="0" y1="125" x2="460" y2="125" stroke="#445" stroke-dasharray="4,4" />
+</svg>
+</div>
+</div>
+<ul style="font-size: 0.7em; text-align: left;">
+    <li class="fragment">состояние: <code>(вершина, были ли уже в C)</code> - две копии графа</li>
+    <li class="fragment">стрелка в <code>C</code> переводит из верхней копии в нижнюю</li>
+    <li class="fragment">ответ - путей до <code>T</code> в нижней копии: <mark class="green">2</mark></li>
+</ul>
+                </section>
+
+                <!-- как придумывать состояние: что нужно знать, чтобы продолжить путь -->
+                <section>
+                    <h2>Как придумать состояние</h2>
+<div class="timeline">
+    <div class="timeline-item fragment">
+        <div class="timeline-marker">1</div>
+        <div class="timeline-content">Что нужно знать, чтобы сделать <mark>следующий шаг</mark>?</div>
+    </div>
+    <div class="timeline-item fragment">
+        <div class="timeline-marker">2</div>
+        <div class="timeline-content">Это и добавляем к вершине: шаги, пересадки, были ли в C</div>
+    </div>
+    <div class="timeline-item fragment">
+        <div class="timeline-marker">3</div>
+        <div class="timeline-content">Проверяем: в графе состояний нет циклов?</div>
+    </div>
+</div>
+<div class="fragment opinion" style="margin-top: 0.6em;">
+    Состояний = вершины * варианты параметра. Чем меньше вариантов, тем быстрее
+</div>
+                </section>
+
+            </section>
+
+            <!-- ИТОГ -->
+            <section>
+
+                <!-- итог: что запомнить, 3-4 пункта -->
+                <section>
+                    <div class="lesson-time">85</div>
+                    <h2>Что запомнить</h2>
+<ul style="font-size: 1em; text-align: left;">
+    <li class="fragment">динамика: <mark>состояние</mark>, <mark>переход</mark>, <mark>порядок</mark></li>
+    <li class="fragment">в графе без циклов порядок топологический, на поле - по строкам</li>
+    <li class="fragment">длиннейший и кратчайший путь в DAG - за <code>O(V + E)</code>, веса любые</li>
+    <li class="fragment">мешает цикл - добавляем к состоянию параметр, который только растёт</li>
+</ul>
+                </section>
+
+                <!-- домашнее задание -->
+                <section>
+                    <h2>Домашнее задание</h2>
+<ol style="font-size: 0.9em; text-align: left;">
+    <li class="fragment"><a href="https://leetcode.com/problems/unique-paths-ii/" target="_blank" rel="noopener">63. Unique Paths II</a> - маршруты со стенами</li>
+    <li class="fragment"><a href="https://leetcode.com/problems/minimum-path-sum/" target="_blank" rel="noopener">64. Minimum Path Sum</a> - самая дешёвая дорога по полю</li>
+    <li class="fragment"><a href="https://leetcode.com/problems/parallel-courses-iii/" target="_blank" rel="noopener">2050. Parallel Courses III</a> - наша задача про проект: сколько месяцев на все курсы</li>
+</ol>
+                </section>
+
+            </section>
+
+        </div>
+    </div>
+
+    <script src="/utils/lib/js/head.min.js"></script>
+    <script src="/utils/js/reveal.js"></script>
+    <script>
+        Reveal.initialize({
+            controls: true,
+            progress: true,
+            history: true,
+            center: true,
+            transition: 'fade',
+            transitionSpeed: 'fast',
+            dependencies: [
+                { src: '/utils/lib/js/classList.js', condition: function () { return !document.body.classList; } },
+                { src: '/utils/plugin/markdown/marked.js', condition: function () { return !!document.querySelector('[data-markdown]'); } },
+                { src: '/utils/plugin/markdown/markdown.js', condition: function () { return !!document.querySelector('[data-markdown]'); } },
+                { src: '/utils/plugin/highlight/highlight.js', async: true, callback: function () { hljs.initHighlightingOnLoad(); } },
+                { src: '/utils/plugin/zoom-js/zoom.js', async: true },
+                { src: '/utils/plugin/notes/notes.js', async: true }
+            ]
+        });
+        Reveal.configure({ slideNumber: 'c/t' });
+    </script>
+</body>
+
+</html>
