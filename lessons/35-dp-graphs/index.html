@@ -160,8 +160,8 @@
                 <!-- вспоминаем занятие 26: число путей в ациклическом графе, SVG графа с подписанными числами -->
                 <section>
                     <h2>Вспоминаем занятие 26</h2>
-<p class="fragment" style="font-size: 0.8em;">Сколько путей из <code>S</code> в <code>T</code>?</p>
-<div class="fragment">
+<p style="font-size: 0.8em;">Сколько путей из <code>S</code> в <code>T</code>?</p>
+<div>
 <svg width="420" height="220" viewBox="0 0 420 220">
 <defs>
 <marker id="d1n" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#667" /></marker>
@@ -859,7 +859,7 @@
 <tr class="fragment"><td>BFS</td><td>рёбра без весов</td><td><code>O(V + E)</code></td></tr>
 <tr class="fragment"><td>Дейкстра</td><td>веса &gt;= 0</td><td><code>O(E log V)</code></td></tr>
 <tr class="fragment"><td>Bellman-Ford</td><td>любые веса</td><td><code>O(V * E)</code></td></tr>
-<tr class="fragment"><td>динамика по топ. порядку</td><td>только без циклов; любые веса; и min, и max</td><td><mark class="green"><code>O(V + E)</code></mark></td></tr>
+<tr class="fragment"><td>динамика по топ. порядку</td><td>только без циклов; любые веса; и min, и max</td><td><mark class="green">O(V + E)</mark></td></tr>
 </table>
 <div class="fragment opinion" style="margin-top: 0.6em;">
     Граф без циклов - самый удобный случай: быстро и без ограничений на веса
