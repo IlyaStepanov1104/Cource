@@ -684,9 +684,19 @@
       ],
       "homeworks": [
         {
-          "title": "329. Longest Increasing Path in Matrix",
-          "description": "Найди самый длинный возрастающий путь в матрице. DAG + мемоизация: из каждой клетки идём только в большие соседей.",
-          "link": "https://leetcode.com/problems/longest-increasing-path-in-a-matrix/"
+          "title": "LeetCode на выбор: 63, 64 или 2050",
+          "description": "Решить одну задачу из трёх. 63. Unique Paths II - маршруты по полю с препятствиями. 64. Minimum Path Sum - самая дешёвая дорога по полю. 2050. Parallel Courses III - сколько месяцев нужно на все курсы (длиннейший путь в графе без циклов, как задача про проект)",
+          "link": "/lessons/35-dp-graphs/#/6/1"
+        },
+        {
+          "title": "ЕГЭ №18: робот и монеты",
+          "description": "С помощью Python или Excel",
+          "link": "https://inf-ege.sdamgia.ru/problem?id=36031"
+        },
+        {
+          "title": "ЕГЭ №18: робот и монеты со стенами",
+          "description": "С помощью Python или Excel",
+          "link": "https://inf-ege.sdamgia.ru/problem?id=92560"
         }
       ]
     },
