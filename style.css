@@ -111,6 +111,8 @@ button.course-link {
 }
 
 /* ── Navigation ──────────────────────────────────────────── */
+.main-menu { margin: 0 0 1rem; }
+
 .main-menu ul {
   list-style: none;
   padding: 0;

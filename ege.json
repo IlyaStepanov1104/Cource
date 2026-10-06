@@ -1,0 +1,297 @@
+{
+  "course": {
+    "title": "ЕГЭ по информатике",
+    "subtitle": "Индивидуальные занятия"
+  },
+  "lessons": [
+    {
+      "number": 1,
+      "title": "Введение в ЕГЭ: время, баллы, правила + обзор всех 27 заданий",
+      "date": "2026-10-06T19:00:00",
+      "duration": 60,
+      "presentations": [
+        {
+          "title": "Презентация",
+          "link": "/lessons-ege/01-intro/",
+          "order": 1
+        }
+      ],
+      "homeworks": [
+        {
+          "title": "Регистрация на Решу ЕГЭ",
+          "description": "Зарегистрироваться на сайте и прислать мне логин - через него будут приходить задания и варианты",
+          "link": "https://inf-ege.sdamgia.ru/"
+        },
+        {
+          "title": "Вариант на Решу ЕГЭ",
+          "description": "Решить вариант, войдя в аккаунт, чтобы я увидел результаты",
+          "link": "https://inf-ege.sdamgia.ru/test?id=21036756"
+        }
+      ]
+    },
+    {
+      "number": 2,
+      "title": "№19-21: теория игр, одна куча",
+      "date": "2026-10-13T19:00:00",
+      "duration": 60,
+      "presentations": [],
+      "homeworks": []
+    },
+    {
+      "number": 3,
+      "title": "№19-21: теория игр, две кучи",
+      "date": "2026-10-20T19:00:00",
+      "duration": 60,
+      "presentations": [],
+      "homeworks": []
+    },
+    {
+      "number": 4,
+      "title": "№2: таблицы истинности и логические функции",
+      "date": "2026-10-27T19:00:00",
+      "duration": 60,
+      "presentations": [],
+      "homeworks": []
+    },
+    {
+      "number": 5,
+      "title": "№8: комбинаторика (перебор слов)",
+      "date": "2026-11-03T19:00:00",
+      "duration": 60,
+      "presentations": [],
+      "homeworks": []
+    },
+    {
+      "number": 6,
+      "title": "№14: системы счисления",
+      "date": "2026-11-10T19:00:00",
+      "duration": 60,
+      "presentations": [],
+      "homeworks": []
+    },
+    {
+      "number": 7,
+      "title": "№5: алгоритмы с двоичной записью числа",
+      "date": "2026-11-17T19:00:00",
+      "duration": 60,
+      "presentations": [],
+      "homeworks": []
+    },
+    {
+      "number": 8,
+      "title": "№10: IP-адреса и маски",
+      "date": "2026-11-24T19:00:00",
+      "duration": 60,
+      "presentations": [],
+      "homeworks": []
+    },
+    {
+      "number": 9,
+      "title": "№17: обработка последовательностей",
+      "date": "2026-12-01T19:00:00",
+      "duration": 60,
+      "presentations": [],
+      "homeworks": []
+    },
+    {
+      "number": 10,
+      "title": "№25: маски и делители",
+      "date": "2026-12-08T19:00:00",
+      "duration": 60,
+      "presentations": [],
+      "homeworks": []
+    },
+    {
+      "number": 11,
+      "title": "№24: обработка строк, базовые приёмы",
+      "date": "2026-12-15T19:00:00",
+      "duration": 60,
+      "presentations": [],
+      "homeworks": []
+    },
+    {
+      "number": 12,
+      "title": "№24: обработка строк, сложные шаблоны",
+      "date": "2026-12-22T19:00:00",
+      "duration": 60,
+      "presentations": [],
+      "homeworks": []
+    },
+    {
+      "number": 13,
+      "title": "№26: сортировка и обработка журнала",
+      "date": "2026-12-29T19:00:00",
+      "duration": 60,
+      "presentations": [],
+      "homeworks": []
+    },
+    {
+      "number": 14,
+      "title": "№27: кластеризация точек",
+      "date": "2027-01-05T19:00:00",
+      "duration": 60,
+      "presentations": [],
+      "homeworks": []
+    },
+    {
+      "number": 15,
+      "title": "№27: эффективные алгоритмы на больших данных",
+      "date": "2027-01-12T19:00:00",
+      "duration": 60,
+      "presentations": [],
+      "homeworks": []
+    },
+    {
+      "number": 16,
+      "title": "№16: рекурсивные функции",
+      "date": "2027-01-19T19:00:00",
+      "duration": 60,
+      "presentations": [],
+      "homeworks": []
+    },
+    {
+      "number": 17,
+      "title": "№13: количество программ исполнителя",
+      "date": "2027-01-26T19:00:00",
+      "duration": 60,
+      "presentations": [],
+      "homeworks": []
+    },
+    {
+      "number": 18,
+      "title": "№23: графы из файла - кратчайший путь и количество путей (новое в 2027)",
+      "date": "2027-02-02T19:00:00",
+      "duration": 60,
+      "presentations": [],
+      "homeworks": []
+    },
+    {
+      "number": 19,
+      "title": "№22: параллельные процессы",
+      "date": "2027-02-09T19:00:00",
+      "duration": 60,
+      "presentations": [],
+      "homeworks": []
+    },
+    {
+      "number": 20,
+      "title": "№18: робот на клетчатом поле",
+      "date": "2027-02-16T19:00:00",
+      "duration": 60,
+      "presentations": [],
+      "homeworks": []
+    },
+    {
+      "number": 21,
+      "title": "№3: базы данных (электронные таблицы)",
+      "date": "2027-02-23T19:00:00",
+      "duration": 60,
+      "presentations": [],
+      "homeworks": []
+    },
+    {
+      "number": 22,
+      "title": "№9: электронные таблицы",
+      "date": "2027-03-02T19:00:00",
+      "duration": 60,
+      "presentations": [],
+      "homeworks": []
+    },
+    {
+      "number": 23,
+      "title": "№1 и №4: граф и таблица, условие Фано",
+      "date": "2027-03-09T19:00:00",
+      "duration": 60,
+      "presentations": [],
+      "homeworks": []
+    },
+    {
+      "number": 24,
+      "title": "№7: кодирование изображений и звука",
+      "date": "2027-03-16T19:00:00",
+      "duration": 60,
+      "presentations": [],
+      "homeworks": []
+    },
+    {
+      "number": 25,
+      "title": "№11: количество информации",
+      "date": "2027-03-23T19:00:00",
+      "duration": 60,
+      "presentations": [],
+      "homeworks": []
+    },
+    {
+      "number": 26,
+      "title": "№6: исполнитель Черепаха",
+      "date": "2027-03-30T19:00:00",
+      "duration": 60,
+      "presentations": [],
+      "homeworks": []
+    },
+    {
+      "number": 27,
+      "title": "№12: машина Тьюринга",
+      "date": "2027-04-06T19:00:00",
+      "duration": 60,
+      "presentations": [],
+      "homeworks": []
+    },
+    {
+      "number": 28,
+      "title": "№15: логика - отрезки, делители, поразрядная конъюнкция",
+      "date": "2027-04-13T19:00:00",
+      "duration": 60,
+      "presentations": [],
+      "homeworks": []
+    },
+    {
+      "number": 29,
+      "title": "Вариант №1: задания 1-14 на время",
+      "date": "2027-04-20T19:00:00",
+      "duration": 60,
+      "presentations": [],
+      "homeworks": []
+    },
+    {
+      "number": 30,
+      "title": "Вариант №1: задания 15-27 на время",
+      "date": "2027-04-27T19:00:00",
+      "duration": 60,
+      "presentations": [],
+      "homeworks": []
+    },
+    {
+      "number": 31,
+      "title": "Разбор ошибок варианта №1",
+      "date": "2027-05-04T19:00:00",
+      "duration": 60,
+      "presentations": [],
+      "homeworks": []
+    },
+    {
+      "number": 32,
+      "title": "Вариант №2: полный прогон на время",
+      "date": "2027-05-11T19:00:00",
+      "duration": 60,
+      "presentations": [],
+      "homeworks": []
+    },
+    {
+      "number": 33,
+      "title": "Разбор ошибок варианта №2",
+      "date": "2027-05-18T19:00:00",
+      "duration": 60,
+      "presentations": [],
+      "homeworks": []
+    },
+    {
+      "number": 34,
+      "title": "Финальное повторение слабых мест",
+      "date": "2027-05-25T19:00:00",
+      "duration": 60,
+      "presentations": [],
+      "homeworks": []
+    }
+  ]
+}

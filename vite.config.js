@@ -91,12 +91,26 @@ export default defineConfig({
 
         const cwd = process.cwd();
 
-        // POST /api/save-lessons
+        // POST /api/save-lessons?track=prog|ege
+        const TRACK_FILES = { prog: 'lessons.json', ege: 'ege.json' };
         server.middlewares.use('/api/save-lessons', async (req, res) => {
           if (req.method !== 'POST') { json(res, {}, 405); return; }
           try {
+            const track = new NodeURL(req.url, 'http://localhost').searchParams.get('track') || 'prog';
+            const file = TRACK_FILES[track];
+            if (!file) { json(res, { error: 'unknown track' }, 400); return; }
             const data = await body(req);
-            fs.writeFileSync(path.join(cwd, 'lessons.json'), JSON.stringify(data, null, 2));
+            fs.writeFileSync(path.join(cwd, file), JSON.stringify(data, null, 2));
+            json(res, { ok: true });
+          } catch (e) { json(res, { error: e.message }, 500); }
+        });
+
+        // POST /api/save-payments - учёт оплат (payments.json, в .gitignore)
+        server.middlewares.use('/api/save-payments', async (req, res) => {
+          if (req.method !== 'POST') { json(res, {}, 405); return; }
+          try {
+            const data = await body(req);
+            fs.writeFileSync(path.join(cwd, 'payments.json'), JSON.stringify(data, null, 2));
             json(res, { ok: true });
           } catch (e) { json(res, { error: e.message }, 500); }
         });

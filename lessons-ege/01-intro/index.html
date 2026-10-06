@@ -1,0 +1,1159 @@
+<!doctype html>
+<html lang="ru">
+
+<head>
+    <meta charset="utf-8">
+    <title>ЕГЭ, занятие 1 - Введение в ЕГЭ</title>
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+
+    <link rel="stylesheet" href="/utils/css/reveal.css">
+    <link rel="stylesheet" href="/utils/lib/css/animate.css">
+    <link rel="stylesheet" href="/utils/css/theme/night.css" id="theme">
+    <link rel="stylesheet" href="/utils/lib/css/zenburn.css">
+    <link rel="stylesheet" href="/utils/css/custom-base.css">
+    <link rel="stylesheet" href="css-custom/custom.css">
+
+    <script>
+        var link = document.createElement('link');
+        link.rel = 'stylesheet'; link.type = 'text/css';
+        link.href = window.location.search.match(/print-pdf/gi)
+            ? '/utils/css/print/pdf.css'
+            : '/utils/css/print/paper.css';
+        document.getElementsByTagName('head')[0].appendChild(link);
+    </script>
+</head>
+
+<body>
+    <div class="reveal">
+        <div class="slides">
+
+            <!-- титульный слайд -->
+            <section style="font-size: 70px; height: 100%; width: 100%">
+                <div class="lesson-time">0</div>
+                <div class="fragment">
+                    <h1 class="animated" style="font-size: 1.5em;">Введение в ЕГЭ по информатике</h1>
+                    <p style="text-align: center; font-size: 0.45em; opacity: 0.6;">время, баллы, правила и все 27 заданий</p>
+                    <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">ЕГЭ, занятие 1</p>
+                </div>
+            </section>
+
+            <!-- ЧАСТЬ 1: Как устроен экзамен -->
+            <section>
+
+                <section style="font-size: 70px; height: 100%; width: 100%">
+                    <div class="lesson-time">0</div>
+                    <div class="fragment">
+                        <h1 style="font-size: 1.3em;">Как устроен экзамен</h1>
+                        <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">формат, время, баллы</p>
+                    </div>
+                </section>
+
+                <!-- зачем эти занятия -->
+                <section>
+                    <h2>Зачем эти занятия</h2>
+                    <ul>
+                        <li class="fragment">в школе к ЕГЭ готовят, но пробелы остаются большие</li>
+                        <li class="fragment">здесь разбираем <mark>каждый номер с нуля</mark>: что спрашивают и как решить быстро</li>
+                        <li class="fragment">сегодня ничего не решаем на скорость - просто смотрим на экзамен целиком</li>
+                        <li class="fragment">цель на сегодня: понять, где ты сейчас</li>
+                    </ul>
+                </section>
+
+                <!-- формат: ответ - число, пара чисел или таблица -->
+                <section>
+                    <h2>Формат</h2>
+                    <p class="fragment" style="font-size: 0.8em;">экзамен за компьютером, <mark>27 заданий</mark>, решения никто не смотрит - только ответ в поле</p>
+                    <div class="compare" style="grid-template-columns: 1fr 1fr 1fr;">
+                        <div class="compare-block fragment">
+                            <h4>Одно число</h4>
+                            <p style="font-size: 1.4em; text-align: center;"><code>127</code></p>
+                            <p style="font-size: 0.6em; opacity: 0.7;">почти все задания</p>
+                        </div>
+                        <div class="compare-block fragment">
+                            <h4>Два числа</h4>
+                            <p style="font-size: 1.4em; text-align: center;"><code>303 220000</code></p>
+                            <p style="font-size: 0.6em; opacity: 0.7;">№26, №27</p>
+                        </div>
+                        <div class="compare-block fragment">
+                            <h4>Таблица</h4>
+                            <table style="font-size: 0.6em; margin: 0 auto;">
+                                <tr><td>число</td><td>делитель</td></tr>
+                                <tr><td><code>...</code></td><td><code>...</code></td></tr>
+                                <tr><td><code>...</code></td><td><code>...</code></td></tr>
+                            </table>
+                            <p style="font-size: 0.6em; opacity: 0.7;">№25</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- что есть на компьютере -->
+                <section>
+                    <h2>Что есть на компьютере</h2>
+                    <div class="compare" style="grid-template-columns: 1fr 1fr 1fr;">
+                        <div class="compare-block fragment">
+                            <h4>Текстовый редактор</h4>
+                            <p style="font-size: 0.65em;">заметки, просмотр файлов</p>
+                        </div>
+                        <div class="compare-block fragment">
+                            <h4>Электронные таблицы</h4>
+                            <p style="font-size: 0.65em;">LibreOffice Calc, файлы <code>.ods</code></p>
+                        </div>
+                        <div class="compare-block fragment">
+                            <h4>Программирование</h4>
+                            <p style="font-size: 0.65em;"><mark class="green">Python</mark>, C++, C#, Java, Pascal</p>
+                        </div>
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        Можно черновик - его не проверяют. Нельзя интернет и телефон.
+                    </div>
+                </section>
+
+                <!-- время: полоса 235 минут по плану ФИПИ -->
+                <section>
+                    <h2>Время: 3 ч 55 мин = 235 минут</h2>
+                    <p class="fragment" style="font-size: 0.65em;">ширина клетки - сколько минут ФИПИ закладывает на задание</p>
+                    <div class="fragment">
+<svg width="960" height="140" viewBox="0 0 960 140"><rect x="10.0" y="50" width="10.5" height="36" fill="#7d7" fill-opacity="0.35" stroke="#7d7" stroke-width="1" />
+<rect x="22.0" y="50" width="10.5" height="36" fill="#7d7" fill-opacity="0.35" stroke="#7d7" stroke-width="1" />
+<rect x="34.0" y="50" width="10.5" height="36" fill="#7d7" fill-opacity="0.35" stroke="#7d7" stroke-width="1" />
+<rect x="46.0" y="50" width="6.5" height="36" fill="#7d7" fill-opacity="0.35" stroke="#7d7" stroke-width="1" />
+<rect x="54.0" y="50" width="14.5" height="36" fill="#7d7" fill-opacity="0.35" stroke="#7d7" stroke-width="1" />
+<rect x="70.0" y="50" width="14.5" height="36" fill="#7d7" fill-opacity="0.35" stroke="#7d7" stroke-width="1" />
+<rect x="86.0" y="50" width="18.5" height="36" fill="#7d7" fill-opacity="0.35" stroke="#7d7" stroke-width="1" />
+<rect x="106.0" y="50" width="14.5" height="36" fill="#7d7" fill-opacity="0.35" stroke="#7d7" stroke-width="1" />
+<rect x="122.0" y="50" width="22.5" height="36" fill="#7d7" fill-opacity="0.35" stroke="#7d7" stroke-width="1" />
+<text x="134.0" y="73" fill="#dde" font-size="12" text-anchor="middle">9</text>
+<rect x="146.0" y="50" width="10.5" height="36" fill="#7d7" fill-opacity="0.35" stroke="#7d7" stroke-width="1" />
+<rect x="158.0" y="50" width="10.5" height="36" fill="#7d7" fill-opacity="0.35" stroke="#7d7" stroke-width="1" />
+<rect x="170.0" y="50" width="22.5" height="36" fill="#7d7" fill-opacity="0.35" stroke="#7d7" stroke-width="1" />
+<text x="182.0" y="73" fill="#dde" font-size="12" text-anchor="middle">12</text>
+<rect x="194.0" y="50" width="26.5" height="36" fill="#7d7" fill-opacity="0.35" stroke="#7d7" stroke-width="1" />
+<text x="208.0" y="73" fill="#dde" font-size="12" text-anchor="middle">13</text>
+<rect x="222.0" y="50" width="10.5" height="36" fill="#7d7" fill-opacity="0.35" stroke="#7d7" stroke-width="1" />
+<rect x="234.0" y="50" width="10.5" height="36" fill="#7d7" fill-opacity="0.35" stroke="#7d7" stroke-width="1" />
+<rect x="246.0" y="50" width="18.5" height="36" fill="#7d7" fill-opacity="0.35" stroke="#7d7" stroke-width="1" />
+<rect x="266.0" y="50" width="50.5" height="36" fill="#fd6" fill-opacity="0.35" stroke="#fd6" stroke-width="1" />
+<text x="292.0" y="73" fill="#dde" font-size="12" text-anchor="middle">17</text>
+<rect x="318.0" y="50" width="30.5" height="36" fill="#fd6" fill-opacity="0.35" stroke="#fd6" stroke-width="1" />
+<text x="334.0" y="73" fill="#dde" font-size="12" text-anchor="middle">18</text>
+<rect x="350.0" y="50" width="18.5" height="36" fill="#fd6" fill-opacity="0.35" stroke="#fd6" stroke-width="1" />
+<rect x="370.0" y="50" width="26.5" height="36" fill="#fd6" fill-opacity="0.35" stroke="#fd6" stroke-width="1" />
+<text x="384.0" y="73" fill="#dde" font-size="12" text-anchor="middle">20</text>
+<rect x="398.0" y="50" width="38.5" height="36" fill="#fd6" fill-opacity="0.35" stroke="#fd6" stroke-width="1" />
+<text x="418.0" y="73" fill="#dde" font-size="12" text-anchor="middle">21</text>
+<rect x="438.0" y="50" width="26.5" height="36" fill="#fd6" fill-opacity="0.35" stroke="#fd6" stroke-width="1" />
+<text x="452.0" y="73" fill="#dde" font-size="12" text-anchor="middle">22</text>
+<rect x="466.0" y="50" width="46.5" height="36" fill="#fd6" fill-opacity="0.35" stroke="#fd6" stroke-width="1" />
+<text x="490.0" y="73" fill="#dde" font-size="12" text-anchor="middle">23</text>
+<rect x="514.0" y="50" width="70.5" height="36" fill="#fd6" fill-opacity="0.35" stroke="#fd6" stroke-width="1" />
+<text x="550.0" y="73" fill="#dde" font-size="12" text-anchor="middle">24</text>
+<rect x="586.0" y="50" width="78.5" height="36" fill="#fd6" fill-opacity="0.35" stroke="#fd6" stroke-width="1" />
+<text x="626.0" y="73" fill="#dde" font-size="12" text-anchor="middle">25</text>
+<rect x="666.0" y="50" width="138.5" height="36" fill="#f7a" fill-opacity="0.35" stroke="#f7a" stroke-width="1" />
+<text x="736.0" y="73" fill="#dde" font-size="12" text-anchor="middle">26</text>
+<rect x="806.0" y="50" width="142.5" height="36" fill="#f7a" fill-opacity="0.35" stroke="#f7a" stroke-width="1" />
+<text x="878.0" y="73" fill="#dde" font-size="12" text-anchor="middle">27</text>
+<g class="fragment"><path d="M10.0,94 v8 H264.5 v-8" fill="none" stroke="#7d7" stroke-width="2" /><text x="137.2" y="126" fill="#7d7" font-size="18" text-anchor="middle">№1-16: ~64 мин</text></g>
+<g class="fragment"><path d="M266.0,94 v8 H664.5 v-8" fill="none" stroke="#fd6" stroke-width="2" /><text x="465.2" y="126" fill="#fd6" font-size="18" text-anchor="middle">№17-25: ~100 мин</text></g>
+<g class="fragment"><path d="M666.0,94 v8 H948.5 v-8" fill="none" stroke="#f7a" stroke-width="2" /><text x="807.2" y="126" fill="#f7a" font-size="18" text-anchor="middle">№26-27: ~71 мин</text></g>
+<text x="10" y="30" fill="#8ab" font-size="15">0 мин</text>
+<text x="950.0" y="30" fill="#8ab" font-size="15" text-anchor="end">235 мин</text></svg>
+                    </div>
+                    <p class="fragment" style="font-size: 0.7em;">два последних задания забирают почти <mark>треть</mark> времени</p>
+                </section>
+
+                <!-- баллы: 27 клеток, две последние двойные -->
+                <section>
+                    <h2>Баллы</h2>
+                    <div class="fragment">
+<svg width="861" height="125" viewBox="0 0 861 125"><rect x="10" y="40" width="26" height="40" rx="4" fill="#8ab" fill-opacity="0.35" stroke="#8ab" stroke-width="1.5" />
+<text x="23.0" y="66" fill="#dde" font-size="13" text-anchor="middle">1</text>
+<rect x="39" y="40" width="26" height="40" rx="4" fill="#8ab" fill-opacity="0.35" stroke="#8ab" stroke-width="1.5" />
+<text x="52.0" y="66" fill="#dde" font-size="13" text-anchor="middle">2</text>
+<rect x="68" y="40" width="26" height="40" rx="4" fill="#8ab" fill-opacity="0.35" stroke="#8ab" stroke-width="1.5" />
+<text x="81.0" y="66" fill="#dde" font-size="13" text-anchor="middle">3</text>
+<rect x="97" y="40" width="26" height="40" rx="4" fill="#8ab" fill-opacity="0.35" stroke="#8ab" stroke-width="1.5" />
+<text x="110.0" y="66" fill="#dde" font-size="13" text-anchor="middle">4</text>
+<rect x="126" y="40" width="26" height="40" rx="4" fill="#8ab" fill-opacity="0.35" stroke="#8ab" stroke-width="1.5" />
+<text x="139.0" y="66" fill="#dde" font-size="13" text-anchor="middle">5</text>
+<rect x="155" y="40" width="26" height="40" rx="4" fill="#8ab" fill-opacity="0.35" stroke="#8ab" stroke-width="1.5" />
+<text x="168.0" y="66" fill="#dde" font-size="13" text-anchor="middle">6</text>
+<rect x="184" y="40" width="26" height="40" rx="4" fill="#8ab" fill-opacity="0.35" stroke="#8ab" stroke-width="1.5" />
+<text x="197.0" y="66" fill="#dde" font-size="13" text-anchor="middle">7</text>
+<rect x="213" y="40" width="26" height="40" rx="4" fill="#8ab" fill-opacity="0.35" stroke="#8ab" stroke-width="1.5" />
+<text x="226.0" y="66" fill="#dde" font-size="13" text-anchor="middle">8</text>
+<rect x="242" y="40" width="26" height="40" rx="4" fill="#8ab" fill-opacity="0.35" stroke="#8ab" stroke-width="1.5" />
+<text x="255.0" y="66" fill="#dde" font-size="13" text-anchor="middle">9</text>
+<rect x="271" y="40" width="26" height="40" rx="4" fill="#8ab" fill-opacity="0.35" stroke="#8ab" stroke-width="1.5" />
+<text x="284.0" y="66" fill="#dde" font-size="13" text-anchor="middle">10</text>
+<rect x="300" y="40" width="26" height="40" rx="4" fill="#8ab" fill-opacity="0.35" stroke="#8ab" stroke-width="1.5" />
+<text x="313.0" y="66" fill="#dde" font-size="13" text-anchor="middle">11</text>
+<rect x="329" y="40" width="26" height="40" rx="4" fill="#8ab" fill-opacity="0.35" stroke="#8ab" stroke-width="1.5" />
+<text x="342.0" y="66" fill="#dde" font-size="13" text-anchor="middle">12</text>
+<rect x="358" y="40" width="26" height="40" rx="4" fill="#8ab" fill-opacity="0.35" stroke="#8ab" stroke-width="1.5" />
+<text x="371.0" y="66" fill="#dde" font-size="13" text-anchor="middle">13</text>
+<rect x="387" y="40" width="26" height="40" rx="4" fill="#8ab" fill-opacity="0.35" stroke="#8ab" stroke-width="1.5" />
+<text x="400.0" y="66" fill="#dde" font-size="13" text-anchor="middle">14</text>
+<rect x="416" y="40" width="26" height="40" rx="4" fill="#8ab" fill-opacity="0.35" stroke="#8ab" stroke-width="1.5" />
+<text x="429.0" y="66" fill="#dde" font-size="13" text-anchor="middle">15</text>
+<rect x="445" y="40" width="26" height="40" rx="4" fill="#8ab" fill-opacity="0.35" stroke="#8ab" stroke-width="1.5" />
+<text x="458.0" y="66" fill="#dde" font-size="13" text-anchor="middle">16</text>
+<rect x="474" y="40" width="26" height="40" rx="4" fill="#8ab" fill-opacity="0.35" stroke="#8ab" stroke-width="1.5" />
+<text x="487.0" y="66" fill="#dde" font-size="13" text-anchor="middle">17</text>
+<rect x="503" y="40" width="26" height="40" rx="4" fill="#8ab" fill-opacity="0.35" stroke="#8ab" stroke-width="1.5" />
+<text x="516.0" y="66" fill="#dde" font-size="13" text-anchor="middle">18</text>
+<rect x="532" y="40" width="26" height="40" rx="4" fill="#8ab" fill-opacity="0.35" stroke="#8ab" stroke-width="1.5" />
+<text x="545.0" y="66" fill="#dde" font-size="13" text-anchor="middle">19</text>
+<rect x="561" y="40" width="26" height="40" rx="4" fill="#8ab" fill-opacity="0.35" stroke="#8ab" stroke-width="1.5" />
+<text x="574.0" y="66" fill="#dde" font-size="13" text-anchor="middle">20</text>
+<rect x="590" y="40" width="26" height="40" rx="4" fill="#8ab" fill-opacity="0.35" stroke="#8ab" stroke-width="1.5" />
+<text x="603.0" y="66" fill="#dde" font-size="13" text-anchor="middle">21</text>
+<rect x="619" y="40" width="26" height="40" rx="4" fill="#8ab" fill-opacity="0.35" stroke="#8ab" stroke-width="1.5" />
+<text x="632.0" y="66" fill="#dde" font-size="13" text-anchor="middle">22</text>
+<rect x="648" y="40" width="26" height="40" rx="4" fill="#8ab" fill-opacity="0.35" stroke="#8ab" stroke-width="1.5" />
+<text x="661.0" y="66" fill="#dde" font-size="13" text-anchor="middle">23</text>
+<rect x="677" y="40" width="26" height="40" rx="4" fill="#8ab" fill-opacity="0.35" stroke="#8ab" stroke-width="1.5" />
+<text x="690.0" y="66" fill="#dde" font-size="13" text-anchor="middle">24</text>
+<rect x="706" y="40" width="26" height="40" rx="4" fill="#8ab" fill-opacity="0.35" stroke="#8ab" stroke-width="1.5" />
+<text x="719.0" y="66" fill="#dde" font-size="13" text-anchor="middle">25</text>
+<rect x="735" y="40" width="55" height="40" rx="4" fill="#f7a" fill-opacity="0.35" stroke="#f7a" stroke-width="1.5" />
+<text x="762.5" y="66" fill="#dde" font-size="13" text-anchor="middle">26</text>
+<rect x="793" y="40" width="55" height="40" rx="4" fill="#f7a" fill-opacity="0.35" stroke="#f7a" stroke-width="1.5" />
+<text x="820.5" y="66" fill="#dde" font-size="13" text-anchor="middle">27</text>
+<g class="fragment"><text x="372.5" y="25" fill="#8ab" font-size="17" text-anchor="middle">№1-25: по 1 баллу = 25</text></g>
+<g class="fragment"><text x="793.0" y="25" fill="#f7a" font-size="17" text-anchor="middle">по 2 = 4</text></g>
+<g class="fragment"><text x="425.5" y="112" fill="#fd6" font-size="20" font-weight="bold" text-anchor="middle">всего 29 первичных баллов</text></g></svg>
+                    </div>
+                </section>
+
+                <!-- частичный балл в №26-27 -->
+                <section>
+                    <h2>№26 и №27: можно получить 1 из 2</h2>
+                    <p class="fragment" style="font-size: 0.7em;">правильный ответ: <code>303 220000</code></p>
+                    <table style="font-size: 0.75em; margin-top: 0.5em;">
+                        <tr><td><strong>Ответ</strong></td><td><strong>Что не так</strong></td><td><strong>Баллы</strong></td></tr>
+                        <tr class="fragment"><td><code>303 220000</code></td><td>всё верно</td><td><strong>2</strong></td></tr>
+                        <tr class="fragment"><td><code>303 150000</code></td><td>верно только первое</td><td><strong>1</strong></td></tr>
+                        <tr class="fragment"><td><code>220000 303</code></td><td>числа перепутаны местами</td><td><strong>1</strong></td></tr>
+                        <tr class="fragment"><td><code>101 150000</code></td><td>оба неверны</td><td><strong>0</strong></td></tr>
+                    </table>
+                </section>
+
+                <!-- уровни сложности -->
+                <section>
+                    <h2>Уровни сложности</h2>
+                    <div class="fragment">
+<svg width="861" height="90" viewBox="0 20 861 70"><rect x="10" y="40" width="26" height="40" rx="4" fill="#7d7" fill-opacity="0.35" stroke="#7d7" stroke-width="1.5" />
+<text x="23.0" y="66" fill="#dde" font-size="13" text-anchor="middle">1</text>
+<rect x="39" y="40" width="26" height="40" rx="4" fill="#7d7" fill-opacity="0.35" stroke="#7d7" stroke-width="1.5" />
+<text x="52.0" y="66" fill="#dde" font-size="13" text-anchor="middle">2</text>
+<rect x="68" y="40" width="26" height="40" rx="4" fill="#7d7" fill-opacity="0.35" stroke="#7d7" stroke-width="1.5" />
+<text x="81.0" y="66" fill="#dde" font-size="13" text-anchor="middle">3</text>
+<rect x="97" y="40" width="26" height="40" rx="4" fill="#7d7" fill-opacity="0.35" stroke="#7d7" stroke-width="1.5" />
+<text x="110.0" y="66" fill="#dde" font-size="13" text-anchor="middle">4</text>
+<rect x="126" y="40" width="26" height="40" rx="4" fill="#7d7" fill-opacity="0.35" stroke="#7d7" stroke-width="1.5" />
+<text x="139.0" y="66" fill="#dde" font-size="13" text-anchor="middle">5</text>
+<rect x="155" y="40" width="26" height="40" rx="4" fill="#7d7" fill-opacity="0.35" stroke="#7d7" stroke-width="1.5" />
+<text x="168.0" y="66" fill="#dde" font-size="13" text-anchor="middle">6</text>
+<rect x="184" y="40" width="26" height="40" rx="4" fill="#7d7" fill-opacity="0.35" stroke="#7d7" stroke-width="1.5" />
+<text x="197.0" y="66" fill="#dde" font-size="13" text-anchor="middle">7</text>
+<rect x="213" y="40" width="26" height="40" rx="4" fill="#7d7" fill-opacity="0.35" stroke="#7d7" stroke-width="1.5" />
+<text x="226.0" y="66" fill="#dde" font-size="13" text-anchor="middle">8</text>
+<rect x="242" y="40" width="26" height="40" rx="4" fill="#7d7" fill-opacity="0.35" stroke="#7d7" stroke-width="1.5" />
+<text x="255.0" y="66" fill="#dde" font-size="13" text-anchor="middle">9</text>
+<rect x="271" y="40" width="26" height="40" rx="4" fill="#7d7" fill-opacity="0.35" stroke="#7d7" stroke-width="1.5" />
+<text x="284.0" y="66" fill="#dde" font-size="13" text-anchor="middle">10</text>
+<rect x="300" y="40" width="26" height="40" rx="4" fill="#fd6" fill-opacity="0.35" stroke="#fd6" stroke-width="1.5" />
+<text x="313.0" y="66" fill="#dde" font-size="13" text-anchor="middle">11</text>
+<rect x="329" y="40" width="26" height="40" rx="4" fill="#fd6" fill-opacity="0.35" stroke="#fd6" stroke-width="1.5" />
+<text x="342.0" y="66" fill="#dde" font-size="13" text-anchor="middle">12</text>
+<rect x="358" y="40" width="26" height="40" rx="4" fill="#fd6" fill-opacity="0.35" stroke="#fd6" stroke-width="1.5" />
+<text x="371.0" y="66" fill="#dde" font-size="13" text-anchor="middle">13</text>
+<rect x="387" y="40" width="26" height="40" rx="4" fill="#fd6" fill-opacity="0.35" stroke="#fd6" stroke-width="1.5" />
+<text x="400.0" y="66" fill="#dde" font-size="13" text-anchor="middle">14</text>
+<rect x="416" y="40" width="26" height="40" rx="4" fill="#fd6" fill-opacity="0.35" stroke="#fd6" stroke-width="1.5" />
+<text x="429.0" y="66" fill="#dde" font-size="13" text-anchor="middle">15</text>
+<rect x="445" y="40" width="26" height="40" rx="4" fill="#fd6" fill-opacity="0.35" stroke="#fd6" stroke-width="1.5" />
+<text x="458.0" y="66" fill="#dde" font-size="13" text-anchor="middle">16</text>
+<rect x="474" y="40" width="26" height="40" rx="4" fill="#fd6" fill-opacity="0.35" stroke="#fd6" stroke-width="1.5" />
+<text x="487.0" y="66" fill="#dde" font-size="13" text-anchor="middle">17</text>
+<rect x="503" y="40" width="26" height="40" rx="4" fill="#fd6" fill-opacity="0.35" stroke="#fd6" stroke-width="1.5" />
+<text x="516.0" y="66" fill="#dde" font-size="13" text-anchor="middle">18</text>
+<rect x="532" y="40" width="26" height="40" rx="4" fill="#7d7" fill-opacity="0.35" stroke="#7d7" stroke-width="1.5" />
+<text x="545.0" y="66" fill="#dde" font-size="13" text-anchor="middle">19</text>
+<rect x="561" y="40" width="26" height="40" rx="4" fill="#fd6" fill-opacity="0.35" stroke="#fd6" stroke-width="1.5" />
+<text x="574.0" y="66" fill="#dde" font-size="13" text-anchor="middle">20</text>
+<rect x="590" y="40" width="26" height="40" rx="4" fill="#f7a" fill-opacity="0.35" stroke="#f7a" stroke-width="1.5" />
+<text x="603.0" y="66" fill="#dde" font-size="13" text-anchor="middle">21</text>
+<rect x="619" y="40" width="26" height="40" rx="4" fill="#fd6" fill-opacity="0.35" stroke="#fd6" stroke-width="1.5" />
+<text x="632.0" y="66" fill="#dde" font-size="13" text-anchor="middle">22</text>
+<rect x="648" y="40" width="26" height="40" rx="4" fill="#fd6" fill-opacity="0.35" stroke="#fd6" stroke-width="1.5" />
+<text x="661.0" y="66" fill="#dde" font-size="13" text-anchor="middle">23</text>
+<rect x="677" y="40" width="26" height="40" rx="4" fill="#f7a" fill-opacity="0.35" stroke="#f7a" stroke-width="1.5" />
+<text x="690.0" y="66" fill="#dde" font-size="13" text-anchor="middle">24</text>
+<rect x="706" y="40" width="26" height="40" rx="4" fill="#f7a" fill-opacity="0.35" stroke="#f7a" stroke-width="1.5" />
+<text x="719.0" y="66" fill="#dde" font-size="13" text-anchor="middle">25</text>
+<rect x="735" y="40" width="55" height="40" rx="4" fill="#f7a" fill-opacity="0.35" stroke="#f7a" stroke-width="1.5" />
+<text x="762.5" y="66" fill="#dde" font-size="13" text-anchor="middle">26</text>
+<rect x="793" y="40" width="55" height="40" rx="4" fill="#f7a" fill-opacity="0.35" stroke="#f7a" stroke-width="1.5" />
+<text x="820.5" y="66" fill="#dde" font-size="13" text-anchor="middle">27</text></svg>
+                    </div>
+                    <ul style="font-size: 0.75em;">
+                        <li class="fragment"><span class="tool" style="background: rgba(119, 221, 119, 0.3);">базовый</span> 11 заданий</li>
+                        <li class="fragment"><span class="tool" style="background: rgba(255, 221, 102, 0.3);">повышенный</span> 11 заданий</li>
+                        <li class="fragment"><span class="tool" style="background: rgba(255, 119, 170, 0.3);">высокий</span> 5 заданий: №21 и №24-27</li>
+                    </ul>
+                </section>
+
+                <!-- перевод в 100-балльную шкалу: шкала 2026, сколько стоит каждый первичный балл -->
+                <section>
+                    <h2>Как баллы становятся сотней</h2>
+                    <p style="font-size: 0.6em; opacity: 0.7;">шкала 2026 года: столбик - сколько тестовых баллов даёт каждый следующий первичный</p>
+                    <div>
+<svg width="1010" height="250" viewBox="-60 20 990 240"><g class="fragment" data-fragment-index="1"><rect x="40" y="71" width="26" height="119" rx="3" fill="#f7a" fill-opacity="0.4" stroke="#f7a" stroke-width="1.5" /><text x="53.0" y="65" fill="#f7a" font-size="14" text-anchor="middle">+7</text></g>
+<text x="53.0" y="210" fill="#dde" font-size="14" text-anchor="middle">1</text>
+<text x="53.0" y="232" fill="#8ab" font-size="12" text-anchor="middle">7</text>
+<g class="fragment" data-fragment-index="1"><rect x="70" y="71" width="26" height="119" rx="3" fill="#f7a" fill-opacity="0.4" stroke="#f7a" stroke-width="1.5" /><text x="83.0" y="65" fill="#f7a" font-size="14" text-anchor="middle">+7</text></g>
+<text x="83.0" y="210" fill="#dde" font-size="14" text-anchor="middle">2</text>
+<text x="83.0" y="232" fill="#8ab" font-size="12" text-anchor="middle">14</text>
+<g class="fragment" data-fragment-index="1"><rect x="100" y="88" width="26" height="102" rx="3" fill="#f7a" fill-opacity="0.4" stroke="#f7a" stroke-width="1.5" /><text x="113.0" y="82" fill="#f7a" font-size="14" text-anchor="middle">+6</text></g>
+<text x="113.0" y="210" fill="#dde" font-size="14" text-anchor="middle">3</text>
+<text x="113.0" y="232" fill="#8ab" font-size="12" text-anchor="middle">20</text>
+<g class="fragment" data-fragment-index="1"><rect x="130" y="71" width="26" height="119" rx="3" fill="#f7a" fill-opacity="0.4" stroke="#f7a" stroke-width="1.5" /><text x="143.0" y="65" fill="#f7a" font-size="14" text-anchor="middle">+7</text></g>
+<text x="143.0" y="210" fill="#dde" font-size="14" text-anchor="middle">4</text>
+<text x="143.0" y="232" fill="#8ab" font-size="12" text-anchor="middle">27</text>
+<g class="fragment" data-fragment-index="1"><rect x="160" y="71" width="26" height="119" rx="3" fill="#f7a" fill-opacity="0.4" stroke="#f7a" stroke-width="1.5" /><text x="173.0" y="65" fill="#f7a" font-size="14" text-anchor="middle">+7</text></g>
+<text x="173.0" y="210" fill="#dde" font-size="14" text-anchor="middle">5</text>
+<text x="173.0" y="232" fill="#8ab" font-size="12" text-anchor="middle">34</text>
+<g class="fragment" data-fragment-index="1"><rect x="190" y="88" width="26" height="102" rx="3" fill="#f7a" fill-opacity="0.4" stroke="#f7a" stroke-width="1.5" /><text x="203.0" y="82" fill="#f7a" font-size="14" text-anchor="middle">+6</text></g>
+<text x="203.0" y="210" fill="#dde" font-size="14" text-anchor="middle">6</text>
+<text x="203.0" y="232" fill="#fd6" font-size="14" font-weight="bold" text-anchor="middle">40</text>
+<g class="fragment" data-fragment-index="2"><rect x="220" y="139" width="26" height="51" rx="3" fill="#7d7" fill-opacity="0.4" stroke="#7d7" stroke-width="1.5" /><text x="233.0" y="133" fill="#7d7" font-size="14" text-anchor="middle">+3</text></g>
+<text x="233.0" y="210" fill="#dde" font-size="14" text-anchor="middle">7</text>
+<text x="233.0" y="232" fill="#8ab" font-size="12" text-anchor="middle">43</text>
+<g class="fragment" data-fragment-index="2"><rect x="250" y="139" width="26" height="51" rx="3" fill="#7d7" fill-opacity="0.4" stroke="#7d7" stroke-width="1.5" /><text x="263.0" y="133" fill="#7d7" font-size="14" text-anchor="middle">+3</text></g>
+<text x="263.0" y="210" fill="#dde" font-size="14" text-anchor="middle">8</text>
+<text x="263.0" y="232" fill="#8ab" font-size="12" text-anchor="middle">46</text>
+<g class="fragment" data-fragment-index="2"><rect x="280" y="156" width="26" height="34" rx="3" fill="#7d7" fill-opacity="0.4" stroke="#7d7" stroke-width="1.5" /><text x="293.0" y="150" fill="#7d7" font-size="14" text-anchor="middle">+2</text></g>
+<text x="293.0" y="210" fill="#dde" font-size="14" text-anchor="middle">9</text>
+<text x="293.0" y="232" fill="#8ab" font-size="12" text-anchor="middle">48</text>
+<g class="fragment" data-fragment-index="2"><rect x="310" y="139" width="26" height="51" rx="3" fill="#7d7" fill-opacity="0.4" stroke="#7d7" stroke-width="1.5" /><text x="323.0" y="133" fill="#7d7" font-size="14" text-anchor="middle">+3</text></g>
+<text x="323.0" y="210" fill="#dde" font-size="14" text-anchor="middle">10</text>
+<text x="323.0" y="232" fill="#8ab" font-size="12" text-anchor="middle">51</text>
+<g class="fragment" data-fragment-index="2"><rect x="340" y="139" width="26" height="51" rx="3" fill="#7d7" fill-opacity="0.4" stroke="#7d7" stroke-width="1.5" /><text x="353.0" y="133" fill="#7d7" font-size="14" text-anchor="middle">+3</text></g>
+<text x="353.0" y="210" fill="#dde" font-size="14" text-anchor="middle">11</text>
+<text x="353.0" y="232" fill="#8ab" font-size="12" text-anchor="middle">54</text>
+<g class="fragment" data-fragment-index="2"><rect x="370" y="156" width="26" height="34" rx="3" fill="#7d7" fill-opacity="0.4" stroke="#7d7" stroke-width="1.5" /><text x="383.0" y="150" fill="#7d7" font-size="14" text-anchor="middle">+2</text></g>
+<text x="383.0" y="210" fill="#dde" font-size="14" text-anchor="middle">12</text>
+<text x="383.0" y="232" fill="#8ab" font-size="12" text-anchor="middle">56</text>
+<g class="fragment" data-fragment-index="2"><rect x="400" y="139" width="26" height="51" rx="3" fill="#7d7" fill-opacity="0.4" stroke="#7d7" stroke-width="1.5" /><text x="413.0" y="133" fill="#7d7" font-size="14" text-anchor="middle">+3</text></g>
+<text x="413.0" y="210" fill="#dde" font-size="14" text-anchor="middle">13</text>
+<text x="413.0" y="232" fill="#8ab" font-size="12" text-anchor="middle">59</text>
+<g class="fragment" data-fragment-index="2"><rect x="430" y="139" width="26" height="51" rx="3" fill="#7d7" fill-opacity="0.4" stroke="#7d7" stroke-width="1.5" /><text x="443.0" y="133" fill="#7d7" font-size="14" text-anchor="middle">+3</text></g>
+<text x="443.0" y="210" fill="#dde" font-size="14" text-anchor="middle">14</text>
+<text x="443.0" y="232" fill="#8ab" font-size="12" text-anchor="middle">62</text>
+<g class="fragment" data-fragment-index="2"><rect x="460" y="156" width="26" height="34" rx="3" fill="#7d7" fill-opacity="0.4" stroke="#7d7" stroke-width="1.5" /><text x="473.0" y="150" fill="#7d7" font-size="14" text-anchor="middle">+2</text></g>
+<text x="473.0" y="210" fill="#dde" font-size="14" text-anchor="middle">15</text>
+<text x="473.0" y="232" fill="#8ab" font-size="12" text-anchor="middle">64</text>
+<g class="fragment" data-fragment-index="2"><rect x="490" y="139" width="26" height="51" rx="3" fill="#7d7" fill-opacity="0.4" stroke="#7d7" stroke-width="1.5" /><text x="503.0" y="133" fill="#7d7" font-size="14" text-anchor="middle">+3</text></g>
+<text x="503.0" y="210" fill="#dde" font-size="14" text-anchor="middle">16</text>
+<text x="503.0" y="232" fill="#8ab" font-size="12" text-anchor="middle">67</text>
+<g class="fragment" data-fragment-index="2"><rect x="520" y="139" width="26" height="51" rx="3" fill="#7d7" fill-opacity="0.4" stroke="#7d7" stroke-width="1.5" /><text x="533.0" y="133" fill="#7d7" font-size="14" text-anchor="middle">+3</text></g>
+<text x="533.0" y="210" fill="#dde" font-size="14" text-anchor="middle">17</text>
+<text x="533.0" y="232" fill="#8ab" font-size="12" text-anchor="middle">70</text>
+<g class="fragment" data-fragment-index="2"><rect x="550" y="156" width="26" height="34" rx="3" fill="#7d7" fill-opacity="0.4" stroke="#7d7" stroke-width="1.5" /><text x="563.0" y="150" fill="#7d7" font-size="14" text-anchor="middle">+2</text></g>
+<text x="563.0" y="210" fill="#dde" font-size="14" text-anchor="middle">18</text>
+<text x="563.0" y="232" fill="#8ab" font-size="12" text-anchor="middle">72</text>
+<g class="fragment" data-fragment-index="2"><rect x="580" y="139" width="26" height="51" rx="3" fill="#7d7" fill-opacity="0.4" stroke="#7d7" stroke-width="1.5" /><text x="593.0" y="133" fill="#7d7" font-size="14" text-anchor="middle">+3</text></g>
+<text x="593.0" y="210" fill="#dde" font-size="14" text-anchor="middle">19</text>
+<text x="593.0" y="232" fill="#8ab" font-size="12" text-anchor="middle">75</text>
+<g class="fragment" data-fragment-index="2"><rect x="610" y="139" width="26" height="51" rx="3" fill="#7d7" fill-opacity="0.4" stroke="#7d7" stroke-width="1.5" /><text x="623.0" y="133" fill="#7d7" font-size="14" text-anchor="middle">+3</text></g>
+<text x="623.0" y="210" fill="#dde" font-size="14" text-anchor="middle">20</text>
+<text x="623.0" y="232" fill="#8ab" font-size="12" text-anchor="middle">78</text>
+<g class="fragment" data-fragment-index="2"><rect x="640" y="156" width="26" height="34" rx="3" fill="#7d7" fill-opacity="0.4" stroke="#7d7" stroke-width="1.5" /><text x="653.0" y="150" fill="#7d7" font-size="14" text-anchor="middle">+2</text></g>
+<text x="653.0" y="210" fill="#dde" font-size="14" text-anchor="middle">21</text>
+<text x="653.0" y="232" fill="#8ab" font-size="12" text-anchor="middle">80</text>
+<g class="fragment" data-fragment-index="2"><rect x="670" y="139" width="26" height="51" rx="3" fill="#7d7" fill-opacity="0.4" stroke="#7d7" stroke-width="1.5" /><text x="683.0" y="133" fill="#7d7" font-size="14" text-anchor="middle">+3</text></g>
+<text x="683.0" y="210" fill="#dde" font-size="14" text-anchor="middle">22</text>
+<text x="683.0" y="232" fill="#8ab" font-size="12" text-anchor="middle">83</text>
+<g class="fragment" data-fragment-index="2"><rect x="700" y="156" width="26" height="34" rx="3" fill="#7d7" fill-opacity="0.4" stroke="#7d7" stroke-width="1.5" /><text x="713.0" y="150" fill="#7d7" font-size="14" text-anchor="middle">+2</text></g>
+<text x="713.0" y="210" fill="#dde" font-size="14" text-anchor="middle">23</text>
+<text x="713.0" y="232" fill="#8ab" font-size="12" text-anchor="middle">85</text>
+<g class="fragment" data-fragment-index="2"><rect x="730" y="139" width="26" height="51" rx="3" fill="#7d7" fill-opacity="0.4" stroke="#7d7" stroke-width="1.5" /><text x="743.0" y="133" fill="#7d7" font-size="14" text-anchor="middle">+3</text></g>
+<text x="743.0" y="210" fill="#dde" font-size="14" text-anchor="middle">24</text>
+<text x="743.0" y="232" fill="#8ab" font-size="12" text-anchor="middle">88</text>
+<g class="fragment" data-fragment-index="2"><rect x="760" y="156" width="26" height="34" rx="3" fill="#7d7" fill-opacity="0.4" stroke="#7d7" stroke-width="1.5" /><text x="773.0" y="150" fill="#7d7" font-size="14" text-anchor="middle">+2</text></g>
+<text x="773.0" y="210" fill="#dde" font-size="14" text-anchor="middle">25</text>
+<text x="773.0" y="232" fill="#8ab" font-size="12" text-anchor="middle">90</text>
+<g class="fragment" data-fragment-index="2"><rect x="790" y="139" width="26" height="51" rx="3" fill="#7d7" fill-opacity="0.4" stroke="#7d7" stroke-width="1.5" /><text x="803.0" y="133" fill="#7d7" font-size="14" text-anchor="middle">+3</text></g>
+<text x="803.0" y="210" fill="#dde" font-size="14" text-anchor="middle">26</text>
+<text x="803.0" y="232" fill="#8ab" font-size="12" text-anchor="middle">93</text>
+<g class="fragment" data-fragment-index="2"><rect x="820" y="156" width="26" height="34" rx="3" fill="#7d7" fill-opacity="0.4" stroke="#7d7" stroke-width="1.5" /><text x="833.0" y="150" fill="#7d7" font-size="14" text-anchor="middle">+2</text></g>
+<text x="833.0" y="210" fill="#dde" font-size="14" text-anchor="middle">27</text>
+<text x="833.0" y="232" fill="#8ab" font-size="12" text-anchor="middle">95</text>
+<g class="fragment" data-fragment-index="2"><rect x="850" y="139" width="26" height="51" rx="3" fill="#7d7" fill-opacity="0.4" stroke="#7d7" stroke-width="1.5" /><text x="863.0" y="133" fill="#7d7" font-size="14" text-anchor="middle">+3</text></g>
+<text x="863.0" y="210" fill="#dde" font-size="14" text-anchor="middle">28</text>
+<text x="863.0" y="232" fill="#8ab" font-size="12" text-anchor="middle">98</text>
+<g class="fragment" data-fragment-index="2"><rect x="880" y="156" width="26" height="34" rx="3" fill="#7d7" fill-opacity="0.4" stroke="#7d7" stroke-width="1.5" /><text x="893.0" y="150" fill="#7d7" font-size="14" text-anchor="middle">+2</text></g>
+<text x="893.0" y="210" fill="#dde" font-size="14" text-anchor="middle">29</text>
+<text x="893.0" y="232" fill="#fd6" font-size="14" font-weight="bold" text-anchor="middle">100</text>
+<line x1="36" y1="190" x2="910" y2="190" stroke="#667" stroke-width="2" />
+<text x="30" y="210" fill="#8ab" font-size="13" text-anchor="end">первичный</text>
+<text x="30" y="232" fill="#8ab" font-size="13" text-anchor="end">тестовый</text>
+<g class="fragment" data-fragment-index="1"><line x1="218.0" y1="40" x2="218.0" y2="238" stroke="#fd6" stroke-width="2" stroke-dasharray="6 4" /><text x="210.0" y="40" fill="#fd6" font-size="15" text-anchor="end">порог 40</text></g></svg>
+                    </div>
+                    <ul style="font-size: 0.7em;">
+                        <li class="fragment" data-fragment-index="1">первые 6 баллов - по <mark>6-7</mark> тестовых: столько нужно для порога 40</li>
+                        <li class="fragment" data-fragment-index="2">дальше каждый балл стоит всего <mark>2-3</mark> тестовых</li>
+                        <li class="fragment">№26 или №27 (2 первичных) = примерно <mark>5</mark> тестовых, а это полчаса работы</li>
+                    </ul>
+                </section>
+
+                <!-- правило: пустых полей не оставлять -->
+                <section>
+                    <h2>Два правила ответа</h2>
+                    <div class="fragment opinion" style="margin-top: 0.5em;">
+                        За неверный ответ <mark>штрафа нет</mark> - пустых полей не оставляем, даже если не уверен
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        Ответ должен <mark>точно</mark> совпасть по форме: просят сумму чисел адреса - пишем сумму, а не сам адрес
+                    </div>
+                </section>
+
+            </section>
+
+            <!-- ЧАСТЬ 2: Что нового в 2027 -->
+            <section>
+
+                <section style="font-size: 70px; height: 100%; width: 100%">
+                    <div class="lesson-time">12</div>
+                    <div class="fragment">
+                        <h1 style="font-size: 1.3em;">Что нового в 2027</h1>
+                        <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">структура и баллы те же, поменялись три номера</p>
+                    </div>
+                </section>
+
+                <!-- убрали поиск в тексте -->
+                <section>
+                    <h2>Что убрали</h2>
+                    <ul>
+                        <li class="fragment">раньше №10: открыть книгу в текстовом редакторе и посчитать, сколько раз встречается слово</li>
+                        <li class="fragment">в 2027 этого задания <mark>нет</mark></li>
+                        <li class="fragment">остальные номера на месте, кроме двух переездов</li>
+                    </ul>
+                </section>
+
+                <!-- переезды: 13 -> 10, 23 -> 13 -->
+                <section>
+                    <h2>Что переехало</h2>
+                    <div class="fragment">
+<svg width="921" height="240" viewBox="-30 0 951 240"><defs><marker id="ra" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#fd6" /></marker></defs>
+<text x="12" y="52" fill="#8ab" font-size="15" text-anchor="end">2026</text>
+<rect x="20.0" y="30" width="30" height="34" rx="4" fill="#556" fill-opacity="0.3" stroke="#556" stroke-width="1.5" />
+<text x="35.0" y="52" fill="#dde" font-size="13" text-anchor="middle">1</text>
+<rect x="53.0" y="30" width="30" height="34" rx="4" fill="#556" fill-opacity="0.3" stroke="#556" stroke-width="1.5" />
+<text x="68.0" y="52" fill="#dde" font-size="13" text-anchor="middle">2</text>
+<rect x="86.0" y="30" width="30" height="34" rx="4" fill="#556" fill-opacity="0.3" stroke="#556" stroke-width="1.5" />
+<text x="101.0" y="52" fill="#dde" font-size="13" text-anchor="middle">3</text>
+<rect x="119.0" y="30" width="30" height="34" rx="4" fill="#556" fill-opacity="0.3" stroke="#556" stroke-width="1.5" />
+<text x="134.0" y="52" fill="#dde" font-size="13" text-anchor="middle">4</text>
+<rect x="152.0" y="30" width="30" height="34" rx="4" fill="#556" fill-opacity="0.3" stroke="#556" stroke-width="1.5" />
+<text x="167.0" y="52" fill="#dde" font-size="13" text-anchor="middle">5</text>
+<rect x="185.0" y="30" width="30" height="34" rx="4" fill="#556" fill-opacity="0.3" stroke="#556" stroke-width="1.5" />
+<text x="200.0" y="52" fill="#dde" font-size="13" text-anchor="middle">6</text>
+<rect x="218.0" y="30" width="30" height="34" rx="4" fill="#556" fill-opacity="0.3" stroke="#556" stroke-width="1.5" />
+<text x="233.0" y="52" fill="#dde" font-size="13" text-anchor="middle">7</text>
+<rect x="251.0" y="30" width="30" height="34" rx="4" fill="#556" fill-opacity="0.3" stroke="#556" stroke-width="1.5" />
+<text x="266.0" y="52" fill="#dde" font-size="13" text-anchor="middle">8</text>
+<rect x="284.0" y="30" width="30" height="34" rx="4" fill="#556" fill-opacity="0.3" stroke="#556" stroke-width="1.5" />
+<text x="299.0" y="52" fill="#dde" font-size="13" text-anchor="middle">9</text>
+<rect x="317.0" y="30" width="30" height="34" rx="4" fill="#e55" fill-opacity="0.3" stroke="#e55" stroke-width="1.5" />
+<text x="332.0" y="52" fill="#dde" font-size="13" text-anchor="middle">10</text>
+<rect x="350.0" y="30" width="30" height="34" rx="4" fill="#556" fill-opacity="0.3" stroke="#556" stroke-width="1.5" />
+<text x="365.0" y="52" fill="#dde" font-size="13" text-anchor="middle">11</text>
+<rect x="383.0" y="30" width="30" height="34" rx="4" fill="#556" fill-opacity="0.3" stroke="#556" stroke-width="1.5" />
+<text x="398.0" y="52" fill="#dde" font-size="13" text-anchor="middle">12</text>
+<rect x="416.0" y="30" width="30" height="34" rx="4" fill="#fd6" fill-opacity="0.3" stroke="#fd6" stroke-width="1.5" />
+<text x="431.0" y="52" fill="#dde" font-size="13" text-anchor="middle">13</text>
+<rect x="449.0" y="30" width="30" height="34" rx="4" fill="#556" fill-opacity="0.3" stroke="#556" stroke-width="1.5" />
+<text x="464.0" y="52" fill="#dde" font-size="13" text-anchor="middle">14</text>
+<rect x="482.0" y="30" width="30" height="34" rx="4" fill="#556" fill-opacity="0.3" stroke="#556" stroke-width="1.5" />
+<text x="497.0" y="52" fill="#dde" font-size="13" text-anchor="middle">15</text>
+<rect x="515.0" y="30" width="30" height="34" rx="4" fill="#556" fill-opacity="0.3" stroke="#556" stroke-width="1.5" />
+<text x="530.0" y="52" fill="#dde" font-size="13" text-anchor="middle">16</text>
+<rect x="548.0" y="30" width="30" height="34" rx="4" fill="#556" fill-opacity="0.3" stroke="#556" stroke-width="1.5" />
+<text x="563.0" y="52" fill="#dde" font-size="13" text-anchor="middle">17</text>
+<rect x="581.0" y="30" width="30" height="34" rx="4" fill="#556" fill-opacity="0.3" stroke="#556" stroke-width="1.5" />
+<text x="596.0" y="52" fill="#dde" font-size="13" text-anchor="middle">18</text>
+<rect x="614.0" y="30" width="30" height="34" rx="4" fill="#556" fill-opacity="0.3" stroke="#556" stroke-width="1.5" />
+<text x="629.0" y="52" fill="#dde" font-size="13" text-anchor="middle">19</text>
+<rect x="647.0" y="30" width="30" height="34" rx="4" fill="#556" fill-opacity="0.3" stroke="#556" stroke-width="1.5" />
+<text x="662.0" y="52" fill="#dde" font-size="13" text-anchor="middle">20</text>
+<rect x="680.0" y="30" width="30" height="34" rx="4" fill="#556" fill-opacity="0.3" stroke="#556" stroke-width="1.5" />
+<text x="695.0" y="52" fill="#dde" font-size="13" text-anchor="middle">21</text>
+<rect x="713.0" y="30" width="30" height="34" rx="4" fill="#556" fill-opacity="0.3" stroke="#556" stroke-width="1.5" />
+<text x="728.0" y="52" fill="#dde" font-size="13" text-anchor="middle">22</text>
+<rect x="746.0" y="30" width="30" height="34" rx="4" fill="#fd6" fill-opacity="0.3" stroke="#fd6" stroke-width="1.5" />
+<text x="761.0" y="52" fill="#dde" font-size="13" text-anchor="middle">23</text>
+<rect x="779.0" y="30" width="30" height="34" rx="4" fill="#556" fill-opacity="0.3" stroke="#556" stroke-width="1.5" />
+<text x="794.0" y="52" fill="#dde" font-size="13" text-anchor="middle">24</text>
+<rect x="812.0" y="30" width="30" height="34" rx="4" fill="#556" fill-opacity="0.3" stroke="#556" stroke-width="1.5" />
+<text x="827.0" y="52" fill="#dde" font-size="13" text-anchor="middle">25</text>
+<rect x="845.0" y="30" width="30" height="34" rx="4" fill="#556" fill-opacity="0.3" stroke="#556" stroke-width="1.5" />
+<text x="860.0" y="52" fill="#dde" font-size="13" text-anchor="middle">26</text>
+<rect x="878.0" y="30" width="30" height="34" rx="4" fill="#556" fill-opacity="0.3" stroke="#556" stroke-width="1.5" />
+<text x="893.0" y="52" fill="#dde" font-size="13" text-anchor="middle">27</text>
+<text x="12" y="192" fill="#8ab" font-size="15" text-anchor="end">2027</text>
+<rect x="20.0" y="170" width="30" height="34" rx="4" fill="#556" fill-opacity="0.3" stroke="#556" stroke-width="1.5" />
+<text x="35.0" y="192" fill="#dde" font-size="13" text-anchor="middle">1</text>
+<rect x="53.0" y="170" width="30" height="34" rx="4" fill="#556" fill-opacity="0.3" stroke="#556" stroke-width="1.5" />
+<text x="68.0" y="192" fill="#dde" font-size="13" text-anchor="middle">2</text>
+<rect x="86.0" y="170" width="30" height="34" rx="4" fill="#556" fill-opacity="0.3" stroke="#556" stroke-width="1.5" />
+<text x="101.0" y="192" fill="#dde" font-size="13" text-anchor="middle">3</text>
+<rect x="119.0" y="170" width="30" height="34" rx="4" fill="#556" fill-opacity="0.3" stroke="#556" stroke-width="1.5" />
+<text x="134.0" y="192" fill="#dde" font-size="13" text-anchor="middle">4</text>
+<rect x="152.0" y="170" width="30" height="34" rx="4" fill="#556" fill-opacity="0.3" stroke="#556" stroke-width="1.5" />
+<text x="167.0" y="192" fill="#dde" font-size="13" text-anchor="middle">5</text>
+<rect x="185.0" y="170" width="30" height="34" rx="4" fill="#556" fill-opacity="0.3" stroke="#556" stroke-width="1.5" />
+<text x="200.0" y="192" fill="#dde" font-size="13" text-anchor="middle">6</text>
+<rect x="218.0" y="170" width="30" height="34" rx="4" fill="#556" fill-opacity="0.3" stroke="#556" stroke-width="1.5" />
+<text x="233.0" y="192" fill="#dde" font-size="13" text-anchor="middle">7</text>
+<rect x="251.0" y="170" width="30" height="34" rx="4" fill="#556" fill-opacity="0.3" stroke="#556" stroke-width="1.5" />
+<text x="266.0" y="192" fill="#dde" font-size="13" text-anchor="middle">8</text>
+<rect x="284.0" y="170" width="30" height="34" rx="4" fill="#556" fill-opacity="0.3" stroke="#556" stroke-width="1.5" />
+<text x="299.0" y="192" fill="#dde" font-size="13" text-anchor="middle">9</text>
+<rect x="317.0" y="170" width="30" height="34" rx="4" fill="#fd6" fill-opacity="0.3" stroke="#fd6" stroke-width="1.5" />
+<text x="332.0" y="192" fill="#dde" font-size="13" text-anchor="middle">10</text>
+<rect x="350.0" y="170" width="30" height="34" rx="4" fill="#556" fill-opacity="0.3" stroke="#556" stroke-width="1.5" />
+<text x="365.0" y="192" fill="#dde" font-size="13" text-anchor="middle">11</text>
+<rect x="383.0" y="170" width="30" height="34" rx="4" fill="#556" fill-opacity="0.3" stroke="#556" stroke-width="1.5" />
+<text x="398.0" y="192" fill="#dde" font-size="13" text-anchor="middle">12</text>
+<rect x="416.0" y="170" width="30" height="34" rx="4" fill="#fd6" fill-opacity="0.3" stroke="#fd6" stroke-width="1.5" />
+<text x="431.0" y="192" fill="#dde" font-size="13" text-anchor="middle">13</text>
+<rect x="449.0" y="170" width="30" height="34" rx="4" fill="#556" fill-opacity="0.3" stroke="#556" stroke-width="1.5" />
+<text x="464.0" y="192" fill="#dde" font-size="13" text-anchor="middle">14</text>
+<rect x="482.0" y="170" width="30" height="34" rx="4" fill="#556" fill-opacity="0.3" stroke="#556" stroke-width="1.5" />
+<text x="497.0" y="192" fill="#dde" font-size="13" text-anchor="middle">15</text>
+<rect x="515.0" y="170" width="30" height="34" rx="4" fill="#556" fill-opacity="0.3" stroke="#556" stroke-width="1.5" />
+<text x="530.0" y="192" fill="#dde" font-size="13" text-anchor="middle">16</text>
+<rect x="548.0" y="170" width="30" height="34" rx="4" fill="#556" fill-opacity="0.3" stroke="#556" stroke-width="1.5" />
+<text x="563.0" y="192" fill="#dde" font-size="13" text-anchor="middle">17</text>
+<rect x="581.0" y="170" width="30" height="34" rx="4" fill="#556" fill-opacity="0.3" stroke="#556" stroke-width="1.5" />
+<text x="596.0" y="192" fill="#dde" font-size="13" text-anchor="middle">18</text>
+<rect x="614.0" y="170" width="30" height="34" rx="4" fill="#556" fill-opacity="0.3" stroke="#556" stroke-width="1.5" />
+<text x="629.0" y="192" fill="#dde" font-size="13" text-anchor="middle">19</text>
+<rect x="647.0" y="170" width="30" height="34" rx="4" fill="#556" fill-opacity="0.3" stroke="#556" stroke-width="1.5" />
+<text x="662.0" y="192" fill="#dde" font-size="13" text-anchor="middle">20</text>
+<rect x="680.0" y="170" width="30" height="34" rx="4" fill="#556" fill-opacity="0.3" stroke="#556" stroke-width="1.5" />
+<text x="695.0" y="192" fill="#dde" font-size="13" text-anchor="middle">21</text>
+<rect x="713.0" y="170" width="30" height="34" rx="4" fill="#556" fill-opacity="0.3" stroke="#556" stroke-width="1.5" />
+<text x="728.0" y="192" fill="#dde" font-size="13" text-anchor="middle">22</text>
+<rect x="746.0" y="170" width="30" height="34" rx="4" fill="#7d7" fill-opacity="0.3" stroke="#7d7" stroke-width="1.5" />
+<text x="761.0" y="192" fill="#dde" font-size="13" text-anchor="middle">23</text>
+<rect x="779.0" y="170" width="30" height="34" rx="4" fill="#556" fill-opacity="0.3" stroke="#556" stroke-width="1.5" />
+<text x="794.0" y="192" fill="#dde" font-size="13" text-anchor="middle">24</text>
+<rect x="812.0" y="170" width="30" height="34" rx="4" fill="#556" fill-opacity="0.3" stroke="#556" stroke-width="1.5" />
+<text x="827.0" y="192" fill="#dde" font-size="13" text-anchor="middle">25</text>
+<rect x="845.0" y="170" width="30" height="34" rx="4" fill="#556" fill-opacity="0.3" stroke="#556" stroke-width="1.5" />
+<text x="860.0" y="192" fill="#dde" font-size="13" text-anchor="middle">26</text>
+<rect x="878.0" y="170" width="30" height="34" rx="4" fill="#556" fill-opacity="0.3" stroke="#556" stroke-width="1.5" />
+<text x="893.0" y="192" fill="#dde" font-size="13" text-anchor="middle">27</text>
+<g class="fragment"><line x1="322.0" y1="34" x2="342.0" y2="60" stroke="#e55" stroke-width="3" /><line x1="342.0" y1="34" x2="322.0" y2="60" stroke="#e55" stroke-width="3" /><text x="332.0" y="22" fill="#e55" font-size="14" text-anchor="middle">поиск в тексте</text></g>
+<g class="fragment"><path d="M431.0,66 C431.0,120 332.0,110 332.0,166" fill="none" stroke="#fd6" stroke-width="2.5" marker-end="url(#ra)" /><text x="378.0" y="110" fill="#fd6" font-size="14" text-anchor="middle">маски</text></g>
+<g class="fragment"><path d="M761.0,66 C761.0,130 431.0,110 431.0,166" fill="none" stroke="#fd6" stroke-width="2.5" marker-end="url(#ra)" /><text x="596.0" y="100" fill="#fd6" font-size="14" text-anchor="middle">количество программ</text></g>
+<g class="fragment"><text x="761.0" y="230" fill="#7d7" font-size="15" text-anchor="middle">новое: графы</text></g></svg>
+                    </div>
+                    <p class="fragment" style="font-size: 0.65em;">в №10 ответ теперь - сумма четырёх чисел адреса</p>
+                </section>
+
+                <!-- новое №23: граф из файла -->
+                <section>
+                    <h2>Новое №23: граф из файла</h2>
+<div style="display: flex; align-items: center; justify-content: center; gap: 1.2em;">
+<div class="fragment" data-fragment-index="0">
+<svg width="540" height="250" viewBox="0 0 530 245"><defs><marker id="g23n" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#667" /></marker><marker id="g23g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#7d7" /></marker></defs>
+<line x1="79.9" y1="110.7" x2="189.2" y2="59.7" stroke="#667" stroke-width="2" marker-end="url(#g23n)" />
+<text x="140.9" y="102.7" fill="#8f8" font-size="15" text-anchor="middle">5.5</text>
+<line class="fragment" data-fragment-index="2" x1="79.9" y1="110.7" x2="189.2" y2="59.7" stroke="#7d7" stroke-width="4" marker-end="url(#g23g)" />
+<line x1="229.9" y1="59.3" x2="339.2" y2="110.3" stroke="#667" stroke-width="2" marker-end="url(#g23n)" />
+<text x="279.1" y="102.7" fill="#8f8" font-size="15" text-anchor="middle">2.0</text>
+<line class="fragment" data-fragment-index="2" x1="229.9" y1="59.3" x2="339.2" y2="110.3" stroke="#7d7" stroke-width="4" marker-end="url(#g23g)" />
+<line x1="79.4" y1="130.4" x2="189.7" y2="189.2" stroke="#667" stroke-width="2" marker-end="url(#g23n)" />
+<text x="128.4" y="177.4" fill="#8f8" font-size="15" text-anchor="middle">2.5</text>
+<line x1="229.4" y1="189.6" x2="339.7" y2="130.8" stroke="#667" stroke-width="2" marker-end="url(#g23n)" />
+<text x="291.6" y="177.4" fill="#8f8" font-size="15" text-anchor="middle">8.0</text>
+<line x1="82.0" y1="120.0" x2="337.0" y2="120.0" stroke="#667" stroke-width="2" marker-end="url(#g23n)" />
+<text x="210.0" y="139.0" fill="#8f8" font-size="15" text-anchor="middle">12.0</text>
+<line x1="81.8" y1="32.9" x2="187.2" y2="47.0" stroke="#667" stroke-width="2" marker-end="url(#g23n)" />
+<text x="133.1" y="58.9" fill="#8f8" font-size="15" text-anchor="middle">7.0</text>
+<line x1="60.0" y1="52.0" x2="60.0" y2="97.0" stroke="#667" stroke-width="2" marker-end="url(#g23n)" />
+<text x="46.0" y="80.0" fill="#8f8" font-size="15" text-anchor="middle">1.0</text>
+<line x1="382.0" y1="120.0" x2="447.0" y2="120.0" stroke="#667" stroke-width="2" marker-end="url(#g23n)" />
+<text x="415.0" y="139.0" fill="#8f8" font-size="15" text-anchor="middle">1.0</text>
+<circle cx="60" cy="120" r="22" fill="#1c2030" stroke="#fd6" stroke-width="2" />
+<text x="60" y="126" fill="#dde" font-size="17" text-anchor="middle">1</text>
+<circle cx="210" cy="200" r="22" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="210" y="206" fill="#dde" font-size="17" text-anchor="middle">4</text>
+<circle cx="210" cy="50" r="22" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="210" y="56" fill="#dde" font-size="17" text-anchor="middle">7</text>
+<circle cx="360" cy="120" r="22" fill="#1c2030" stroke="#fd6" stroke-width="2" />
+<text x="360" y="126" fill="#dde" font-size="15" text-anchor="middle">100</text>
+<circle cx="60" cy="30" r="22" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="60" y="36" fill="#dde" font-size="17" text-anchor="middle">6</text>
+<circle cx="470" cy="120" r="22" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="470" y="126" fill="#dde" font-size="17" text-anchor="middle">12</text></svg>
+</div>
+<ul style="font-size: 0.7em; text-align: left;">
+    <li class="fragment" data-fragment-index="1">в файле до 200 строк: откуда, куда, вес</li>
+    <li class="fragment" data-fragment-index="2">кратчайший путь <code>1 -&gt; 100</code>: <code>5.5 + 2.0 = 7.5</code>, ответ <mark>7</mark></li>
+    <li class="fragment" data-fragment-index="3">или: сколько путей в графе без циклов</li>
+    <li class="fragment" data-fragment-index="4">ты это уже умеешь: <mark class="green">Дейкстра</mark> и DP на графах</li>
+</ul>
+</div>
+                </section>
+
+                <!-- №27 одной строкой + форматы файлов -->
+                <section>
+                    <h2>№27 и файлы</h2>
+                    <div class="compare">
+                        <div class="compare-block fragment">
+                            <h4>2026: две строки</h4>
+                            <p style="text-align: center;"><code>12 34</code><br><code>56 78</code></p>
+                        </div>
+                        <div class="compare-block fragment">
+                            <h4>2027: одна строка</h4>
+                            <p style="text-align: center;"><code>12 34</code></p>
+                        </div>
+                    </div>
+                    <ul style="font-size: 0.7em;">
+                        <li class="fragment">таблицы к №3, 9, 18, 22 - <code>.ods</code></li>
+                        <li class="fragment">данные к №17, 23, 24, 26, 27 - <code>.txt</code></li>
+                    </ul>
+                </section>
+
+            </section>
+
+            <!-- ЧАСТЬ 3: Обзор заданий 1-14 -->
+            <section>
+
+                <section style="font-size: 70px; height: 100%; width: 100%">
+                    <div class="lesson-time">18</div>
+                    <div class="fragment">
+                        <h1 style="font-size: 1.3em;">Задания 1-14</h1>
+                        <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">что спрашивают и чем решать</p>
+                    </div>
+                </section>
+
+                <!-- легенда инструментов -->
+                <section>
+                    <h2>Три инструмента</h2>
+                    <ul>
+                        <li class="fragment"><span class="tool tool-hand">руками</span> на бумаге или в уме, компьютер не нужен</li>
+                        <li class="fragment"><span class="tool tool-py">Python</span> короткая программа: перебор, подсчёт, чтение файла</li>
+                        <li class="fragment"><span class="tool tool-xls">таблицы</span> файл <code>.ods</code> в электронных таблицах</li>
+                    </ul>
+                    <p class="fragment" style="font-size: 0.65em; opacity: 0.8;">на каждом задании: сколько минут даёт ФИПИ, пример и чем проще решать</p>
+                </section>
+
+                <!-- №1: Граф и таблица -->
+                <section>
+                    <h2>№1. Граф и таблица</h2>
+                    <p style="font-size: 0.6em; opacity: 0.7;">~3 мин, базовый уровень, 1 балл</p>
+                    <blockquote class="fragment" style="font-size: 0.6em; width: 90%;">Схема дорог в виде графа и таблица длин дорог, нумерация пунктов не совпадает. Найти сумму длин дорог E-A и B-C.</blockquote>
+                    <p class="fragment" style="font-size: 0.7em;">Проще всего: <span class="tool tool-hand">руками</span> сопоставить вершины</p>
+                </section>
+                <!-- №2: Таблица истинности -->
+                <section>
+                    <h2>№2. Таблица истинности</h2>
+                    <p style="font-size: 0.6em; opacity: 0.7;">~3 мин, базовый уровень, 1 балл</p>
+                    <blockquote class="fragment" style="font-size: 0.6em; width: 90%;">F = ((x &equiv; &not;y) -&gt; &not;(w -&gt; x)) \/ &not;z. Дан кусок таблицы истинности без подписей столбцов. Какая переменная в каком столбце?</blockquote>
+                    <p class="fragment" style="font-size: 0.7em;">Проще всего: <span class="tool tool-py">Python</span> перебором</p>
+                </section>
+                <!-- №3: Базы данных -->
+                <section>
+                    <h2>№3. Базы данных</h2>
+                    <p style="font-size: 0.6em; opacity: 0.7;">~3 мин, базовый уровень, 1 балл</p>
+                    <blockquote class="fragment" style="font-size: 0.6em; width: 90%;">Три таблицы: движение товаров, товары, магазины. Найти общую массу зефира, полученного магазинами на Прибрежной улице с 5 по 19 июня.</blockquote>
+                    <p class="fragment" style="font-size: 0.7em;">Проще всего: <span class="tool tool-xls">таблицы</span> фильтрами и ВПР</p>
+                </section>
+                <!-- №4: Условие Фано -->
+                <section>
+                    <h2>№4. Условие Фано</h2>
+                    <p style="font-size: 0.6em; opacity: 0.7;">~2 мин, базовый уровень, 1 балл</p>
+                    <blockquote class="fragment" style="font-size: 0.6em; width: 90%;">Буквы Б, К, Л, О, Н, код Фано. Известно: Б - 00, Н - 010, Л - 111. Сколько бит займёт слово КОЛОБОК при самом коротком коде?</blockquote>
+                    <p class="fragment" style="font-size: 0.7em;">Проще всего: <span class="tool tool-hand">руками</span> подбором кодов</p>
+                </section>
+                <!-- №5: Двоичная запись -->
+                <section>
+                    <h2>№5. Двоичная запись</h2>
+                    <p style="font-size: 0.6em; opacity: 0.7;">~4 мин, базовый уровень, 1 балл</p>
+                    <blockquote class="fragment" style="font-size: 0.6em; width: 90%;">Число N -&gt; двоичная запись -&gt; дописываем цифры слева и справа в зависимости от чётности -&gt; число R. Найти наименьшее R больше 95.</blockquote>
+                    <p class="fragment" style="font-size: 0.7em;">Проще всего: <span class="tool tool-py">Python</span> перебором</p>
+                </section>
+                <!-- №6: Черепаха -->
+                <section>
+                    <h2>№6. Черепаха</h2>
+                    <p style="font-size: 0.6em; opacity: 0.7;">~4 мин, базовый уровень, 1 балл</p>
+                    <blockquote class="fragment" style="font-size: 0.6em; width: 90%;">Повтори 6 [Вперёд 24 Направо 90 Вперёд 30 Направо 90], сдвиг, потом второй прямоугольник. Сколько точек с целыми координатами в пересечении фигур?</blockquote>
+                    <p class="fragment" style="font-size: 0.7em;">Проще всего: <span class="tool tool-py">Python</span> модулем turtle</p>
+                </section>
+                <!-- №7: Звук и изображения -->
+                <section>
+                    <h2>№7. Звук и изображения</h2>
+                    <p style="font-size: 0.6em; opacity: 0.7;">~5 мин, базовый уровень, 1 балл</p>
+                    <blockquote class="fragment" style="font-size: 0.6em; width: 90%;">Стерео, 32 000 Гц, 16 бит, длительность 2 мин 27 с. Сколько Кбайт нужно для записи?</blockquote>
+                    <p class="fragment" style="font-size: 0.7em;">Проще всего: <span class="tool tool-hand">руками</span> по формуле</p>
+                </section>
+                <!-- №8: Комбинаторика слов -->
+                <section>
+                    <h2>№8. Комбинаторика слов</h2>
+                    <p style="font-size: 0.6em; opacity: 0.7;">~4 мин, базовый уровень, 1 балл</p>
+                    <blockquote class="fragment" style="font-size: 0.6em; width: 90%;">Все 5-буквенные слова из букв А, К, Ц, Е, Н, Т записаны по алфавиту и пронумерованы. Найти номер первого слова с чётным номером, которое не начинается на А, Е, К и содержит Т.</blockquote>
+                    <p class="fragment" style="font-size: 0.7em;">Проще всего: <span class="tool tool-py">Python</span> перебором</p>
+                </section>
+                <!-- №9: Электронные таблицы -->
+                <section>
+                    <h2>№9. Электронные таблицы</h2>
+                    <p style="font-size: 0.6em; opacity: 0.7;">~6 мин, базовый уровень, 1 балл</p>
+                    <blockquote class="fragment" style="font-size: 0.6em; width: 90%;">В каждой строке 5 чисел. Сколько строк, где все числа разные и удвоенная сумма максимума и минимума больше суммы остальных трёх?</blockquote>
+                    <p class="fragment" style="font-size: 0.7em;">Проще всего: <span class="tool tool-xls">таблицы</span> формулами</p>
+                </section>
+                <!-- №10: IP-адреса и маски -->
+                <section>
+                    <h2>№10. IP-адреса и маски</h2>
+                    <p style="font-size: 0.6em; opacity: 0.7;">~3 мин, базовый уровень, 1 балл</p>
+                    <blockquote class="fragment" style="font-size: 0.6em; width: 90%;">Адрес 192.168.159.86, маска 255.255.252.0. Найти адрес сети, в ответ - сумму его четырёх чисел.</blockquote>
+                    <p class="fragment" style="font-size: 0.7em;">Проще всего: <span class="tool tool-py">Python</span> побитовым И</p>
+                </section>
+                <!-- №11: Количество информации -->
+                <section>
+                    <h2>№11. Количество информации</h2>
+                    <p style="font-size: 0.6em; opacity: 0.7;">~3 мин, повышенный уровень, 1 балл</p>
+                    <blockquote class="fragment" style="font-size: 0.6em; width: 90%;">Номер детали из 157 символов хранится в целом числе байт. 12 450 номеров занимают не больше 955 Кбайт. Какой самый большой алфавит?</blockquote>
+                    <p class="fragment" style="font-size: 0.7em;">Проще всего: <span class="tool tool-hand">руками</span> по формуле</p>
+                </section>
+                <!-- №12: Машина Тьюринга -->
+                <section>
+                    <h2>№12. Машина Тьюринга</h2>
+                    <p style="font-size: 0.6em; opacity: 0.7;">~6 мин, повышенный уровень, 1 балл</p>
+                    <blockquote class="fragment" style="font-size: 0.6em; width: 90%;">На ленте двоичная запись числа 2025, дана таблица команд головки. Какое число получится?</blockquote>
+                    <p class="fragment" style="font-size: 0.7em;">Проще всего: <span class="tool tool-hand">руками</span> по шагам на черновике</p>
+                </section>
+                <!-- №13: Количество программ -->
+                <section>
+                    <h2>№13. Количество программ</h2>
+                    <p style="font-size: 0.6em; opacity: 0.7;">~7 мин, повышенный уровень, 1 балл</p>
+                    <blockquote class="fragment" style="font-size: 0.6em; width: 90%;">Команды: A - прибавь 1, B - поменять местами две последние цифры (если десятки меньше единиц). Сколько программ переводят 100 в 141?</blockquote>
+                    <p class="fragment" style="font-size: 0.7em;">Проще всего: <span class="tool tool-py">Python</span> рекурсией</p>
+                </section>
+                <!-- №14: Системы счисления -->
+                <section>
+                    <h2>№14. Системы счисления</h2>
+                    <p style="font-size: 0.6em; opacity: 0.7;">~3 мин, повышенный уровень, 1 балл</p>
+                    <blockquote class="fragment" style="font-size: 0.6em; width: 90%;">Выражение из чисел в 22-ричной системе с неизвестной цифрой x. Найти наименьший x, при котором значение делится на 21.</blockquote>
+                    <p class="fragment" style="font-size: 0.7em;">Проще всего: <span class="tool tool-py">Python</span> перебором</p>
+                </section>
+
+                <!-- смотрим вживую: №1 на Решу ЕГЭ -->
+                <section>
+                    <h2>Пробуем: №1</h2>
+                    <div class="timeline">
+                        <div class="timeline-item fragment" data-fragment-index="0">
+                            <div class="timeline-marker">1</div>
+                            <div class="timeline-content">открываем <a href="https://inf-ege.sdamgia.ru/prob_catalog" target="_blank" rel="noopener">каталог заданий Решу ЕГЭ</a></div>
+                        </div>
+                        <div class="timeline-item fragment" data-fragment-index="1">
+                            <div class="timeline-marker">2</div>
+                            <div class="timeline-content">выбираем любое задание №1</div>
+                        </div>
+                        <div class="timeline-item fragment" data-fragment-index="2">
+                            <div class="timeline-marker">3</div>
+                            <div class="timeline-content">засекаем <mark>3 минуты</mark> и решаем</div>
+                        </div>
+                        <div class="timeline-item fragment" data-fragment-index="3">
+                            <div class="timeline-marker">4</div>
+                            <div class="timeline-content">проверяем ответ и смотрим, где застрял</div>
+                        </div>
+                    </div>
+                    <!-- таймер: клик - старт/пауза, кнопка - сброс; после лимита краснеет и считает перебор -->
+                    <div class="timer fragment" data-fragment-index="2" data-limit="180">
+                        <div class="timer-bar"><div class="timer-fill"></div></div>
+                        <div class="timer-row">
+                            <span class="timer-time">0:00</span>
+                            <span class="timer-hint">клик - старт</span>
+                            <button class="timer-reset" type="button">сброс</button>
+                        </div>
+                    </div>
+                </section>
+
+            </section>
+
+            <!-- ЧАСТЬ 4: Обзор заданий 15-27 -->
+            <section>
+
+                <section style="font-size: 70px; height: 100%; width: 100%">
+                    <div class="lesson-time">32</div>
+                    <div class="fragment">
+                        <h1 style="font-size: 1.3em;">Задания 15-27</h1>
+                        <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">тут почти везде программа</p>
+                    </div>
+                </section>
+
+                <!-- №15: Логика с делителями -->
+                <section>
+                    <h2>№15. Логика с делителями</h2>
+                    <p style="font-size: 0.6em; opacity: 0.7;">~3 мин, повышенный уровень, 1 балл</p>
+                    <blockquote class="fragment" style="font-size: 0.6em; width: 90%;">ДЕЛ(x, A) \/ ((x в отрезке [70; 90]) -&gt; &not;ДЕЛ(x, 22)). Наибольшее A, при котором выражение истинно при любом x.</blockquote>
+                    <p class="fragment" style="font-size: 0.7em;">Проще всего: <span class="tool tool-py">Python</span> перебором</p>
+                </section>
+                <!-- №16: Рекурсия -->
+                <section>
+                    <h2>№16. Рекурсия</h2>
+                    <p style="font-size: 0.6em; opacity: 0.7;">~5 мин, повышенный уровень, 1 балл</p>
+                    <blockquote class="fragment" style="font-size: 0.6em; width: 90%;">F(1) = 1, F(n) = n * F(n - 1). Найти (F(3038) + 5 * F(3037)) / F(3036).</blockquote>
+                    <p class="fragment" style="font-size: 0.7em;">Проще всего: <span class="tool tool-py">Python</span> сначала упростить формулу</p>
+                </section>
+                <!-- №17: Последовательности -->
+                <section>
+                    <h2>№17. Последовательности</h2>
+                    <p style="font-size: 0.6em; opacity: 0.7;">~13 мин, повышенный уровень, 1 балл</p>
+                    <blockquote class="fragment" style="font-size: 0.6em; width: 90%;">Числа из файла. Пары соседних чисел, где остаток от деления на 33 хотя бы одного равен минимуму всей последовательности. Количество пар и максимальная сумма.</blockquote>
+                    <p class="fragment" style="font-size: 0.7em;">Проще всего: <span class="tool tool-py">Python</span> перебором пар</p>
+                </section>
+                <!-- №18: Робот -->
+                <section>
+                    <h2>№18. Робот</h2>
+                    <p style="font-size: 0.6em; opacity: 0.7;">~8 мин, повышенный уровень, 1 балл</p>
+                    <blockquote class="fragment" style="font-size: 0.6em; width: 90%;">Поле N x N, в клетках монеты, есть стены. Робот ходит только вправо и вниз. Максимальная и минимальная сумма, которую он соберёт.</blockquote>
+                    <p class="fragment" style="font-size: 0.7em;">Проще всего: <span class="tool tool-xls">таблицы</span> формулами</p>
+                </section>
+                <!-- №19: Теория игр: 1 ход -->
+                <section>
+                    <h2>№19. Теория игр: 1 ход</h2>
+                    <p style="font-size: 0.6em; opacity: 0.7;">~5 мин, базовый уровень, 1 балл</p>
+                    <blockquote class="fragment" style="font-size: 0.6em; width: 90%;">Две кучи камней, ход: +4 камня или удвоить одну кучу. Побеждает тот, кто первым набрал 133. Наименьшее S, при котором Ваня выигрывает первым ходом.</blockquote>
+                    <p class="fragment" style="font-size: 0.7em;">Проще всего: <span class="tool tool-py">Python</span> рекурсией</p>
+                </section>
+                <!-- №20: Теория игр: Петя -->
+                <section>
+                    <h2>№20. Теория игр: Петя</h2>
+                    <p style="font-size: 0.6em; opacity: 0.7;">~7 мин, повышенный уровень, 1 балл</p>
+                    <blockquote class="fragment" style="font-size: 0.6em; width: 90%;">Та же игра. Два наименьших S, при которых Петя не выигрывает первым ходом, но точно выигрывает вторым.</blockquote>
+                    <p class="fragment" style="font-size: 0.7em;">Проще всего: <span class="tool tool-py">Python</span> рекурсией</p>
+                </section>
+                <!-- №21: Теория игр: Ваня -->
+                <section>
+                    <h2>№21. Теория игр: Ваня</h2>
+                    <p style="font-size: 0.6em; opacity: 0.7;">~10 мин, высокий уровень, 1 балл</p>
+                    <blockquote class="fragment" style="font-size: 0.6em; width: 90%;">Та же игра. Наименьшее S, при котором Ваня выигрывает первым или вторым ходом, но не гарантированно первым.</blockquote>
+                    <p class="fragment" style="font-size: 0.7em;">Проще всего: <span class="tool tool-py">Python</span> рекурсией</p>
+                </section>
+                <!-- №22: Параллельные процессы -->
+                <section>
+                    <h2>№22. Параллельные процессы</h2>
+                    <p style="font-size: 0.6em; opacity: 0.7;">~7 мин, повышенный уровень, 1 балл</p>
+                    <blockquote class="fragment" style="font-size: 0.6em; width: 90%;">Таблица процессов: время работы и от каких процессов зависит. Сколько процессов идёт одновременно на 7-й мс?</blockquote>
+                    <p class="fragment" style="font-size: 0.7em;">Проще всего: <span class="tool tool-xls">таблицы</span> формулами</p>
+                </section>
+                <!-- №23: Графы (новое) -->
+                <section>
+                    <h2>№23. Графы (новое)</h2>
+                    <p style="font-size: 0.6em; opacity: 0.7;">~12 мин, повышенный уровень, 1 балл</p>
+                    <blockquote class="fragment" style="font-size: 0.6em; width: 90%;">В файле до 200 строк: откуда, куда, вес. Граф без циклов. Найти целую часть длины кратчайшего пути из 1 в 100.</blockquote>
+                    <p class="fragment" style="font-size: 0.7em;">Проще всего: <span class="tool tool-py">Python</span> Дейкстрой</p>
+                </section>
+                <!-- №24: Строки -->
+                <section>
+                    <h2>№24. Строки</h2>
+                    <p style="font-size: 0.6em; opacity: 0.7;">~18 мин, высокий уровень, 1 балл</p>
+                    <blockquote class="fragment" style="font-size: 0.6em; width: 90%;">Файл из цифр 0, 6, 7, 8, 9 и знаков - и *. Найти самый длинный кусок, который является правильным выражением: знаки не подряд, без ведущих нулей.</blockquote>
+                    <p class="fragment" style="font-size: 0.7em;">Проще всего: <span class="tool tool-py">Python</span> одним проходом по строке</p>
+                </section>
+                <!-- №25: Маски и делители -->
+                <section>
+                    <h2>№25. Маски и делители</h2>
+                    <p style="font-size: 0.6em; opacity: 0.7;">~20 мин, высокий уровень, 1 балл</p>
+                    <blockquote class="fragment" style="font-size: 0.6em; width: 90%;">Маска 3?12?14*5: ? - одна цифра, * - любое число цифр. Найти числа до 10<sup>10</sup> по маске, которые делятся на 1917.</blockquote>
+                    <p class="fragment" style="font-size: 0.7em;">Проще всего: <span class="tool tool-py">Python</span> перебором</p>
+                </section>
+                <!-- №26: Обработка журнала -->
+                <section>
+                    <h2>№26. Обработка журнала</h2>
+                    <p style="font-size: 0.6em; opacity: 0.7;">~35 мин, высокий уровень, 2 балла</p>
+                    <blockquote class="fragment" style="font-size: 0.6em; width: 90%;">Журнал сервера: время, клиент, объём. Когда память переполняется, делается копия. Клиент с наибольшим объёмом и сумма двух наибольших копий до полудня.</blockquote>
+                    <p class="fragment" style="font-size: 0.7em;">Проще всего: <span class="tool tool-py">Python</span> моделированием</p>
+                </section>
+                <!-- №27: Кластеризация -->
+                <section>
+                    <h2>№27. Кластеризация</h2>
+                    <p style="font-size: 0.6em; opacity: 0.7;">~36 мин, высокий уровень, 2 балла</p>
+                    <blockquote class="fragment" style="font-size: 0.6em; width: 90%;">Частицы: координаты, скорость, масса, признак. Разбить на 4 кластера по энергии, найти центры кластеров, потом два числа.</blockquote>
+                    <p class="fragment" style="font-size: 0.7em;">Проще всего: <span class="tool tool-py">Python</span> сортировкой и перебором</p>
+                </section>
+
+                <!-- что уже знаешь из программирования -->
+                <section>
+                    <h2>Что ты уже знаешь</h2>
+                    <table style="font-size: 0.75em;">
+                        <tr><td><strong>Тема</strong></td><td><strong>Занятие</strong></td><td><strong>Где пригодится</strong></td></tr>
+                        <tr class="fragment"><td>рекурсия</td><td>17 (19.05)</td><td>№16, №19-21</td></tr>
+                        <tr class="fragment"><td>DP на графах</td><td>35 (05.10)</td><td>№18, №13</td></tr>
+                        <tr class="fragment"><td>DFS, Дейкстра</td><td>20 (29.05), 32 (27.09), 33 (28.09)</td><td>№23</td></tr>
+                        <tr class="fragment"><td>строки</td><td>2 (23.03)</td><td>№24</td></tr>
+                        <tr class="fragment"><td>сортировки</td><td>15 (15.05), 18 (26.05)</td><td>№26</td></tr>
+                    </table>
+                </section>
+
+            </section>
+
+            <!-- ЧАСТЬ 5: Карта экзамена и план -->
+            <section>
+
+                <section style="font-size: 70px; height: 100%; width: 100%">
+                    <div class="lesson-time">47</div>
+                    <div class="fragment">
+                        <h1 style="font-size: 1.3em;">Карта экзамена</h1>
+                        <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">и как будем готовиться</p>
+                    </div>
+                </section>
+
+                <!-- карта: 27 клеток, цвет = инструмент -->
+                <section>
+                    <h2>Весь экзамен на одной картинке</h2>
+                    <div class="fragment">
+<svg width="720" height="198" viewBox="0 0 720 198"><rect x="0" y="0" width="72" height="58" rx="6" fill="#fd6" fill-opacity="0.3" stroke="#fd6" stroke-width="2" />
+<text x="36.0" y="26" fill="#dde" font-size="20" font-weight="bold" text-anchor="middle">1</text>
+<text x="36.0" y="47" fill="#bbc" font-size="12" text-anchor="middle">3 мин</text>
+<rect x="80" y="0" width="72" height="58" rx="6" fill="#7d7" fill-opacity="0.3" stroke="#7d7" stroke-width="2" />
+<text x="116.0" y="26" fill="#dde" font-size="20" font-weight="bold" text-anchor="middle">2</text>
+<text x="116.0" y="47" fill="#bbc" font-size="12" text-anchor="middle">3 мин</text>
+<rect x="160" y="0" width="72" height="58" rx="6" fill="#6bf" fill-opacity="0.3" stroke="#6bf" stroke-width="2" />
+<text x="196.0" y="26" fill="#dde" font-size="20" font-weight="bold" text-anchor="middle">3</text>
+<text x="196.0" y="47" fill="#bbc" font-size="12" text-anchor="middle">3 мин</text>
+<rect x="240" y="0" width="72" height="58" rx="6" fill="#fd6" fill-opacity="0.3" stroke="#fd6" stroke-width="2" />
+<text x="276.0" y="26" fill="#dde" font-size="20" font-weight="bold" text-anchor="middle">4</text>
+<text x="276.0" y="47" fill="#bbc" font-size="12" text-anchor="middle">2 мин</text>
+<rect x="320" y="0" width="72" height="58" rx="6" fill="#7d7" fill-opacity="0.3" stroke="#7d7" stroke-width="2" />
+<text x="356.0" y="26" fill="#dde" font-size="20" font-weight="bold" text-anchor="middle">5</text>
+<text x="356.0" y="47" fill="#bbc" font-size="12" text-anchor="middle">4 мин</text>
+<rect x="400" y="0" width="72" height="58" rx="6" fill="#7d7" fill-opacity="0.3" stroke="#7d7" stroke-width="2" />
+<text x="436.0" y="26" fill="#dde" font-size="20" font-weight="bold" text-anchor="middle">6</text>
+<text x="436.0" y="47" fill="#bbc" font-size="12" text-anchor="middle">4 мин</text>
+<rect x="480" y="0" width="72" height="58" rx="6" fill="#fd6" fill-opacity="0.3" stroke="#fd6" stroke-width="2" />
+<text x="516.0" y="26" fill="#dde" font-size="20" font-weight="bold" text-anchor="middle">7</text>
+<text x="516.0" y="47" fill="#bbc" font-size="12" text-anchor="middle">5 мин</text>
+<rect x="560" y="0" width="72" height="58" rx="6" fill="#7d7" fill-opacity="0.3" stroke="#7d7" stroke-width="2" />
+<text x="596.0" y="26" fill="#dde" font-size="20" font-weight="bold" text-anchor="middle">8</text>
+<text x="596.0" y="47" fill="#bbc" font-size="12" text-anchor="middle">4 мин</text>
+<rect x="640" y="0" width="72" height="58" rx="6" fill="#6bf" fill-opacity="0.3" stroke="#6bf" stroke-width="2" />
+<text x="676.0" y="26" fill="#dde" font-size="20" font-weight="bold" text-anchor="middle">9</text>
+<text x="676.0" y="47" fill="#bbc" font-size="12" text-anchor="middle">6 мин</text>
+<rect x="0" y="66" width="72" height="58" rx="6" fill="#7d7" fill-opacity="0.3" stroke="#7d7" stroke-width="2" />
+<text x="36.0" y="92" fill="#dde" font-size="20" font-weight="bold" text-anchor="middle">10</text>
+<text x="36.0" y="113" fill="#bbc" font-size="12" text-anchor="middle">3 мин</text>
+<rect x="80" y="66" width="72" height="58" rx="6" fill="#fd6" fill-opacity="0.3" stroke="#fd6" stroke-width="2" />
+<text x="116.0" y="92" fill="#dde" font-size="20" font-weight="bold" text-anchor="middle">11</text>
+<text x="116.0" y="113" fill="#bbc" font-size="12" text-anchor="middle">3 мин</text>
+<rect x="160" y="66" width="72" height="58" rx="6" fill="#fd6" fill-opacity="0.3" stroke="#fd6" stroke-width="2" />
+<text x="196.0" y="92" fill="#dde" font-size="20" font-weight="bold" text-anchor="middle">12</text>
+<text x="196.0" y="113" fill="#bbc" font-size="12" text-anchor="middle">6 мин</text>
+<rect x="240" y="66" width="72" height="58" rx="6" fill="#7d7" fill-opacity="0.3" stroke="#7d7" stroke-width="2" />
+<text x="276.0" y="92" fill="#dde" font-size="20" font-weight="bold" text-anchor="middle">13</text>
+<text x="276.0" y="113" fill="#bbc" font-size="12" text-anchor="middle">7 мин</text>
+<rect x="320" y="66" width="72" height="58" rx="6" fill="#7d7" fill-opacity="0.3" stroke="#7d7" stroke-width="2" />
+<text x="356.0" y="92" fill="#dde" font-size="20" font-weight="bold" text-anchor="middle">14</text>
+<text x="356.0" y="113" fill="#bbc" font-size="12" text-anchor="middle">3 мин</text>
+<rect x="400" y="66" width="72" height="58" rx="6" fill="#7d7" fill-opacity="0.3" stroke="#7d7" stroke-width="2" />
+<text x="436.0" y="92" fill="#dde" font-size="20" font-weight="bold" text-anchor="middle">15</text>
+<text x="436.0" y="113" fill="#bbc" font-size="12" text-anchor="middle">3 мин</text>
+<rect x="480" y="66" width="72" height="58" rx="6" fill="#7d7" fill-opacity="0.3" stroke="#7d7" stroke-width="2" />
+<text x="516.0" y="92" fill="#dde" font-size="20" font-weight="bold" text-anchor="middle">16</text>
+<text x="516.0" y="113" fill="#bbc" font-size="12" text-anchor="middle">5 мин</text>
+<rect x="560" y="66" width="72" height="58" rx="6" fill="#7d7" fill-opacity="0.3" stroke="#7d7" stroke-width="2" />
+<text x="596.0" y="92" fill="#dde" font-size="20" font-weight="bold" text-anchor="middle">17</text>
+<text x="596.0" y="113" fill="#bbc" font-size="12" text-anchor="middle">13 мин</text>
+<rect x="640" y="66" width="72" height="58" rx="6" fill="#6bf" fill-opacity="0.3" stroke="#6bf" stroke-width="2" />
+<text x="676.0" y="92" fill="#dde" font-size="20" font-weight="bold" text-anchor="middle">18</text>
+<text x="676.0" y="113" fill="#bbc" font-size="12" text-anchor="middle">8 мин</text>
+<rect x="0" y="132" width="72" height="58" rx="6" fill="#7d7" fill-opacity="0.3" stroke="#7d7" stroke-width="2" />
+<text x="36.0" y="158" fill="#dde" font-size="20" font-weight="bold" text-anchor="middle">19</text>
+<text x="36.0" y="179" fill="#bbc" font-size="12" text-anchor="middle">5 мин</text>
+<rect x="80" y="132" width="72" height="58" rx="6" fill="#7d7" fill-opacity="0.3" stroke="#7d7" stroke-width="2" />
+<text x="116.0" y="158" fill="#dde" font-size="20" font-weight="bold" text-anchor="middle">20</text>
+<text x="116.0" y="179" fill="#bbc" font-size="12" text-anchor="middle">7 мин</text>
+<rect x="160" y="132" width="72" height="58" rx="6" fill="#7d7" fill-opacity="0.3" stroke="#7d7" stroke-width="2" />
+<text x="196.0" y="158" fill="#dde" font-size="20" font-weight="bold" text-anchor="middle">21</text>
+<text x="196.0" y="179" fill="#bbc" font-size="12" text-anchor="middle">10 мин</text>
+<rect x="240" y="132" width="72" height="58" rx="6" fill="#6bf" fill-opacity="0.3" stroke="#6bf" stroke-width="2" />
+<text x="276.0" y="158" fill="#dde" font-size="20" font-weight="bold" text-anchor="middle">22</text>
+<text x="276.0" y="179" fill="#bbc" font-size="12" text-anchor="middle">7 мин</text>
+<rect x="320" y="132" width="72" height="58" rx="6" fill="#7d7" fill-opacity="0.3" stroke="#7d7" stroke-width="2" />
+<text x="356.0" y="158" fill="#dde" font-size="20" font-weight="bold" text-anchor="middle">23</text>
+<text x="356.0" y="179" fill="#bbc" font-size="12" text-anchor="middle">12 мин</text>
+<rect x="400" y="132" width="72" height="58" rx="6" fill="#7d7" fill-opacity="0.3" stroke="#7d7" stroke-width="2" />
+<text x="436.0" y="158" fill="#dde" font-size="20" font-weight="bold" text-anchor="middle">24</text>
+<text x="436.0" y="179" fill="#bbc" font-size="12" text-anchor="middle">18 мин</text>
+<rect x="480" y="132" width="72" height="58" rx="6" fill="#7d7" fill-opacity="0.3" stroke="#7d7" stroke-width="2" />
+<text x="516.0" y="158" fill="#dde" font-size="20" font-weight="bold" text-anchor="middle">25</text>
+<text x="516.0" y="179" fill="#bbc" font-size="12" text-anchor="middle">20 мин</text>
+<rect x="560" y="132" width="72" height="58" rx="6" fill="#7d7" fill-opacity="0.3" stroke="#7d7" stroke-width="2" />
+<text x="596.0" y="158" fill="#dde" font-size="20" font-weight="bold" text-anchor="middle">26</text>
+<text x="596.0" y="179" fill="#bbc" font-size="12" text-anchor="middle">35 мин</text>
+<rect x="640" y="132" width="72" height="58" rx="6" fill="#7d7" fill-opacity="0.3" stroke="#7d7" stroke-width="2" />
+<text x="676.0" y="158" fill="#dde" font-size="20" font-weight="bold" text-anchor="middle">27</text>
+<text x="676.0" y="179" fill="#bbc" font-size="12" text-anchor="middle">36 мин</text></svg>
+                    </div>
+                    <p style="font-size: 0.7em;">
+                        <span class="fragment"><span class="tool tool-py">Python</span> 18 заданий</span>&nbsp;&nbsp;
+                        <span class="fragment"><span class="tool tool-hand">руками</span> 5</span>&nbsp;&nbsp;
+                        <span class="fragment"><span class="tool tool-xls">таблицы</span> 4</span>
+                    </p>
+                </section>
+
+                <!-- стратегия на экзамене -->
+                <section>
+                    <h2>Стратегия на экзамене</h2>
+                    <div class="timeline">
+                        <div class="timeline-item fragment">
+                            <div class="timeline-marker">1</div>
+                            <div class="timeline-content"><strong>№1-16</strong> подряд: короткие, около часа на все</div>
+                        </div>
+                        <div class="timeline-item fragment">
+                            <div class="timeline-marker">2</div>
+                            <div class="timeline-content"><strong>№17-25</strong>: программы и файлы</div>
+                        </div>
+                        <div class="timeline-item fragment">
+                            <div class="timeline-marker">3</div>
+                            <div class="timeline-content"><strong>№26-27</strong> в конце, на оставшееся время</div>
+                        </div>
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        Застрял дольше 15 минут - пропусти и вернись потом
+                    </div>
+                </section>
+
+                <!-- как будем заниматься -->
+                <section>
+                    <h2>Как будем заниматься</h2>
+                    <ul>
+                        <li class="fragment">каждый вторник, 60 минут, <mark>1-2 номера</mark> по порядку</li>
+                        <li class="fragment">на занятии: что спрашивают, как решать, решаем вместе</li>
+                        <li class="fragment">ДЗ: задания и варианты на Решу ЕГЭ</li>
+                        <li class="fragment">весной - полные варианты на время</li>
+                    </ul>
+                </section>
+
+                <!-- ДЗ: регистрация на Решу ЕГЭ -->
+                <section>
+                    <h2>Домашнее задание</h2>
+                    <div class="timeline">
+                        <div class="timeline-item fragment">
+                            <div class="timeline-marker">1</div>
+                            <div class="timeline-content">зарегистрироваться на <a href="https://inf-ege.sdamgia.ru/" target="_blank" rel="noopener">inf-ege.sdamgia.ru</a></div>
+                        </div>
+                        <div class="timeline-item fragment">
+                            <div class="timeline-marker">2</div>
+                            <div class="timeline-content">прислать мне логин</div>
+                        </div>
+                        <div class="timeline-item fragment">
+                            <div class="timeline-marker">3</div>
+                            <div class="timeline-content">решить <a href="https://inf-ege.sdamgia.ru/test?id=21036756" target="_blank" rel="noopener">вариант на Решу ЕГЭ</a>, войдя в аккаунт</div>
+                        </div>
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        Через сайт будут приходить задания и варианты, а я увижу результаты
+                    </div>
+                </section>
+
+            </section>
+
+            <!-- ИТОГ -->
+            <section>
+                <div class="lesson-time">55</div>
+                <h2>Что запомнить</h2>
+                <ul>
+                    <li class="fragment">27 заданий за <mark>3 ч 55 мин</mark>, 29 баллов, порог - 6 первичных</li>
+                    <li class="fragment">№26 и №27 стоят по 2 балла и занимают треть времени</li>
+                    <li class="fragment">штрафа нет - отвечаем на всё</li>
+                    <li class="fragment">2 из 3 заданий решаются программой, новое №23 на графах - наша сильная сторона</li>
+                </ul>
+            </section>
+
+        </div>
+    </div>
+
+    <script src="/utils/lib/js/head.min.js"></script>
+    <script src="/utils/js/reveal.js"></script>
+    <script>
+        Reveal.initialize({
+            controls: true,
+            progress: true,
+            history: true,
+            center: true,
+            transition: 'fade',
+            transitionSpeed: 'fast',
+            dependencies: [
+                { src: '/utils/lib/js/classList.js', condition: function () { return !document.body.classList; } },
+                { src: '/utils/plugin/markdown/marked.js', condition: function () { return !!document.querySelector('[data-markdown]'); } },
+                { src: '/utils/plugin/markdown/markdown.js', condition: function () { return !!document.querySelector('[data-markdown]'); } },
+                { src: '/utils/plugin/highlight/highlight.js', async: true, callback: function () { hljs.initHighlightingOnLoad(); } },
+                { src: '/utils/plugin/zoom-js/zoom.js', async: true },
+                { src: '/utils/plugin/notes/notes.js', async: true }
+            ]
+        });
+        Reveal.configure({ slideNumber: 'c/t' });
+    </script>
+    <script>
+        // таймер на слайде: клик - старт/пауза, "сброс" - обнулить
+        document.querySelectorAll('.timer').forEach(function (el) {
+            var limit = +el.dataset.limit || 180;
+            var fill = el.querySelector('.timer-fill');
+            var timeEl = el.querySelector('.timer-time');
+            var hint = el.querySelector('.timer-hint');
+            var spent = 0, startedAt = null, tick = null;
+
+            function fmt(sec) {
+                sec = Math.floor(sec);
+                return Math.floor(sec / 60) + ':' + String(sec % 60).padStart(2, '0');
+            }
+            function elapsed() {
+                return spent + (startedAt ? (Date.now() - startedAt) / 1000 : 0);
+            }
+            function draw() {
+                var t = elapsed();
+                fill.style.width = Math.min(t / limit, 1) * 100 + '%';
+                el.classList.toggle('warn', t >= limit * 0.8 && t < limit);
+                el.classList.toggle('over', t >= limit);
+                timeEl.textContent = t >= limit
+                    ? fmt(limit) + ' + ' + fmt(t - limit)
+                    : fmt(t) + ' / ' + fmt(limit);
+            }
+            function toggle() {
+                if (startedAt) {
+                    spent = elapsed(); startedAt = null;
+                    clearInterval(tick);
+                    hint.textContent = 'пауза - клик, чтобы продолжить';
+                } else {
+                    startedAt = Date.now();
+                    tick = setInterval(draw, 200);
+                    hint.textContent = 'идёт - клик для паузы';
+                }
+                draw();
+            }
+            el.addEventListener('click', function (e) {
+                e.stopPropagation();
+                if (e.target.closest('.timer-reset')) {
+                    clearInterval(tick); spent = 0; startedAt = null;
+                    hint.textContent = 'клик - старт';
+                } else {
+                    toggle();
+                }
+                draw();
+            });
+            draw();
+        });
+    </script>
+</body>
+
+</html>

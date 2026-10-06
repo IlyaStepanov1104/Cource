@@ -36,7 +36,14 @@
       padding: 12px 20px;
       display: flex; align-items: center; gap: 12px;
     }
-    header h1 { font-size: 16px; font-weight: 600; flex: 1; }
+    header h1 { font-size: 16px; font-weight: 600; }
+    .tracks { display: flex; gap: 4px; flex: 1; }
+    .tracks a {
+      padding: 4px 12px; border-radius: 6px;
+      color: var(--muted); text-decoration: none; font-size: 13px;
+    }
+    .tracks a:hover { color: var(--text); }
+    .tracks a.active { background: var(--accent); color: #fff; }
     #status {
       font-size: 13px; color: var(--muted);
       transition: color 0.3s;
@@ -252,6 +259,20 @@
     .card.u-yellow { border-left: 3px solid #eab308; }
     .card.u-green  { border-left: 3px solid #10b981; }
 
+    /* ── ОПЛАТА ── */
+    .paid-left { flex-shrink: 0; font-size: 11px; color: var(--muted); white-space: nowrap; }
+    .u-red .paid-left { color: var(--red); }
+    .u-orange .paid-left { color: #f97316; }
+    #balance { font-size: 13px; color: var(--muted); }
+    #balance.low { color: #f97316; font-weight: 600; }
+    #balance.none { color: var(--red); font-weight: 600; }
+    #pay-btn {
+      background: none; color: var(--text);
+      border: 1px solid var(--border); border-radius: 6px;
+      padding: 6px 12px; cursor: pointer; font-size: 13px;
+    }
+    #pay-btn:hover { border-color: var(--green); }
+
     /* ── OLD LESSONS GROUP ── */
     #old-container {
       max-width: 900px; margin: 14px auto 0; padding: 0 20px;
@@ -275,6 +296,9 @@
 
 <header>
   <h1>Уроки</h1>
+  <nav class="tracks" id="tracks"></nav>
+  <span id="balance"></span>
+  <button id="pay-btn" onclick="addPayment()">+ Оплата</button>
   <span id="status"></span>
   <button id="save-btn" onclick="save()">Сохранить</button>
 </header>
@@ -287,19 +311,84 @@
 </div>
 
 <script>
+  const TRACKS = {
+    prog: { label: 'Программирование', file: '/lessons.json', dir: 'lessons' },
+    ege:  { label: 'ЕГЭ',              file: '/ege.json',     dir: 'lessons-ege' },
+  };
+  const trackParam = new URLSearchParams(location.search).get('track');
+  const track = TRACKS[trackParam] ? trackParam : 'prog';
+
   let data = {};
+  let otherLessons = [];   // занятия второго потока - для общего счётчика оплат
+  let payments = [];       // payments.json: [{ date, lessons, note }]
+  let paidLeft = new Map(); // занятие -> сколько оплаченных останется к нему (включая его)
   let oldLessons = [];
   let recentLessons = [];
 
   // ── LOAD ──────────────────────────────────────────────────────
   async function load() {
-    const res = await fetch('/lessons.json');
+    const nav = document.getElementById('tracks');
+    Object.entries(TRACKS).forEach(([key, t]) => {
+      const a = document.createElement('a');
+      a.href = key === 'prog' ? '?' : '?track=' + key;
+      a.textContent = t.label;
+      if (key === track) a.className = 'active';
+      nav.appendChild(a);
+    });
+    document.title = 'Админка — ' + TRACKS[track].label;
+
+    const res = await fetch(TRACKS[track].file, { cache: 'no-store' });
     data = await res.json();
+
+    const other = Object.keys(TRACKS).find(k => k !== track);
+    otherLessons = (await (await fetch(TRACKS[other].file, { cache: 'no-store' })).json()).lessons;
+
+    const pr = await fetch('/payments.json', { cache: 'no-store' });
+    payments = pr.ok ? (await pr.json()).payments || [] : [];
     render();
   }
 
   // ── RENDER ────────────────────────────────────────────────────
+  // ── ОПЛАТЫ ────────────────────────────────────────────────────
+  // Общий счётчик по обоим потокам: занятия с даты первой оплаты идут по порядку дат
+  // и по очереди "съедают" оплаченные уроки.
+  function computePayments() {
+    paidLeft = new Map();
+    const balanceEl = document.getElementById('balance');
+    if (!payments.length) { balanceEl.textContent = 'оплат нет'; balanceEl.className = 'none'; return; }
+
+    const start = payments.map(p => new Date(p.date)).reduce((a, b) => (a < b ? a : b));
+    const total = payments.reduce((s, p) => s + (+p.lessons || 0), 0);
+    const all = [...data.lessons, ...otherLessons]
+      .filter(l => l.date && new Date(l.date) >= start)
+      .sort((a, b) => new Date(a.date) - new Date(b.date));
+    all.forEach((l, i) => paidLeft.set(l, total - i));
+
+    const now = new Date();
+    const held = all.filter(l => new Date(l.date) <= now).length;
+    const left = total - held;
+    balanceEl.textContent = 'осталось оплаченных: ' + left;
+    balanceEl.className = left <= 0 ? 'none' : left <= 2 ? 'low' : '';
+    balanceEl.title = payments.map(p => `${p.date.slice(0, 10)}: +${p.lessons}${p.note ? ' (' + p.note + ')' : ''}`).join(String.fromCharCode(10));
+  }
+
+  async function addPayment() {
+    const n = parseInt(prompt('Сколько занятий оплачено?', '8'), 10);
+    if (!n || n <= 0) return;
+    const note = prompt('Комментарий (необязательно)', '') || '';
+    const d = new Date();
+    const date = new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString().slice(0, 19);
+    payments.push(note ? { date, lessons: n, note } : { date, lessons: n });
+    const res = await fetch('/api/save-payments', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ payments }, null, 2),
+    });
+    if (!res.ok) alert('Не удалось сохранить оплату');
+    render();
+  }
+
   function render() {
+    computePayments();
     const now = Date.now();
     const weekAgo = new Date(now - 7 * 24 * 60 * 60 * 1000);
     oldLessons    = data.lessons.filter(l => new Date(l.date) < weekAgo);
@@ -343,10 +432,12 @@
 
   function makeCard(lesson, i, isNearest = false) {
     const card = document.createElement('div');
-    const rem = lesson.number % 8;
-    const urgencyClass = rem === 7 ? 'u-red'
-      : rem === 6 || rem === 5 ? 'u-orange'
-      : rem === 4 || rem === 3 ? 'u-yellow'
+    // сколько оплаченных уроков останется к этому занятию (включая его); 2 и меньше - пора платить
+    const left = paidLeft.get(lesson);
+    const urgencyClass = left === undefined ? ''
+      : left <= 0 ? 'u-red'
+      : left <= 2 ? 'u-orange'
+      : left <= 4 ? 'u-yellow'
       : 'u-green';
     card.className = 'card ' + urgencyClass + (isNearest ? ' nearest' : '');
     card.dataset.i = i;
@@ -363,6 +454,7 @@
         <button data-val="60" class="${(lesson.duration ?? 60) === 60 ? 'active' : ''}">60</button>
         <button data-val="90" class="${(lesson.duration ?? 60) === 90 ? 'active' : ''}">90</button>
       </div>
+      <span class="paid-left" title="оплаченных уроков к этому занятию, включая его">${left === undefined ? '' : left > 0 ? 'опл. ' + left : 'не опл.'}</span>
       <button class="expand-btn">ДЗ ${lesson.homeworks.length ? `(${lesson.homeworks.length})` : ''} ▾</button>
     `;
 
@@ -422,7 +514,7 @@
 
     const input = document.createElement('input');
     input.className = 'folder-input';
-    input.placeholder = '/lessons/NN-slug/';
+    input.placeholder = `/${TRACKS[track].dir}/NN-slug/`;
 
     const statusEl = document.createElement('span');
     statusEl.className = 'folder-status';
@@ -592,7 +684,7 @@
     status.className = '';
     status.textContent = '';
     try {
-      const res = await fetch('/api/save-lessons', {
+      const res = await fetch('/api/save-lessons?track=' + track, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data, null, 2),

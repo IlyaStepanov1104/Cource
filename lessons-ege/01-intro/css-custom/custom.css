@@ -1,0 +1,19 @@
+/* ЕГЭ, занятие 1 - Введение в ЕГЭ */
+
+/* метка инструмента (руками / Python / таблицы): используется в таблицах обзора всех 27 заданий */
+.reveal .tool { display: inline-block; padding: 0 0.4em; border-radius: 0.3em; font-size: 0.85em; white-space: nowrap; }
+.reveal .tool-hand { background: rgba(255, 221, 102, 0.3); }
+.reveal .tool-py { background: rgba(119, 221, 119, 0.3); }
+.reveal .tool-xls { background: rgba(102, 187, 255, 0.3); }
+
+/* таймер на слайде "Пробуем: №1" */
+.reveal .timer { width: 70%; margin: 0.8em auto 0; cursor: pointer; user-select: none; }
+.reveal .timer-bar { height: 0.5em; border-radius: 0.25em; background: rgba(255, 255, 255, 0.12); overflow: hidden; }
+.reveal .timer-fill { height: 100%; width: 0; background: #7d7; }
+.reveal .timer.warn .timer-fill { background: #fd6; }
+.reveal .timer.over .timer-fill { background: #e55; }
+.reveal .timer-row { display: flex; align-items: baseline; gap: 0.8em; margin-top: 0.2em; }
+.reveal .timer-time { font-size: 1.1em; font-variant-numeric: tabular-nums; }
+.reveal .timer.over .timer-time { color: #f77; }
+.reveal .timer-hint { flex: 1; font-size: 0.5em; opacity: 0.6; }
+.reveal .timer-reset { font: inherit; font-size: 0.45em; padding: 0.1em 0.6em; border-radius: 0.3em; border: 1px solid rgba(255, 255, 255, 0.3); background: none; color: inherit; cursor: pointer; }

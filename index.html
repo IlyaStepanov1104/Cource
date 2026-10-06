@@ -13,11 +13,14 @@
     <header>
         <h1 class="js-course-title">Курс лекций</h1>
         <p class="course-subtitle js-course-subtitle"></p>
+        <nav class="main-menu">
+            <ul class="js-tracks"></ul>
+        </nav>
         <nav class="course-links">
             <a href="https://1drv.ms/o/c/a78f46d739c0db14/IgDyJmm0KD_6Rb8SEPyyGZDWASgLwt_W8Lx5DruE-S7WqMY?e=Jhp8Wo" target="_blank" rel="noopener" class="course-link">
                 OneNote
             </a>
-            <a href="https://github.com/IlyaStepanov1104/Cource/tree/main/practice" class="course-link">
+            <a href="https://github.com/IlyaStepanov1104/Cource/tree/main/practice" class="course-link js-github-link">
                 GitHub
             </a>
         </nav>
@@ -30,8 +33,40 @@
 </div>
 
 <script>
+    // Потоки курса: у каждого свой json с занятиями и своя папка practice
+    const TRACKS = {
+        prog: { label: 'Программирование', file: '/lessons.json', practice: 'practice' },
+        ege:  { label: 'ЕГЭ',              file: '/ege.json',     practice: 'practice-ege' },
+    };
+    const GITHUB_TREE = 'https://github.com/IlyaStepanov1104/Cource/tree/main/';
+
+    function currentTrack() {
+        const t = new URLSearchParams(window.location.search).get('track');
+        return TRACKS[t] ? t : 'prog';
+    }
+
+    function renderTracks(active) {
+        const ul = document.querySelector('.js-tracks');
+        Object.entries(TRACKS).forEach(([key, track]) => {
+            const params = new URLSearchParams(window.location.search);
+            if (key === 'prog') params.delete('track'); else params.set('track', key);
+            const query = params.toString();
+
+            const li = document.createElement('li');
+            const a  = document.createElement('a');
+            a.href = window.location.pathname + (query ? '?' + query : '');
+            a.textContent = track.label;
+            if (key === active) a.className = 'active';
+            li.appendChild(a);
+            ul.appendChild(li);
+        });
+        document.querySelector('.js-github-link').href = GITHUB_TREE + TRACKS[active].practice;
+    }
+
     document.addEventListener('DOMContentLoaded', function () {
-        fetch('/lessons.json')
+        const track = currentTrack();
+        renderTracks(track);
+        fetch(TRACKS[track].file)
             .then(r => { if (!r.ok) throw new Error('network'); return r.json(); })
             .then(data => renderLessons(data))
             .catch((error) => {
