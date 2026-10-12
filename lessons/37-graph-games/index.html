@@ -1,0 +1,1877 @@
+<!doctype html>
+<html lang="ru">
+
+<head>
+    <meta charset="utf-8">
+    <title>Занятие 37 - Игры на графах (часть 2)</title>
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+
+    <link rel="stylesheet" href="/utils/css/reveal.css">
+    <link rel="stylesheet" href="/utils/lib/css/animate.css">
+    <link rel="stylesheet" href="/utils/css/theme/night.css" id="theme">
+    <link rel="stylesheet" href="/utils/lib/css/zenburn.css">
+    <link rel="stylesheet" href="/utils/css/custom-base.css">
+    <link rel="stylesheet" href="css-custom/custom.css">
+
+    <script>
+        var link = document.createElement('link');
+        link.rel = 'stylesheet'; link.type = 'text/css';
+        link.href = window.location.search.match(/print-pdf/gi)
+            ? '/utils/css/print/pdf.css'
+            : '/utils/css/print/paper.css';
+        document.getElementsByTagName('head')[0].appendChild(link);
+    </script>
+</head>
+
+<body>
+    <div class="reveal">
+        <div class="slides">
+
+            <!-- титульный слайд -->
+            <section style="font-size: 70px; height: 100%; width: 100%">
+                <div class="lesson-time">0</div>
+                <div class="fragment">
+                    <h1 class="animated" style="font-size: 1.5em;">Игры на графах</h1>
+                    <p style="text-align: center; font-size: 0.45em; opacity: 0.6;">часть 2: ничьи, циклы и асимметричные игры</p>
+                    <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">Занятие 37</p>
+                </div>
+            </section>
+
+            <!-- РАЗБОР ДЗ (занятие 36): крестики-нолики на GamesmanUni -->
+            <section>
+
+                <section style="font-size: 70px; height: 100%; width: 100%">
+                    <div class="lesson-time">0</div>
+                    <div class="fragment">
+                        <h1 style="font-size: 1.3em;">Разбор ДЗ</h1>
+                        <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">крестики-нолики на GamesmanUni</p>
+                    </div>
+                </section>
+
+                <!-- вопрос 1: почему в начале нет зелёных клеток - крестики-нолики при правильной игре ничья -->
+                <section>
+                    <h2>Почему нет зелёных?</h2>
+<div style="display: flex; align-items: center; justify-content: center; gap: 1.2em;">
+<div class="fragment" style="flex: none;">
+<svg width="260" height="260" viewBox="0 0 250 250">
+<rect x="10" y="10" width="72" height="72" rx="6" fill="#38331c" stroke="#db5" stroke-width="2" />
+<rect x="88" y="10" width="72" height="72" rx="6" fill="#38331c" stroke="#db5" stroke-width="2" />
+<rect x="166" y="10" width="72" height="72" rx="6" fill="#38331c" stroke="#db5" stroke-width="2" />
+<rect x="10" y="88" width="72" height="72" rx="6" fill="#38331c" stroke="#db5" stroke-width="2" />
+<rect x="88" y="88" width="72" height="72" rx="6" fill="#38331c" stroke="#db5" stroke-width="2" />
+<rect x="166" y="88" width="72" height="72" rx="6" fill="#38331c" stroke="#db5" stroke-width="2" />
+<rect x="10" y="166" width="72" height="72" rx="6" fill="#38331c" stroke="#db5" stroke-width="2" />
+<rect x="88" y="166" width="72" height="72" rx="6" fill="#38331c" stroke="#db5" stroke-width="2" />
+<rect x="166" y="166" width="72" height="72" rx="6" fill="#38331c" stroke="#db5" stroke-width="2" />
+</svg>
+</div>
+<ul style="font-size: 0.7em; text-align: left;">
+    <li class="fragment">зелёная клетка: сходил туда - и выиграл, <mark>как бы ни играл</mark> соперник</li>
+    <li class="fragment">в начале все клетки жёлтые: любой первый ход ведёт к ничьей</li>
+    <li class="fragment">над доской: <code>Player 1 should tie</code> - крестики могут рассчитывать только на ничью</li>
+</ul>
+</div>
+<div class="fragment opinion" style="margin-top: 0.6em;">
+    Крестики-нолики при правильной игре обоих - <mark class="yellow">ничья</mark>
+</div>
+                </section>
+
+                <!-- вопрос 2: нолик сходил на красную - точка на графике ушла в сторону победы крестиков, над доской "X wins in N" -->
+                <section>
+                    <h2>Нолик ошибся</h2>
+<div style="display: flex; align-items: center; justify-content: center; gap: 1.2em;">
+<div style="flex: none;">
+<svg width="260" height="260" viewBox="0 0 250 250">
+<rect x="10" y="10" width="72" height="72" rx="6" fill="#38331c" stroke="#db5" stroke-width="2" />
+<rect x="88" y="10" width="72" height="72" rx="6" fill="#3a1f24" stroke="#f66" stroke-width="2" />
+<rect x="166" y="10" width="72" height="72" rx="6" fill="#38331c" stroke="#db5" stroke-width="2" />
+<rect x="10" y="88" width="72" height="72" rx="6" fill="#3a1f24" stroke="#f66" stroke-width="2" />
+<rect x="88" y="88" width="72" height="72" rx="6" fill="#1c2030" stroke="#556" stroke-width="2" />
+<rect x="166" y="88" width="72" height="72" rx="6" fill="#3a1f24" stroke="#f66" stroke-width="2" />
+<rect x="10" y="166" width="72" height="72" rx="6" fill="#38331c" stroke="#db5" stroke-width="2" />
+<rect x="88" y="166" width="72" height="72" rx="6" fill="#3a1f24" stroke="#f66" stroke-width="2" />
+<rect x="166" y="166" width="72" height="72" rx="6" fill="#38331c" stroke="#db5" stroke-width="2" />
+<text x="124" y="140" fill="#fa5" font-size="44" font-weight="bold" text-anchor="middle">X</text>
+<text x="124" y="62" fill="#6af" font-size="44" font-weight="bold" text-anchor="middle" class="fragment" data-fragment-index="3">O</text>
+</svg>
+</div>
+<ul style="font-size: 0.65em; text-align: left;">
+    <li class="fragment" data-fragment-index="1">крестик в центре: у ноликов жёлтые только <mark class="yellow">углы</mark></li>
+    <li class="fragment" data-fragment-index="2">края красные: туда - проигрыш</li>
+    <li class="fragment" data-fragment-index="3">нолик пошёл на край - позиция стала выигрышной для крестиков</li>
+    <li class="fragment" data-fragment-index="4">над доской: <code>Player 1 should win</code>, точка на графике ушла влево, в зону победы крестиков</li>
+</ul>
+</div>
+                </section>
+
+                <!-- вывод: у позиции три исхода, не два - W, L и D (ничья); сегодня учимся находить D -->
+                <section>
+                    <h2>Три исхода</h2>
+<ul style="font-size: 0.85em; text-align: left;">
+    <li class="fragment"><span style="color: #7d7; font-weight: bold;">W</span> - кто ходит, тот выиграет</li>
+    <li class="fragment"><span style="color: #f66; font-weight: bold;">L</span> - кто ходит, тот проиграет</li>
+    <li class="fragment"><span style="color: #db5; font-weight: bold;">D</span> (draw) - при правильной игре никто не выиграет</li>
+</ul>
+<div class="fragment opinion" style="margin-top: 0.6em;">
+    В прошлый раз ничьих не было. Сегодня: откуда они берутся в графе и как их найти
+</div>
+                </section>
+
+            </section>
+
+            <!-- ЧАСТЬ 1: когда граф с циклами -->
+            <section>
+
+                <section style="font-size: 70px; height: 100%; width: 100%">
+                    <div class="lesson-time">5</div>
+                    <div class="fragment">
+                        <h1 style="font-size: 1.3em;">Граф с циклами</h1>
+                        <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">когда игра может не кончиться</p>
+                    </div>
+                </section>
+
+                <!-- напоминание с прошлого занятия: W - есть ход в L, L - все ходы в W, тупик - L (картинка раскрашенного графа) -->
+                <section>
+                    <h2>Напоминание</h2>
+<div style="display: flex; align-items: center; justify-content: center; gap: 1.2em;">
+<div style="flex: none;">
+<svg width="460" height="300" viewBox="0 0 460 300">
+<defs>
+<marker id="g37_1n" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#667" /></marker>
+<marker id="g37_1h" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#f7a" /></marker>
+<marker id="g37_1o" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#fa5" /></marker>
+<marker id="g37_1b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#6af" /></marker>
+<marker id="g37_1g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#556" /></marker>
+</defs>
+<line x1="77.7" y1="140.6" x2="211.4" y2="69.8" stroke="#667" stroke-width="2" marker-end="url(#g37_1n)" />
+<line x1="77.7" y1="159.4" x2="211.4" y2="230.2" stroke="#667" stroke-width="2" marker-end="url(#g37_1n)" />
+<line x1="247.7" y1="69.4" x2="381.4" y2="140.2" stroke="#667" stroke-width="2" marker-end="url(#g37_1n)" />
+<line x1="230.0" y1="220.0" x2="230.0" y2="81.0" stroke="#667" stroke-width="2" marker-end="url(#g37_1n)" />
+<circle cx="60" cy="150" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="60" y="156" fill="#dde" font-size="17" text-anchor="middle">P</text>
+<circle cx="230" cy="60" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="230" y="66" fill="#dde" font-size="17" text-anchor="middle">Q</text>
+<circle cx="230" cy="240" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="230" y="246" fill="#dde" font-size="17" text-anchor="middle">R</text>
+<circle cx="400" cy="150" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="400" y="156" fill="#dde" font-size="17" text-anchor="middle">T</text>
+<g class="fragment" data-fragment-index="1">
+<circle cx="400" cy="150" r="20" fill="#3a1f24" stroke="#f66" stroke-width="3" />
+<text x="400" y="156" fill="#dde" font-size="17" text-anchor="middle">T</text>
+<text x="400" y="121" fill="#f66" font-size="17" font-weight="bold" text-anchor="middle">L</text>
+</g>
+<g class="fragment" data-fragment-index="2">
+<circle cx="230" cy="60" r="20" fill="#1f3a26" stroke="#7d7" stroke-width="3" />
+<text x="230" y="66" fill="#dde" font-size="17" text-anchor="middle">Q</text>
+<text x="230" y="31" fill="#7d7" font-size="17" font-weight="bold" text-anchor="middle">W</text>
+</g>
+<g class="fragment" data-fragment-index="3">
+<circle cx="230" cy="240" r="20" fill="#3a1f24" stroke="#f66" stroke-width="3" />
+<text x="230" y="246" fill="#dde" font-size="17" text-anchor="middle">R</text>
+<text x="230" y="211" fill="#f66" font-size="17" font-weight="bold" text-anchor="middle">L</text>
+</g>
+<g class="fragment" data-fragment-index="4">
+<circle cx="60" cy="150" r="20" fill="#1f3a26" stroke="#7d7" stroke-width="3" />
+<text x="60" y="156" fill="#dde" font-size="17" text-anchor="middle">P</text>
+<text x="60" y="121" fill="#7d7" font-size="17" font-weight="bold" text-anchor="middle">W</text>
+</g>
+
+</svg>
+</div>
+<ul style="font-size: 0.7em; text-align: left;">
+    <li class="fragment" data-fragment-index="1">тупик - <span style="color: #f66; font-weight: bold;">L</span></li>
+    <li class="fragment" data-fragment-index="2">есть ход в L - <span style="color: #7d7; font-weight: bold;">W</span></li>
+    <li class="fragment" data-fragment-index="3">все ходы в W - <span style="color: #f66; font-weight: bold;">L</span></li>
+    <li class="fragment" data-fragment-index="4"><code>P</code>: есть ход в <code>R</code> - <span style="color: #7d7; font-weight: bold;">W</span></li>
+</ul>
+</div>
+                </section>
+
+                <!-- новая игра: фишка на графе с циклом, ходят по очереди, кто не может ходить - проиграл (SVG графа) -->
+                <section>
+                    <h2>Новая игра</h2>
+<div style="display: flex; align-items: center; justify-content: center; gap: 1.2em;">
+<div class="fragment" style="flex: none;">
+<svg width="620" height="340" viewBox="0 0 620 340">
+<defs>
+<marker id="g37_2n" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#667" /></marker>
+<marker id="g37_2h" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#f7a" /></marker>
+<marker id="g37_2o" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#fa5" /></marker>
+<marker id="g37_2b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#6af" /></marker>
+<marker id="g37_2g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#556" /></marker>
+</defs>
+<line x1="220.0" y1="307.0" x2="339.0" y2="307.0" stroke="#667" stroke-width="2" marker-end="url(#g37_2n)" />
+<line x1="340.0" y1="293.0" x2="221.0" y2="293.0" stroke="#667" stroke-width="2" marker-end="url(#g37_2n)" />
+<line x1="212.5" y1="284.4" x2="306.9" y2="166.4" stroke="#667" stroke-width="2" marker-end="url(#g37_2n)" />
+<line x1="380.0" y1="300.0" x2="499.0" y2="300.0" stroke="#667" stroke-width="2" marker-end="url(#g37_2n)" />
+<line x1="504.0" y1="288.0" x2="336.8" y2="162.6" stroke="#667" stroke-width="2" marker-end="url(#g37_2n)" />
+<line x1="340.0" y1="150.0" x2="529.0" y2="150.0" stroke="#667" stroke-width="2" marker-end="url(#g37_2n)" />
+<line x1="63.0" y1="80.0" x2="63.0" y2="219.0" stroke="#667" stroke-width="2" marker-end="url(#g37_2n)" />
+<line x1="77.0" y1="220.0" x2="77.0" y2="81.0" stroke="#667" stroke-width="2" marker-end="url(#g37_2n)" />
+<line x1="88.8" y1="66.8" x2="300.2" y2="142.9" stroke="#667" stroke-width="2" marker-end="url(#g37_2n)" />
+<line x1="88.8" y1="233.2" x2="300.2" y2="157.1" stroke="#667" stroke-width="2" marker-end="url(#g37_2n)" />
+<circle cx="70" cy="60" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="70" y="66" fill="#dde" font-size="17" text-anchor="middle">G</text>
+<circle cx="70" cy="240" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="70" y="246" fill="#dde" font-size="17" text-anchor="middle">H</text>
+<circle cx="320" cy="150" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="320" y="156" fill="#dde" font-size="17" text-anchor="middle">C</text>
+<circle cx="550" cy="150" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="550" y="156" fill="#dde" font-size="17" text-anchor="middle">T</text>
+<circle cx="200" cy="300" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="200" y="306" fill="#dde" font-size="17" text-anchor="middle">A</text>
+<circle cx="360" cy="300" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="360" y="306" fill="#dde" font-size="17" text-anchor="middle">B</text>
+<circle cx="520" cy="300" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="520" y="306" fill="#dde" font-size="17" text-anchor="middle">D</text>
+<circle cx="85" cy="45" r="9" fill="#fd6" stroke="#222" stroke-width="2" />
+
+</svg>
+</div>
+<ul style="font-size: 0.65em; text-align: left;">
+    <li class="fragment">правила те же: ход по стрелке, без хода - проиграл</li>
+    <li class="fragment">но есть стрелки туда и обратно: <code>G</code> и <code>H</code>, <code>A</code> и <code>B</code></li>
+    <li class="fragment">фишка может <mark>вернуться</mark> туда, где уже была</li>
+</ul>
+</div>
+                </section>
+
+                <!-- сыграем: игроки могут ходить по кругу бесконечно - кто победил? -->
+                <section>
+                    <h2>Сыграем</h2>
+<div style="display: flex; align-items: center; justify-content: center; gap: 1.2em;">
+<div style="flex: none;">
+<svg width="620" height="340" viewBox="0 0 620 340">
+<defs>
+<marker id="g37_3n" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#667" /></marker>
+<marker id="g37_3h" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#f7a" /></marker>
+<marker id="g37_3o" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#fa5" /></marker>
+<marker id="g37_3b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#6af" /></marker>
+<marker id="g37_3g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#556" /></marker>
+</defs>
+<line x1="220.0" y1="307.0" x2="339.0" y2="307.0" stroke="#667" stroke-width="2" marker-end="url(#g37_3n)" />
+<line x1="340.0" y1="293.0" x2="221.0" y2="293.0" stroke="#667" stroke-width="2" marker-end="url(#g37_3n)" />
+<line x1="212.5" y1="284.4" x2="306.9" y2="166.4" stroke="#667" stroke-width="2" marker-end="url(#g37_3n)" />
+<line x1="380.0" y1="300.0" x2="499.0" y2="300.0" stroke="#667" stroke-width="2" marker-end="url(#g37_3n)" />
+<line x1="504.0" y1="288.0" x2="336.8" y2="162.6" stroke="#667" stroke-width="2" marker-end="url(#g37_3n)" />
+<line x1="340.0" y1="150.0" x2="529.0" y2="150.0" stroke="#667" stroke-width="2" marker-end="url(#g37_3n)" />
+<line x1="63.0" y1="80.0" x2="63.0" y2="219.0" stroke="#667" stroke-width="2" marker-end="url(#g37_3n)" />
+<line x1="77.0" y1="220.0" x2="77.0" y2="81.0" stroke="#667" stroke-width="2" marker-end="url(#g37_3n)" />
+<line x1="88.8" y1="66.8" x2="300.2" y2="142.9" stroke="#667" stroke-width="2" marker-end="url(#g37_3n)" />
+<line x1="88.8" y1="233.2" x2="300.2" y2="157.1" stroke="#667" stroke-width="2" marker-end="url(#g37_3n)" />
+<line x1="88.8" y1="66.8" x2="300.2" y2="142.9" stroke="#f7a" stroke-width="4" marker-end="url(#g37_3h)" class="fragment" data-fragment-index="1" />
+<line x1="63.0" y1="80.0" x2="63.0" y2="219.0" stroke="#f7a" stroke-width="4" marker-end="url(#g37_3h)" class="fragment" data-fragment-index="2" />
+<line x1="77.0" y1="220.0" x2="77.0" y2="81.0" stroke="#f7a" stroke-width="4" marker-end="url(#g37_3h)" class="fragment" data-fragment-index="3" />
+<circle cx="70" cy="60" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="70" y="66" fill="#dde" font-size="17" text-anchor="middle">G</text>
+<circle cx="70" cy="240" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="70" y="246" fill="#dde" font-size="17" text-anchor="middle">H</text>
+<circle cx="320" cy="150" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="320" y="156" fill="#dde" font-size="17" text-anchor="middle">C</text>
+<circle cx="550" cy="150" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="550" y="156" fill="#dde" font-size="17" text-anchor="middle">T</text>
+<circle cx="200" cy="300" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="200" y="306" fill="#dde" font-size="17" text-anchor="middle">A</text>
+<circle cx="360" cy="300" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="360" y="306" fill="#dde" font-size="17" text-anchor="middle">B</text>
+<circle cx="520" cy="300" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="520" y="306" fill="#dde" font-size="17" text-anchor="middle">D</text>
+<circle cx="85" cy="45" r="9" fill="#fd6" stroke="#222" stroke-width="2" />
+
+</svg>
+</div>
+<ul style="font-size: 0.6em; text-align: left;">
+    <li class="fragment" data-fragment-index="1">фишка в <code>G</code>, ходишь ты. Пойдёшь в <code>C</code> - соперник сходит в <code>T</code>, и ты проиграл</li>
+    <li class="fragment" data-fragment-index="2">значит, идём в <code>H</code></li>
+    <li class="fragment" data-fragment-index="3">соперник рассуждает так же и возвращается в <code>G</code></li>
+    <li class="fragment" data-fragment-index="4">и так по кругу. Кто победил?</li>
+</ul>
+</div>
+                </section>
+
+                <!-- правило: бесконечная игра = ничья -->
+                <section>
+                    <h2>Бесконечная игра</h2>
+<ul style="font-size: 0.85em; text-align: left;">
+    <li class="fragment">партия, которая никогда не кончается, - <mark class="yellow">ничья</mark></li>
+    <li class="fragment">в шахматах похоже: троекратное повторение позиции - ничья</li>
+    <li class="fragment">у вершины теперь три варианта: <span style="color: #7d7; font-weight: bold;">W</span>, <span style="color: #f66; font-weight: bold;">L</span> или <span style="color: #db5; font-weight: bold;">D</span></li>
+</ul>
+<div class="fragment opinion" style="margin-top: 0.6em;">
+    Из <code>G</code> никто не выиграет: <code>G</code> - это D
+</div>
+                </section>
+
+                <!-- попробуем старую рекурсию: вершина спрашивает соседа, сосед спрашивает её обратно - рекурсия зацикливается (трассировка) -->
+                <section>
+                    <h2>Старая рекурсия</h2>
+<div class="timeline" style="font-size: 0.7em;">
+    <div class="timeline-item fragment">
+        <div class="timeline-marker">1</div>
+        <div class="timeline-content"><code>G</code>: чтобы узнать свой цвет, спрашиваю <code>H</code> и <code>C</code></div>
+    </div>
+    <div class="timeline-item fragment">
+        <div class="timeline-marker">2</div>
+        <div class="timeline-content"><code>H</code>: спрашиваю <code>G</code> и <code>C</code></div>
+    </div>
+    <div class="timeline-item fragment">
+        <div class="timeline-marker">3</div>
+        <div class="timeline-content"><code>G</code>: спрашиваю <code>H</code>... ответа для <code>G</code> ещё нет, мы его как раз считаем</div>
+    </div>
+    <div class="timeline-item fragment">
+        <div class="timeline-marker">4</div>
+        <div class="timeline-content">и так до <code>RecursionError</code></div>
+    </div>
+</div>
+<div class="fragment opinion" style="margin-top: 0.6em;">
+    Память не спасает: <code>G</code> ждёт <code>H</code>, а <code>H</code> ждёт <code>G</code>
+</div>
+                </section>
+
+                <!-- почему динамика "от тупиков" ломается: нет порядка, в котором все соседи уже посчитаны -->
+                <section>
+                    <h2>Нет порядка</h2>
+<ul style="font-size: 0.8em; text-align: left;">
+    <li class="fragment">на занятии 35: вершину считаем, когда <mark>все, куда она ходит</mark>, уже посчитаны</li>
+    <li class="fragment">без циклов такой порядок есть - топологический</li>
+    <li class="fragment"><code>G</code> надо считать после <code>H</code>, а <code>H</code> - после <code>G</code></li>
+</ul>
+<div class="fragment opinion" style="margin-top: 0.6em;">
+    В графе с циклом топологического порядка нет
+</div>
+                </section>
+
+                <!-- вопрос: какие вершины всё-таки можно раскрасить уверенно? (fragment-раскраска тупиков и их соседей) -->
+                <section>
+                    <h2>Что знаем точно?</h2>
+<div style="display: flex; align-items: center; justify-content: center; gap: 1.2em;">
+<div style="flex: none;">
+<svg width="620" height="340" viewBox="0 0 620 340">
+<defs>
+<marker id="g37_4n" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#667" /></marker>
+<marker id="g37_4h" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#f7a" /></marker>
+<marker id="g37_4o" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#fa5" /></marker>
+<marker id="g37_4b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#6af" /></marker>
+<marker id="g37_4g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#556" /></marker>
+</defs>
+<line x1="220.0" y1="307.0" x2="339.0" y2="307.0" stroke="#667" stroke-width="2" marker-end="url(#g37_4n)" />
+<line x1="340.0" y1="293.0" x2="221.0" y2="293.0" stroke="#667" stroke-width="2" marker-end="url(#g37_4n)" />
+<line x1="212.5" y1="284.4" x2="306.9" y2="166.4" stroke="#667" stroke-width="2" marker-end="url(#g37_4n)" />
+<line x1="380.0" y1="300.0" x2="499.0" y2="300.0" stroke="#667" stroke-width="2" marker-end="url(#g37_4n)" />
+<line x1="504.0" y1="288.0" x2="336.8" y2="162.6" stroke="#667" stroke-width="2" marker-end="url(#g37_4n)" />
+<line x1="340.0" y1="150.0" x2="529.0" y2="150.0" stroke="#667" stroke-width="2" marker-end="url(#g37_4n)" />
+<line x1="63.0" y1="80.0" x2="63.0" y2="219.0" stroke="#667" stroke-width="2" marker-end="url(#g37_4n)" />
+<line x1="77.0" y1="220.0" x2="77.0" y2="81.0" stroke="#667" stroke-width="2" marker-end="url(#g37_4n)" />
+<line x1="88.8" y1="66.8" x2="300.2" y2="142.9" stroke="#667" stroke-width="2" marker-end="url(#g37_4n)" />
+<line x1="88.8" y1="233.2" x2="300.2" y2="157.1" stroke="#667" stroke-width="2" marker-end="url(#g37_4n)" />
+<circle cx="70" cy="60" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="70" y="66" fill="#dde" font-size="17" text-anchor="middle">G</text>
+<circle cx="70" cy="240" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="70" y="246" fill="#dde" font-size="17" text-anchor="middle">H</text>
+<circle cx="320" cy="150" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="320" y="156" fill="#dde" font-size="17" text-anchor="middle">C</text>
+<circle cx="550" cy="150" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="550" y="156" fill="#dde" font-size="17" text-anchor="middle">T</text>
+<circle cx="200" cy="300" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="200" y="306" fill="#dde" font-size="17" text-anchor="middle">A</text>
+<circle cx="360" cy="300" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="360" y="306" fill="#dde" font-size="17" text-anchor="middle">B</text>
+<circle cx="520" cy="300" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="520" y="306" fill="#dde" font-size="17" text-anchor="middle">D</text>
+<g class="fragment" data-fragment-index="1">
+<circle cx="550" cy="150" r="20" fill="#3a1f24" stroke="#f66" stroke-width="3" />
+<text x="550" y="156" fill="#dde" font-size="17" text-anchor="middle">T</text>
+<text x="550" y="121" fill="#f66" font-size="17" font-weight="bold" text-anchor="middle">L</text>
+</g>
+<g class="fragment" data-fragment-index="2">
+<circle cx="320" cy="150" r="20" fill="#1f3a26" stroke="#7d7" stroke-width="3" />
+<text x="320" y="156" fill="#dde" font-size="17" text-anchor="middle">C</text>
+<text x="320" y="121" fill="#7d7" font-size="17" font-weight="bold" text-anchor="middle">W</text>
+</g>
+<g class="fragment" data-fragment-index="3">
+<circle cx="520" cy="300" r="20" fill="#3a1f24" stroke="#f66" stroke-width="3" />
+<text x="520" y="306" fill="#dde" font-size="17" text-anchor="middle">D</text>
+<text x="520" y="271" fill="#f66" font-size="17" font-weight="bold" text-anchor="middle">L</text>
+</g>
+
+</svg>
+</div>
+<ul style="font-size: 0.6em; text-align: left;">
+    <li class="fragment" data-fragment-index="1"><code>T</code> - тупик: <span style="color: #f66; font-weight: bold;">L</span></li>
+    <li class="fragment" data-fragment-index="2"><code>C</code> ходит в L: <span style="color: #7d7; font-weight: bold;">W</span></li>
+    <li class="fragment" data-fragment-index="3"><code>D</code> - единственный ход в W: <span style="color: #f66; font-weight: bold;">L</span></li>
+    <li class="fragment" data-fragment-index="4">а остальные? Двигаемся так же: <mark>от того, что уже знаем</mark></li>
+</ul>
+</div>
+                </section>
+
+            </section>
+
+            <!-- ЧАСТЬ 2: ретроанализ - раскраска от тупиков через BFS -->
+            <section>
+
+                <section style="font-size: 70px; height: 100%; width: 100%">
+                    <div class="lesson-time">20</div>
+                    <div class="fragment">
+                        <h1 style="font-size: 1.3em;">Раскраска от тупиков</h1>
+                        <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">BFS назад по стрелкам</p>
+                    </div>
+                </section>
+
+                <!-- идея: идём не вперёд от старта, а назад от тупиков - по обратным рёбрам -->
+                <section>
+                    <h2>Идём назад</h2>
+<ul style="font-size: 0.85em; text-align: left;">
+    <li class="fragment">наверняка известны только тупики</li>
+    <li class="fragment">от них идём <mark>против стрелок</mark></li>
+    <li class="fragment">узнали цвет вершины - сообщаем всем, кто в неё ходит</li>
+    <li class="fragment">кто будет следующим - решает очередь, как в BFS</li>
+</ul>
+                </section>
+
+                <!-- обратный граф: картинка исходного и обратного графа рядом -->
+                <section>
+                    <h2>Обратный граф</h2>
+<div style="display: flex; align-items: center; justify-content: center; gap: 0.6em;">
+<div class="fragment"><p style="font-size: 0.5em; margin: 0;">исходный: куда можно пойти</p>
+<svg width="465" height="255" viewBox="0 0 620 340">
+<defs>
+<marker id="g37_5n" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#667" /></marker>
+<marker id="g37_5h" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#f7a" /></marker>
+<marker id="g37_5o" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#fa5" /></marker>
+<marker id="g37_5b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#6af" /></marker>
+<marker id="g37_5g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#556" /></marker>
+</defs>
+<line x1="220.0" y1="307.0" x2="339.0" y2="307.0" stroke="#667" stroke-width="2" marker-end="url(#g37_5n)" />
+<line x1="340.0" y1="293.0" x2="221.0" y2="293.0" stroke="#667" stroke-width="2" marker-end="url(#g37_5n)" />
+<line x1="212.5" y1="284.4" x2="306.9" y2="166.4" stroke="#667" stroke-width="2" marker-end="url(#g37_5n)" />
+<line x1="380.0" y1="300.0" x2="499.0" y2="300.0" stroke="#667" stroke-width="2" marker-end="url(#g37_5n)" />
+<line x1="504.0" y1="288.0" x2="336.8" y2="162.6" stroke="#667" stroke-width="2" marker-end="url(#g37_5n)" />
+<line x1="340.0" y1="150.0" x2="529.0" y2="150.0" stroke="#667" stroke-width="2" marker-end="url(#g37_5n)" />
+<line x1="63.0" y1="80.0" x2="63.0" y2="219.0" stroke="#667" stroke-width="2" marker-end="url(#g37_5n)" />
+<line x1="77.0" y1="220.0" x2="77.0" y2="81.0" stroke="#667" stroke-width="2" marker-end="url(#g37_5n)" />
+<line x1="88.8" y1="66.8" x2="300.2" y2="142.9" stroke="#667" stroke-width="2" marker-end="url(#g37_5n)" />
+<line x1="88.8" y1="233.2" x2="300.2" y2="157.1" stroke="#667" stroke-width="2" marker-end="url(#g37_5n)" />
+<circle cx="70" cy="60" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="70" y="66" fill="#dde" font-size="17" text-anchor="middle">G</text>
+<circle cx="70" cy="240" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="70" y="246" fill="#dde" font-size="17" text-anchor="middle">H</text>
+<circle cx="320" cy="150" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="320" y="156" fill="#dde" font-size="17" text-anchor="middle">C</text>
+<circle cx="550" cy="150" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="550" y="156" fill="#dde" font-size="17" text-anchor="middle">T</text>
+<circle cx="200" cy="300" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="200" y="306" fill="#dde" font-size="17" text-anchor="middle">A</text>
+<circle cx="360" cy="300" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="360" y="306" fill="#dde" font-size="17" text-anchor="middle">B</text>
+<circle cx="520" cy="300" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="520" y="306" fill="#dde" font-size="17" text-anchor="middle">D</text>
+
+</svg>
+</div>
+<div class="fragment"><p style="font-size: 0.5em; margin: 0;">обратный: кто ходит сюда</p>
+<svg width="465" height="255" viewBox="0 0 620 340">
+<defs>
+<marker id="g37_6n" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#667" /></marker>
+<marker id="g37_6h" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#f7a" /></marker>
+<marker id="g37_6o" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#fa5" /></marker>
+<marker id="g37_6b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#6af" /></marker>
+<marker id="g37_6g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#556" /></marker>
+</defs>
+<line x1="340.0" y1="293.0" x2="221.0" y2="293.0" stroke="#667" stroke-width="2" marker-end="url(#g37_6n)" />
+<line x1="220.0" y1="307.0" x2="339.0" y2="307.0" stroke="#667" stroke-width="2" marker-end="url(#g37_6n)" />
+<line x1="307.5" y1="165.6" x2="213.1" y2="283.6" stroke="#667" stroke-width="2" marker-end="url(#g37_6n)" />
+<line x1="500.0" y1="300.0" x2="381.0" y2="300.0" stroke="#667" stroke-width="2" marker-end="url(#g37_6n)" />
+<line x1="336.0" y1="162.0" x2="503.2" y2="287.4" stroke="#667" stroke-width="2" marker-end="url(#g37_6n)" />
+<line x1="530.0" y1="150.0" x2="341.0" y2="150.0" stroke="#667" stroke-width="2" marker-end="url(#g37_6n)" />
+<line x1="77.0" y1="220.0" x2="77.0" y2="81.0" stroke="#667" stroke-width="2" marker-end="url(#g37_6n)" />
+<line x1="63.0" y1="80.0" x2="63.0" y2="219.0" stroke="#667" stroke-width="2" marker-end="url(#g37_6n)" />
+<line x1="301.2" y1="143.2" x2="89.8" y2="67.1" stroke="#667" stroke-width="2" marker-end="url(#g37_6n)" />
+<line x1="301.2" y1="156.8" x2="89.8" y2="232.9" stroke="#667" stroke-width="2" marker-end="url(#g37_6n)" />
+<circle cx="70" cy="60" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="70" y="66" fill="#dde" font-size="17" text-anchor="middle">G</text>
+<circle cx="70" cy="240" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="70" y="246" fill="#dde" font-size="17" text-anchor="middle">H</text>
+<circle cx="320" cy="150" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="320" y="156" fill="#dde" font-size="17" text-anchor="middle">C</text>
+<circle cx="550" cy="150" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="550" y="156" fill="#dde" font-size="17" text-anchor="middle">T</text>
+<circle cx="200" cy="300" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="200" y="306" fill="#dde" font-size="17" text-anchor="middle">A</text>
+<circle cx="360" cy="300" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="360" y="306" fill="#dde" font-size="17" text-anchor="middle">B</text>
+<circle cx="520" cy="300" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="520" y="306" fill="#dde" font-size="17" text-anchor="middle">D</text>
+
+</svg>
+</div>
+</div>
+<div class="fragment opinion" style="margin-top: 0.6em;">
+    Обратный граф строим один раз: для каждой стрелки <code>u -&gt; v</code> записываем <code>u</code> в список <code>v</code>
+</div>
+                </section>
+
+                <!-- шаг 1: все тупики - L, кладём в очередь -->
+                <section>
+                    <h2>Шаг 1</h2>
+<div style="display: flex; align-items: center; justify-content: center; gap: 1.2em;">
+<div style="flex: none;">
+<svg width="620" height="340" viewBox="0 0 620 340">
+<defs>
+<marker id="g37_7n" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#667" /></marker>
+<marker id="g37_7h" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#f7a" /></marker>
+<marker id="g37_7o" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#fa5" /></marker>
+<marker id="g37_7b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#6af" /></marker>
+<marker id="g37_7g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#556" /></marker>
+</defs>
+<line x1="220.0" y1="307.0" x2="339.0" y2="307.0" stroke="#667" stroke-width="2" marker-end="url(#g37_7n)" />
+<line x1="340.0" y1="293.0" x2="221.0" y2="293.0" stroke="#667" stroke-width="2" marker-end="url(#g37_7n)" />
+<line x1="212.5" y1="284.4" x2="306.9" y2="166.4" stroke="#667" stroke-width="2" marker-end="url(#g37_7n)" />
+<line x1="380.0" y1="300.0" x2="499.0" y2="300.0" stroke="#667" stroke-width="2" marker-end="url(#g37_7n)" />
+<line x1="504.0" y1="288.0" x2="336.8" y2="162.6" stroke="#667" stroke-width="2" marker-end="url(#g37_7n)" />
+<line x1="340.0" y1="150.0" x2="529.0" y2="150.0" stroke="#667" stroke-width="2" marker-end="url(#g37_7n)" />
+<line x1="63.0" y1="80.0" x2="63.0" y2="219.0" stroke="#667" stroke-width="2" marker-end="url(#g37_7n)" />
+<line x1="77.0" y1="220.0" x2="77.0" y2="81.0" stroke="#667" stroke-width="2" marker-end="url(#g37_7n)" />
+<line x1="88.8" y1="66.8" x2="300.2" y2="142.9" stroke="#667" stroke-width="2" marker-end="url(#g37_7n)" />
+<line x1="88.8" y1="233.2" x2="300.2" y2="157.1" stroke="#667" stroke-width="2" marker-end="url(#g37_7n)" />
+<circle cx="70" cy="60" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="70" y="66" fill="#dde" font-size="17" text-anchor="middle">G</text>
+<circle cx="70" cy="240" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="70" y="246" fill="#dde" font-size="17" text-anchor="middle">H</text>
+<circle cx="320" cy="150" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="320" y="156" fill="#dde" font-size="17" text-anchor="middle">C</text>
+<circle cx="550" cy="150" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="550" y="156" fill="#dde" font-size="17" text-anchor="middle">T</text>
+<circle cx="200" cy="300" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="200" y="306" fill="#dde" font-size="17" text-anchor="middle">A</text>
+<circle cx="360" cy="300" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="360" y="306" fill="#dde" font-size="17" text-anchor="middle">B</text>
+<circle cx="520" cy="300" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="520" y="306" fill="#dde" font-size="17" text-anchor="middle">D</text>
+<g class="fragment" data-fragment-index="1">
+<circle cx="550" cy="150" r="20" fill="#3a1f24" stroke="#f66" stroke-width="3" />
+<text x="550" y="156" fill="#dde" font-size="17" text-anchor="middle">T</text>
+<text x="550" y="121" fill="#f66" font-size="17" font-weight="bold" text-anchor="middle">L</text>
+</g>
+
+</svg>
+</div>
+<ul style="font-size: 0.75em; text-align: left;">
+    <li class="fragment" data-fragment-index="1">тупики сразу <span style="color: #f66; font-weight: bold;">L</span></li>
+    <li class="fragment" data-fragment-index="2">кладём их в очередь</li>
+    <li class="fragment" data-fragment-index="3">очередь: <code>T</code></li>
+</ul>
+</div>
+                </section>
+
+                <!-- шаг 2: достали L-вершину - все, кто в неё ходит, становятся W -->
+                <section>
+                    <h2>Шаг 2: достали L</h2>
+<div style="display: flex; align-items: center; justify-content: center; gap: 1.2em;">
+<div style="flex: none;">
+<svg width="460" height="320" viewBox="0 0 460 320">
+<defs>
+<marker id="g37_8n" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#667" /></marker>
+<marker id="g37_8h" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#f7a" /></marker>
+<marker id="g37_8o" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#fa5" /></marker>
+<marker id="g37_8b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#6af" /></marker>
+<marker id="g37_8g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#556" /></marker>
+</defs>
+<line x1="128.5" y1="57.5" x2="360.6" y2="152.1" stroke="#667" stroke-width="2" marker-end="url(#g37_8n)" />
+<line x1="130.0" y1="160.0" x2="359.0" y2="160.0" stroke="#667" stroke-width="2" marker-end="url(#g37_8n)" />
+<line x1="128.5" y1="262.5" x2="360.6" y2="167.9" stroke="#667" stroke-width="2" marker-end="url(#g37_8n)" />
+<circle cx="380" cy="160" r="20" fill="#3a1f24" stroke="#f66" stroke-width="3" />
+<text x="380" y="166" fill="#dde" font-size="17" text-anchor="middle">v</text>
+<text x="380" y="131" fill="#f66" font-size="17" font-weight="bold" text-anchor="middle">L</text>
+<circle cx="110" cy="50" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="110" y="56" fill="#dde" font-size="17" text-anchor="middle">x</text>
+<circle cx="110" cy="160" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="110" y="166" fill="#dde" font-size="17" text-anchor="middle">y</text>
+<circle cx="110" cy="270" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="110" y="276" fill="#dde" font-size="17" text-anchor="middle">z</text>
+<g class="fragment" data-fragment-index="1">
+<circle cx="110" cy="50" r="20" fill="#1f3a26" stroke="#7d7" stroke-width="3" />
+<text x="110" y="56" fill="#dde" font-size="17" text-anchor="middle">x</text>
+<text x="110" y="21" fill="#7d7" font-size="17" font-weight="bold" text-anchor="middle">W</text>
+</g>
+<g class="fragment" data-fragment-index="1">
+<circle cx="110" cy="160" r="20" fill="#1f3a26" stroke="#7d7" stroke-width="3" />
+<text x="110" y="166" fill="#dde" font-size="17" text-anchor="middle">y</text>
+<text x="110" y="131" fill="#7d7" font-size="17" font-weight="bold" text-anchor="middle">W</text>
+</g>
+<g class="fragment" data-fragment-index="1">
+<circle cx="110" cy="270" r="20" fill="#1f3a26" stroke="#7d7" stroke-width="3" />
+<text x="110" y="276" fill="#dde" font-size="17" text-anchor="middle">z</text>
+<text x="110" y="241" fill="#7d7" font-size="17" font-weight="bold" text-anchor="middle">W</text>
+</g>
+
+</svg>
+</div>
+<ul style="font-size: 0.7em; text-align: left;">
+    <li class="fragment" data-fragment-index="1">каждый, кто ходит в <code>v</code>, отдаёт сопернику проигрыш - <span style="color: #7d7; font-weight: bold;">W</span></li>
+    <li class="fragment" data-fragment-index="2">новые W - в очередь</li>
+    <li class="fragment" data-fragment-index="3">кто уже раскрашен - не трогаем</li>
+</ul>
+</div>
+                </section>
+
+                <!-- шаг 3: достали W-вершину - у каждого, кто в неё ходит, уменьшаем счётчик "ещё не проигрышных ходов"; счётчик 0 - вершина L -->
+                <section>
+                    <h2>Шаг 3: достали W</h2>
+<div style="display: flex; align-items: center; justify-content: center; gap: 1.2em;">
+<div style="flex: none;">
+<svg width="460" height="320" viewBox="0 0 460 320">
+<defs>
+<marker id="g37_9n" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#667" /></marker>
+<marker id="g37_9h" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#f7a" /></marker>
+<marker id="g37_9o" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#fa5" /></marker>
+<marker id="g37_9b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#6af" /></marker>
+<marker id="g37_9g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#556" /></marker>
+</defs>
+<line x1="128.5" y1="57.5" x2="360.6" y2="152.1" stroke="#667" stroke-width="2" marker-end="url(#g37_9n)" />
+<line x1="130.0" y1="160.0" x2="359.0" y2="160.0" stroke="#667" stroke-width="2" marker-end="url(#g37_9n)" />
+<line x1="128.5" y1="262.5" x2="360.6" y2="167.9" stroke="#667" stroke-width="2" marker-end="url(#g37_9n)" />
+<circle cx="380" cy="160" r="20" fill="#1f3a26" stroke="#7d7" stroke-width="3" />
+<text x="380" y="166" fill="#dde" font-size="17" text-anchor="middle">v</text>
+<text x="380" y="131" fill="#7d7" font-size="17" font-weight="bold" text-anchor="middle">W</text>
+<circle cx="110" cy="50" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="110" y="56" fill="#dde" font-size="17" text-anchor="middle">x</text>
+<circle cx="110" cy="160" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="110" y="166" fill="#dde" font-size="17" text-anchor="middle">y</text>
+<circle cx="110" cy="270" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="110" y="276" fill="#dde" font-size="17" text-anchor="middle">z</text>
+<g class="fragment" data-fragment-index="2">
+<circle cx="110" cy="160" r="20" fill="#3a1f24" stroke="#f66" stroke-width="3" />
+<text x="110" y="166" fill="#dde" font-size="17" text-anchor="middle">y</text>
+<text x="110" y="131" fill="#f66" font-size="17" font-weight="bold" text-anchor="middle">L</text>
+</g>
+<circle cx="134" cy="72" r="11" fill="#2a2a3a" stroke="#fd6" stroke-width="1.5" />
+<text x="134" y="77" fill="#fd6" font-size="14" text-anchor="middle">2</text>
+<circle cx="134" cy="182" r="11" fill="#2a2a3a" stroke="#fd6" stroke-width="1.5" />
+<text x="134" y="187" fill="#fd6" font-size="14" text-anchor="middle">1</text>
+<circle cx="134" cy="292" r="11" fill="#2a2a3a" stroke="#fd6" stroke-width="1.5" />
+<text x="134" y="297" fill="#fd6" font-size="14" text-anchor="middle">3</text>
+<g class="fragment" data-fragment-index="1">
+<circle cx="134" cy="72" r="11" fill="#2a2a3a" stroke="#fd6" stroke-width="1.5" />
+<text x="134" y="77" fill="#fd6" font-size="14" text-anchor="middle">1</text>
+</g>
+<g class="fragment" data-fragment-index="1">
+<circle cx="134" cy="182" r="11" fill="#2a2a3a" stroke="#fd6" stroke-width="1.5" />
+<text x="134" y="187" fill="#fd6" font-size="14" text-anchor="middle">0</text>
+</g>
+<g class="fragment" data-fragment-index="1">
+<circle cx="134" cy="292" r="11" fill="#2a2a3a" stroke="#fd6" stroke-width="1.5" />
+<text x="134" y="297" fill="#fd6" font-size="14" text-anchor="middle">2</text>
+</g>
+
+</svg>
+</div>
+<ul style="font-size: 0.68em; text-align: left;">
+    <li class="fragment" data-fragment-index="1">у каждого, кто ходит в <code>v</code>, одним плохим ходом больше: счётчик <mark>минус 1</mark></li>
+    <li class="fragment" data-fragment-index="2">счётчик стал 0 - все ходы в W: <span style="color: #f66; font-weight: bold;">L</span>, в очередь</li>
+    <li class="fragment" data-fragment-index="3">не 0 - пока ничего не знаем</li>
+</ul>
+</div>
+                </section>
+
+                <!-- счётчик = число исходящих рёбер: зачем он нужен, картинка вершины с тремя стрелками -->
+                <section>
+                    <h2>Счётчик</h2>
+<div style="display: flex; align-items: center; justify-content: center; gap: 1.2em;">
+<div style="flex: none;">
+<svg width="460" height="320" viewBox="0 0 460 320">
+<defs>
+<marker id="g37_10n" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#667" /></marker>
+<marker id="g37_10h" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#f7a" /></marker>
+<marker id="g37_10o" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#fa5" /></marker>
+<marker id="g37_10b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#6af" /></marker>
+<marker id="g37_10g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#556" /></marker>
+</defs>
+<line x1="108.6" y1="152.7" x2="350.5" y2="57.7" stroke="#667" stroke-width="2" marker-end="url(#g37_10n)" />
+<line x1="110.0" y1="160.0" x2="349.0" y2="160.0" stroke="#667" stroke-width="2" marker-end="url(#g37_10n)" />
+<line x1="108.6" y1="167.3" x2="350.5" y2="262.3" stroke="#667" stroke-width="2" marker-end="url(#g37_10n)" />
+<circle cx="90" cy="160" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="90" y="166" fill="#dde" font-size="17" text-anchor="middle">u</text>
+<circle cx="370" cy="50" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="370" y="56" fill="#dde" font-size="17" text-anchor="middle">a</text>
+<circle cx="370" cy="160" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="370" y="166" fill="#dde" font-size="17" text-anchor="middle">b</text>
+<circle cx="370" cy="270" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="370" y="276" fill="#dde" font-size="17" text-anchor="middle">c</text>
+<g class="fragment" data-fragment-index="2">
+<circle cx="370" cy="50" r="20" fill="#1f3a26" stroke="#7d7" stroke-width="3" />
+<text x="370" y="56" fill="#dde" font-size="17" text-anchor="middle">a</text>
+<text x="370" y="21" fill="#7d7" font-size="17" font-weight="bold" text-anchor="middle">W</text>
+</g>
+<g class="fragment" data-fragment-index="3">
+<circle cx="370" cy="160" r="20" fill="#1f3a26" stroke="#7d7" stroke-width="3" />
+<text x="370" y="166" fill="#dde" font-size="17" text-anchor="middle">b</text>
+<text x="370" y="131" fill="#7d7" font-size="17" font-weight="bold" text-anchor="middle">W</text>
+</g>
+<g class="fragment" data-fragment-index="4">
+<circle cx="370" cy="270" r="20" fill="#1f3a26" stroke="#7d7" stroke-width="3" />
+<text x="370" y="276" fill="#dde" font-size="17" text-anchor="middle">c</text>
+<text x="370" y="241" fill="#7d7" font-size="17" font-weight="bold" text-anchor="middle">W</text>
+</g>
+<circle cx="114" cy="182" r="11" fill="#2a2a3a" stroke="#fd6" stroke-width="1.5" />
+<text x="114" y="187" fill="#fd6" font-size="14" text-anchor="middle">3</text>
+<g class="fragment" data-fragment-index="2">
+<circle cx="114" cy="182" r="11" fill="#2a2a3a" stroke="#fd6" stroke-width="1.5" />
+<text x="114" y="187" fill="#fd6" font-size="14" text-anchor="middle">2</text>
+</g>
+<g class="fragment" data-fragment-index="3">
+<circle cx="114" cy="182" r="11" fill="#2a2a3a" stroke="#fd6" stroke-width="1.5" />
+<text x="114" y="187" fill="#fd6" font-size="14" text-anchor="middle">1</text>
+</g>
+<g class="fragment" data-fragment-index="4">
+<circle cx="114" cy="182" r="11" fill="#2a2a3a" stroke="#fd6" stroke-width="1.5" />
+<text x="114" y="187" fill="#fd6" font-size="14" text-anchor="middle">0</text>
+</g>
+
+</svg>
+</div>
+<ul style="font-size: 0.68em; text-align: left;">
+    <li class="fragment" data-fragment-index="1">вначале счётчик = сколько стрелок выходит</li>
+    <li class="fragment" data-fragment-index="2">для W хватает <mark>одного</mark> хода в L</li>
+    <li class="fragment" data-fragment-index="3">для L нужно, чтобы <mark>все</mark> ходы вели в W</li>
+    <li class="fragment" data-fragment-index="4">счётчик дошёл до 0 - <span style="color: #f66; font-weight: bold;">L</span></li>
+</ul>
+</div>
+                </section>
+
+                <!-- трассировка на графе с циклом: очередь, счётчики, раскраска по кликам (несколько слайдов) -->
+                <section>
+                    <h2>Трассировка: начало</h2>
+<div style="display: flex; align-items: center; justify-content: center; gap: 1.2em;">
+<div style="flex: none;">
+<svg width="620" height="340" viewBox="0 0 620 340">
+<defs>
+<marker id="g37_11n" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#667" /></marker>
+<marker id="g37_11h" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#f7a" /></marker>
+<marker id="g37_11o" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#fa5" /></marker>
+<marker id="g37_11b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#6af" /></marker>
+<marker id="g37_11g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#556" /></marker>
+</defs>
+<line x1="220.0" y1="307.0" x2="339.0" y2="307.0" stroke="#667" stroke-width="2" marker-end="url(#g37_11n)" />
+<line x1="340.0" y1="293.0" x2="221.0" y2="293.0" stroke="#667" stroke-width="2" marker-end="url(#g37_11n)" />
+<line x1="212.5" y1="284.4" x2="306.9" y2="166.4" stroke="#667" stroke-width="2" marker-end="url(#g37_11n)" />
+<line x1="380.0" y1="300.0" x2="499.0" y2="300.0" stroke="#667" stroke-width="2" marker-end="url(#g37_11n)" />
+<line x1="504.0" y1="288.0" x2="336.8" y2="162.6" stroke="#667" stroke-width="2" marker-end="url(#g37_11n)" />
+<line x1="340.0" y1="150.0" x2="529.0" y2="150.0" stroke="#667" stroke-width="2" marker-end="url(#g37_11n)" />
+<line x1="63.0" y1="80.0" x2="63.0" y2="219.0" stroke="#667" stroke-width="2" marker-end="url(#g37_11n)" />
+<line x1="77.0" y1="220.0" x2="77.0" y2="81.0" stroke="#667" stroke-width="2" marker-end="url(#g37_11n)" />
+<line x1="88.8" y1="66.8" x2="300.2" y2="142.9" stroke="#667" stroke-width="2" marker-end="url(#g37_11n)" />
+<line x1="88.8" y1="233.2" x2="300.2" y2="157.1" stroke="#667" stroke-width="2" marker-end="url(#g37_11n)" />
+<circle cx="70" cy="60" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="70" y="66" fill="#dde" font-size="17" text-anchor="middle">G</text>
+<circle cx="70" cy="240" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="70" y="246" fill="#dde" font-size="17" text-anchor="middle">H</text>
+<circle cx="320" cy="150" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="320" y="156" fill="#dde" font-size="17" text-anchor="middle">C</text>
+<circle cx="550" cy="150" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="550" y="156" fill="#dde" font-size="17" text-anchor="middle">T</text>
+<circle cx="200" cy="300" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="200" y="306" fill="#dde" font-size="17" text-anchor="middle">A</text>
+<circle cx="360" cy="300" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="360" y="306" fill="#dde" font-size="17" text-anchor="middle">B</text>
+<circle cx="520" cy="300" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="520" y="306" fill="#dde" font-size="17" text-anchor="middle">D</text>
+<g class="fragment" data-fragment-index="1">
+<circle cx="550" cy="150" r="20" fill="#3a1f24" stroke="#f66" stroke-width="3" />
+<text x="550" y="156" fill="#dde" font-size="17" text-anchor="middle">T</text>
+<text x="550" y="121" fill="#f66" font-size="17" font-weight="bold" text-anchor="middle">L</text>
+</g>
+<g class="fragment" data-fragment-index="2">
+<circle cx="320" cy="150" r="20" fill="#1f3a26" stroke="#7d7" stroke-width="3" />
+<text x="320" y="156" fill="#dde" font-size="17" text-anchor="middle">C</text>
+<text x="320" y="121" fill="#7d7" font-size="17" font-weight="bold" text-anchor="middle">W</text>
+</g>
+<circle cx="94" cy="82" r="11" fill="#2a2a3a" stroke="#fd6" stroke-width="1.5" />
+<text x="94" y="87" fill="#fd6" font-size="14" text-anchor="middle">2</text>
+<circle cx="94" cy="262" r="11" fill="#2a2a3a" stroke="#fd6" stroke-width="1.5" />
+<text x="94" y="267" fill="#fd6" font-size="14" text-anchor="middle">2</text>
+<circle cx="344" cy="172" r="11" fill="#2a2a3a" stroke="#fd6" stroke-width="1.5" />
+<text x="344" y="177" fill="#fd6" font-size="14" text-anchor="middle">1</text>
+<circle cx="574" cy="172" r="11" fill="#2a2a3a" stroke="#fd6" stroke-width="1.5" />
+<text x="574" y="177" fill="#fd6" font-size="14" text-anchor="middle">0</text>
+<circle cx="224" cy="322" r="11" fill="#2a2a3a" stroke="#fd6" stroke-width="1.5" />
+<text x="224" y="327" fill="#fd6" font-size="14" text-anchor="middle">2</text>
+<circle cx="384" cy="322" r="11" fill="#2a2a3a" stroke="#fd6" stroke-width="1.5" />
+<text x="384" y="327" fill="#fd6" font-size="14" text-anchor="middle">2</text>
+<circle cx="544" cy="322" r="11" fill="#2a2a3a" stroke="#fd6" stroke-width="1.5" />
+<text x="544" y="327" fill="#fd6" font-size="14" text-anchor="middle">1</text>
+
+</svg>
+</div>
+<ul style="font-size: 0.6em; text-align: left;">
+    <li class="fragment" data-fragment-index="0">жёлтые числа - сколько ходов из вершины</li>
+    <li class="fragment" data-fragment-index="1"><code>T</code> - тупик: <span style="color: #f66; font-weight: bold;">L</span>. Очередь: <code>T</code></li>
+    <li class="fragment" data-fragment-index="2">достали <code>T</code>: в неё ходит <code>C</code> - <span style="color: #7d7; font-weight: bold;">W</span>. Очередь: <code>C</code></li>
+</ul>
+</div>
+                </section>
+
+                <!-- трассировка (продолжение): достали C -->
+                <section>
+                    <h2>Достали C</h2>
+<div style="display: flex; align-items: center; justify-content: center; gap: 1.2em;">
+<div style="flex: none;">
+<svg width="620" height="340" viewBox="0 0 620 340">
+<defs>
+<marker id="g37_12n" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#667" /></marker>
+<marker id="g37_12h" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#f7a" /></marker>
+<marker id="g37_12o" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#fa5" /></marker>
+<marker id="g37_12b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#6af" /></marker>
+<marker id="g37_12g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#556" /></marker>
+</defs>
+<line x1="220.0" y1="307.0" x2="339.0" y2="307.0" stroke="#667" stroke-width="2" marker-end="url(#g37_12n)" />
+<line x1="340.0" y1="293.0" x2="221.0" y2="293.0" stroke="#667" stroke-width="2" marker-end="url(#g37_12n)" />
+<line x1="212.5" y1="284.4" x2="306.9" y2="166.4" stroke="#667" stroke-width="2" marker-end="url(#g37_12n)" />
+<line x1="380.0" y1="300.0" x2="499.0" y2="300.0" stroke="#667" stroke-width="2" marker-end="url(#g37_12n)" />
+<line x1="504.0" y1="288.0" x2="336.8" y2="162.6" stroke="#667" stroke-width="2" marker-end="url(#g37_12n)" />
+<line x1="340.0" y1="150.0" x2="529.0" y2="150.0" stroke="#667" stroke-width="2" marker-end="url(#g37_12n)" />
+<line x1="63.0" y1="80.0" x2="63.0" y2="219.0" stroke="#667" stroke-width="2" marker-end="url(#g37_12n)" />
+<line x1="77.0" y1="220.0" x2="77.0" y2="81.0" stroke="#667" stroke-width="2" marker-end="url(#g37_12n)" />
+<line x1="88.8" y1="66.8" x2="300.2" y2="142.9" stroke="#667" stroke-width="2" marker-end="url(#g37_12n)" />
+<line x1="88.8" y1="233.2" x2="300.2" y2="157.1" stroke="#667" stroke-width="2" marker-end="url(#g37_12n)" />
+<circle cx="70" cy="60" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="70" y="66" fill="#dde" font-size="17" text-anchor="middle">G</text>
+<circle cx="70" cy="240" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="70" y="246" fill="#dde" font-size="17" text-anchor="middle">H</text>
+<circle cx="320" cy="150" r="20" fill="#1f3a26" stroke="#7d7" stroke-width="3" />
+<text x="320" y="156" fill="#dde" font-size="17" text-anchor="middle">C</text>
+<text x="320" y="121" fill="#7d7" font-size="17" font-weight="bold" text-anchor="middle">W</text>
+<circle cx="550" cy="150" r="20" fill="#3a1f24" stroke="#f66" stroke-width="3" />
+<text x="550" y="156" fill="#dde" font-size="17" text-anchor="middle">T</text>
+<text x="550" y="121" fill="#f66" font-size="17" font-weight="bold" text-anchor="middle">L</text>
+<circle cx="200" cy="300" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="200" y="306" fill="#dde" font-size="17" text-anchor="middle">A</text>
+<circle cx="360" cy="300" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="360" y="306" fill="#dde" font-size="17" text-anchor="middle">B</text>
+<circle cx="520" cy="300" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="520" y="306" fill="#dde" font-size="17" text-anchor="middle">D</text>
+<g class="fragment" data-fragment-index="2">
+<circle cx="520" cy="300" r="20" fill="#3a1f24" stroke="#f66" stroke-width="3" />
+<text x="520" y="306" fill="#dde" font-size="17" text-anchor="middle">D</text>
+<text x="520" y="271" fill="#f66" font-size="17" font-weight="bold" text-anchor="middle">L</text>
+</g>
+<circle cx="94" cy="82" r="11" fill="#2a2a3a" stroke="#fd6" stroke-width="1.5" />
+<text x="94" y="87" fill="#fd6" font-size="14" text-anchor="middle">2</text>
+<circle cx="94" cy="262" r="11" fill="#2a2a3a" stroke="#fd6" stroke-width="1.5" />
+<text x="94" y="267" fill="#fd6" font-size="14" text-anchor="middle">2</text>
+<circle cx="224" cy="322" r="11" fill="#2a2a3a" stroke="#fd6" stroke-width="1.5" />
+<text x="224" y="327" fill="#fd6" font-size="14" text-anchor="middle">2</text>
+<circle cx="384" cy="322" r="11" fill="#2a2a3a" stroke="#fd6" stroke-width="1.5" />
+<text x="384" y="327" fill="#fd6" font-size="14" text-anchor="middle">2</text>
+<circle cx="544" cy="322" r="11" fill="#2a2a3a" stroke="#fd6" stroke-width="1.5" />
+<text x="544" y="327" fill="#fd6" font-size="14" text-anchor="middle">1</text>
+<g class="fragment" data-fragment-index="1">
+<circle cx="224" cy="322" r="11" fill="#2a2a3a" stroke="#fd6" stroke-width="1.5" />
+<text x="224" y="327" fill="#fd6" font-size="14" text-anchor="middle">1</text>
+</g>
+<g class="fragment" data-fragment-index="1">
+<circle cx="94" cy="82" r="11" fill="#2a2a3a" stroke="#fd6" stroke-width="1.5" />
+<text x="94" y="87" fill="#fd6" font-size="14" text-anchor="middle">1</text>
+</g>
+<g class="fragment" data-fragment-index="1">
+<circle cx="94" cy="262" r="11" fill="#2a2a3a" stroke="#fd6" stroke-width="1.5" />
+<text x="94" y="267" fill="#fd6" font-size="14" text-anchor="middle">1</text>
+</g>
+<g class="fragment" data-fragment-index="1">
+<circle cx="544" cy="322" r="11" fill="#2a2a3a" stroke="#fd6" stroke-width="1.5" />
+<text x="544" y="327" fill="#fd6" font-size="14" text-anchor="middle">0</text>
+</g>
+
+</svg>
+</div>
+<ul style="font-size: 0.6em; text-align: left;">
+    <li class="fragment" data-fragment-index="1"><code>C</code> - W. В <code>C</code> ходят <code>A</code>, <code>D</code>, <code>G</code>, <code>H</code>: всем минус 1</li>
+    <li class="fragment" data-fragment-index="2">у <code>D</code> стало 0: <span style="color: #f66; font-weight: bold;">L</span>. Очередь: <code>D</code></li>
+    <li class="fragment" data-fragment-index="3">у <code>A</code>, <code>G</code>, <code>H</code> ещё есть непроверенные ходы</li>
+</ul>
+</div>
+                </section>
+
+                <!-- трассировка (окончание): достали D, B, A -->
+                <section>
+                    <h2>Достали D, B, A</h2>
+<div style="display: flex; align-items: center; justify-content: center; gap: 1.2em;">
+<div style="flex: none;">
+<svg width="620" height="340" viewBox="0 0 620 340">
+<defs>
+<marker id="g37_13n" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#667" /></marker>
+<marker id="g37_13h" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#f7a" /></marker>
+<marker id="g37_13o" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#fa5" /></marker>
+<marker id="g37_13b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#6af" /></marker>
+<marker id="g37_13g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#556" /></marker>
+</defs>
+<line x1="220.0" y1="307.0" x2="339.0" y2="307.0" stroke="#667" stroke-width="2" marker-end="url(#g37_13n)" />
+<line x1="340.0" y1="293.0" x2="221.0" y2="293.0" stroke="#667" stroke-width="2" marker-end="url(#g37_13n)" />
+<line x1="212.5" y1="284.4" x2="306.9" y2="166.4" stroke="#667" stroke-width="2" marker-end="url(#g37_13n)" />
+<line x1="380.0" y1="300.0" x2="499.0" y2="300.0" stroke="#667" stroke-width="2" marker-end="url(#g37_13n)" />
+<line x1="504.0" y1="288.0" x2="336.8" y2="162.6" stroke="#667" stroke-width="2" marker-end="url(#g37_13n)" />
+<line x1="340.0" y1="150.0" x2="529.0" y2="150.0" stroke="#667" stroke-width="2" marker-end="url(#g37_13n)" />
+<line x1="63.0" y1="80.0" x2="63.0" y2="219.0" stroke="#667" stroke-width="2" marker-end="url(#g37_13n)" />
+<line x1="77.0" y1="220.0" x2="77.0" y2="81.0" stroke="#667" stroke-width="2" marker-end="url(#g37_13n)" />
+<line x1="88.8" y1="66.8" x2="300.2" y2="142.9" stroke="#667" stroke-width="2" marker-end="url(#g37_13n)" />
+<line x1="88.8" y1="233.2" x2="300.2" y2="157.1" stroke="#667" stroke-width="2" marker-end="url(#g37_13n)" />
+<circle cx="70" cy="60" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="70" y="66" fill="#dde" font-size="17" text-anchor="middle">G</text>
+<circle cx="70" cy="240" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="70" y="246" fill="#dde" font-size="17" text-anchor="middle">H</text>
+<circle cx="320" cy="150" r="20" fill="#1f3a26" stroke="#7d7" stroke-width="3" />
+<text x="320" y="156" fill="#dde" font-size="17" text-anchor="middle">C</text>
+<text x="320" y="121" fill="#7d7" font-size="17" font-weight="bold" text-anchor="middle">W</text>
+<circle cx="550" cy="150" r="20" fill="#3a1f24" stroke="#f66" stroke-width="3" />
+<text x="550" y="156" fill="#dde" font-size="17" text-anchor="middle">T</text>
+<text x="550" y="121" fill="#f66" font-size="17" font-weight="bold" text-anchor="middle">L</text>
+<circle cx="200" cy="300" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="200" y="306" fill="#dde" font-size="17" text-anchor="middle">A</text>
+<circle cx="360" cy="300" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="360" y="306" fill="#dde" font-size="17" text-anchor="middle">B</text>
+<circle cx="520" cy="300" r="20" fill="#3a1f24" stroke="#f66" stroke-width="3" />
+<text x="520" y="306" fill="#dde" font-size="17" text-anchor="middle">D</text>
+<text x="520" y="271" fill="#f66" font-size="17" font-weight="bold" text-anchor="middle">L</text>
+<g class="fragment" data-fragment-index="1">
+<circle cx="360" cy="300" r="20" fill="#1f3a26" stroke="#7d7" stroke-width="3" />
+<text x="360" y="306" fill="#dde" font-size="17" text-anchor="middle">B</text>
+<text x="360" y="271" fill="#7d7" font-size="17" font-weight="bold" text-anchor="middle">W</text>
+</g>
+<g class="fragment" data-fragment-index="2">
+<circle cx="200" cy="300" r="20" fill="#3a1f24" stroke="#f66" stroke-width="3" />
+<text x="200" y="306" fill="#dde" font-size="17" text-anchor="middle">A</text>
+<text x="200" y="271" fill="#f66" font-size="17" font-weight="bold" text-anchor="middle">L</text>
+</g>
+<circle cx="224" cy="322" r="11" fill="#2a2a3a" stroke="#fd6" stroke-width="1.5" />
+<text x="224" y="327" fill="#fd6" font-size="14" text-anchor="middle">1</text>
+<circle cx="94" cy="82" r="11" fill="#2a2a3a" stroke="#fd6" stroke-width="1.5" />
+<text x="94" y="87" fill="#fd6" font-size="14" text-anchor="middle">1</text>
+<circle cx="94" cy="262" r="11" fill="#2a2a3a" stroke="#fd6" stroke-width="1.5" />
+<text x="94" y="267" fill="#fd6" font-size="14" text-anchor="middle">1</text>
+<circle cx="384" cy="322" r="11" fill="#2a2a3a" stroke="#fd6" stroke-width="1.5" />
+<text x="384" y="327" fill="#fd6" font-size="14" text-anchor="middle">2</text>
+<g class="fragment" data-fragment-index="2">
+<circle cx="224" cy="322" r="11" fill="#2a2a3a" stroke="#fd6" stroke-width="1.5" />
+<text x="224" y="327" fill="#fd6" font-size="14" text-anchor="middle">0</text>
+</g>
+
+</svg>
+</div>
+<ul style="font-size: 0.6em; text-align: left;">
+    <li class="fragment" data-fragment-index="1">достали <code>D</code> (L): в неё ходит <code>B</code> - <span style="color: #7d7; font-weight: bold;">W</span></li>
+    <li class="fragment" data-fragment-index="2">достали <code>B</code> (W): у <code>A</code> счётчик 0 - <span style="color: #f66; font-weight: bold;">L</span></li>
+    <li class="fragment" data-fragment-index="3">достали <code>A</code>: в неё ходит <code>B</code>, он уже раскрашен</li>
+    <li class="fragment" data-fragment-index="4">очередь пуста</li>
+</ul>
+</div>
+                </section>
+
+                <!-- что осталось нераскрашенным - это ничьи D -->
+                <section>
+                    <h2>Ничьи</h2>
+<div style="display: flex; align-items: center; justify-content: center; gap: 1.2em;">
+<div style="flex: none;">
+<svg width="620" height="340" viewBox="0 0 620 340">
+<defs>
+<marker id="g37_14n" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#667" /></marker>
+<marker id="g37_14h" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#f7a" /></marker>
+<marker id="g37_14o" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#fa5" /></marker>
+<marker id="g37_14b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#6af" /></marker>
+<marker id="g37_14g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#556" /></marker>
+</defs>
+<line x1="220.0" y1="307.0" x2="339.0" y2="307.0" stroke="#667" stroke-width="2" marker-end="url(#g37_14n)" />
+<line x1="340.0" y1="293.0" x2="221.0" y2="293.0" stroke="#667" stroke-width="2" marker-end="url(#g37_14n)" />
+<line x1="212.5" y1="284.4" x2="306.9" y2="166.4" stroke="#667" stroke-width="2" marker-end="url(#g37_14n)" />
+<line x1="380.0" y1="300.0" x2="499.0" y2="300.0" stroke="#667" stroke-width="2" marker-end="url(#g37_14n)" />
+<line x1="504.0" y1="288.0" x2="336.8" y2="162.6" stroke="#667" stroke-width="2" marker-end="url(#g37_14n)" />
+<line x1="340.0" y1="150.0" x2="529.0" y2="150.0" stroke="#667" stroke-width="2" marker-end="url(#g37_14n)" />
+<line x1="63.0" y1="80.0" x2="63.0" y2="219.0" stroke="#667" stroke-width="2" marker-end="url(#g37_14n)" />
+<line x1="77.0" y1="220.0" x2="77.0" y2="81.0" stroke="#667" stroke-width="2" marker-end="url(#g37_14n)" />
+<line x1="88.8" y1="66.8" x2="300.2" y2="142.9" stroke="#667" stroke-width="2" marker-end="url(#g37_14n)" />
+<line x1="88.8" y1="233.2" x2="300.2" y2="157.1" stroke="#667" stroke-width="2" marker-end="url(#g37_14n)" />
+<circle cx="70" cy="60" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="70" y="66" fill="#dde" font-size="17" text-anchor="middle">G</text>
+<circle cx="70" cy="240" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="70" y="246" fill="#dde" font-size="17" text-anchor="middle">H</text>
+<circle cx="320" cy="150" r="20" fill="#1f3a26" stroke="#7d7" stroke-width="3" />
+<text x="320" y="156" fill="#dde" font-size="17" text-anchor="middle">C</text>
+<text x="320" y="121" fill="#7d7" font-size="17" font-weight="bold" text-anchor="middle">W</text>
+<circle cx="550" cy="150" r="20" fill="#3a1f24" stroke="#f66" stroke-width="3" />
+<text x="550" y="156" fill="#dde" font-size="17" text-anchor="middle">T</text>
+<text x="550" y="121" fill="#f66" font-size="17" font-weight="bold" text-anchor="middle">L</text>
+<circle cx="200" cy="300" r="20" fill="#3a1f24" stroke="#f66" stroke-width="3" />
+<text x="200" y="306" fill="#dde" font-size="17" text-anchor="middle">A</text>
+<text x="200" y="271" fill="#f66" font-size="17" font-weight="bold" text-anchor="middle">L</text>
+<circle cx="360" cy="300" r="20" fill="#1f3a26" stroke="#7d7" stroke-width="3" />
+<text x="360" y="306" fill="#dde" font-size="17" text-anchor="middle">B</text>
+<text x="360" y="271" fill="#7d7" font-size="17" font-weight="bold" text-anchor="middle">W</text>
+<circle cx="520" cy="300" r="20" fill="#3a1f24" stroke="#f66" stroke-width="3" />
+<text x="520" y="306" fill="#dde" font-size="17" text-anchor="middle">D</text>
+<text x="520" y="271" fill="#f66" font-size="17" font-weight="bold" text-anchor="middle">L</text>
+<g class="fragment" data-fragment-index="1">
+<circle cx="70" cy="60" r="20" fill="#38331c" stroke="#db5" stroke-width="3" />
+<text x="70" y="66" fill="#dde" font-size="17" text-anchor="middle">G</text>
+<text x="70" y="31" fill="#db5" font-size="17" font-weight="bold" text-anchor="middle">D</text>
+</g>
+<g class="fragment" data-fragment-index="1">
+<circle cx="70" cy="240" r="20" fill="#38331c" stroke="#db5" stroke-width="3" />
+<text x="70" y="246" fill="#dde" font-size="17" text-anchor="middle">H</text>
+<text x="70" y="211" fill="#db5" font-size="17" font-weight="bold" text-anchor="middle">D</text>
+</g>
+<circle cx="94" cy="82" r="11" fill="#2a2a3a" stroke="#fd6" stroke-width="1.5" />
+<text x="94" y="87" fill="#fd6" font-size="14" text-anchor="middle">1</text>
+<circle cx="94" cy="262" r="11" fill="#2a2a3a" stroke="#fd6" stroke-width="1.5" />
+<text x="94" y="267" fill="#fd6" font-size="14" text-anchor="middle">1</text>
+
+</svg>
+</div>
+<ul style="font-size: 0.65em; text-align: left;">
+    <li class="fragment" data-fragment-index="1"><code>G</code> и <code>H</code> так и не раскрасились - это <span style="color: #db5; font-weight: bold;">D</span></li>
+    <li class="fragment" data-fragment-index="2">у обоих счётчик застрял на 1: ход друг в друга так ничего и не узнал</li>
+</ul>
+</div>
+                </section>
+
+                <!-- почему это верно: из D нет хода в L, но есть ход в D - выгоднее крутиться по кругу -->
+                <section>
+                    <h2>Почему это ничья</h2>
+<ul style="font-size: 0.8em; text-align: left;">
+    <li class="fragment">из D нет хода в L: иначе вершина стала бы <span style="color: #7d7; font-weight: bold;">W</span></li>
+    <li class="fragment">из D есть ход в D: иначе все ходы вели бы в W и она стала бы <span style="color: #f66; font-weight: bold;">L</span></li>
+    <li class="fragment">ходить в W нельзя - соперник выиграет</li>
+    <li class="fragment">остаётся ходить из D в D - и так бесконечно</li>
+</ul>
+<div class="fragment opinion" style="margin-top: 0.6em;">
+    Кто стоит в D, не может выиграть, но и проиграть его не заставят
+</div>
+                </section>
+
+                <!-- сложность: каждое ребро смотрим один раз - O(V + E), как обычный BFS -->
+                <section>
+                    <h2>Сложность</h2>
+<ul style="font-size: 0.85em; text-align: left;">
+    <li class="fragment">каждая вершина попадает в очередь <mark>не больше одного раза</mark></li>
+    <li class="fragment">каждую стрелку смотрим один раз: когда достаём её конец</li>
+    <li class="fragment">итого O(V + E) - как обычный BFS</li>
+</ul>
+<div class="fragment opinion" style="margin-top: 0.6em;">
+    Работает для любого графа - и с циклами, и без
+</div>
+                </section>
+
+            </section>
+
+            <!-- ЧАСТЬ 3: поменялись правила - меняем граф, а не алгоритм -->
+            <section>
+
+                <section style="font-size: 70px; height: 100%; width: 100%">
+                    <div class="lesson-time">40</div>
+                    <div class="fragment">
+                        <h1 style="font-size: 1.3em;">Меняем правила</h1>
+                        <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">перестраиваем граф, алгоритм тот же</p>
+                    </div>
+                </section>
+
+                <!-- поддавки: выигрывает тот, кто НЕ может ходить. Вопрос: как не писать новый алгоритм? -->
+                <section>
+                    <h2>Поддавки</h2>
+<div style="display: flex; align-items: center; justify-content: center; gap: 1.2em;">
+<div class="fragment" style="flex: none;">
+<svg width="440" height="200" viewBox="0 0 440 200">
+<defs>
+<marker id="g37_15n" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#667" /></marker>
+<marker id="g37_15h" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#f7a" /></marker>
+<marker id="g37_15o" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#fa5" /></marker>
+<marker id="g37_15b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#6af" /></marker>
+<marker id="g37_15g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#556" /></marker>
+</defs>
+<line x1="80.0" y1="110.0" x2="199.0" y2="110.0" stroke="#667" stroke-width="2" marker-end="url(#g37_15n)" />
+<line x1="240.0" y1="110.0" x2="359.0" y2="110.0" stroke="#667" stroke-width="2" marker-end="url(#g37_15n)" />
+<circle cx="60" cy="110" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="60" y="116" fill="#dde" font-size="17" text-anchor="middle">P</text>
+<circle cx="220" cy="110" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="220" y="116" fill="#dde" font-size="17" text-anchor="middle">Q</text>
+<circle cx="380" cy="110" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="380" y="116" fill="#dde" font-size="17" text-anchor="middle">R</text>
+
+</svg>
+</div>
+<ul style="font-size: 0.68em; text-align: left;">
+    <li class="fragment">правила наоборот: кто <mark>не может</mark> ходить - выиграл</li>
+    <li class="fragment">в <code>R</code> ходов нет - кто там ходит, тот выиграл</li>
+    <li class="fragment">Вопрос: можно ли не писать новую раскраску, а взять старую?</li>
+</ul>
+</div>
+                </section>
+
+                <!-- ответ: к каждому тупику пристраиваем новую вершину-тупик - SVG графа до и после (fragment) -->
+                <section>
+                    <h2>Пристроим тупик</h2>
+<div class="fragment" data-fragment-index="1">
+<svg width="600" height="180" viewBox="0 0 600 180">
+<defs>
+<marker id="g37_16n" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#667" /></marker>
+<marker id="g37_16h" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#f7a" /></marker>
+<marker id="g37_16o" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#fa5" /></marker>
+<marker id="g37_16b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#6af" /></marker>
+<marker id="g37_16g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#556" /></marker>
+</defs>
+<line x1="80.0" y1="90.0" x2="199.0" y2="90.0" stroke="#667" stroke-width="2" marker-end="url(#g37_16n)" />
+<line x1="240.0" y1="90.0" x2="359.0" y2="90.0" stroke="#667" stroke-width="2" marker-end="url(#g37_16n)" />
+<line x1="400.0" y1="90.0" x2="519.0" y2="90.0" stroke="#f7a" stroke-width="4" marker-end="url(#g37_16h)" />
+<circle cx="60" cy="90" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="60" y="96" fill="#dde" font-size="17" text-anchor="middle">P</text>
+<circle cx="220" cy="90" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="220" y="96" fill="#dde" font-size="17" text-anchor="middle">Q</text>
+<circle cx="380" cy="90" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="380" y="96" fill="#dde" font-size="17" text-anchor="middle">R</text>
+<circle cx="540" cy="90" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="540" y="96" fill="#dde" font-size="17" text-anchor="middle">R*</text>
+<g class="fragment" data-fragment-index="2">
+<circle cx="540" cy="90" r="20" fill="#3a1f24" stroke="#f66" stroke-width="3" />
+<text x="540" y="96" fill="#dde" font-size="17" text-anchor="middle">R*</text>
+<text x="540" y="61" fill="#f66" font-size="17" font-weight="bold" text-anchor="middle">L</text>
+</g>
+<g class="fragment" data-fragment-index="3">
+<circle cx="380" cy="90" r="20" fill="#1f3a26" stroke="#7d7" stroke-width="3" />
+<text x="380" y="96" fill="#dde" font-size="17" text-anchor="middle">R</text>
+<text x="380" y="61" fill="#7d7" font-size="17" font-weight="bold" text-anchor="middle">W</text>
+</g>
+<g class="fragment" data-fragment-index="4">
+<circle cx="220" cy="90" r="20" fill="#3a1f24" stroke="#f66" stroke-width="3" />
+<text x="220" y="96" fill="#dde" font-size="17" text-anchor="middle">Q</text>
+<text x="220" y="61" fill="#f66" font-size="17" font-weight="bold" text-anchor="middle">L</text>
+</g>
+<g class="fragment" data-fragment-index="5">
+<circle cx="60" cy="90" r="20" fill="#1f3a26" stroke="#7d7" stroke-width="3" />
+<text x="60" y="96" fill="#dde" font-size="17" text-anchor="middle">P</text>
+<text x="60" y="61" fill="#7d7" font-size="17" font-weight="bold" text-anchor="middle">W</text>
+</g>
+
+</svg>
+</div>
+<ul style="font-size: 0.7em; text-align: left;">
+    <li class="fragment" data-fragment-index="1">к каждому тупику - стрелка в <mark>новый тупик</mark></li>
+    <li class="fragment" data-fragment-index="2">дальше обычные правила и обычная раскраска</li>
+</ul>
+                </section>
+
+                <!-- проверка: кто стоял в старом тупике, теперь обязан сходить в новый, и без хода остаётся соперник -->
+                <section>
+                    <h2>Проверка</h2>
+<ul style="font-size: 0.8em; text-align: left;">
+    <li class="fragment">в поддавках из <code>R</code> ходящий выиграл - в новом графе <code>R</code> тоже <span style="color: #7d7; font-weight: bold;">W</span></li>
+    <li class="fragment">ему приходится сходить в <code>R*</code> - и соперник остаётся без хода</li>
+    <li class="fragment">по обычным правилам <code>P</code> была L, в поддавках стала W</li>
+</ul>
+<div class="fragment opinion" style="margin-top: 0.6em;">
+    Правила поменяли - а раскраску взяли ту же самую
+</div>
+                </section>
+
+                <!-- ход на два ребра вперёд: строим новый граф, где ребро = путь из двух рёбер старого (SVG) -->
+                <section>
+                    <h2>Ход на два ребра</h2>
+<div style="display: flex; align-items: center; justify-content: center; gap: 0.6em;">
+<div class="fragment"><p style="font-size: 0.5em; margin: 0;">старый граф</p>
+<svg width="410" height="216" viewBox="0 0 570 300">
+<defs>
+<marker id="g37_17n" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#667" /></marker>
+<marker id="g37_17h" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#f7a" /></marker>
+<marker id="g37_17o" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#fa5" /></marker>
+<marker id="g37_17b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#6af" /></marker>
+<marker id="g37_17g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#556" /></marker>
+</defs>
+<line x1="80.0" y1="150.0" x2="189.0" y2="150.0" stroke="#667" stroke-width="2" marker-end="url(#g37_17n)" />
+<line x1="227.1" y1="139.7" x2="342.0" y2="70.8" stroke="#667" stroke-width="2" marker-end="url(#g37_17n)" />
+<line x1="227.1" y1="160.3" x2="342.0" y2="229.2" stroke="#667" stroke-width="2" marker-end="url(#g37_17n)" />
+<line x1="377.1" y1="70.3" x2="492.0" y2="139.2" stroke="#667" stroke-width="2" marker-end="url(#g37_17n)" />
+<line x1="377.1" y1="229.7" x2="492.0" y2="160.8" stroke="#667" stroke-width="2" marker-end="url(#g37_17n)" />
+<circle cx="60" cy="150" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="60" y="156" fill="#dde" font-size="17" text-anchor="middle">A</text>
+<circle cx="210" cy="150" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="210" y="156" fill="#dde" font-size="17" text-anchor="middle">B</text>
+<circle cx="360" cy="60" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="360" y="66" fill="#dde" font-size="17" text-anchor="middle">C</text>
+<circle cx="360" cy="240" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="360" y="246" fill="#dde" font-size="17" text-anchor="middle">D</text>
+<circle cx="510" cy="150" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="510" y="156" fill="#dde" font-size="17" text-anchor="middle">E</text>
+
+</svg>
+</div>
+<div class="fragment"><p style="font-size: 0.5em; margin: 0;">новый: ребро = два шага</p>
+<svg width="410" height="216" viewBox="0 0 570 300">
+<defs>
+<marker id="g37_18n" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#667" /></marker>
+<marker id="g37_18h" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#f7a" /></marker>
+<marker id="g37_18o" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#fa5" /></marker>
+<marker id="g37_18b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#6af" /></marker>
+<marker id="g37_18g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#556" /></marker>
+</defs>
+<line x1="79.2" y1="144.3" x2="339.9" y2="66.0" stroke="#f7a" stroke-width="4" stroke-dasharray="7,5" marker-end="url(#g37_18h)" />
+<line x1="79.2" y1="155.7" x2="339.9" y2="234.0" stroke="#f7a" stroke-width="4" stroke-dasharray="7,5" marker-end="url(#g37_18h)" />
+<line x1="230.0" y1="150.0" x2="489.0" y2="150.0" stroke="#f7a" stroke-width="4" stroke-dasharray="7,5" marker-end="url(#g37_18h)" />
+<circle cx="60" cy="150" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="60" y="156" fill="#dde" font-size="17" text-anchor="middle">A</text>
+<circle cx="210" cy="150" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="210" y="156" fill="#dde" font-size="17" text-anchor="middle">B</text>
+<circle cx="360" cy="60" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="360" y="66" fill="#dde" font-size="17" text-anchor="middle">C</text>
+<circle cx="360" cy="240" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="360" y="246" fill="#dde" font-size="17" text-anchor="middle">D</text>
+<circle cx="510" cy="150" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="510" y="156" fill="#dde" font-size="17" text-anchor="middle">E</text>
+
+</svg>
+</div>
+</div>
+<ul style="font-size: 0.65em; text-align: left;">
+    <li class="fragment">ход: фишка проходит <mark>ровно два</mark> ребра подряд</li>
+    <li class="fragment">новая стрелка <code>u -&gt; w</code>, если была дорога <code>u -&gt; v -&gt; w</code></li>
+</ul>
+                </section>
+
+                <!-- ход на одно или два ребра на выбор: в новом графе оба вида рёбер; рёбер может стать до n^2 - отсюда O(n^2) -->
+                <section>
+                    <h2>Одно или два</h2>
+<div style="display: flex; align-items: center; justify-content: center; gap: 1.2em;">
+<div class="fragment" style="flex: none;">
+<svg width="456" height="240" viewBox="0 0 570 300">
+<defs>
+<marker id="g37_19n" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#667" /></marker>
+<marker id="g37_19h" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#f7a" /></marker>
+<marker id="g37_19o" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#fa5" /></marker>
+<marker id="g37_19b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#6af" /></marker>
+<marker id="g37_19g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#556" /></marker>
+</defs>
+<line x1="80.0" y1="150.0" x2="189.0" y2="150.0" stroke="#667" stroke-width="2" marker-end="url(#g37_19n)" />
+<line x1="227.1" y1="139.7" x2="342.0" y2="70.8" stroke="#667" stroke-width="2" marker-end="url(#g37_19n)" />
+<line x1="227.1" y1="160.3" x2="342.0" y2="229.2" stroke="#667" stroke-width="2" marker-end="url(#g37_19n)" />
+<line x1="377.1" y1="70.3" x2="492.0" y2="139.2" stroke="#667" stroke-width="2" marker-end="url(#g37_19n)" />
+<line x1="377.1" y1="229.7" x2="492.0" y2="160.8" stroke="#667" stroke-width="2" marker-end="url(#g37_19n)" />
+<line x1="79.2" y1="144.3" x2="339.9" y2="66.0" stroke="#f7a" stroke-width="4" stroke-dasharray="7,5" marker-end="url(#g37_19h)" />
+<line x1="79.2" y1="155.7" x2="339.9" y2="234.0" stroke="#f7a" stroke-width="4" stroke-dasharray="7,5" marker-end="url(#g37_19h)" />
+<line x1="230.0" y1="150.0" x2="489.0" y2="150.0" stroke="#f7a" stroke-width="4" stroke-dasharray="7,5" marker-end="url(#g37_19h)" />
+<circle cx="60" cy="150" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="60" y="156" fill="#dde" font-size="17" text-anchor="middle">A</text>
+<circle cx="210" cy="150" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="210" y="156" fill="#dde" font-size="17" text-anchor="middle">B</text>
+<circle cx="360" cy="60" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="360" y="66" fill="#dde" font-size="17" text-anchor="middle">C</text>
+<circle cx="360" cy="240" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="360" y="246" fill="#dde" font-size="17" text-anchor="middle">D</text>
+<circle cx="510" cy="150" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="510" y="156" fill="#dde" font-size="17" text-anchor="middle">E</text>
+
+</svg>
+</div>
+<ul style="font-size: 0.62em; text-align: left;">
+    <li class="fragment">в новом графе и старые стрелки, и новые</li>
+    <li class="fragment">между двумя вершинами - не больше одной стрелки</li>
+    <li class="fragment">значит, стрелок не больше n &middot; n</li>
+    <li class="fragment">раскраска: O(n + n<sup>2</sup>) = O(n<sup>2</sup>)</li>
+</ul>
+</div>
+                </section>
+
+                <!-- вывод: правила поменялись - перестраиваем граф, раскраска из части 2 остаётся той же -->
+                <section>
+                    <h2>Вывод</h2>
+<ul style="font-size: 0.85em; text-align: left;">
+    <li class="fragment">поддавки - пристроили тупики</li>
+    <li class="fragment">ход на два ребра - новые стрелки</li>
+    <li class="fragment">алгоритм раскраски не меняли ни разу</li>
+</ul>
+<div class="fragment opinion" style="margin-top: 0.6em;">
+    Новые правила - это новый граф, а не новый алгоритм
+</div>
+                </section>
+
+            </section>
+
+            <!-- ЧАСТЬ 4: асимметричные игры - раздвоенный граф -->
+            <section>
+
+                <section style="font-size: 70px; height: 100%; width: 100%">
+                    <div class="lesson-time">52</div>
+                    <div class="fragment">
+                        <h1 style="font-size: 1.3em;">Асимметричные игры</h1>
+                        <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">у каждого игрока свои ходы</p>
+                    </div>
+                </section>
+
+                <!-- новая игра: красные рёбра - ходы только первого, синие - только второго (SVG) -->
+                <section>
+                    <h2>Свои рёбра</h2>
+<div style="display: flex; align-items: center; justify-content: center; gap: 1.2em;">
+<div class="fragment" style="flex: none;">
+<svg width="500" height="340" viewBox="0 0 500 340">
+<defs>
+<marker id="g37_20n" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#667" /></marker>
+<marker id="g37_20h" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#f7a" /></marker>
+<marker id="g37_20o" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#fa5" /></marker>
+<marker id="g37_20b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#6af" /></marker>
+<marker id="g37_20g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#556" /></marker>
+</defs>
+<line x1="87.1" y1="159.6" x2="232.1" y2="71.0" stroke="#fa5" stroke-width="4" marker-end="url(#g37_20o)" />
+<line x1="267.1" y1="70.4" x2="412.1" y2="159.0" stroke="#fa5" stroke-width="4" marker-end="url(#g37_20o)" />
+<line x1="409.5" y1="175.3" x2="263.6" y2="272.5" stroke="#fa5" stroke-width="4" marker-end="url(#g37_20o)" />
+<line x1="270.5" y1="284.7" x2="416.4" y2="187.5" stroke="#6af" stroke-width="4" marker-end="url(#g37_20b)" />
+<line x1="86.6" y1="181.1" x2="232.5" y2="278.4" stroke="#6af" stroke-width="4" marker-end="url(#g37_20b)" />
+<circle cx="70" cy="170" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="70" y="176" fill="#dde" font-size="17" text-anchor="middle">A</text>
+<circle cx="250" cy="60" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="250" y="66" fill="#dde" font-size="17" text-anchor="middle">B</text>
+<circle cx="430" cy="170" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="430" y="176" fill="#dde" font-size="17" text-anchor="middle">C</text>
+<circle cx="250" cy="290" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="250" y="296" fill="#dde" font-size="17" text-anchor="middle">D</text>
+<circle cx="85" cy="155" r="9" fill="#fd6" stroke="#222" stroke-width="2" />
+
+</svg>
+</div>
+<ul style="font-size: 0.65em; text-align: left;">
+    <li class="fragment"><span style="color: #fa5;">Оранжевый</span> ходит только по оранжевым стрелкам</li>
+    <li class="fragment"><span style="color: #6af;">Синий</span> - только по синим</li>
+    <li class="fragment">фишка одна, ходят по очереди</li>
+    <li class="fragment">кто не может сходить - проиграл</li>
+</ul>
+</div>
+                </section>
+
+                <!-- попробуем раскрасить вершину: у первого отсюда есть ход, у второго нет - W или L? зависит от того, чей ход -->
+                <section>
+                    <h2>Какого цвета B?</h2>
+<div style="display: flex; align-items: center; justify-content: center; gap: 1.2em;">
+<div class="fragment" style="flex: none;">
+<svg width="500" height="340" viewBox="0 0 500 340">
+<defs>
+<marker id="g37_21n" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#667" /></marker>
+<marker id="g37_21h" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#f7a" /></marker>
+<marker id="g37_21o" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#fa5" /></marker>
+<marker id="g37_21b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#6af" /></marker>
+<marker id="g37_21g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#556" /></marker>
+</defs>
+<line x1="87.1" y1="159.6" x2="232.1" y2="71.0" stroke="#fa5" stroke-width="4" marker-end="url(#g37_21o)" />
+<line x1="267.1" y1="70.4" x2="412.1" y2="159.0" stroke="#fa5" stroke-width="4" marker-end="url(#g37_21o)" />
+<line x1="409.5" y1="175.3" x2="263.6" y2="272.5" stroke="#fa5" stroke-width="4" marker-end="url(#g37_21o)" />
+<line x1="270.5" y1="284.7" x2="416.4" y2="187.5" stroke="#6af" stroke-width="4" marker-end="url(#g37_21b)" />
+<line x1="86.6" y1="181.1" x2="232.5" y2="278.4" stroke="#6af" stroke-width="4" marker-end="url(#g37_21b)" />
+<circle cx="70" cy="170" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="70" y="176" fill="#dde" font-size="17" text-anchor="middle">A</text>
+<circle cx="250" cy="60" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="250" y="66" fill="#dde" font-size="17" text-anchor="middle">B</text>
+<circle cx="430" cy="170" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="430" y="176" fill="#dde" font-size="17" text-anchor="middle">C</text>
+<circle cx="250" cy="290" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="250" y="296" fill="#dde" font-size="17" text-anchor="middle">D</text>
+
+</svg>
+</div>
+<ul style="font-size: 0.65em; text-align: left;">
+    <li class="fragment" data-fragment-index="1"><span style="color: #fa5;">Оранжевый</span> в <code>B</code> ходит в <code>C</code></li>
+    <li class="fragment" data-fragment-index="2"><span style="color: #6af;">Синий</span> в <code>B</code> сходить не может - проиграл</li>
+    <li class="fragment" data-fragment-index="3">одна и та же вершина: для одного - одно, для другого - другое</li>
+    <li class="fragment" data-fragment-index="4">один цвет на вершину не подходит</li>
+</ul>
+</div>
+                </section>
+
+                <!-- вывод: позиция = (вершина, чей ход), а не просто вершина -->
+                <section>
+                    <h2>Позиция</h2>
+<ul style="font-size: 0.85em; text-align: left;">
+    <li class="fragment">раньше хватало вершины: ходы у всех одинаковые</li>
+    <li class="fragment">теперь важно ещё, <mark>чей сейчас ход</mark></li>
+    <li class="fragment">позиция = (вершина, чей ход)</li>
+    <li class="fragment">позиций вдвое больше, чем вершин</li>
+</ul>
+                </section>
+
+                <!-- раздвоенный граф: две копии вершин, верхний этаж - ходит первый (красные рёбра ведут вниз), нижний - второй (синие ведут вверх), SVG -->
+                <section>
+                    <h2>Раздвоенный граф</h2>
+<div style="display: flex; align-items: center; justify-content: center; gap: 1.2em;">
+<div class="fragment" style="flex: none;">
+<svg width="600" height="350" viewBox="0 0 600 350">
+<defs>
+<marker id="g37_22n" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#667" /></marker>
+<marker id="g37_22h" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#f7a" /></marker>
+<marker id="g37_22o" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#fa5" /></marker>
+<marker id="g37_22b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#6af" /></marker>
+<marker id="g37_22g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#556" /></marker>
+</defs>
+<line x1="120.5" y1="87.0" x2="228.9" y2="262.1" stroke="#fa5" stroke-width="4" marker-end="url(#g37_22o)" />
+<line x1="250.5" y1="87.0" x2="358.9" y2="262.1" stroke="#fa5" stroke-width="4" marker-end="url(#g37_22o)" />
+<line x1="374.6" y1="90.7" x2="483.0" y2="265.8" stroke="#fa5" stroke-width="4" marker-end="url(#g37_22o)" />
+<line x1="495.4" y1="259.3" x2="387.0" y2="84.2" stroke="#6af" stroke-width="4" marker-end="url(#g37_22b)" />
+<line x1="127.6" y1="270.5" x2="481.5" y2="80.0" stroke="#6af" stroke-width="4" marker-end="url(#g37_22b)" />
+<circle cx="110" cy="70" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="110" y="76" fill="#dde" font-size="17" text-anchor="middle">A</text>
+<circle cx="110" cy="280" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="110" y="286" fill="#dde" font-size="17" text-anchor="middle">A</text>
+<circle cx="240" cy="70" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="240" y="76" fill="#dde" font-size="17" text-anchor="middle">B</text>
+<circle cx="240" cy="280" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="240" y="286" fill="#dde" font-size="17" text-anchor="middle">B</text>
+<circle cx="370" cy="70" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="370" y="76" fill="#dde" font-size="17" text-anchor="middle">C</text>
+<circle cx="370" cy="280" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="370" y="286" fill="#dde" font-size="17" text-anchor="middle">C</text>
+<circle cx="500" cy="70" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="500" y="76" fill="#dde" font-size="17" text-anchor="middle">D</text>
+<circle cx="500" cy="280" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="500" y="286" fill="#dde" font-size="17" text-anchor="middle">D</text>
+<text x="0" y="66" fill="#fa5" font-size="15">ходит</text><text x="0" y="84" fill="#fa5" font-size="15">Оранж.</text><text x="0" y="276" fill="#6af" font-size="15">ходит</text><text x="0" y="294" fill="#6af" font-size="15">Синий</text>
+</svg>
+</div>
+<ul style="font-size: 0.62em; text-align: left;">
+    <li class="fragment">каждую вершину копируем на два этажа</li>
+    <li class="fragment">оранжевая стрелка: с верхнего этажа на нижний</li>
+    <li class="fragment">синяя стрелка: с нижнего на верхний</li>
+    <li class="fragment">ход всегда меняет этаж</li>
+</ul>
+</div>
+                </section>
+
+                <!-- в раздвоенном графе правила одинаковые для обоих - обычная игра, раскрашиваем BFS из части 2 -->
+                <section>
+                    <h2>Обычная игра</h2>
+<ul style="font-size: 0.85em; text-align: left;">
+    <li class="fragment">в раздвоенном графе у каждой позиции свои стрелки</li>
+    <li class="fragment">кто ходит - видно по этажу, цвет стрелок больше не нужен</li>
+    <li class="fragment">это обычная фишка на графе</li>
+    <li class="fragment">раскрашиваем BFS из части 2 без изменений</li>
+</ul>
+                </section>
+
+                <!-- трассировка раскраски на маленьком раздвоенном графе (fragment) -->
+                <section>
+                    <h2>Раскраска</h2>
+<div style="display: flex; align-items: center; justify-content: center; gap: 1.2em;">
+<div style="flex: none;">
+<svg width="600" height="350" viewBox="0 0 600 350">
+<defs>
+<marker id="g37_23n" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#667" /></marker>
+<marker id="g37_23h" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#f7a" /></marker>
+<marker id="g37_23o" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#fa5" /></marker>
+<marker id="g37_23b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#6af" /></marker>
+<marker id="g37_23g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#556" /></marker>
+</defs>
+<line x1="120.5" y1="87.0" x2="228.9" y2="262.1" stroke="#fa5" stroke-width="4" marker-end="url(#g37_23o)" />
+<line x1="250.5" y1="87.0" x2="358.9" y2="262.1" stroke="#fa5" stroke-width="4" marker-end="url(#g37_23o)" />
+<line x1="374.6" y1="90.7" x2="483.0" y2="265.8" stroke="#fa5" stroke-width="4" marker-end="url(#g37_23o)" />
+<line x1="495.4" y1="259.3" x2="387.0" y2="84.2" stroke="#6af" stroke-width="4" marker-end="url(#g37_23b)" />
+<line x1="127.6" y1="270.5" x2="481.5" y2="80.0" stroke="#6af" stroke-width="4" marker-end="url(#g37_23b)" />
+<line x1="250.5" y1="87.0" x2="358.9" y2="262.1" stroke="#f7a" stroke-width="4" marker-end="url(#g37_23h)" class="fragment" data-fragment-index="6" />
+<circle cx="110" cy="70" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="110" y="76" fill="#dde" font-size="17" text-anchor="middle">A</text>
+<circle cx="110" cy="280" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="110" y="286" fill="#dde" font-size="17" text-anchor="middle">A</text>
+<circle cx="240" cy="70" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="240" y="76" fill="#dde" font-size="17" text-anchor="middle">B</text>
+<circle cx="240" cy="280" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="240" y="286" fill="#dde" font-size="17" text-anchor="middle">B</text>
+<circle cx="370" cy="70" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="370" y="76" fill="#dde" font-size="17" text-anchor="middle">C</text>
+<circle cx="370" cy="280" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="370" y="286" fill="#dde" font-size="17" text-anchor="middle">C</text>
+<circle cx="500" cy="70" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="500" y="76" fill="#dde" font-size="17" text-anchor="middle">D</text>
+<circle cx="500" cy="280" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="500" y="286" fill="#dde" font-size="17" text-anchor="middle">D</text>
+<g class="fragment" data-fragment-index="1">
+<circle cx="240" cy="280" r="20" fill="#3a1f24" stroke="#f66" stroke-width="3" />
+<text x="240" y="286" fill="#dde" font-size="17" text-anchor="middle">B</text>
+<text x="240" y="251" fill="#f66" font-size="17" font-weight="bold" text-anchor="middle">L</text>
+</g>
+<g class="fragment" data-fragment-index="1">
+<circle cx="370" cy="280" r="20" fill="#3a1f24" stroke="#f66" stroke-width="3" />
+<text x="370" y="286" fill="#dde" font-size="17" text-anchor="middle">C</text>
+<text x="370" y="251" fill="#f66" font-size="17" font-weight="bold" text-anchor="middle">L</text>
+</g>
+<g class="fragment" data-fragment-index="1">
+<circle cx="500" cy="70" r="20" fill="#3a1f24" stroke="#f66" stroke-width="3" />
+<text x="500" y="76" fill="#dde" font-size="17" text-anchor="middle">D</text>
+<text x="500" y="41" fill="#f66" font-size="17" font-weight="bold" text-anchor="middle">L</text>
+</g>
+<g class="fragment" data-fragment-index="2">
+<circle cx="110" cy="70" r="20" fill="#1f3a26" stroke="#7d7" stroke-width="3" />
+<text x="110" y="76" fill="#dde" font-size="17" text-anchor="middle">A</text>
+<text x="110" y="41" fill="#7d7" font-size="17" font-weight="bold" text-anchor="middle">W</text>
+</g>
+<g class="fragment" data-fragment-index="3">
+<circle cx="240" cy="70" r="20" fill="#1f3a26" stroke="#7d7" stroke-width="3" />
+<text x="240" y="76" fill="#dde" font-size="17" text-anchor="middle">B</text>
+<text x="240" y="41" fill="#7d7" font-size="17" font-weight="bold" text-anchor="middle">W</text>
+</g>
+<g class="fragment" data-fragment-index="4">
+<circle cx="110" cy="280" r="20" fill="#1f3a26" stroke="#7d7" stroke-width="3" />
+<text x="110" y="286" fill="#dde" font-size="17" text-anchor="middle">A</text>
+<text x="110" y="251" fill="#7d7" font-size="17" font-weight="bold" text-anchor="middle">W</text>
+</g>
+<g class="fragment" data-fragment-index="5">
+<circle cx="370" cy="70" r="20" fill="#38331c" stroke="#db5" stroke-width="3" />
+<text x="370" y="76" fill="#dde" font-size="17" text-anchor="middle">C</text>
+<text x="370" y="41" fill="#db5" font-size="17" font-weight="bold" text-anchor="middle">D</text>
+</g>
+<g class="fragment" data-fragment-index="5">
+<circle cx="500" cy="280" r="20" fill="#38331c" stroke="#db5" stroke-width="3" />
+<text x="500" y="286" fill="#dde" font-size="17" text-anchor="middle">D</text>
+<text x="500" y="251" fill="#db5" font-size="17" font-weight="bold" text-anchor="middle">D</text>
+</g>
+<text x="0" y="66" fill="#fa5" font-size="15">ходит</text><text x="0" y="84" fill="#fa5" font-size="15">Оранж.</text><text x="0" y="276" fill="#6af" font-size="15">ходит</text><text x="0" y="294" fill="#6af" font-size="15">Синий</text><circle cx="240" cy="70" r="28" fill="none" stroke="#f7a" stroke-width="3" class="fragment" data-fragment-index="6" /><circle cx="240" cy="280" r="28" fill="none" stroke="#f7a" stroke-width="3" class="fragment" data-fragment-index="6" />
+</svg>
+</div>
+<ul style="font-size: 0.58em; text-align: left;">
+    <li class="fragment" data-fragment-index="1">тупики: нет своих стрелок - L</li>
+    <li class="fragment" data-fragment-index="2">дальше обычные шаги BFS</li>
+    <li class="fragment" data-fragment-index="5">что не раскрасилось - ничья</li>
+    <li class="fragment" data-fragment-index="6">верхняя <code>B</code> (ходит Оранжевый) - <span style="color: #7d7; font-weight: bold;">W</span>: ход в нижнюю <code>C</code>, а у Синего из <code>C</code> нет стрелок</li>
+    <li class="fragment" data-fragment-index="6">нижняя <code>B</code> (ходит Синий) - <span style="color: #f66; font-weight: bold;">L</span>: синих стрелок из <code>B</code> нет</li>
+</ul>
+</div>
+                </section>
+
+                <!-- размер: 2n вершин, m рёбер - всё ещё O(n + m) -->
+                <section>
+                    <h2>Размер</h2>
+<ul style="font-size: 0.85em; text-align: left;">
+    <li class="fragment">позиций: 2n</li>
+    <li class="fragment">каждая стрелка попадает в раздвоенный граф один раз: со своего этажа</li>
+    <li class="fragment">раскраска: O(n + m)</li>
+</ul>
+<div class="fragment opinion" style="margin-top: 0.6em;">
+    Приём на будущее: если ход зависит от того, <mark>кто ходит</mark>, - добавь это в позицию
+</div>
+                </section>
+
+                <!-- разные цели: первый хочет загнать фишку в тупик, второй - чтобы игра не кончалась никогда. Вопрос: кто добьётся своего? -->
+                <section>
+                    <h2>Разные цели</h2>
+<div style="display: flex; align-items: center; justify-content: center; gap: 1.2em;">
+<div class="fragment" style="flex: none;">
+<svg width="510" height="187" viewBox="0 0 600 220">
+<defs>
+<marker id="g37_24n" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#667" /></marker>
+<marker id="g37_24h" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#f7a" /></marker>
+<marker id="g37_24o" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#fa5" /></marker>
+<marker id="g37_24b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#6af" /></marker>
+<marker id="g37_24g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#556" /></marker>
+</defs>
+<line x1="200.0" y1="120.0" x2="81.0" y2="120.0" stroke="#667" stroke-width="2" marker-end="url(#g37_24n)" />
+<line x1="240.0" y1="127.0" x2="359.0" y2="127.0" stroke="#667" stroke-width="2" marker-end="url(#g37_24n)" />
+<line x1="360.0" y1="113.0" x2="241.0" y2="113.0" stroke="#667" stroke-width="2" marker-end="url(#g37_24n)" />
+<line x1="400.0" y1="127.0" x2="519.0" y2="127.0" stroke="#667" stroke-width="2" marker-end="url(#g37_24n)" />
+<line x1="520.0" y1="113.0" x2="401.0" y2="113.0" stroke="#667" stroke-width="2" marker-end="url(#g37_24n)" />
+<circle cx="60" cy="120" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="60" y="126" fill="#dde" font-size="17" text-anchor="middle">T</text>
+<circle cx="220" cy="120" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="220" y="126" fill="#dde" font-size="17" text-anchor="middle">A</text>
+<circle cx="380" cy="120" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="380" y="126" fill="#dde" font-size="17" text-anchor="middle">B</text>
+<circle cx="540" cy="120" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="540" y="126" fill="#dde" font-size="17" text-anchor="middle">C</text>
+<circle cx="235" cy="105" r="9" fill="#fd6" stroke="#222" stroke-width="2" />
+
+</svg>
+</div>
+<ul style="font-size: 0.62em; text-align: left;">
+    <li class="fragment">ходы у обоих одинаковые</li>
+    <li class="fragment">Первый хочет, чтобы фишка <mark>попала в тупик</mark></li>
+    <li class="fragment">Второй хочет, чтобы игра <mark>не кончалась</mark></li>
+    <li class="fragment">Вопрос: кто добьётся своего, если фишка в <code>A</code>?</li>
+</ul>
+</div>
+                </section>
+
+                <!-- решение: снова позиция = (вершина, чей ход); тупик - W, если ходит Первый, и L, если Второй; дальше обычный BFS с W/L/счётчиком; D - бесконечная игра, победа Второго -->
+                <section>
+                    <h2>Решение</h2>
+<div style="display: flex; align-items: center; justify-content: center; gap: 1.2em;">
+<div style="flex: none;">
+<svg width="600" height="350" viewBox="0 0 600 350">
+<defs>
+<marker id="g37_25n" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#667" /></marker>
+<marker id="g37_25h" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#f7a" /></marker>
+<marker id="g37_25o" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#fa5" /></marker>
+<marker id="g37_25b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#6af" /></marker>
+<marker id="g37_25g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#556" /></marker>
+</defs>
+<line x1="229.5" y1="87.0" x2="121.1" y2="262.1" stroke="#667" stroke-width="2" marker-end="url(#g37_25n)" />
+<line x1="244.6" y1="90.7" x2="353.0" y2="265.8" stroke="#667" stroke-width="2" marker-end="url(#g37_25n)" />
+<line x1="353.5" y1="83.3" x2="245.1" y2="258.5" stroke="#667" stroke-width="2" marker-end="url(#g37_25n)" />
+<line x1="374.6" y1="90.7" x2="483.0" y2="265.8" stroke="#667" stroke-width="2" marker-end="url(#g37_25n)" />
+<line x1="483.5" y1="83.3" x2="375.1" y2="258.5" stroke="#667" stroke-width="2" marker-end="url(#g37_25n)" />
+<line x1="229.5" y1="263.0" x2="121.1" y2="87.9" stroke="#667" stroke-width="2" marker-end="url(#g37_25n)" />
+<line x1="256.5" y1="266.7" x2="364.9" y2="91.5" stroke="#667" stroke-width="2" marker-end="url(#g37_25n)" />
+<line x1="365.4" y1="259.3" x2="257.0" y2="84.2" stroke="#667" stroke-width="2" marker-end="url(#g37_25n)" />
+<line x1="386.5" y1="266.7" x2="494.9" y2="91.5" stroke="#667" stroke-width="2" marker-end="url(#g37_25n)" />
+<line x1="495.4" y1="259.3" x2="387.0" y2="84.2" stroke="#667" stroke-width="2" marker-end="url(#g37_25n)" />
+<line x1="229.5" y1="87.0" x2="121.1" y2="262.1" stroke="#f7a" stroke-width="4" marker-end="url(#g37_25h)" class="fragment" data-fragment-index="3" />
+<circle cx="110" cy="70" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="110" y="76" fill="#dde" font-size="17" text-anchor="middle">T</text>
+<circle cx="110" cy="280" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="110" y="286" fill="#dde" font-size="17" text-anchor="middle">T</text>
+<circle cx="240" cy="70" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="240" y="76" fill="#dde" font-size="17" text-anchor="middle">A</text>
+<circle cx="240" cy="280" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="240" y="286" fill="#dde" font-size="17" text-anchor="middle">A</text>
+<circle cx="370" cy="70" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="370" y="76" fill="#dde" font-size="17" text-anchor="middle">B</text>
+<circle cx="370" cy="280" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="370" y="286" fill="#dde" font-size="17" text-anchor="middle">B</text>
+<circle cx="500" cy="70" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="500" y="76" fill="#dde" font-size="17" text-anchor="middle">C</text>
+<circle cx="500" cy="280" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="500" y="286" fill="#dde" font-size="17" text-anchor="middle">C</text>
+<g class="fragment" data-fragment-index="2">
+<circle cx="110" cy="70" r="20" fill="#1f3a26" stroke="#7d7" stroke-width="3" />
+<text x="110" y="76" fill="#dde" font-size="17" text-anchor="middle">T</text>
+<text x="110" y="41" fill="#7d7" font-size="17" font-weight="bold" text-anchor="middle">W</text>
+</g>
+<g class="fragment" data-fragment-index="2">
+<circle cx="110" cy="280" r="20" fill="#3a1f24" stroke="#f66" stroke-width="3" />
+<text x="110" y="286" fill="#dde" font-size="17" text-anchor="middle">T</text>
+<text x="110" y="251" fill="#f66" font-size="17" font-weight="bold" text-anchor="middle">L</text>
+</g>
+<g class="fragment" data-fragment-index="3">
+<circle cx="240" cy="70" r="20" fill="#1f3a26" stroke="#7d7" stroke-width="3" />
+<text x="240" y="76" fill="#dde" font-size="17" text-anchor="middle">A</text>
+<text x="240" y="41" fill="#7d7" font-size="17" font-weight="bold" text-anchor="middle">W</text>
+</g>
+<g class="fragment" data-fragment-index="4">
+<circle cx="240" cy="280" r="20" fill="#38331c" stroke="#db5" stroke-width="3" />
+<text x="240" y="286" fill="#dde" font-size="17" text-anchor="middle">A</text>
+<text x="240" y="251" fill="#db5" font-size="17" font-weight="bold" text-anchor="middle">D</text>
+</g>
+<g class="fragment" data-fragment-index="4">
+<circle cx="370" cy="70" r="20" fill="#38331c" stroke="#db5" stroke-width="3" />
+<text x="370" y="76" fill="#dde" font-size="17" text-anchor="middle">B</text>
+<text x="370" y="41" fill="#db5" font-size="17" font-weight="bold" text-anchor="middle">D</text>
+</g>
+<g class="fragment" data-fragment-index="4">
+<circle cx="370" cy="280" r="20" fill="#38331c" stroke="#db5" stroke-width="3" />
+<text x="370" y="286" fill="#dde" font-size="17" text-anchor="middle">B</text>
+<text x="370" y="251" fill="#db5" font-size="17" font-weight="bold" text-anchor="middle">D</text>
+</g>
+<g class="fragment" data-fragment-index="4">
+<circle cx="500" cy="70" r="20" fill="#38331c" stroke="#db5" stroke-width="3" />
+<text x="500" y="76" fill="#dde" font-size="17" text-anchor="middle">C</text>
+<text x="500" y="41" fill="#db5" font-size="17" font-weight="bold" text-anchor="middle">D</text>
+</g>
+<g class="fragment" data-fragment-index="4">
+<circle cx="500" cy="280" r="20" fill="#38331c" stroke="#db5" stroke-width="3" />
+<text x="500" y="286" fill="#dde" font-size="17" text-anchor="middle">C</text>
+<text x="500" y="251" fill="#db5" font-size="17" font-weight="bold" text-anchor="middle">D</text>
+</g>
+<text x="0" y="66" fill="#dde" font-size="15">ходит</text><text x="0" y="84" fill="#dde" font-size="15">Первый</text><text x="0" y="276" fill="#dde" font-size="15">ходит</text><text x="0" y="294" fill="#dde" font-size="15">Второй</text>
+</svg>
+</div>
+<ul style="font-size: 0.58em; text-align: left;">
+    <li class="fragment" data-fragment-index="1">позиция = (вершина, чей ход), W / L / D - для того, кто ходит</li>
+    <li class="fragment" data-fragment-index="2">тупик: игра кончилась, как хотел Первый. Ходит Первый - <span style="color: #7d7; font-weight: bold;">W</span>, ходит Второй - <span style="color: #f66; font-weight: bold;">L</span></li>
+    <li class="fragment" data-fragment-index="3">дальше обычный BFS: есть ход в L - <span style="color: #7d7; font-weight: bold;">W</span>, все ходы в W - <span style="color: #f66; font-weight: bold;">L</span> (счётчик)</li>
+    <li class="fragment" data-fragment-index="4">что не раскрасилось - <span style="color: #db5; font-weight: bold;">D</span>: игра бесконечна, а это победа Второго</li>
+</ul>
+</div>
+                </section>
+
+                <!-- задача: <a target="_blank"> 913. Cat and Mouse - условие на картинке графа, кот, мышь, нора -->
+                <section>
+                    <h2><a href="https://leetcode.com/problems/cat-and-mouse/" target="_blank" rel="noopener">913. Cat and Mouse</a></h2>
+<div style="display: flex; align-items: center; justify-content: center; gap: 1.2em;">
+<div class="fragment" style="flex: none;">
+<svg width="450" height="270" viewBox="0 0 600 360">
+<defs>
+<marker id="g37_26n" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#667" /></marker>
+<marker id="g37_26h" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#f7a" /></marker>
+<marker id="g37_26o" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#fa5" /></marker>
+<marker id="g37_26b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#6af" /></marker>
+<marker id="g37_26g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#556" /></marker>
+</defs>
+<line x1="283.2" y1="80.9" x2="116.8" y2="189.1" stroke="#667" stroke-width="3" />
+<line x1="316.8" y1="80.9" x2="483.2" y2="189.1" stroke="#667" stroke-width="3" />
+<line x1="500.0" y1="220.0" x2="500.0" y2="300.0" stroke="#667" stroke-width="3" />
+<circle cx="300" cy="70" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="300" y="76" fill="#dde" font-size="17" text-anchor="middle">0</text>
+<circle cx="100" cy="200" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="100" y="206" fill="#dde" font-size="17" text-anchor="middle">1</text>
+<circle cx="500" cy="200" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="500" y="206" fill="#dde" font-size="17" text-anchor="middle">3</text>
+<circle cx="500" cy="320" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="500" y="326" fill="#dde" font-size="17" text-anchor="middle">2</text>
+<circle cx="78" cy="176" r="17" fill="#aab" stroke="#222" stroke-width="2" /><text x="78" y="182" fill="#222" font-size="18" font-weight="bold" text-anchor="middle">М</text><circle cx="478" cy="296" r="17" fill="#fa5" stroke="#222" stroke-width="2" /><text x="478" y="302" fill="#222" font-size="18" font-weight="bold" text-anchor="middle">К</text><text x="330" y="45" fill="#7d7" font-size="16">нора</text>
+</svg>
+</div>
+<ul style="font-size: 0.58em; text-align: left;">
+    <li class="fragment">граф без стрелок: мышь (М) в 1, кот (К) в 2, нора - 0</li>
+    <li class="fragment">ходят по очереди, первой мышь; стоять на месте нельзя</li>
+    <li class="fragment">мышь в норе - победа мыши; кот на мыши - победа кота</li>
+    <li class="fragment">позиция повторилась - ничья. Ответ: 1, 2 или 0</li>
+</ul>
+</div>
+                </section>
+
+                <!-- где асимметрия: кот не может зайти в нору, у кота и мыши разные фишки -->
+                <section>
+                    <h2>Где асимметрия</h2>
+<ul style="font-size: 0.85em; text-align: left;">
+    <li class="fragment">кот <mark>не может</mark> зайти в нору - у него другие ходы</li>
+    <li class="fragment">у мыши и кота разные фишки: каждый двигает свою</li>
+    <li class="fragment">цели разные: мышь бежит в нору, кот ловит мышь</li>
+</ul>
+<div class="fragment opinion" style="margin-top: 0.6em;">
+    Значит, в позиции должно быть всё: где мышь, где кот и чей ход
+</div>
+                </section>
+
+                <!-- позиция: (где мышь, где кот, чей ход) - n * n * 2 позиций, картинка одной позиции -->
+                <section>
+                    <h2>Позиция</h2>
+<div style="display: flex; align-items: center; justify-content: center; gap: 1.2em;">
+<div class="fragment" style="flex: none;">
+<svg width="450" height="270" viewBox="0 0 600 360">
+<defs>
+<marker id="g37_27n" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#667" /></marker>
+<marker id="g37_27h" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#f7a" /></marker>
+<marker id="g37_27o" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#fa5" /></marker>
+<marker id="g37_27b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#6af" /></marker>
+<marker id="g37_27g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#556" /></marker>
+</defs>
+<line x1="283.2" y1="80.9" x2="116.8" y2="189.1" stroke="#667" stroke-width="3" />
+<line x1="316.8" y1="80.9" x2="483.2" y2="189.1" stroke="#667" stroke-width="3" />
+<line x1="500.0" y1="220.0" x2="500.0" y2="300.0" stroke="#667" stroke-width="3" />
+<circle cx="300" cy="70" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="300" y="76" fill="#dde" font-size="17" text-anchor="middle">0</text>
+<circle cx="100" cy="200" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="100" y="206" fill="#dde" font-size="17" text-anchor="middle">1</text>
+<circle cx="500" cy="200" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="500" y="206" fill="#dde" font-size="17" text-anchor="middle">3</text>
+<circle cx="500" cy="320" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="500" y="326" fill="#dde" font-size="17" text-anchor="middle">2</text>
+<circle cx="478" cy="176" r="17" fill="#aab" stroke="#222" stroke-width="2" /><text x="478" y="182" fill="#222" font-size="18" font-weight="bold" text-anchor="middle">М</text><circle cx="478" cy="296" r="17" fill="#fa5" stroke="#222" stroke-width="2" /><text x="478" y="302" fill="#222" font-size="18" font-weight="bold" text-anchor="middle">К</text><text x="330" y="45" fill="#7d7" font-size="16">нора</text>
+</svg>
+</div>
+<ul style="font-size: 0.62em; text-align: left;">
+    <li class="fragment">позиция: (мышь, кот, чей ход)</li>
+    <li class="fragment">на картинке: (3, 2, ходит мышь)</li>
+    <li class="fragment">всего n &middot; n &middot; 2 позиций</li>
+    <li class="fragment">n не больше 50: не больше 5000 позиций</li>
+</ul>
+</div>
+                </section>
+
+                <!-- тупики: мышь в норе, кот поймал мышь - исход уже известен -->
+                <section>
+                    <h2>С чего начать</h2>
+<ul style="font-size: 0.72em; text-align: left;">
+    <li class="fragment">мышь в норе: (0, кот, ...) - мышь уже выиграла</li>
+    <li class="fragment">кот на мыши: (x, x, ...) - кот уже выиграл</li>
+    <li class="fragment">исход этих позиций известен заранее - с них начинаем BFS</li>
+    <li class="fragment">для того, чей ход: проиграл - L, выиграл - W</li>
+</ul>
+<div class="fragment opinion" style="margin-top: 0.6em;">
+    Дальше всё как в части 2: очередь, счётчики, что не раскрасилось - ничья
+</div>
+                </section>
+
+                <!-- трассировка на маленьком примере: несколько позиций, очередь, счётчики; ответ W / L / D -> 1 / 2 / 0 -->
+                <section>
+                    <h2>Трассировка</h2>
+<div style="display: flex; align-items: center; justify-content: center; gap: 1.2em;">
+<div class="fragment" style="flex: none;">
+<svg width="450" height="270" viewBox="0 0 600 360">
+<defs>
+<marker id="g37_28n" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#667" /></marker>
+<marker id="g37_28h" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#f7a" /></marker>
+<marker id="g37_28o" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#fa5" /></marker>
+<marker id="g37_28b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#6af" /></marker>
+<marker id="g37_28g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#556" /></marker>
+</defs>
+<line x1="283.2" y1="80.9" x2="116.8" y2="189.1" stroke="#667" stroke-width="3" />
+<line x1="316.8" y1="80.9" x2="483.2" y2="189.1" stroke="#667" stroke-width="3" />
+<line x1="500.0" y1="220.0" x2="500.0" y2="300.0" stroke="#667" stroke-width="3" />
+<circle cx="300" cy="70" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="300" y="76" fill="#dde" font-size="17" text-anchor="middle">0</text>
+<circle cx="100" cy="200" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="100" y="206" fill="#dde" font-size="17" text-anchor="middle">1</text>
+<circle cx="500" cy="200" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="500" y="206" fill="#dde" font-size="17" text-anchor="middle">3</text>
+<circle cx="500" cy="320" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="500" y="326" fill="#dde" font-size="17" text-anchor="middle">2</text>
+<circle cx="78" cy="176" r="17" fill="#aab" stroke="#222" stroke-width="2" /><text x="78" y="182" fill="#222" font-size="18" font-weight="bold" text-anchor="middle">М</text><circle cx="478" cy="296" r="17" fill="#fa5" stroke="#222" stroke-width="2" /><text x="478" y="302" fill="#222" font-size="18" font-weight="bold" text-anchor="middle">К</text><text x="330" y="45" fill="#7d7" font-size="16">нора</text>
+</svg>
+</div>
+<ul style="font-size: 0.58em; text-align: left;">
+    <li class="fragment">(0, 2, ходит кот): мышь уже в норе - для кота <span style="color: #f66; font-weight: bold;">L</span></li>
+    <li class="fragment">в неё ведёт ход мыши из (1, 2, ходит мышь) - для мыши <span style="color: #7d7; font-weight: bold;">W</span></li>
+    <li class="fragment">это и есть старт: мышь выигрывает, ответ 1</li>
+    <li class="fragment">для старта: W - 1, L - 2, D - 0</li>
+</ul>
+</div>
+                </section>
+
+            </section>
+
+            <!-- ИТОГ -->
+            <section>
+
+                <!-- итог: 1) у позиции три исхода W, L, D; 2) циклы - BFS назад от тупиков со счётчиками, нераскрашенные - ничья; 3) поменялись правила - перестраиваем граф; 4) разные ходы у игроков - раздваиваем граф по "чей ход" -->
+                <section>
+                    <div class="lesson-time">85</div>
+                    <h2>Что запомнить</h2>
+<ul style="font-size: 0.8em; text-align: left;">
+    <li class="fragment">у позиции три исхода: <span style="color: #7d7; font-weight: bold;">W</span>, <span style="color: #f66; font-weight: bold;">L</span> и <span style="color: #db5; font-weight: bold;">D</span></li>
+    <li class="fragment">граф с циклами: BFS назад от тупиков со счётчиками, что не раскрасилось - ничья</li>
+    <li class="fragment">поменялись правила - перестраиваем граф, алгоритм тот же</li>
+    <li class="fragment">у игроков разные ходы или цели - позиция = (вершина, чей ход)</li>
+</ul>
+                </section>
+
+                <!-- домашнее задание: 464. Can I Win, ссылка target="_blank"; подсказка: позиция = какие числа уже взяты (2^n наборов), циклов нет - рекурсия с памятью -->
+                <section>
+                    <h2>Домашнее задание</h2>
+<p style="font-size: 0.7em;"><a href="https://leetcode.com/problems/can-i-win/" target="_blank" rel="noopener">464. Can I Win</a></p>
+<ul style="font-size: 0.65em; text-align: left;">
+    <li class="fragment">числа от 1 до n, каждое можно взять один раз; кто первым довёл сумму до цели - выиграл</li>
+    <li class="fragment">позиция: <mark>какие числа уже взяты</mark>; сумма по ним считается сама</li>
+    <li class="fragment">наборов взятых чисел 2<sup>n</sup>: при n = 20 это около миллиона</li>
+    <li class="fragment">циклов нет - взятых чисел только больше: хватит рекурсии с памятью</li>
+</ul>
+<div class="fragment opinion" style="margin-top: 0.5em;">
+    Набор взятых чисел - ключ словаря: подумай, как его хранить
+</div>
+                </section>
+
+            </section>
+
+        </div>
+    </div>
+
+    <script src="/utils/lib/js/head.min.js"></script>
+    <script src="/utils/js/reveal.js"></script>
+    <script>
+        Reveal.initialize({
+            controls: true,
+            progress: true,
+            history: true,
+            center: true,
+            transition: 'fade',
+            transitionSpeed: 'fast',
+            dependencies: [
+                { src: '/utils/lib/js/classList.js', condition: function () { return !document.body.classList; } },
+                { src: '/utils/plugin/markdown/marked.js', condition: function () { return !!document.querySelector('[data-markdown]'); } },
+                { src: '/utils/plugin/markdown/markdown.js', condition: function () { return !!document.querySelector('[data-markdown]'); } },
+                { src: '/utils/plugin/highlight/highlight.js', async: true, callback: function () { hljs.initHighlightingOnLoad(); } },
+                { src: '/utils/plugin/zoom-js/zoom.js', async: true },
+                { src: '/utils/plugin/notes/notes.js', async: true }
+            ]
+        });
+        Reveal.configure({ slideNumber: 'c/t' });
+    </script>
+</body>
+
+</html>

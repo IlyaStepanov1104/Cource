@@ -1,0 +1,1272 @@
+<!doctype html>
+<html lang="ru">
+
+<head>
+    <meta charset="utf-8">
+    <title>Занятие 36 - Игры на графах (часть 1)</title>
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+
+    <link rel="stylesheet" href="/utils/css/reveal.css">
+    <link rel="stylesheet" href="/utils/lib/css/animate.css">
+    <link rel="stylesheet" href="/utils/css/theme/night.css" id="theme">
+    <link rel="stylesheet" href="/utils/lib/css/zenburn.css">
+    <link rel="stylesheet" href="/utils/css/custom-base.css">
+    <link rel="stylesheet" href="css-custom/custom.css">
+
+    <script>
+        var link = document.createElement('link');
+        link.rel = 'stylesheet'; link.type = 'text/css';
+        link.href = window.location.search.match(/print-pdf/gi)
+            ? '/utils/css/print/pdf.css'
+            : '/utils/css/print/paper.css';
+        document.getElementsByTagName('head')[0].appendChild(link);
+    </script>
+</head>
+
+<body>
+    <div class="reveal">
+        <div class="slides">
+
+            <!-- титульный слайд -->
+            <section style="font-size: 70px; height: 100%; width: 100%">
+                <div class="lesson-time">0</div>
+                <div class="fragment">
+                    <h1 class="animated" style="font-size: 1.5em;">Игры на графах</h1>
+                    <p style="text-align: center; font-size: 0.45em; opacity: 0.6;">кто выиграет, если оба играют идеально</p>
+                    <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">Занятие 36</p>
+                </div>
+            </section>
+
+            <!-- РАЗБОР ДЗ (занятие 35) -->
+            <section>
+
+                <section style="font-size: 70px; height: 100%; width: 100%">
+                    <div class="lesson-time">0</div>
+                    <div class="fragment">
+                        <h1 style="font-size: 1.3em;">Разбор ДЗ</h1>
+                        <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">DP на графах и на поле</p>
+                    </div>
+                </section>
+
+                <!-- LeetCode 63/64/2050: какую выбрал, состояние и переход одной фразой, порядок обхода -->
+                <section>
+                    <h2>Какую задачу выбрал?</h2>
+<table style="font-size: 0.6em; width: 100%; margin-top: 0.6em;">
+<tr><td><strong>Задача</strong></td><td><strong>Состояние</strong></td><td><strong>Переход</strong></td><td><strong>Порядок</strong></td></tr>
+<tr class="fragment"><td><a href="https://leetcode.com/problems/unique-paths-ii/" target="_blank" rel="noopener">63. Unique Paths II</a></td><td>сколько путей до клетки</td><td>сверху + слева, в препятствии 0</td><td>по строкам</td></tr>
+<tr class="fragment"><td><a href="https://leetcode.com/problems/minimum-path-sum/" target="_blank" rel="noopener">64. Minimum Path Sum</a></td><td>самая дешёвая дорога до клетки</td><td>min(сверху, слева) + цена клетки</td><td>по строкам</td></tr>
+<tr class="fragment"><td><a href="https://leetcode.com/problems/parallel-courses-iii/" target="_blank" rel="noopener">2050. Parallel Courses III</a></td><td>когда закончится курс</td><td>своё время + max по курсам, которые нужны до него</td><td>топологический</td></tr>
+</table>
+<div class="fragment opinion" style="margin-top: 0.6em;">
+    Три вопроса динамики: <mark>что храним</mark>, <mark>как считаем</mark>, <mark>в каком порядке</mark>
+</div>
+                </section>
+
+                <!-- ЕГЭ №18 робот и монеты: поле = граф без циклов, max по двум соседям; частые ошибки - края поля и стены -->
+                <section>
+                    <h2>Робот и монеты</h2>
+<ul style="font-size: 0.8em; text-align: left;">
+    <li class="fragment">робот ходит только вправо и вниз: поле - граф без циклов</li>
+    <li class="fragment">в клетке: её монеты + <mark>max</mark>(сверху, слева), для минимума - <mark>min</mark></li>
+    <li class="fragment">в первой строке сосед только слева, в первом столбце - только сверху</li>
+    <li class="fragment">через стену прийти нельзя: этого соседа не учитываем</li>
+</ul>
+<div class="fragment opinion" style="margin-top: 0.6em;">
+    Ответ - в правом нижнем углу таблицы
+</div>
+                </section>
+
+            </section>
+
+            <!-- ЧАСТЬ 1: фишка на графе -->
+            <section>
+
+                <section style="font-size: 70px; height: 100%; width: 100%">
+                    <div class="lesson-time">5</div>
+                    <div class="fragment">
+                        <h1 style="font-size: 1.3em;">Фишка на графе</h1>
+                        <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">самая простая игра на графе</p>
+                    </div>
+                </section>
+
+                <!-- игра: ориентированный граф без циклов (SVG), фишка в вершине, игроки по очереди двигают её по ребру; кто не может сходить - проиграл -->
+                <section>
+                    <h2>Правила</h2>
+<div style="display: flex; align-items: center; justify-content: center; gap: 1.2em;">
+<div class="fragment">
+<svg width="589" height="314" viewBox="0 0 620 330">
+<defs>
+<marker id="gg1n" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#667" /></marker>
+<marker id="gg1h" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#f7a" /></marker>
+</defs>
+<line x1="53.4" y1="155.1" x2="134.0" y2="65.6" stroke="#667" stroke-width="2" marker-end="url(#gg1n)" />
+<line x1="60.0" y1="170.0" x2="127.0" y2="170.0" stroke="#667" stroke-width="2" marker-end="url(#gg1n)" />
+<line x1="53.4" y1="184.9" x2="134.0" y2="274.4" stroke="#667" stroke-width="2" marker-end="url(#gg1n)" />
+<line x1="168.0" y1="50.0" x2="235.0" y2="50.0" stroke="#667" stroke-width="2" marker-end="url(#gg1n)" />
+<line x1="161.4" y1="64.9" x2="242.0" y2="154.4" stroke="#667" stroke-width="2" marker-end="url(#gg1n)" />
+<line x1="168.0" y1="170.0" x2="235.0" y2="170.0" stroke="#667" stroke-width="2" marker-end="url(#gg1n)" />
+<line x1="161.4" y1="275.1" x2="242.0" y2="185.6" stroke="#667" stroke-width="2" marker-end="url(#gg1n)" />
+<line x1="168.0" y1="290.0" x2="235.0" y2="290.0" stroke="#667" stroke-width="2" marker-end="url(#gg1n)" />
+<line x1="276.0" y1="50.0" x2="343.0" y2="50.0" stroke="#667" stroke-width="2" marker-end="url(#gg1n)" />
+<line x1="269.4" y1="155.1" x2="350.0" y2="65.6" stroke="#667" stroke-width="2" marker-end="url(#gg1n)" />
+<line x1="276.0" y1="170.0" x2="343.0" y2="170.0" stroke="#667" stroke-width="2" marker-end="url(#gg1n)" />
+<line x1="269.4" y1="184.9" x2="350.0" y2="274.4" stroke="#667" stroke-width="2" marker-end="url(#gg1n)" />
+<line x1="276.0" y1="290.0" x2="343.0" y2="290.0" stroke="#667" stroke-width="2" marker-end="url(#gg1n)" />
+<line x1="384.0" y1="50.0" x2="451.0" y2="50.0" stroke="#667" stroke-width="2" marker-end="url(#gg1n)" />
+<line x1="377.4" y1="64.9" x2="458.0" y2="154.4" stroke="#667" stroke-width="2" marker-end="url(#gg1n)" />
+<line x1="377.4" y1="155.1" x2="458.0" y2="65.6" stroke="#667" stroke-width="2" marker-end="url(#gg1n)" />
+<line x1="377.4" y1="184.9" x2="458.0" y2="274.4" stroke="#667" stroke-width="2" marker-end="url(#gg1n)" />
+<line x1="377.4" y1="275.1" x2="458.0" y2="185.6" stroke="#667" stroke-width="2" marker-end="url(#gg1n)" />
+<line x1="384.0" y1="290.0" x2="451.0" y2="290.0" stroke="#667" stroke-width="2" marker-end="url(#gg1n)" />
+<line x1="492.0" y1="50.0" x2="559.0" y2="50.0" stroke="#667" stroke-width="2" marker-end="url(#gg1n)" />
+<line x1="492.0" y1="290.0" x2="559.0" y2="290.0" stroke="#667" stroke-width="2" marker-end="url(#gg1n)" />
+<circle cx="40" cy="170" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="40" y="176" fill="#dde" font-size="17" text-anchor="middle">S</text>
+<circle cx="148" cy="50" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="148" y="56" fill="#dde" font-size="17" text-anchor="middle">A</text>
+<circle cx="148" cy="170" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="148" y="176" fill="#dde" font-size="17" text-anchor="middle">B</text>
+<circle cx="148" cy="290" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="148" y="296" fill="#dde" font-size="17" text-anchor="middle">C</text>
+<circle cx="256" cy="50" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="256" y="56" fill="#dde" font-size="17" text-anchor="middle">D</text>
+<circle cx="256" cy="170" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="256" y="176" fill="#dde" font-size="17" text-anchor="middle">E</text>
+<circle cx="256" cy="290" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="256" y="296" fill="#dde" font-size="17" text-anchor="middle">F</text>
+<circle cx="364" cy="50" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="364" y="56" fill="#dde" font-size="17" text-anchor="middle">G</text>
+<circle cx="364" cy="170" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="364" y="176" fill="#dde" font-size="17" text-anchor="middle">H</text>
+<circle cx="364" cy="290" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="364" y="296" fill="#dde" font-size="17" text-anchor="middle">I</text>
+<circle cx="472" cy="50" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="472" y="56" fill="#dde" font-size="17" text-anchor="middle">J</text>
+<circle cx="472" cy="170" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="472" y="176" fill="#dde" font-size="17" text-anchor="middle">K</text>
+<circle cx="472" cy="290" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="472" y="296" fill="#dde" font-size="17" text-anchor="middle">M</text>
+<circle cx="580" cy="50" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="580" y="56" fill="#dde" font-size="17" text-anchor="middle">N</text>
+<circle cx="580" cy="290" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="580" y="296" fill="#dde" font-size="17" text-anchor="middle">O</text>
+<circle cx="57" cy="153" r="9" fill="#fd6" stroke="#222" stroke-width="2" />
+</svg>
+</div>
+<ul style="font-size: 0.75em; text-align: left;">
+    <li class="fragment">фишка (жёлтая) стоит в <code>S</code></li>
+    <li class="fragment">игроки ходят по очереди</li>
+    <li class="fragment">ход: передвинуть фишку по одной стрелке</li>
+    <li class="fragment">кто <mark>не может сходить</mark> - проиграл</li>
+</ul>
+</div>
+                </section>
+
+                <!-- сыграть вживую с учеником 2-3 партии, ученик выбирает, ходить первым или вторым -->
+                <section>
+                    <h2>Сыграем</h2>
+<div style="display: flex; align-items: center; justify-content: center; gap: 1.2em;">
+<div class="fragment">
+<svg width="589" height="314" viewBox="0 0 620 330">
+<defs>
+<marker id="gg2n" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#667" /></marker>
+<marker id="gg2h" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#f7a" /></marker>
+</defs>
+<line x1="53.4" y1="155.1" x2="134.0" y2="65.6" stroke="#667" stroke-width="2" marker-end="url(#gg2n)" />
+<line x1="60.0" y1="170.0" x2="127.0" y2="170.0" stroke="#667" stroke-width="2" marker-end="url(#gg2n)" />
+<line x1="53.4" y1="184.9" x2="134.0" y2="274.4" stroke="#667" stroke-width="2" marker-end="url(#gg2n)" />
+<line x1="168.0" y1="50.0" x2="235.0" y2="50.0" stroke="#667" stroke-width="2" marker-end="url(#gg2n)" />
+<line x1="161.4" y1="64.9" x2="242.0" y2="154.4" stroke="#667" stroke-width="2" marker-end="url(#gg2n)" />
+<line x1="168.0" y1="170.0" x2="235.0" y2="170.0" stroke="#667" stroke-width="2" marker-end="url(#gg2n)" />
+<line x1="161.4" y1="275.1" x2="242.0" y2="185.6" stroke="#667" stroke-width="2" marker-end="url(#gg2n)" />
+<line x1="168.0" y1="290.0" x2="235.0" y2="290.0" stroke="#667" stroke-width="2" marker-end="url(#gg2n)" />
+<line x1="276.0" y1="50.0" x2="343.0" y2="50.0" stroke="#667" stroke-width="2" marker-end="url(#gg2n)" />
+<line x1="269.4" y1="155.1" x2="350.0" y2="65.6" stroke="#667" stroke-width="2" marker-end="url(#gg2n)" />
+<line x1="276.0" y1="170.0" x2="343.0" y2="170.0" stroke="#667" stroke-width="2" marker-end="url(#gg2n)" />
+<line x1="269.4" y1="184.9" x2="350.0" y2="274.4" stroke="#667" stroke-width="2" marker-end="url(#gg2n)" />
+<line x1="276.0" y1="290.0" x2="343.0" y2="290.0" stroke="#667" stroke-width="2" marker-end="url(#gg2n)" />
+<line x1="384.0" y1="50.0" x2="451.0" y2="50.0" stroke="#667" stroke-width="2" marker-end="url(#gg2n)" />
+<line x1="377.4" y1="64.9" x2="458.0" y2="154.4" stroke="#667" stroke-width="2" marker-end="url(#gg2n)" />
+<line x1="377.4" y1="155.1" x2="458.0" y2="65.6" stroke="#667" stroke-width="2" marker-end="url(#gg2n)" />
+<line x1="377.4" y1="184.9" x2="458.0" y2="274.4" stroke="#667" stroke-width="2" marker-end="url(#gg2n)" />
+<line x1="377.4" y1="275.1" x2="458.0" y2="185.6" stroke="#667" stroke-width="2" marker-end="url(#gg2n)" />
+<line x1="384.0" y1="290.0" x2="451.0" y2="290.0" stroke="#667" stroke-width="2" marker-end="url(#gg2n)" />
+<line x1="492.0" y1="50.0" x2="559.0" y2="50.0" stroke="#667" stroke-width="2" marker-end="url(#gg2n)" />
+<line x1="492.0" y1="290.0" x2="559.0" y2="290.0" stroke="#667" stroke-width="2" marker-end="url(#gg2n)" />
+<circle cx="40" cy="170" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="40" y="176" fill="#dde" font-size="17" text-anchor="middle">S</text>
+<circle cx="148" cy="50" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="148" y="56" fill="#dde" font-size="17" text-anchor="middle">A</text>
+<circle cx="148" cy="170" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="148" y="176" fill="#dde" font-size="17" text-anchor="middle">B</text>
+<circle cx="148" cy="290" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="148" y="296" fill="#dde" font-size="17" text-anchor="middle">C</text>
+<circle cx="256" cy="50" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="256" y="56" fill="#dde" font-size="17" text-anchor="middle">D</text>
+<circle cx="256" cy="170" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="256" y="176" fill="#dde" font-size="17" text-anchor="middle">E</text>
+<circle cx="256" cy="290" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="256" y="296" fill="#dde" font-size="17" text-anchor="middle">F</text>
+<circle cx="364" cy="50" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="364" y="56" fill="#dde" font-size="17" text-anchor="middle">G</text>
+<circle cx="364" cy="170" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="364" y="176" fill="#dde" font-size="17" text-anchor="middle">H</text>
+<circle cx="364" cy="290" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="364" y="296" fill="#dde" font-size="17" text-anchor="middle">I</text>
+<circle cx="472" cy="50" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="472" y="56" fill="#dde" font-size="17" text-anchor="middle">J</text>
+<circle cx="472" cy="170" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="472" y="176" fill="#dde" font-size="17" text-anchor="middle">K</text>
+<circle cx="472" cy="290" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="472" y="296" fill="#dde" font-size="17" text-anchor="middle">M</text>
+<circle cx="580" cy="50" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="580" y="56" fill="#dde" font-size="17" text-anchor="middle">N</text>
+<circle cx="580" cy="290" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="580" y="296" fill="#dde" font-size="17" text-anchor="middle">O</text>
+<circle cx="57" cy="153" r="9" fill="#fd6" stroke="#222" stroke-width="2" />
+</svg>
+</div>
+<ul style="font-size: 0.75em; text-align: left;">
+    <li class="fragment">выбирай: ходишь <mark>первым</mark> или <mark>вторым</mark></li>
+    <li class="fragment">играем 2-3 партии</li>
+    <li class="fragment">запоминай, после каких ходов ты проигрывал</li>
+</ul>
+</div>
+                </section>
+
+                <!-- вопрос: можно ли по картинке заранее сказать, кто выиграет? -->
+                <section>
+                    <h2>Вопрос</h2>
+<ul style="font-size: 0.9em; text-align: left;">
+    <li class="fragment">Можно ли по картинке <mark>до начала игры</mark> сказать, кто выиграет?</li>
+    <li class="fragment">перебирать все партии долго: в шахматах их больше, чем атомов во Вселенной</li>
+    <li class="fragment">зато одно мы знаем точно: чем заканчивается каждая партия</li>
+</ul>
+<div class="fragment opinion" style="margin-top: 0.6em;">
+    Идея: начать <mark>с конца игры</mark> и идти назад
+</div>
+                </section>
+
+                <!-- тупики (нет исходящих рёбер): ходящий в них уже проиграл -->
+                <section>
+                    <h2>Тупики</h2>
+<div style="display: flex; align-items: center; justify-content: center; gap: 1.2em;">
+<div class="fragment">
+<svg width="589" height="314" viewBox="0 0 620 330">
+<defs>
+<marker id="gg3n" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#667" /></marker>
+<marker id="gg3h" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#f7a" /></marker>
+</defs>
+<line x1="53.4" y1="155.1" x2="134.0" y2="65.6" stroke="#667" stroke-width="2" marker-end="url(#gg3n)" />
+<line x1="60.0" y1="170.0" x2="127.0" y2="170.0" stroke="#667" stroke-width="2" marker-end="url(#gg3n)" />
+<line x1="53.4" y1="184.9" x2="134.0" y2="274.4" stroke="#667" stroke-width="2" marker-end="url(#gg3n)" />
+<line x1="168.0" y1="50.0" x2="235.0" y2="50.0" stroke="#667" stroke-width="2" marker-end="url(#gg3n)" />
+<line x1="161.4" y1="64.9" x2="242.0" y2="154.4" stroke="#667" stroke-width="2" marker-end="url(#gg3n)" />
+<line x1="168.0" y1="170.0" x2="235.0" y2="170.0" stroke="#667" stroke-width="2" marker-end="url(#gg3n)" />
+<line x1="161.4" y1="275.1" x2="242.0" y2="185.6" stroke="#667" stroke-width="2" marker-end="url(#gg3n)" />
+<line x1="168.0" y1="290.0" x2="235.0" y2="290.0" stroke="#667" stroke-width="2" marker-end="url(#gg3n)" />
+<line x1="276.0" y1="50.0" x2="343.0" y2="50.0" stroke="#667" stroke-width="2" marker-end="url(#gg3n)" />
+<line x1="269.4" y1="155.1" x2="350.0" y2="65.6" stroke="#667" stroke-width="2" marker-end="url(#gg3n)" />
+<line x1="276.0" y1="170.0" x2="343.0" y2="170.0" stroke="#667" stroke-width="2" marker-end="url(#gg3n)" />
+<line x1="269.4" y1="184.9" x2="350.0" y2="274.4" stroke="#667" stroke-width="2" marker-end="url(#gg3n)" />
+<line x1="276.0" y1="290.0" x2="343.0" y2="290.0" stroke="#667" stroke-width="2" marker-end="url(#gg3n)" />
+<line x1="384.0" y1="50.0" x2="451.0" y2="50.0" stroke="#667" stroke-width="2" marker-end="url(#gg3n)" />
+<line x1="377.4" y1="64.9" x2="458.0" y2="154.4" stroke="#667" stroke-width="2" marker-end="url(#gg3n)" />
+<line x1="377.4" y1="155.1" x2="458.0" y2="65.6" stroke="#667" stroke-width="2" marker-end="url(#gg3n)" />
+<line x1="377.4" y1="184.9" x2="458.0" y2="274.4" stroke="#667" stroke-width="2" marker-end="url(#gg3n)" />
+<line x1="377.4" y1="275.1" x2="458.0" y2="185.6" stroke="#667" stroke-width="2" marker-end="url(#gg3n)" />
+<line x1="384.0" y1="290.0" x2="451.0" y2="290.0" stroke="#667" stroke-width="2" marker-end="url(#gg3n)" />
+<line x1="492.0" y1="50.0" x2="559.0" y2="50.0" stroke="#667" stroke-width="2" marker-end="url(#gg3n)" />
+<line x1="492.0" y1="290.0" x2="559.0" y2="290.0" stroke="#667" stroke-width="2" marker-end="url(#gg3n)" />
+<circle cx="40" cy="170" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="40" y="176" fill="#dde" font-size="17" text-anchor="middle">S</text>
+<circle cx="148" cy="50" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="148" y="56" fill="#dde" font-size="17" text-anchor="middle">A</text>
+<circle cx="148" cy="170" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="148" y="176" fill="#dde" font-size="17" text-anchor="middle">B</text>
+<circle cx="148" cy="290" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="148" y="296" fill="#dde" font-size="17" text-anchor="middle">C</text>
+<circle cx="256" cy="50" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="256" y="56" fill="#dde" font-size="17" text-anchor="middle">D</text>
+<circle cx="256" cy="170" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="256" y="176" fill="#dde" font-size="17" text-anchor="middle">E</text>
+<circle cx="256" cy="290" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="256" y="296" fill="#dde" font-size="17" text-anchor="middle">F</text>
+<circle cx="364" cy="50" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="364" y="56" fill="#dde" font-size="17" text-anchor="middle">G</text>
+<circle cx="364" cy="170" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="364" y="176" fill="#dde" font-size="17" text-anchor="middle">H</text>
+<circle cx="364" cy="290" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="364" y="296" fill="#dde" font-size="17" text-anchor="middle">I</text>
+<circle cx="472" cy="50" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="472" y="56" fill="#dde" font-size="17" text-anchor="middle">J</text>
+<circle cx="472" cy="170" r="20" fill="#1c2030" stroke="#f7a" stroke-width="2" />
+<text x="472" y="176" fill="#dde" font-size="17" text-anchor="middle">K</text>
+<circle cx="472" cy="290" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="472" y="296" fill="#dde" font-size="17" text-anchor="middle">M</text>
+<circle cx="580" cy="50" r="20" fill="#1c2030" stroke="#f7a" stroke-width="2" />
+<text x="580" y="56" fill="#dde" font-size="17" text-anchor="middle">N</text>
+<circle cx="580" cy="290" r="20" fill="#1c2030" stroke="#f7a" stroke-width="2" />
+<text x="580" y="296" fill="#dde" font-size="17" text-anchor="middle">O</text>
+</svg>
+</div>
+<ul style="font-size: 0.75em; text-align: left;">
+    <li class="fragment">из <code>K</code>, <code>N</code>, <code>O</code> не выходит ни одной стрелки</li>
+    <li class="fragment">тупик бывает и посередине: <code>K</code></li>
+    <li class="fragment">кто должен ходить из тупика, <mark>уже проиграл</mark></li>
+</ul>
+</div>
+                </section>
+
+                <!-- почему игра обязательно закончится: в графе нет циклов (связь с занятием 35) -->
+                <section>
+                    <h2>Игра закончится</h2>
+<div style="display: flex; align-items: center; justify-content: center; gap: 1.2em;">
+<div class="fragment">
+<svg width="589" height="314" viewBox="0 0 620 330">
+<defs>
+<marker id="gg4n" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#667" /></marker>
+<marker id="gg4h" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#f7a" /></marker>
+</defs>
+<line x1="53.4" y1="155.1" x2="134.0" y2="65.6" stroke="#667" stroke-width="2" marker-end="url(#gg4n)" />
+<line x1="60.0" y1="170.0" x2="127.0" y2="170.0" stroke="#667" stroke-width="2" marker-end="url(#gg4n)" />
+<line x1="53.4" y1="184.9" x2="134.0" y2="274.4" stroke="#667" stroke-width="2" marker-end="url(#gg4n)" />
+<line x1="168.0" y1="50.0" x2="235.0" y2="50.0" stroke="#667" stroke-width="2" marker-end="url(#gg4n)" />
+<line x1="161.4" y1="64.9" x2="242.0" y2="154.4" stroke="#667" stroke-width="2" marker-end="url(#gg4n)" />
+<line x1="168.0" y1="170.0" x2="235.0" y2="170.0" stroke="#667" stroke-width="2" marker-end="url(#gg4n)" />
+<line x1="161.4" y1="275.1" x2="242.0" y2="185.6" stroke="#667" stroke-width="2" marker-end="url(#gg4n)" />
+<line x1="168.0" y1="290.0" x2="235.0" y2="290.0" stroke="#667" stroke-width="2" marker-end="url(#gg4n)" />
+<line x1="276.0" y1="50.0" x2="343.0" y2="50.0" stroke="#667" stroke-width="2" marker-end="url(#gg4n)" />
+<line x1="269.4" y1="155.1" x2="350.0" y2="65.6" stroke="#667" stroke-width="2" marker-end="url(#gg4n)" />
+<line x1="276.0" y1="170.0" x2="343.0" y2="170.0" stroke="#667" stroke-width="2" marker-end="url(#gg4n)" />
+<line x1="269.4" y1="184.9" x2="350.0" y2="274.4" stroke="#667" stroke-width="2" marker-end="url(#gg4n)" />
+<line x1="276.0" y1="290.0" x2="343.0" y2="290.0" stroke="#667" stroke-width="2" marker-end="url(#gg4n)" />
+<line x1="384.0" y1="50.0" x2="451.0" y2="50.0" stroke="#667" stroke-width="2" marker-end="url(#gg4n)" />
+<line x1="377.4" y1="64.9" x2="458.0" y2="154.4" stroke="#667" stroke-width="2" marker-end="url(#gg4n)" />
+<line x1="377.4" y1="155.1" x2="458.0" y2="65.6" stroke="#667" stroke-width="2" marker-end="url(#gg4n)" />
+<line x1="377.4" y1="184.9" x2="458.0" y2="274.4" stroke="#667" stroke-width="2" marker-end="url(#gg4n)" />
+<line x1="377.4" y1="275.1" x2="458.0" y2="185.6" stroke="#667" stroke-width="2" marker-end="url(#gg4n)" />
+<line x1="384.0" y1="290.0" x2="451.0" y2="290.0" stroke="#667" stroke-width="2" marker-end="url(#gg4n)" />
+<line x1="492.0" y1="50.0" x2="559.0" y2="50.0" stroke="#667" stroke-width="2" marker-end="url(#gg4n)" />
+<line x1="492.0" y1="290.0" x2="559.0" y2="290.0" stroke="#667" stroke-width="2" marker-end="url(#gg4n)" />
+<line x1="60.0" y1="170.0" x2="127.0" y2="170.0" stroke="#f7a" stroke-width="4" marker-end="url(#gg4h)" />
+<line x1="168.0" y1="170.0" x2="235.0" y2="170.0" stroke="#f7a" stroke-width="4" marker-end="url(#gg4h)" />
+<line x1="276.0" y1="170.0" x2="343.0" y2="170.0" stroke="#f7a" stroke-width="4" marker-end="url(#gg4h)" />
+<line x1="377.4" y1="155.1" x2="458.0" y2="65.6" stroke="#f7a" stroke-width="4" marker-end="url(#gg4h)" />
+<line x1="492.0" y1="50.0" x2="559.0" y2="50.0" stroke="#f7a" stroke-width="4" marker-end="url(#gg4h)" />
+<circle cx="40" cy="170" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="40" y="176" fill="#dde" font-size="17" text-anchor="middle">S</text>
+<circle cx="148" cy="50" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="148" y="56" fill="#dde" font-size="17" text-anchor="middle">A</text>
+<circle cx="148" cy="170" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="148" y="176" fill="#dde" font-size="17" text-anchor="middle">B</text>
+<circle cx="148" cy="290" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="148" y="296" fill="#dde" font-size="17" text-anchor="middle">C</text>
+<circle cx="256" cy="50" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="256" y="56" fill="#dde" font-size="17" text-anchor="middle">D</text>
+<circle cx="256" cy="170" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="256" y="176" fill="#dde" font-size="17" text-anchor="middle">E</text>
+<circle cx="256" cy="290" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="256" y="296" fill="#dde" font-size="17" text-anchor="middle">F</text>
+<circle cx="364" cy="50" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="364" y="56" fill="#dde" font-size="17" text-anchor="middle">G</text>
+<circle cx="364" cy="170" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="364" y="176" fill="#dde" font-size="17" text-anchor="middle">H</text>
+<circle cx="364" cy="290" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="364" y="296" fill="#dde" font-size="17" text-anchor="middle">I</text>
+<circle cx="472" cy="50" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="472" y="56" fill="#dde" font-size="17" text-anchor="middle">J</text>
+<circle cx="472" cy="170" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="472" y="176" fill="#dde" font-size="17" text-anchor="middle">K</text>
+<circle cx="472" cy="290" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="472" y="296" fill="#dde" font-size="17" text-anchor="middle">M</text>
+<circle cx="580" cy="50" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="580" y="56" fill="#dde" font-size="17" text-anchor="middle">N</text>
+<circle cx="580" cy="290" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="580" y="296" fill="#dde" font-size="17" text-anchor="middle">O</text>
+</svg>
+</div>
+<ul style="font-size: 0.75em; text-align: left;">
+    <li class="fragment">в графе нет циклов: в вершину, где фишка уже была, не вернуться</li>
+    <li class="fragment">партия - это путь в графе</li>
+    <li class="fragment">самая длинная партия здесь - 5 ходов</li>
+</ul>
+</div>
+<div class="fragment opinion" style="margin-top: 0.6em;">
+    Как в занятии 35: нет циклов - значит, можно идти по порядку
+</div>
+                </section>
+
+            </section>
+
+            <!-- ЧАСТЬ 2: выигрышные и проигрышные вершины -->
+            <section>
+
+                <section style="font-size: 70px; height: 100%; width: 100%">
+                    <div class="lesson-time">20</div>
+                    <div class="fragment">
+                        <h1 style="font-size: 1.3em;">Выигрышные и проигрышные</h1>
+                        <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">раскрашиваем граф</p>
+                    </div>
+                </section>
+
+                <!-- что значит "вершина выигрышная": ходящий отсюда выигрывает при любой игре соперника -->
+                <section>
+                    <h2>W и L</h2>
+<ul style="font-size: 0.85em; text-align: left;">
+    <li class="fragment"><mark class="green">W</mark> (win): тот, кто сейчас ходит, выиграет, <mark>как бы ни играл</mark> соперник</li>
+    <li class="fragment"><mark>L</mark> (lose): тот, кто сейчас ходит, проиграет, если соперник не ошибётся</li>
+    <li class="fragment">это свойство вершины: неважно, Петя ходит или Вася</li>
+</ul>
+<div class="fragment opinion" style="margin-top: 0.6em;">
+    В графе без циклов каждая вершина - либо W, либо L
+</div>
+                </section>
+
+                <!-- правило 1: есть ребро в проигрышную - вершина выигрышная (W) -->
+                <section>
+                    <h2>Правило 1</h2>
+<div style="display: flex; align-items: center; justify-content: center; gap: 1.2em;">
+<div class="fragment" data-fragment-index="1">
+<svg width="284" height="273" viewBox="0 0 270 260">
+<defs>
+<marker id="gg5n" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#667" /></marker>
+<marker id="gg5h" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#f7a" /></marker>
+</defs>
+<line x1="58.1" y1="121.4" x2="211.0" y2="49.0" stroke="#667" stroke-width="2" marker-end="url(#gg5n)" />
+<line x1="60.0" y1="130.0" x2="209.0" y2="130.0" stroke="#667" stroke-width="2" marker-end="url(#gg5n)" />
+<line x1="58.1" y1="138.6" x2="211.0" y2="211.0" stroke="#667" stroke-width="2" marker-end="url(#gg5n)" />
+<line x1="60.0" y1="130.0" x2="209.0" y2="130.0" stroke="#f7a" stroke-width="4" marker-end="url(#gg5h)" class="fragment" data-fragment-index="2" />
+<circle cx="40" cy="130" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="40" y="136" fill="#dde" font-size="17" text-anchor="middle">v</text>
+<circle cx="230" cy="40" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="230" y="46" fill="#dde" font-size="17" text-anchor="middle">X</text>
+<circle cx="230" cy="130" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="230" y="136" fill="#dde" font-size="17" text-anchor="middle">Y</text>
+<circle cx="230" cy="220" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="230" y="226" fill="#dde" font-size="17" text-anchor="middle">Z</text>
+<g>
+<circle cx="230" cy="40" r="20" fill="#1f3a26" stroke="#7d7" stroke-width="3" />
+<text x="230" y="46" fill="#dde" font-size="17" text-anchor="middle">X</text>
+<text x="230" y="11" fill="#7d7" font-size="17" font-weight="bold" text-anchor="middle">W</text>
+</g>
+<g>
+<circle cx="230" cy="130" r="20" fill="#3a1f24" stroke="#f66" stroke-width="3" />
+<text x="230" y="136" fill="#dde" font-size="17" text-anchor="middle">Y</text>
+<text x="230" y="101" fill="#f66" font-size="17" font-weight="bold" text-anchor="middle">L</text>
+</g>
+<g>
+<circle cx="230" cy="220" r="20" fill="#1f3a26" stroke="#7d7" stroke-width="3" />
+<text x="230" y="226" fill="#dde" font-size="17" text-anchor="middle">Z</text>
+<text x="230" y="191" fill="#7d7" font-size="17" font-weight="bold" text-anchor="middle">W</text>
+</g>
+<g class="fragment" data-fragment-index="3">
+<circle cx="40" cy="130" r="20" fill="#1f3a26" stroke="#7d7" stroke-width="3" />
+<text x="40" y="136" fill="#dde" font-size="17" text-anchor="middle">v</text>
+<text x="40" y="101" fill="#7d7" font-size="17" font-weight="bold" text-anchor="middle">W</text>
+</g>
+</svg>
+</div>
+<ul style="font-size: 0.75em; text-align: left;">
+    <li class="fragment" data-fragment-index="1">из <code>v</code> можно пойти в <code>X</code>, <code>Y</code>, <code>Z</code></li>
+    <li class="fragment" data-fragment-index="1"><code>Y</code> - <mark>L</mark>: кто там ходит, тот проиграет</li>
+    <li class="fragment" data-fragment-index="2">идём в <code>Y</code> и отдаём ход сопернику</li>
+    <li class="fragment" data-fragment-index="3">есть ход в L - вершина <mark class='green'>W</mark></li>
+</ul>
+</div>
+                </section>
+
+                <!-- правило 2: все рёбра ведут в выигрышные (или их нет) - вершина проигрышная (L) -->
+                <section>
+                    <h2>Правило 2</h2>
+<div style="display: flex; align-items: center; justify-content: center; gap: 1em;">
+<div class="fragment" data-fragment-index="1">
+<svg width="284" height="273" viewBox="0 0 270 260">
+<defs>
+<marker id="gg6n" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#667" /></marker>
+<marker id="gg6h" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#f7a" /></marker>
+</defs>
+<line x1="58.1" y1="121.4" x2="211.0" y2="49.0" stroke="#667" stroke-width="2" marker-end="url(#gg6n)" />
+<line x1="60.0" y1="130.0" x2="209.0" y2="130.0" stroke="#667" stroke-width="2" marker-end="url(#gg6n)" />
+<line x1="58.1" y1="138.6" x2="211.0" y2="211.0" stroke="#667" stroke-width="2" marker-end="url(#gg6n)" />
+<circle cx="40" cy="130" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="40" y="136" fill="#dde" font-size="17" text-anchor="middle">v</text>
+<circle cx="230" cy="40" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="230" y="46" fill="#dde" font-size="17" text-anchor="middle">X</text>
+<circle cx="230" cy="130" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="230" y="136" fill="#dde" font-size="17" text-anchor="middle">Y</text>
+<circle cx="230" cy="220" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="230" y="226" fill="#dde" font-size="17" text-anchor="middle">Z</text>
+<g>
+<circle cx="230" cy="40" r="20" fill="#1f3a26" stroke="#7d7" stroke-width="3" />
+<text x="230" y="46" fill="#dde" font-size="17" text-anchor="middle">X</text>
+<text x="230" y="11" fill="#7d7" font-size="17" font-weight="bold" text-anchor="middle">W</text>
+</g>
+<g>
+<circle cx="230" cy="130" r="20" fill="#1f3a26" stroke="#7d7" stroke-width="3" />
+<text x="230" y="136" fill="#dde" font-size="17" text-anchor="middle">Y</text>
+<text x="230" y="101" fill="#7d7" font-size="17" font-weight="bold" text-anchor="middle">W</text>
+</g>
+<g>
+<circle cx="230" cy="220" r="20" fill="#1f3a26" stroke="#7d7" stroke-width="3" />
+<text x="230" y="226" fill="#dde" font-size="17" text-anchor="middle">Z</text>
+<text x="230" y="191" fill="#7d7" font-size="17" font-weight="bold" text-anchor="middle">W</text>
+</g>
+<g class="fragment" data-fragment-index="2">
+<circle cx="40" cy="130" r="20" fill="#3a1f24" stroke="#f66" stroke-width="3" />
+<text x="40" y="136" fill="#dde" font-size="17" text-anchor="middle">v</text>
+<text x="40" y="101" fill="#f66" font-size="17" font-weight="bold" text-anchor="middle">L</text>
+</g>
+</svg>
+</div>
+<div class="fragment" data-fragment-index="2">
+<svg width="126" height="273" viewBox="0 0 120 260">
+<defs>
+<marker id="gg7n" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#667" /></marker>
+<marker id="gg7h" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#f7a" /></marker>
+</defs>
+<circle cx="60" cy="130" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="60" y="136" fill="#dde" font-size="17" text-anchor="middle">T</text>
+<g class="fragment" data-fragment-index="2">
+<circle cx="60" cy="130" r="20" fill="#3a1f24" stroke="#f66" stroke-width="3" />
+<text x="60" y="136" fill="#dde" font-size="17" text-anchor="middle">T</text>
+<text x="60" y="101" fill="#f66" font-size="17" font-weight="bold" text-anchor="middle">L</text>
+</g>
+</svg>
+</div>
+<ul style="font-size: 0.75em; text-align: left;">
+    <li class="fragment" data-fragment-index="1">все ходы ведут в <mark class="green">W</mark>: куда ни пойди, соперник выиграет</li>
+    <li class="fragment" data-fragment-index="2">значит, <code>v</code> - <mark>L</mark></li>
+    <li class="fragment" data-fragment-index="2">тупик <code>T</code>: ходов нет совсем, тоже <mark>L</mark></li>
+</ul>
+</div>
+                </section>
+
+                <!-- разметка того же графа от тупиков назад, фрагмент за фрагментом (SVG) -->
+                <section>
+                    <h2>Раскрашиваем от тупиков</h2>
+<div style="display: flex; align-items: center; justify-content: center; gap: 1.2em;">
+<svg width="589" height="314" viewBox="0 0 620 330">
+<defs>
+<marker id="gg8n" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#667" /></marker>
+<marker id="gg8h" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#f7a" /></marker>
+</defs>
+<line x1="53.4" y1="155.1" x2="134.0" y2="65.6" stroke="#667" stroke-width="2" marker-end="url(#gg8n)" />
+<line x1="60.0" y1="170.0" x2="127.0" y2="170.0" stroke="#667" stroke-width="2" marker-end="url(#gg8n)" />
+<line x1="53.4" y1="184.9" x2="134.0" y2="274.4" stroke="#667" stroke-width="2" marker-end="url(#gg8n)" />
+<line x1="168.0" y1="50.0" x2="235.0" y2="50.0" stroke="#667" stroke-width="2" marker-end="url(#gg8n)" />
+<line x1="161.4" y1="64.9" x2="242.0" y2="154.4" stroke="#667" stroke-width="2" marker-end="url(#gg8n)" />
+<line x1="168.0" y1="170.0" x2="235.0" y2="170.0" stroke="#667" stroke-width="2" marker-end="url(#gg8n)" />
+<line x1="161.4" y1="275.1" x2="242.0" y2="185.6" stroke="#667" stroke-width="2" marker-end="url(#gg8n)" />
+<line x1="168.0" y1="290.0" x2="235.0" y2="290.0" stroke="#667" stroke-width="2" marker-end="url(#gg8n)" />
+<line x1="276.0" y1="50.0" x2="343.0" y2="50.0" stroke="#667" stroke-width="2" marker-end="url(#gg8n)" />
+<line x1="269.4" y1="155.1" x2="350.0" y2="65.6" stroke="#667" stroke-width="2" marker-end="url(#gg8n)" />
+<line x1="276.0" y1="170.0" x2="343.0" y2="170.0" stroke="#667" stroke-width="2" marker-end="url(#gg8n)" />
+<line x1="269.4" y1="184.9" x2="350.0" y2="274.4" stroke="#667" stroke-width="2" marker-end="url(#gg8n)" />
+<line x1="276.0" y1="290.0" x2="343.0" y2="290.0" stroke="#667" stroke-width="2" marker-end="url(#gg8n)" />
+<line x1="384.0" y1="50.0" x2="451.0" y2="50.0" stroke="#667" stroke-width="2" marker-end="url(#gg8n)" />
+<line x1="377.4" y1="64.9" x2="458.0" y2="154.4" stroke="#667" stroke-width="2" marker-end="url(#gg8n)" />
+<line x1="377.4" y1="155.1" x2="458.0" y2="65.6" stroke="#667" stroke-width="2" marker-end="url(#gg8n)" />
+<line x1="377.4" y1="184.9" x2="458.0" y2="274.4" stroke="#667" stroke-width="2" marker-end="url(#gg8n)" />
+<line x1="377.4" y1="275.1" x2="458.0" y2="185.6" stroke="#667" stroke-width="2" marker-end="url(#gg8n)" />
+<line x1="384.0" y1="290.0" x2="451.0" y2="290.0" stroke="#667" stroke-width="2" marker-end="url(#gg8n)" />
+<line x1="492.0" y1="50.0" x2="559.0" y2="50.0" stroke="#667" stroke-width="2" marker-end="url(#gg8n)" />
+<line x1="492.0" y1="290.0" x2="559.0" y2="290.0" stroke="#667" stroke-width="2" marker-end="url(#gg8n)" />
+<circle cx="40" cy="170" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="40" y="176" fill="#dde" font-size="17" text-anchor="middle">S</text>
+<circle cx="148" cy="50" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="148" y="56" fill="#dde" font-size="17" text-anchor="middle">A</text>
+<circle cx="148" cy="170" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="148" y="176" fill="#dde" font-size="17" text-anchor="middle">B</text>
+<circle cx="148" cy="290" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="148" y="296" fill="#dde" font-size="17" text-anchor="middle">C</text>
+<circle cx="256" cy="50" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="256" y="56" fill="#dde" font-size="17" text-anchor="middle">D</text>
+<circle cx="256" cy="170" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="256" y="176" fill="#dde" font-size="17" text-anchor="middle">E</text>
+<circle cx="256" cy="290" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="256" y="296" fill="#dde" font-size="17" text-anchor="middle">F</text>
+<circle cx="364" cy="50" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="364" y="56" fill="#dde" font-size="17" text-anchor="middle">G</text>
+<circle cx="364" cy="170" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="364" y="176" fill="#dde" font-size="17" text-anchor="middle">H</text>
+<circle cx="364" cy="290" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="364" y="296" fill="#dde" font-size="17" text-anchor="middle">I</text>
+<circle cx="472" cy="50" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="472" y="56" fill="#dde" font-size="17" text-anchor="middle">J</text>
+<circle cx="472" cy="170" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="472" y="176" fill="#dde" font-size="17" text-anchor="middle">K</text>
+<circle cx="472" cy="290" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="472" y="296" fill="#dde" font-size="17" text-anchor="middle">M</text>
+<circle cx="580" cy="50" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="580" y="56" fill="#dde" font-size="17" text-anchor="middle">N</text>
+<circle cx="580" cy="290" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="580" y="296" fill="#dde" font-size="17" text-anchor="middle">O</text>
+<g class="fragment" data-fragment-index="6">
+<circle cx="40" cy="170" r="20" fill="#1f3a26" stroke="#7d7" stroke-width="3" />
+<text x="40" y="176" fill="#dde" font-size="17" text-anchor="middle">S</text>
+<text x="40" y="141" fill="#7d7" font-size="17" font-weight="bold" text-anchor="middle">W</text>
+</g>
+<g class="fragment" data-fragment-index="5">
+<circle cx="148" cy="50" r="20" fill="#1f3a26" stroke="#7d7" stroke-width="3" />
+<text x="148" y="56" fill="#dde" font-size="17" text-anchor="middle">A</text>
+<text x="148" y="21" fill="#7d7" font-size="17" font-weight="bold" text-anchor="middle">W</text>
+</g>
+<g class="fragment" data-fragment-index="5">
+<circle cx="148" cy="170" r="20" fill="#3a1f24" stroke="#f66" stroke-width="3" />
+<text x="148" y="176" fill="#dde" font-size="17" text-anchor="middle">B</text>
+<text x="148" y="141" fill="#f66" font-size="17" font-weight="bold" text-anchor="middle">L</text>
+</g>
+<g class="fragment" data-fragment-index="5">
+<circle cx="148" cy="290" r="20" fill="#1f3a26" stroke="#7d7" stroke-width="3" />
+<text x="148" y="296" fill="#dde" font-size="17" text-anchor="middle">C</text>
+<text x="148" y="261" fill="#7d7" font-size="17" font-weight="bold" text-anchor="middle">W</text>
+</g>
+<g class="fragment" data-fragment-index="4">
+<circle cx="256" cy="50" r="20" fill="#3a1f24" stroke="#f66" stroke-width="3" />
+<text x="256" y="56" fill="#dde" font-size="17" text-anchor="middle">D</text>
+<text x="256" y="21" fill="#f66" font-size="17" font-weight="bold" text-anchor="middle">L</text>
+</g>
+<g class="fragment" data-fragment-index="4">
+<circle cx="256" cy="170" r="20" fill="#1f3a26" stroke="#7d7" stroke-width="3" />
+<text x="256" y="176" fill="#dde" font-size="17" text-anchor="middle">E</text>
+<text x="256" y="141" fill="#7d7" font-size="17" font-weight="bold" text-anchor="middle">W</text>
+</g>
+<g class="fragment" data-fragment-index="4">
+<circle cx="256" cy="290" r="20" fill="#3a1f24" stroke="#f66" stroke-width="3" />
+<text x="256" y="296" fill="#dde" font-size="17" text-anchor="middle">F</text>
+<text x="256" y="261" fill="#f66" font-size="17" font-weight="bold" text-anchor="middle">L</text>
+</g>
+<g class="fragment" data-fragment-index="2">
+<circle cx="364" cy="50" r="20" fill="#1f3a26" stroke="#7d7" stroke-width="3" />
+<text x="364" y="56" fill="#dde" font-size="17" text-anchor="middle">G</text>
+<text x="364" y="21" fill="#7d7" font-size="17" font-weight="bold" text-anchor="middle">W</text>
+</g>
+<g class="fragment" data-fragment-index="3">
+<circle cx="364" cy="170" r="20" fill="#3a1f24" stroke="#f66" stroke-width="3" />
+<text x="364" y="176" fill="#dde" font-size="17" text-anchor="middle">H</text>
+<text x="364" y="141" fill="#f66" font-size="17" font-weight="bold" text-anchor="middle">L</text>
+</g>
+<g class="fragment" data-fragment-index="2">
+<circle cx="364" cy="290" r="20" fill="#1f3a26" stroke="#7d7" stroke-width="3" />
+<text x="364" y="296" fill="#dde" font-size="17" text-anchor="middle">I</text>
+<text x="364" y="261" fill="#7d7" font-size="17" font-weight="bold" text-anchor="middle">W</text>
+</g>
+<g class="fragment" data-fragment-index="2">
+<circle cx="472" cy="50" r="20" fill="#1f3a26" stroke="#7d7" stroke-width="3" />
+<text x="472" y="56" fill="#dde" font-size="17" text-anchor="middle">J</text>
+<text x="472" y="21" fill="#7d7" font-size="17" font-weight="bold" text-anchor="middle">W</text>
+</g>
+<g class="fragment" data-fragment-index="1">
+<circle cx="472" cy="170" r="20" fill="#3a1f24" stroke="#f66" stroke-width="3" />
+<text x="472" y="176" fill="#dde" font-size="17" text-anchor="middle">K</text>
+<text x="472" y="141" fill="#f66" font-size="17" font-weight="bold" text-anchor="middle">L</text>
+</g>
+<g class="fragment" data-fragment-index="2">
+<circle cx="472" cy="290" r="20" fill="#1f3a26" stroke="#7d7" stroke-width="3" />
+<text x="472" y="296" fill="#dde" font-size="17" text-anchor="middle">M</text>
+<text x="472" y="261" fill="#7d7" font-size="17" font-weight="bold" text-anchor="middle">W</text>
+</g>
+<g class="fragment" data-fragment-index="1">
+<circle cx="580" cy="50" r="20" fill="#3a1f24" stroke="#f66" stroke-width="3" />
+<text x="580" y="56" fill="#dde" font-size="17" text-anchor="middle">N</text>
+<text x="580" y="21" fill="#f66" font-size="17" font-weight="bold" text-anchor="middle">L</text>
+</g>
+<g class="fragment" data-fragment-index="1">
+<circle cx="580" cy="290" r="20" fill="#3a1f24" stroke="#f66" stroke-width="3" />
+<text x="580" y="296" fill="#dde" font-size="17" text-anchor="middle">O</text>
+<text x="580" y="261" fill="#f66" font-size="17" font-weight="bold" text-anchor="middle">L</text>
+</g>
+</svg>
+<ul style="font-size: 0.6em; text-align: left;">
+    <li class="fragment" data-fragment-index="1">тупики <code>K</code>, <code>N</code>, <code>O</code>: <mark>L</mark></li>
+    <li class="fragment" data-fragment-index="2"><code>G</code>, <code>I</code>, <code>J</code>, <code>M</code>: есть ход в тупик - <mark class='green'>W</mark></li>
+    <li class="fragment" data-fragment-index="3"><code>H</code>: все ходы в W - <mark>L</mark></li>
+    <li class="fragment" data-fragment-index="4"><code>E</code> - <mark class='green'>W</mark>, <code>D</code> и <code>F</code> - <mark>L</mark></li>
+    <li class="fragment" data-fragment-index="5"><code>A</code>, <code>C</code> - <mark class='green'>W</mark>, <code>B</code> - <mark>L</mark></li>
+    <li class="fragment" data-fragment-index="6"><code>S</code> - <mark class='green'>W</mark></li>
+</ul>
+</div>
+<div class="fragment opinion" data-fragment-index="7" style="margin-top: 0.4em;">
+    Первый выигрывает, но из трёх ходов из <code>S</code> верный только один - в <code>B</code>
+</div>
+                </section>
+
+                <!-- это DP: состояние = вершина, порядок = обратный топологический; рекурсия + запоминание считает то же самое -->
+                <section>
+                    <h2>Это динамика</h2>
+<div class="timeline">
+    <div class="timeline-item fragment">
+        <div class="timeline-marker">1</div>
+        <div class="timeline-content"><strong>Что храним?</strong> Для каждой вершины: W или L</div>
+    </div>
+    <div class="timeline-item fragment">
+        <div class="timeline-marker">2</div>
+        <div class="timeline-content"><strong>Как считаем?</strong> W, если хотя бы один ход ведёт в L</div>
+    </div>
+    <div class="timeline-item fragment">
+        <div class="timeline-marker">3</div>
+        <div class="timeline-content"><strong>В каком порядке?</strong> От тупиков назад: <mark>обратный топологический</mark></div>
+    </div>
+</div>
+<div class="fragment opinion" style="margin-top: 0.6em;">
+    Можно и рекурсией: чтобы узнать вершину, спроси всех соседей; готовые ответы клади в словарь, чтобы не считать дважды
+</div>
+                </section>
+
+                <!-- стратегия: из W всегда ходим в L - переиграть партию по разметке -->
+                <section>
+                    <h2>Стратегия</h2>
+<div style="display: flex; align-items: center; justify-content: center; gap: 1.2em;">
+<svg width="589" height="314" viewBox="0 0 620 330">
+<defs>
+<marker id="gg9n" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#667" /></marker>
+<marker id="gg9h" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#f7a" /></marker>
+</defs>
+<line x1="53.4" y1="155.1" x2="134.0" y2="65.6" stroke="#667" stroke-width="2" marker-end="url(#gg9n)" />
+<line x1="60.0" y1="170.0" x2="127.0" y2="170.0" stroke="#667" stroke-width="2" marker-end="url(#gg9n)" />
+<line x1="53.4" y1="184.9" x2="134.0" y2="274.4" stroke="#667" stroke-width="2" marker-end="url(#gg9n)" />
+<line x1="168.0" y1="50.0" x2="235.0" y2="50.0" stroke="#667" stroke-width="2" marker-end="url(#gg9n)" />
+<line x1="161.4" y1="64.9" x2="242.0" y2="154.4" stroke="#667" stroke-width="2" marker-end="url(#gg9n)" />
+<line x1="168.0" y1="170.0" x2="235.0" y2="170.0" stroke="#667" stroke-width="2" marker-end="url(#gg9n)" />
+<line x1="161.4" y1="275.1" x2="242.0" y2="185.6" stroke="#667" stroke-width="2" marker-end="url(#gg9n)" />
+<line x1="168.0" y1="290.0" x2="235.0" y2="290.0" stroke="#667" stroke-width="2" marker-end="url(#gg9n)" />
+<line x1="276.0" y1="50.0" x2="343.0" y2="50.0" stroke="#667" stroke-width="2" marker-end="url(#gg9n)" />
+<line x1="269.4" y1="155.1" x2="350.0" y2="65.6" stroke="#667" stroke-width="2" marker-end="url(#gg9n)" />
+<line x1="276.0" y1="170.0" x2="343.0" y2="170.0" stroke="#667" stroke-width="2" marker-end="url(#gg9n)" />
+<line x1="269.4" y1="184.9" x2="350.0" y2="274.4" stroke="#667" stroke-width="2" marker-end="url(#gg9n)" />
+<line x1="276.0" y1="290.0" x2="343.0" y2="290.0" stroke="#667" stroke-width="2" marker-end="url(#gg9n)" />
+<line x1="384.0" y1="50.0" x2="451.0" y2="50.0" stroke="#667" stroke-width="2" marker-end="url(#gg9n)" />
+<line x1="377.4" y1="64.9" x2="458.0" y2="154.4" stroke="#667" stroke-width="2" marker-end="url(#gg9n)" />
+<line x1="377.4" y1="155.1" x2="458.0" y2="65.6" stroke="#667" stroke-width="2" marker-end="url(#gg9n)" />
+<line x1="377.4" y1="184.9" x2="458.0" y2="274.4" stroke="#667" stroke-width="2" marker-end="url(#gg9n)" />
+<line x1="377.4" y1="275.1" x2="458.0" y2="185.6" stroke="#667" stroke-width="2" marker-end="url(#gg9n)" />
+<line x1="384.0" y1="290.0" x2="451.0" y2="290.0" stroke="#667" stroke-width="2" marker-end="url(#gg9n)" />
+<line x1="492.0" y1="50.0" x2="559.0" y2="50.0" stroke="#667" stroke-width="2" marker-end="url(#gg9n)" />
+<line x1="492.0" y1="290.0" x2="559.0" y2="290.0" stroke="#667" stroke-width="2" marker-end="url(#gg9n)" />
+<line x1="60.0" y1="170.0" x2="127.0" y2="170.0" stroke="#f7a" stroke-width="4" marker-end="url(#gg9h)" class="fragment" data-fragment-index="1" />
+<line x1="168.0" y1="170.0" x2="235.0" y2="170.0" stroke="#f7a" stroke-width="4" marker-end="url(#gg9h)" class="fragment" data-fragment-index="2" />
+<line x1="276.0" y1="170.0" x2="343.0" y2="170.0" stroke="#f7a" stroke-width="4" marker-end="url(#gg9h)" class="fragment" data-fragment-index="3" />
+<line x1="377.4" y1="155.1" x2="458.0" y2="65.6" stroke="#f7a" stroke-width="4" marker-end="url(#gg9h)" class="fragment" data-fragment-index="4" />
+<line x1="492.0" y1="50.0" x2="559.0" y2="50.0" stroke="#f7a" stroke-width="4" marker-end="url(#gg9h)" class="fragment" data-fragment-index="5" />
+<circle cx="40" cy="170" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="40" y="176" fill="#dde" font-size="17" text-anchor="middle">S</text>
+<circle cx="148" cy="50" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="148" y="56" fill="#dde" font-size="17" text-anchor="middle">A</text>
+<circle cx="148" cy="170" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="148" y="176" fill="#dde" font-size="17" text-anchor="middle">B</text>
+<circle cx="148" cy="290" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="148" y="296" fill="#dde" font-size="17" text-anchor="middle">C</text>
+<circle cx="256" cy="50" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="256" y="56" fill="#dde" font-size="17" text-anchor="middle">D</text>
+<circle cx="256" cy="170" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="256" y="176" fill="#dde" font-size="17" text-anchor="middle">E</text>
+<circle cx="256" cy="290" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="256" y="296" fill="#dde" font-size="17" text-anchor="middle">F</text>
+<circle cx="364" cy="50" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="364" y="56" fill="#dde" font-size="17" text-anchor="middle">G</text>
+<circle cx="364" cy="170" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="364" y="176" fill="#dde" font-size="17" text-anchor="middle">H</text>
+<circle cx="364" cy="290" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="364" y="296" fill="#dde" font-size="17" text-anchor="middle">I</text>
+<circle cx="472" cy="50" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="472" y="56" fill="#dde" font-size="17" text-anchor="middle">J</text>
+<circle cx="472" cy="170" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="472" y="176" fill="#dde" font-size="17" text-anchor="middle">K</text>
+<circle cx="472" cy="290" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="472" y="296" fill="#dde" font-size="17" text-anchor="middle">M</text>
+<circle cx="580" cy="50" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="580" y="56" fill="#dde" font-size="17" text-anchor="middle">N</text>
+<circle cx="580" cy="290" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="580" y="296" fill="#dde" font-size="17" text-anchor="middle">O</text>
+<g>
+<circle cx="40" cy="170" r="20" fill="#1f3a26" stroke="#7d7" stroke-width="3" />
+<text x="40" y="176" fill="#dde" font-size="17" text-anchor="middle">S</text>
+<text x="40" y="141" fill="#7d7" font-size="17" font-weight="bold" text-anchor="middle">W</text>
+</g>
+<g>
+<circle cx="148" cy="50" r="20" fill="#1f3a26" stroke="#7d7" stroke-width="3" />
+<text x="148" y="56" fill="#dde" font-size="17" text-anchor="middle">A</text>
+<text x="148" y="21" fill="#7d7" font-size="17" font-weight="bold" text-anchor="middle">W</text>
+</g>
+<g>
+<circle cx="148" cy="170" r="20" fill="#3a1f24" stroke="#f66" stroke-width="3" />
+<text x="148" y="176" fill="#dde" font-size="17" text-anchor="middle">B</text>
+<text x="148" y="141" fill="#f66" font-size="17" font-weight="bold" text-anchor="middle">L</text>
+</g>
+<g>
+<circle cx="148" cy="290" r="20" fill="#1f3a26" stroke="#7d7" stroke-width="3" />
+<text x="148" y="296" fill="#dde" font-size="17" text-anchor="middle">C</text>
+<text x="148" y="261" fill="#7d7" font-size="17" font-weight="bold" text-anchor="middle">W</text>
+</g>
+<g>
+<circle cx="256" cy="50" r="20" fill="#3a1f24" stroke="#f66" stroke-width="3" />
+<text x="256" y="56" fill="#dde" font-size="17" text-anchor="middle">D</text>
+<text x="256" y="21" fill="#f66" font-size="17" font-weight="bold" text-anchor="middle">L</text>
+</g>
+<g>
+<circle cx="256" cy="170" r="20" fill="#1f3a26" stroke="#7d7" stroke-width="3" />
+<text x="256" y="176" fill="#dde" font-size="17" text-anchor="middle">E</text>
+<text x="256" y="141" fill="#7d7" font-size="17" font-weight="bold" text-anchor="middle">W</text>
+</g>
+<g>
+<circle cx="256" cy="290" r="20" fill="#3a1f24" stroke="#f66" stroke-width="3" />
+<text x="256" y="296" fill="#dde" font-size="17" text-anchor="middle">F</text>
+<text x="256" y="261" fill="#f66" font-size="17" font-weight="bold" text-anchor="middle">L</text>
+</g>
+<g>
+<circle cx="364" cy="50" r="20" fill="#1f3a26" stroke="#7d7" stroke-width="3" />
+<text x="364" y="56" fill="#dde" font-size="17" text-anchor="middle">G</text>
+<text x="364" y="21" fill="#7d7" font-size="17" font-weight="bold" text-anchor="middle">W</text>
+</g>
+<g>
+<circle cx="364" cy="170" r="20" fill="#3a1f24" stroke="#f66" stroke-width="3" />
+<text x="364" y="176" fill="#dde" font-size="17" text-anchor="middle">H</text>
+<text x="364" y="141" fill="#f66" font-size="17" font-weight="bold" text-anchor="middle">L</text>
+</g>
+<g>
+<circle cx="364" cy="290" r="20" fill="#1f3a26" stroke="#7d7" stroke-width="3" />
+<text x="364" y="296" fill="#dde" font-size="17" text-anchor="middle">I</text>
+<text x="364" y="261" fill="#7d7" font-size="17" font-weight="bold" text-anchor="middle">W</text>
+</g>
+<g>
+<circle cx="472" cy="50" r="20" fill="#1f3a26" stroke="#7d7" stroke-width="3" />
+<text x="472" y="56" fill="#dde" font-size="17" text-anchor="middle">J</text>
+<text x="472" y="21" fill="#7d7" font-size="17" font-weight="bold" text-anchor="middle">W</text>
+</g>
+<g>
+<circle cx="472" cy="170" r="20" fill="#3a1f24" stroke="#f66" stroke-width="3" />
+<text x="472" y="176" fill="#dde" font-size="17" text-anchor="middle">K</text>
+<text x="472" y="141" fill="#f66" font-size="17" font-weight="bold" text-anchor="middle">L</text>
+</g>
+<g>
+<circle cx="472" cy="290" r="20" fill="#1f3a26" stroke="#7d7" stroke-width="3" />
+<text x="472" y="296" fill="#dde" font-size="17" text-anchor="middle">M</text>
+<text x="472" y="261" fill="#7d7" font-size="17" font-weight="bold" text-anchor="middle">W</text>
+</g>
+<g>
+<circle cx="580" cy="50" r="20" fill="#3a1f24" stroke="#f66" stroke-width="3" />
+<text x="580" y="56" fill="#dde" font-size="17" text-anchor="middle">N</text>
+<text x="580" y="21" fill="#f66" font-size="17" font-weight="bold" text-anchor="middle">L</text>
+</g>
+<g>
+<circle cx="580" cy="290" r="20" fill="#3a1f24" stroke="#f66" stroke-width="3" />
+<text x="580" y="296" fill="#dde" font-size="17" text-anchor="middle">O</text>
+<text x="580" y="261" fill="#f66" font-size="17" font-weight="bold" text-anchor="middle">L</text>
+</g>
+</svg>
+<ul style="font-size: 0.6em; text-align: left;">
+    <li class="fragment" data-fragment-index="1">мы в <code>S</code> (W): идём в <code>B</code> (L)</li>
+    <li class="fragment" data-fragment-index="2">у соперника один ход: в <code>E</code></li>
+    <li class="fragment" data-fragment-index="3">из <code>E</code> три хода, в L ведёт только <code>H</code></li>
+    <li class="fragment" data-fragment-index="4">соперник идёт в <code>J</code> или <code>M</code> - оба W</li>
+    <li class="fragment" data-fragment-index="5">ходим в тупик: <mark class='green'>победа</mark></li>
+</ul>
+</div>
+<div class="fragment opinion" data-fragment-index="6" style="margin-top: 0.4em;">
+    Из W всегда ходим в L. Сыграем ещё раз - теперь ты знаешь, как выиграть
+</div>
+                </section>
+
+                <!-- любая игра без случайности и скрытой информации - такой граф: позиция = вершина, ход = ребро -->
+                <section>
+                    <h2>Любая игра - граф</h2>
+<div class="compare">
+    <div class="compare-block fragment">
+        <h4>Крестики-нолики</h4>
+        <p style="font-size: 0.7em;">вершина - поле 3 на 3, около 5 тысяч позиций: компьютер раскрасит всё мгновенно</p>
+    </div>
+    <div class="compare-block fragment">
+        <h4>Шахматы</h4>
+        <p style="font-size: 0.7em;">граф тоже есть, но позиций так много, что его не построить</p>
+    </div>
+    <div class="compare-block fragment">
+        <h4>Карты, кости</h4>
+        <p style="font-size: 0.7em;">не подходят: есть случайность и скрытые карты</p>
+    </div>
+</div>
+<div class="fragment opinion" style="margin-top: 0.6em;">
+    Нужно: ходят по очереди, нет случайности, оба видят всю позицию. Тогда <mark>позиция - вершина, ход - ребро</mark>
+</div>
+                </section>
+
+            </section>
+
+            <!-- ЧАСТЬ 3: игры с LeetCode -->
+            <section>
+
+                <section style="font-size: 70px; height: 100%; width: 100%">
+                    <div class="lesson-time">35</div>
+                    <div class="fragment">
+                        <h1 style="font-size: 1.3em;">Игры с LeetCode</h1>
+                        <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">от фишки к настоящим задачам</p>
+                    </div>
+                </section>
+
+                <!-- 1025. Divisor Game: состояние = число, ходы = делители; построить граф для n до 8 (SVG), разметить W/L -->
+                <section>
+                    <h2><a href="https://leetcode.com/problems/divisor-game/" target="_blank" rel="noopener">1025. Divisor Game</a></h2>
+<p style="font-size: 0.6em;">На доске число <code>n</code>. Ход: выбрать делитель <code>x</code> числа <code>n</code>, <code>0 &lt; x &lt; n</code>, и заменить <code>n</code> на <code>n - x</code>. Кто не может сходить - проиграл</p>
+<table style="font-size: 0.6em; margin: 0.3em auto;"><tr><td><strong>n</strong></td><td><strong>делители меньше n</strong></td><td><strong>куда можно пойти: n - x</strong></td></tr>
+<tr class="fragment"><td>1</td><td>нет</td><td><mark>никуда - тупик</mark></td></tr>
+<tr class="fragment"><td>2</td><td>1</td><td>1</td></tr>
+<tr class="fragment"><td>3</td><td>1</td><td>2</td></tr>
+<tr class="fragment"><td>4</td><td>1, 2</td><td>3, 2</td></tr>
+<tr class="fragment"><td>5</td><td>1</td><td>4</td></tr>
+<tr class="fragment"><td>6</td><td>1, 2, 3</td><td>5, 4, 3</td></tr>
+<tr class="fragment"><td>7</td><td>1</td><td>6</td></tr>
+<tr class="fragment"><td>8</td><td>1, 2, 4</td><td>7, 6, 4</td></tr></table>
+                </section>
+
+                <!-- граф ходов Divisor Game для n до 8, раскраска W/L -->
+                <section>
+                    <h2>Divisor Game: граф</h2>
+<div class="fragment" data-fragment-index="0">
+<svg width="770" height="223" viewBox="0 55 570 165">
+<defs>
+<marker id="gg10n" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#667" /></marker>
+<marker id="gg10h" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#f7a" /></marker>
+</defs>
+<line x1="90.0" y1="170.0" x2="61.0" y2="170.0" stroke="#667" stroke-width="2" marker-end="url(#gg10n)" />
+<line x1="160.0" y1="170.0" x2="131.0" y2="170.0" stroke="#667" stroke-width="2" marker-end="url(#gg10n)" />
+<line x1="230.0" y1="170.0" x2="201.0" y2="170.0" stroke="#667" stroke-width="2" marker-end="url(#gg10n)" />
+<line x1="300.0" y1="170.0" x2="271.0" y2="170.0" stroke="#667" stroke-width="2" marker-end="url(#gg10n)" />
+<line x1="370.0" y1="170.0" x2="341.0" y2="170.0" stroke="#667" stroke-width="2" marker-end="url(#gg10n)" />
+<line x1="440.0" y1="170.0" x2="411.0" y2="170.0" stroke="#667" stroke-width="2" marker-end="url(#gg10n)" />
+<line x1="510.0" y1="170.0" x2="481.0" y2="170.0" stroke="#667" stroke-width="2" marker-end="url(#gg10n)" />
+<path d="M236.8,154.9 Q180.0,90.0 123.8,154.2" fill="none" stroke="#667" stroke-width="2" marker-end="url(#gg10n)" />
+<path d="M376.8,154.9 Q320.0,90.0 263.8,154.2" fill="none" stroke="#667" stroke-width="2" marker-end="url(#gg10n)" />
+<path d="M516.8,154.9 Q460.0,90.0 403.8,154.2" fill="none" stroke="#667" stroke-width="2" marker-end="url(#gg10n)" />
+<path d="M377.4,154.4 Q285.0,40.0 193.2,153.7" fill="none" stroke="#667" stroke-width="2" marker-end="url(#gg10n)" />
+<path d="M518.5,153.6 Q390.0,-30.0 262.0,152.8" fill="none" stroke="#667" stroke-width="2" marker-end="url(#gg10n)" />
+<circle cx="40" cy="170" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="40" y="176" fill="#dde" font-size="17" text-anchor="middle">1</text>
+<circle cx="110" cy="170" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="110" y="176" fill="#dde" font-size="17" text-anchor="middle">2</text>
+<circle cx="180" cy="170" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="180" y="176" fill="#dde" font-size="17" text-anchor="middle">3</text>
+<circle cx="250" cy="170" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="250" y="176" fill="#dde" font-size="17" text-anchor="middle">4</text>
+<circle cx="320" cy="170" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="320" y="176" fill="#dde" font-size="17" text-anchor="middle">5</text>
+<circle cx="390" cy="170" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="390" y="176" fill="#dde" font-size="17" text-anchor="middle">6</text>
+<circle cx="460" cy="170" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="460" y="176" fill="#dde" font-size="17" text-anchor="middle">7</text>
+<circle cx="530" cy="170" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="530" y="176" fill="#dde" font-size="17" text-anchor="middle">8</text>
+<g class="fragment" data-fragment-index="1">
+<circle cx="40" cy="170" r="20" fill="#3a1f24" stroke="#f66" stroke-width="3" />
+<text x="40" y="176" fill="#dde" font-size="17" text-anchor="middle">1</text>
+<text x="40" y="214" fill="#f66" font-size="17" font-weight="bold" text-anchor="middle">L</text>
+</g>
+<g class="fragment" data-fragment-index="2">
+<circle cx="110" cy="170" r="20" fill="#1f3a26" stroke="#7d7" stroke-width="3" />
+<text x="110" y="176" fill="#dde" font-size="17" text-anchor="middle">2</text>
+<text x="110" y="214" fill="#7d7" font-size="17" font-weight="bold" text-anchor="middle">W</text>
+</g>
+<g class="fragment" data-fragment-index="3">
+<circle cx="180" cy="170" r="20" fill="#3a1f24" stroke="#f66" stroke-width="3" />
+<text x="180" y="176" fill="#dde" font-size="17" text-anchor="middle">3</text>
+<text x="180" y="214" fill="#f66" font-size="17" font-weight="bold" text-anchor="middle">L</text>
+</g>
+<g class="fragment" data-fragment-index="4">
+<circle cx="250" cy="170" r="20" fill="#1f3a26" stroke="#7d7" stroke-width="3" />
+<text x="250" y="176" fill="#dde" font-size="17" text-anchor="middle">4</text>
+<text x="250" y="214" fill="#7d7" font-size="17" font-weight="bold" text-anchor="middle">W</text>
+</g>
+<g class="fragment" data-fragment-index="5">
+<circle cx="320" cy="170" r="20" fill="#3a1f24" stroke="#f66" stroke-width="3" />
+<text x="320" y="176" fill="#dde" font-size="17" text-anchor="middle">5</text>
+<text x="320" y="214" fill="#f66" font-size="17" font-weight="bold" text-anchor="middle">L</text>
+</g>
+<g class="fragment" data-fragment-index="6">
+<circle cx="390" cy="170" r="20" fill="#1f3a26" stroke="#7d7" stroke-width="3" />
+<text x="390" y="176" fill="#dde" font-size="17" text-anchor="middle">6</text>
+<text x="390" y="214" fill="#7d7" font-size="17" font-weight="bold" text-anchor="middle">W</text>
+</g>
+<g class="fragment" data-fragment-index="7">
+<circle cx="460" cy="170" r="20" fill="#3a1f24" stroke="#f66" stroke-width="3" />
+<text x="460" y="176" fill="#dde" font-size="17" text-anchor="middle">7</text>
+<text x="460" y="214" fill="#f66" font-size="17" font-weight="bold" text-anchor="middle">L</text>
+</g>
+<g class="fragment" data-fragment-index="8">
+<circle cx="530" cy="170" r="20" fill="#1f3a26" stroke="#7d7" stroke-width="3" />
+<text x="530" y="176" fill="#dde" font-size="17" text-anchor="middle">8</text>
+<text x="530" y="214" fill="#7d7" font-size="17" font-weight="bold" text-anchor="middle">W</text>
+</g>
+</svg>
+</div>
+<p class="fragment" data-fragment-index="0" style="font-size: 0.55em; opacity: 0.8;">вершина - число, стрелка - ход; у <code>1</code> нет делителей меньше неё - тупик</p>
+                </section>
+
+                <!-- по разметке видна закономерность (чётные - W): DP помогает угадать формулу, а формулу потом доказать -->
+                <section>
+                    <h2>Закономерность</h2>
+<ul style="font-size: 0.8em; text-align: left;">
+    <li class="fragment">чётные - <mark class="green">W</mark>, нечётные - <mark>L</mark></li>
+    <li class="fragment">из чётного берём <code>x = 1</code> и отдаём сопернику нечётное</li>
+    <li class="fragment">у нечётного все делители нечётные: после хода число станет чётным</li>
+    <li class="fragment">ответ задачи: <code>n</code> чётное</li>
+</ul>
+<div class="fragment opinion" style="margin-top: 0.6em;">
+    Раскраска для маленьких <code>n</code> помогает <mark>угадать</mark> правило, а потом его доказываем
+</div>
+                </section>
+
+                <!-- игры на очки: уже не "кто победит", а "на сколько больше наберу" -->
+                <section>
+                    <h2>Игра на очки: <a href="https://leetcode.com/problems/predict-the-winner/" target="_blank" rel="noopener">486. 486</a></h2>
+<p style="font-size: 0.65em;">Двое по очереди берут число <mark>с левого или правого края</mark>. Первый побеждает, если его сумма не меньше, чем у второго</p>
+<div class="fragment"><table style="margin: 0.3em auto; border-collapse: collapse; font-size: 0.85em;"><tr><td style="border: 2px solid #556; padding: 0.15em 0.6em; text-align: center;">1</td><td style="border: 2px solid #556; padding: 0.15em 0.6em; text-align: center;">5</td><td style="border: 2px solid #556; padding: 0.15em 0.6em; text-align: center;">233</td><td style="border: 2px solid #556; padding: 0.15em 0.6em; text-align: center;">7</td></tr></table></div>
+<ul style="font-size: 0.7em; text-align: left;">
+    <li class="fragment">жадно берём <code>7</code> - соперник забирает <code>233</code>, мы проиграли</li>
+    <li class="fragment">берём <code>1</code> - соперник берёт <code>5</code> или <code>7</code>, и <code>233</code> открывается нам</li>
+    <li class="fragment">жадность не работает: нужно думать на несколько ходов вперёд</li>
+</ul>
+                </section>
+
+                <!-- позиция в игре на очки: после любых ходов на столе остаётся кусок подряд -->
+                <section>
+                    <h2>Что остаётся на столе</h2>
+<div class="fragment" style="display: flex; align-items: center; justify-content: center; gap: 0.8em;"><span style="font-size: 0.6em; width: 7em; text-align: right;">в начале</span><table style="margin: 0.3em auto; border-collapse: collapse; font-size: 0.85em;"><tr><td style="border: 2px solid #556; padding: 0.15em 0.6em; text-align: center;">1</td><td style="border: 2px solid #556; padding: 0.15em 0.6em; text-align: center;">5</td><td style="border: 2px solid #556; padding: 0.15em 0.6em; text-align: center;">233</td><td style="border: 2px solid #556; padding: 0.15em 0.6em; text-align: center;">7</td></tr></table></div>
+<div class="fragment" style="display: flex; align-items: center; justify-content: center; gap: 0.8em;"><span style="font-size: 0.6em; width: 7em; text-align: right;">взяли 1</span><table style="margin: 0.3em auto; border-collapse: collapse; font-size: 0.85em;"><tr><td style="border: 2px solid #556; padding: 0.15em 0.6em; text-align: center; opacity: 0.3;">1</td><td style="border: 2px solid #556; padding: 0.15em 0.6em; text-align: center;">5</td><td style="border: 2px solid #556; padding: 0.15em 0.6em; text-align: center;">233</td><td style="border: 2px solid #556; padding: 0.15em 0.6em; text-align: center;">7</td></tr></table></div>
+<div class="fragment" style="display: flex; align-items: center; justify-content: center; gap: 0.8em;"><span style="font-size: 0.6em; width: 7em; text-align: right;">взяли 7</span><table style="margin: 0.3em auto; border-collapse: collapse; font-size: 0.85em;"><tr><td style="border: 2px solid #556; padding: 0.15em 0.6em; text-align: center; opacity: 0.3;">1</td><td style="border: 2px solid #556; padding: 0.15em 0.6em; text-align: center;">5</td><td style="border: 2px solid #556; padding: 0.15em 0.6em; text-align: center;">233</td><td style="border: 2px solid #556; padding: 0.15em 0.6em; text-align: center; opacity: 0.3;">7</td></tr></table></div>
+<div class="fragment" style="display: flex; align-items: center; justify-content: center; gap: 0.8em;"><span style="font-size: 0.6em; width: 7em; text-align: right;">взяли 233</span><table style="margin: 0.3em auto; border-collapse: collapse; font-size: 0.85em;"><tr><td style="border: 2px solid #556; padding: 0.15em 0.6em; text-align: center; opacity: 0.3;">1</td><td style="border: 2px solid #556; padding: 0.15em 0.6em; text-align: center;">5</td><td style="border: 2px solid #556; padding: 0.15em 0.6em; text-align: center; opacity: 0.3;">233</td><td style="border: 2px solid #556; padding: 0.15em 0.6em; text-align: center; opacity: 0.3;">7</td></tr></table></div>
+<div class="fragment opinion" style="margin-top: 0.6em;">
+    Всегда остаётся <mark>кусок подряд</mark>. Позиция игры = кусок: откуда и докуда
+</div>
+                </section>
+
+                <!-- граф кусков для 1 5 2 (SVG): вершина - кусок, ребро - взяли число с края -->
+                <section>
+                    <h2>Граф кусков</h2>
+<div class="fragment">
+<svg width="594" height="352" viewBox="0 0 540 320">
+<defs>
+<marker id="gg11n" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#667" /></marker>
+</defs>
+<line x1="250" y1="58.0" x2="120" y2="125.0" stroke="#667" stroke-width="2" marker-end="url(#gg11n)" />
+<text x="145.0" y="95.5" fill="#9ab" font-size="14" text-anchor="middle">взял 1</text>
+<line x1="250" y1="58.0" x2="380" y2="125.0" stroke="#667" stroke-width="2" marker-end="url(#gg11n)" />
+<text x="355.0" y="95.5" fill="#9ab" font-size="14" text-anchor="middle">взял 2</text>
+<line x1="120" y1="163.0" x2="40" y2="230.0" stroke="#667" stroke-width="2" marker-end="url(#gg11n)" />
+<text x="40.0" y="200.5" fill="#9ab" font-size="14" text-anchor="middle">взял 5</text>
+<line x1="120" y1="163.0" x2="250" y2="230.0" stroke="#667" stroke-width="2" marker-end="url(#gg11n)" />
+<text x="225.0" y="200.5" fill="#9ab" font-size="14" text-anchor="middle">взял 2</text>
+<line x1="380" y1="163.0" x2="250" y2="230.0" stroke="#667" stroke-width="2" marker-end="url(#gg11n)" />
+<text x="275.0" y="200.5" fill="#9ab" font-size="14" text-anchor="middle">взял 1</text>
+<line x1="380" y1="163.0" x2="460" y2="230.0" stroke="#667" stroke-width="2" marker-end="url(#gg11n)" />
+<text x="460.0" y="200.5" fill="#9ab" font-size="14" text-anchor="middle">взял 5</text>
+<rect x="199.0" y="22.0" width="34" height="36" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="216.0" y="46" fill="#dde" font-size="18" text-anchor="middle">1</text>
+<rect x="233.0" y="22.0" width="34" height="36" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="250.0" y="46" fill="#dde" font-size="18" text-anchor="middle">5</text>
+<rect x="267.0" y="22.0" width="34" height="36" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="284.0" y="46" fill="#dde" font-size="18" text-anchor="middle">2</text>
+<rect x="86.0" y="127.0" width="34" height="36" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="103.0" y="151" fill="#dde" font-size="18" text-anchor="middle">5</text>
+<rect x="120.0" y="127.0" width="34" height="36" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="137.0" y="151" fill="#dde" font-size="18" text-anchor="middle">2</text>
+<rect x="346.0" y="127.0" width="34" height="36" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="363.0" y="151" fill="#dde" font-size="18" text-anchor="middle">1</text>
+<rect x="380.0" y="127.0" width="34" height="36" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="397.0" y="151" fill="#dde" font-size="18" text-anchor="middle">5</text>
+<rect x="23.0" y="232.0" width="34" height="36" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="40.0" y="256" fill="#dde" font-size="18" text-anchor="middle">2</text>
+<rect x="233.0" y="232.0" width="34" height="36" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="250.0" y="256" fill="#dde" font-size="18" text-anchor="middle">5</text>
+<rect x="443.0" y="232.0" width="34" height="36" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="460.0" y="256" fill="#dde" font-size="18" text-anchor="middle">1</text>
+<rect class="fragment" x="229.0" y="228.0" width="42" height="44" rx="6" fill="none" stroke="#f7a" stroke-width="4" />
+</svg>
+</div>
+<ul style="font-size: 0.65em; text-align: left;">
+    <li class="fragment">вершина - кусок, стрелка - взяли число с края</li>
+    <li class="fragment">в кусок <code>5</code> можно прийти двумя путями - посчитаем его один раз</li>
+</ul>
+                </section>
+
+                <!-- перевес: вместо W/L храним число - на сколько больше наберёт тот, кто ходит -->
+                <section>
+                    <h2>Перевес</h2>
+<ul style="font-size: 0.8em; text-align: left;">
+    <li class="fragment">W и L тут мало: важно, <mark>на сколько очков</mark> больше</li>
+    <li class="fragment"><mark>перевес</mark> куска: на сколько больше наберёт тот, кто сейчас ходит, если оба играют идеально</li>
+    <li class="fragment">кусок из одного числа: берём его, соперник получает 0. Перевес = само число</li>
+</ul>
+<div class="fragment opinion" style="margin-top: 0.6em;">
+    Первый выигрывает, если перевес всего массива <mark>&gt;= 0</mark>
+</div>
+                </section>
+
+                <!-- кусок из двух чисел 1 5: два варианта хода, выбираем лучший -->
+                <section>
+                    <h2>Кусок из двух чисел</h2>
+<div class="fragment"><table style="margin: 0.3em auto; border-collapse: collapse; font-size: 0.85em;"><tr><td style="border: 2px solid #556; padding: 0.15em 0.6em; text-align: center;">1</td><td style="border: 2px solid #556; padding: 0.15em 0.6em; text-align: center;">5</td></tr></table></div>
+<div class="compare">
+    <div class="compare-block fragment">
+        <h4>Взять 1</h4>
+        <table style="margin: 0.3em auto; border-collapse: collapse; font-size: 0.85em;"><tr><td style="border: 2px solid #556; padding: 0.15em 0.6em; text-align: center; background: rgba(255, 119, 170, 0.35);">1</td><td style="border: 2px solid #556; padding: 0.15em 0.6em; text-align: center;">5</td></tr></table>
+        <p style="font-size: 0.65em;">соперник возьмёт 5<br>перевес: 1 - 5 = -4</p>
+    </div>
+    <div class="compare-block fragment">
+        <h4>Взять 5</h4>
+        <table style="margin: 0.3em auto; border-collapse: collapse; font-size: 0.85em;"><tr><td style="border: 2px solid #556; padding: 0.15em 0.6em; text-align: center;">1</td><td style="border: 2px solid #556; padding: 0.15em 0.6em; text-align: center; background: rgba(255, 119, 170, 0.35);">5</td></tr></table>
+        <p style="font-size: 0.65em;">соперник возьмёт 1<br>перевес: 5 - 1 = <mark class="green">4</mark></p>
+    </div>
+</div>
+<div class="fragment opinion" style="margin-top: 0.6em;">
+    Выбираем лучший вариант: перевес куска <code>1 5</code> равен <mark class="green">4</mark>
+</div>
+                </section>
+
+                <!-- кусок из трёх чисел 1 5 2: перевес соперника вычитаем -->
+                <section>
+                    <h2>Кусок из трёх чисел</h2>
+<div class="fragment"><table style="margin: 0.3em auto; border-collapse: collapse; font-size: 0.85em;"><tr><td style="border: 2px solid #556; padding: 0.15em 0.6em; text-align: center;">1</td><td style="border: 2px solid #556; padding: 0.15em 0.6em; text-align: center;">5</td><td style="border: 2px solid #556; padding: 0.15em 0.6em; text-align: center;">2</td></tr></table></div>
+<div class="compare">
+    <div class="compare-block fragment">
+        <h4>Взять 1</h4>
+        <table style="margin: 0.3em auto; border-collapse: collapse; font-size: 0.85em;"><tr><td style="border: 2px solid #556; padding: 0.15em 0.6em; text-align: center; background: rgba(255, 119, 170, 0.35);">1</td><td style="border: 2px solid #556; padding: 0.15em 0.6em; text-align: center;">5</td><td style="border: 2px solid #556; padding: 0.15em 0.6em; text-align: center;">2</td></tr></table>
+        <p style="font-size: 0.6em;">соперник ходит на куске <code>5 2</code>, его перевес 5 - 2 = 3<br>наш: 1 - 3 = <mark>-2</mark></p>
+    </div>
+    <div class="compare-block fragment">
+        <h4>Взять 2</h4>
+        <table style="margin: 0.3em auto; border-collapse: collapse; font-size: 0.85em;"><tr><td style="border: 2px solid #556; padding: 0.15em 0.6em; text-align: center;">1</td><td style="border: 2px solid #556; padding: 0.15em 0.6em; text-align: center;">5</td><td style="border: 2px solid #556; padding: 0.15em 0.6em; text-align: center; background: rgba(255, 119, 170, 0.35);">2</td></tr></table>
+        <p style="font-size: 0.6em;">соперник ходит на куске <code>1 5</code>, его перевес 4<br>наш: 2 - 4 = <mark>-2</mark></p>
+    </div>
+</div>
+<div class="fragment opinion" style="margin-top: 0.6em;">
+    Перевес соперника <mark>вычитаем</mark>: что хорошо ему, то плохо нам. Здесь первый проигрывает на 2 очка
+</div>
+                </section>
+
+                <!-- правило: перевес куска = max(левое - перевес остатка, правое - перевес остатка) -->
+                <section>
+                    <h2>Правило</h2>
+<div class="compare">
+    <div class="compare-block fragment">
+        <h4>Взять левое</h4>
+        <table style="margin: 0.3em auto; border-collapse: collapse; font-size: 0.85em;"><tr><td style="border: 2px solid #556; padding: 0.15em 0.6em; text-align: center; background: rgba(255, 119, 170, 0.35);">?</td><td style="border: 2px solid #556; padding: 0.15em 0.6em; text-align: center;">...</td><td style="border: 2px solid #556; padding: 0.15em 0.6em; text-align: center;">?</td></tr></table>
+        <p style="font-size: 0.65em;">левое число - перевес соперника на куске без левого</p>
+    </div>
+    <div class="compare-block fragment">
+        <h4>Взять правое</h4>
+        <table style="margin: 0.3em auto; border-collapse: collapse; font-size: 0.85em;"><tr><td style="border: 2px solid #556; padding: 0.15em 0.6em; text-align: center;">?</td><td style="border: 2px solid #556; padding: 0.15em 0.6em; text-align: center;">...</td><td style="border: 2px solid #556; padding: 0.15em 0.6em; text-align: center; background: rgba(255, 119, 170, 0.35);">?</td></tr></table>
+        <p style="font-size: 0.65em;">правое число - перевес соперника на куске без правого</p>
+    </div>
+</div>
+<div class="fragment opinion" style="margin-top: 0.6em;">
+    Перевес куска = <mark>лучший</mark> из двух вариантов
+</div>
+<p class="fragment" style="font-size: 0.6em; opacity: 0.8;">Как с W и L: ищем ход, после которого сопернику хуже всего</p>
+                </section>
+
+                <!-- трассировка 1 5 233 7: куски из одного и двух чисел -->
+                <section>
+                    <h2>Считаем <code>1 5 233 7</code></h2>
+<p class="fragment" style="font-size: 0.65em;">Куски из одного числа: перевес = само число (1, 5, 233, 7)</p>
+<table style="font-size: 0.6em; margin: 0.4em auto;"><tr><td><strong>Кусок</strong></td><td><strong>Взять левое</strong></td><td><strong>Взять правое</strong></td><td><strong>Перевес</strong></td></tr>
+<tr class="fragment"><td><code>1 5</code></td><td>1 - 5 = -4</td><td><mark class='green'>5 - 1 = 4</mark></td><td><strong>4</strong></td></tr>
+<tr class="fragment"><td><code>5 233</code></td><td>5 - 233 = -228</td><td><mark class='green'>233 - 5 = 228</mark></td><td><strong>228</strong></td></tr>
+<tr class="fragment"><td><code>233 7</code></td><td><mark class='green'>233 - 7 = 226</mark></td><td>7 - 233 = -226</td><td><strong>226</strong></td></tr></table>
+<p class="fragment" style="font-size: 0.6em; opacity: 0.8;">Подсвечен лучший вариант</p>
+                </section>
+
+                <!-- трассировка: куски из трёх чисел, берём перевесы кусков из двух -->
+                <section>
+                    <h2>Куски из трёх чисел</h2>
+<p class="fragment" style="font-size: 0.6em;">Уже знаем: <code>1 5</code> = 4, <code>5 233</code> = 228, <code>233 7</code> = 226</p>
+<table style="font-size: 0.6em; margin: 0.4em auto;"><tr><td><strong>Кусок</strong></td><td><strong>Взять левое</strong></td><td><strong>Взять правое</strong></td><td><strong>Перевес</strong></td></tr>
+<tr class="fragment"><td><code>1 5 233</code></td><td>1 - 228 = -227</td><td><mark class='green'>233 - 4 = 229</mark></td><td><strong>229</strong></td></tr>
+<tr class="fragment"><td><code>5 233 7</code></td><td><mark class='green'>5 - 226 = -221</mark></td><td><mark class='green'>7 - 228 = -221</mark></td><td><strong>-221</strong></td></tr></table>
+                </section>
+
+                <!-- трассировка: весь массив, ответ и проверка -->
+                <section>
+                    <h2>Весь массив</h2>
+<p class="fragment" style="font-size: 0.6em;">Уже знаем: <code>5 233 7</code> = -221, <code>1 5 233</code> = 229</p>
+<table style="font-size: 0.6em; margin: 0.4em auto;"><tr><td><strong>Кусок</strong></td><td><strong>Взять левое</strong></td><td><strong>Взять правое</strong></td><td><strong>Перевес</strong></td></tr>
+<tr class="fragment"><td><code>1 5 233 7</code></td><td><mark class='green'>1 - (-221) = 222</mark></td><td>7 - 229 = -222</td><td><strong>222</strong></td></tr></table>
+<div class="fragment opinion" style="margin-top: 0.6em;">
+    222 &gt;= 0 - первый выигрывает, первым ходом берёт <code>1</code>
+</div>
+<p class="fragment" style="font-size: 0.6em; opacity: 0.8;">Проверка: первый 1 + 233 = 234, второй 5 + 7 = 12, разница 222</p>
+                </section>
+
+                <!-- как придумать состояние игры: что должен знать игрок, чтобы сделать ход -->
+                <section>
+                    <h2>Как придумать состояние</h2>
+<p style="font-size: 0.7em;">Что должен знать игрок, чтобы сделать ход?</p>
+<table style="font-size: 0.7em; margin: 0.4em auto;">
+<tr><td><strong>Игра</strong></td><td><strong>Состояние</strong></td></tr>
+<tr class="fragment"><td>фишка на графе</td><td>вершина</td></tr>
+<tr class="fragment"><td>Divisor Game</td><td>число на доске</td></tr>
+<tr class="fragment"><td>Predict the Winner</td><td>кусок массива: откуда и докуда</td></tr>
+</table>
+<div class="fragment opinion" style="margin-top: 0.6em;">
+    Чей ход, хранить не нужно: ответ всегда считаем для того, кто сейчас ходит
+</div>
+                </section>
+
+            </section>
+
+            <!-- ИТОГ -->
+            <section>
+
+                <!-- итог: что запомнить, 3-4 пункта -->
+                <section>
+                    <div class="lesson-time">55</div>
+                    <h2>Что запомнить</h2>
+<ul style="font-size: 0.9em; text-align: left;">
+    <li class="fragment">игра без случайности - граф: <mark>позиция - вершина, ход - ребро</mark></li>
+    <li class="fragment">W - есть ход в L; L - все ходы в W, тупик - L</li>
+    <li class="fragment">без циклов раскрашиваем от тупиков назад - это динамика</li>
+    <li class="fragment">игра на очки: перевес = лучший вариант из (взятое число - перевес соперника)</li>
+</ul>
+                </section>
+
+                <!-- домашнее задание + анонс части 2 (игры, где граф с циклами: ничья и разметка от тупиков через BFS) -->
+                <section>
+                    <h2>Домашнее задание</h2>
+<p style="font-size: 0.65em;"><a href="https://nyc.cs.berkeley.edu/uni/games/tictactoe/variants/regular" target="_blank" rel="noopener">Крестики-нолики на GamesmanUni</a>: цвет клетки - чем кончится игра, если сходить туда. Зелёный - победа, жёлтый - ничья, красный - проигрыш</p>
+<ol style="font-size: 0.7em; text-align: left;">
+    <li class="fragment">Сыграй за крестиков против компьютера (шестерёнка, Second Player: Computer). Почему ни одна клетка в начале не зелёная?</li>
+    <li class="fragment">Без компьютера: крестик в центр, нолик - на красную клетку. Как сдвинулась точка на графике справа и что написано над доской?</li>
+</ol>
+<div class="fragment opinion" style="margin-top: 0.6em;">
+    Минут на 10, просто потыкать. Завтра: игры, где бывает <mark>ничья</mark>
+</div>
+                </section>
+
+            </section>
+
+        </div>
+    </div>
+
+    <script src="/utils/lib/js/head.min.js"></script>
+    <script src="/utils/js/reveal.js"></script>
+    <script>
+        Reveal.initialize({
+            controls: true,
+            progress: true,
+            history: true,
+            center: true,
+            transition: 'fade',
+            transitionSpeed: 'fast',
+            dependencies: [
+                { src: '/utils/lib/js/classList.js', condition: function () { return !document.body.classList; } },
+                { src: '/utils/plugin/markdown/marked.js', condition: function () { return !!document.querySelector('[data-markdown]'); } },
+                { src: '/utils/plugin/markdown/markdown.js', condition: function () { return !!document.querySelector('[data-markdown]'); } },
+                { src: '/utils/plugin/highlight/highlight.js', async: true, callback: function () { hljs.initHighlightingOnLoad(); } },
+                { src: '/utils/plugin/zoom-js/zoom.js', async: true },
+                { src: '/utils/plugin/notes/notes.js', async: true }
+            ]
+        });
+        Reveal.configure({ slideNumber: 'c/t' });
+    </script>
+</body>
+
+</html>

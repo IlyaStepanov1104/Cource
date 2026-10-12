@@ -1,0 +1,21 @@
+from functools import cache
+
+
+# LeetCode 464. Can I Win.
+# Числа от 1 до max_choosable, каждое можно взять только один раз. Двое по очереди берут число
+# и прибавляют к общей сумме. Кто первым довёл сумму до desired_total или больше - выиграл.
+# Вернуть True, если первый игрок выигрывает при идеальной игре обоих.
+def can_i_win(max_choosable: int, desired_total: int) -> bool:
+    pass
+
+
+
+
+print(can_i_win(10, 11), False)
+print(can_i_win(10, 0), True)
+print(can_i_win(10, 1), True)
+print(can_i_win(10, 40), False)
+print(can_i_win(4, 6), True)
+print(can_i_win(5, 50), False)
+print(can_i_win(18, 79), True)
+print(can_i_win(20, 210), False)
