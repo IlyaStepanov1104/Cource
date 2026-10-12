@@ -6,9 +6,35 @@ from collections import deque
 # Бесконечная игра - ничья. Для каждой вершины вернуть строку из букв:
 # W - тот, кто ходит отсюда, выигрывает, L - проигрывает, D - ничья.
 def classify(n: int, edges: list[tuple[int, int]]) -> str:
-    pass
+    rev = [[] for _ in range(n)]
+    counter = [0] * n
+    for v, to in edges:
+        rev[to].append(v)
+        counter[v] += 1
+    res = ['D'] * n
+    q = deque()
 
+    # Помечаем тупики
+    for v in range(n):
+        if counter[v] == 0:
+            res[v] = 'L'
+            q.append(v)
 
+    while q:
+        v = q.popleft()
+        for parent in rev[v]:
+            if res[parent] != 'D':
+                continue
+            elif res[v] == 'L':
+                res[parent] = 'W'
+                q.append(parent)
+            else:
+                counter[parent] -= 1
+                if counter[parent] == 0:
+                    res[parent] = 'L'
+                    q.append(parent)
+
+    return ''.join(res)
 
 
 # граф с занятия: A=0 B=1 C=2 D=3 G=4 H=5 T=6

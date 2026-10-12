@@ -1831,18 +1831,18 @@
 </ul>
                 </section>
 
-                <!-- домашнее задание: 464. Can I Win, ссылка target="_blank"; подсказка: позиция = какие числа уже взяты (2^n наборов), циклов нет - рекурсия с памятью -->
+                <!-- домашнее задание: 464. Can I Win; позиция = кортеж ещё не взятых чисел, рекурсия (занятие 17) + словарь memo -->
                 <section>
                     <h2>Домашнее задание</h2>
 <p style="font-size: 0.7em;"><a href="https://leetcode.com/problems/can-i-win/" target="_blank" rel="noopener">464. Can I Win</a></p>
-<ul style="font-size: 0.65em; text-align: left;">
-    <li class="fragment">числа от 1 до n, каждое можно взять один раз; кто первым довёл сумму до цели - выиграл</li>
-    <li class="fragment">позиция: <mark>какие числа уже взяты</mark>; сумма по ним считается сама</li>
-    <li class="fragment">наборов взятых чисел 2<sup>n</sup>: при n = 20 это около миллиона</li>
-    <li class="fragment">циклов нет - взятых чисел только больше: хватит рекурсии с памятью</li>
+<ul style="font-size: 0.62em; text-align: left;">
+    <li class="fragment">числа от 1 до <code>maxChoosableInteger</code>, каждое можно взять один раз; кто первым довёл общую сумму до <code>desiredTotal</code> или больше - выиграл</li>
+    <li class="fragment">позиция: <mark>какие числа ещё не взяты</mark>. Сумму хранить не нужно: это сумма взятых чисел, в каком порядке их ни брали</li>
+    <li class="fragment">наборов 2<sup>maxChoosableInteger</sup>: при <code>maxChoosableInteger</code> = 20 это около миллиона</li>
+    <li class="fragment">циклов нет - чисел только меньше: хватит рекурсии (занятие 17) со словарём ответов</li>
 </ul>
 <div class="fragment opinion" style="margin-top: 0.5em;">
-    Набор взятых чисел - ключ словаря: подумай, как его хранить
+    Позиция - ключ словаря. <code>list</code> ключом быть не может: храни числа в <code>tuple</code>
 </div>
                 </section>
 

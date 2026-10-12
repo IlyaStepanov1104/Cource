@@ -1,14 +1,38 @@
 from collections import deque
 
-
 # Фишка на ориентированном графе, вершины 0..n-1, ходы у обоих одинаковые.
 # Первый хочет, чтобы фишка попала в тупик (игра кончилась), Второй - чтобы игра не кончалась никогда.
 # Фишка в start, первым ходит Первый. Вернуть True, если Первый может добиться своего
 # при любой игре Второго. За O(n + m).
 def first_can_end(n: int, edges: list[tuple[int, int]], start: int) -> bool:
     # позиция v - ходит Первый, n + v - ходит Второй
-    pass
-
+    rev = [[] for _ in range(2 * n)]
+    cnt = [0] * (2 * n)
+    for u, v in edges:
+        rev[n + v].append(u)
+        rev[v].append(n + u)
+        cnt[u] += 1
+        cnt[n + u] += 1
+    good = [False] * (2 * n)
+    q = deque()
+    for p in range(2 * n):
+        if cnt[p] == 0:
+            good[p] = True
+            q.append(p)
+    while q:
+        p = q.popleft()
+        for u in rev[p]:
+            if good[u]:
+                continue
+            if u < n:
+                good[u] = True
+                q.append(u)
+            else:
+                cnt[u] -= 1
+                if cnt[u] == 0:
+                    good[u] = True
+                    q.append(u)
+    return good[start]
 
 
 
