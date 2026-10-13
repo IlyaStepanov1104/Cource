@@ -34,8 +34,45 @@
       "title": "№19-21: теория игр, одна куча",
       "date": "2026-10-13T19:00:00",
       "duration": 60,
-      "presentations": [],
-      "homeworks": []
+      "presentations": [
+        {
+          "title": "Презентация",
+          "link": "/lessons-ege/02-games-one-heap/",
+          "order": 1
+        }
+      ],
+      "homeworks": [
+        {
+          "title": "ФИПИ D27F4B",
+          "description": "№19-21: +1, x2, финиш 69. Все 5 игр решать программой с занятия, меняя ходы и финиш",
+          "link": "https://ege.fipi.ru/bank/questions.php?search=1&proj=B9ACA5BBB2E19E434CD6BEC25284C67F&zid=D27F4B"
+        },
+        {
+          "title": "ФИПИ 632026",
+          "description": "№19-21: +1, +4, x2, финиш 58",
+          "link": "https://ege.fipi.ru/bank/questions.php?search=1&proj=B9ACA5BBB2E19E434CD6BEC25284C67F&zid=632026"
+        },
+        {
+          "title": "ФИПИ 8E9976",
+          "description": "№19-21: +1, +4, x3, финиш 67",
+          "link": "https://ege.fipi.ru/bank/questions.php?search=1&proj=B9ACA5BBB2E19E434CD6BEC25284C67F&zid=8E9976"
+        },
+        {
+          "title": "ФИПИ F674EB",
+          "description": "№19-21: +1, +3, x2, финиш 435",
+          "link": "https://ege.fipi.ru/bank/questions.php?search=1&proj=B9ACA5BBB2E19E434CD6BEC25284C67F&zid=F674EB"
+        },
+        {
+          "title": "ФИПИ 9914FB",
+          "description": "№19-21: куча уменьшается: -3, -8, деление на 3",
+          "link": "https://ege.fipi.ru/bank/questions.php?search=1&proj=B9ACA5BBB2E19E434CD6BEC25284C67F&zid=9914FB"
+        },
+        {
+          "title": "№25 из варианта",
+          "description": "Перерешать №25 (задание 68287 в каталоге): найти все 6 чисел, проверить, до какой границы идёт перебор",
+          "link": "https://inf-ege.sdamgia.ru/problem?id=68287"
+        }
+      ]
     },
     {
       "number": 3,

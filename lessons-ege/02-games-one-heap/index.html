@@ -1,0 +1,3158 @@
+<!doctype html>
+<html lang="ru">
+
+<head>
+    <meta charset="utf-8">
+    <title>ЕГЭ, занятие 2 - №19-21: теория игр, одна куча</title>
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+
+    <link rel="stylesheet" href="/utils/css/reveal.css">
+    <link rel="stylesheet" href="/utils/lib/css/animate.css">
+    <link rel="stylesheet" href="/utils/css/theme/night.css" id="theme">
+    <link rel="stylesheet" href="/utils/lib/css/zenburn.css">
+    <link rel="stylesheet" href="/utils/css/custom-base.css">
+    <link rel="stylesheet" href="css-custom/custom.css">
+
+    <script>
+        var link = document.createElement('link');
+        link.rel = 'stylesheet'; link.type = 'text/css';
+        link.href = window.location.search.match(/print-pdf/gi)
+            ? '/utils/css/print/pdf.css'
+            : '/utils/css/print/paper.css';
+        document.getElementsByTagName('head')[0].appendChild(link);
+    </script>
+</head>
+
+<body>
+    <div class="reveal">
+        <div class="slides">
+
+            <!-- титульный слайд -->
+            <section style="font-size: 70px; height: 100%; width: 100%">
+                <div class="lesson-time">0</div>
+                <div class="fragment">
+                    <h1 class="animated" style="font-size: 1.5em;">Теория игр: одна куча</h1>
+                    <p style="text-align: center; font-size: 0.45em; opacity: 0.6;">задания 19, 20 и 21</p>
+                    <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">ЕГЭ, занятие 2</p>
+                </div>
+            </section>
+
+            <!-- РАЗБОР ДЗ: вариант на Решу ЕГЭ -->
+            <section>
+
+                <section style="font-size: 70px; height: 100%; width: 100%">
+                    <div class="lesson-time">0</div>
+                    <div class="fragment">
+                        <h1 style="font-size: 1.3em;">Разбор ДЗ</h1>
+                        <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">вариант на Решу ЕГЭ</p>
+                    </div>
+                </section>
+
+                <!-- результаты варианта: лучшая попытка 7 из 29 (полоска 27 клеток: верно / неверно / нет ответа), попытки 6, 2, 7 -->
+                <section>
+                    <h2>Результаты варианта</h2>
+<div class="fragment">
+<svg id="hw-strip" width="880" height="70" viewBox="0 0 880 70" style="cursor: pointer;">
+<g data-task="1" data-state="ok"><rect x="6" y="10" width="28" height="44" rx="4" fill="#1f3a26" stroke="#7d7" stroke-width="1.5" /><text x="20.0" y="38" fill="#dde" font-size="13" text-anchor="middle" style="pointer-events: none;">1</text></g>
+<g data-task="2" data-state="ok"><rect x="38" y="10" width="28" height="44" rx="4" fill="#1f3a26" stroke="#7d7" stroke-width="1.5" /><text x="52.0" y="38" fill="#dde" font-size="13" text-anchor="middle" style="pointer-events: none;">2</text></g>
+<g data-task="3" data-state="none"><rect x="70" y="10" width="28" height="44" rx="4" fill="#1c2030" stroke="#556" stroke-width="1.5" /><text x="84.0" y="38" fill="#dde" font-size="13" text-anchor="middle" style="pointer-events: none;">3</text></g>
+<g data-task="4" data-state="ok"><rect x="102" y="10" width="28" height="44" rx="4" fill="#1f3a26" stroke="#7d7" stroke-width="1.5" /><text x="116.0" y="38" fill="#dde" font-size="13" text-anchor="middle" style="pointer-events: none;">4</text></g>
+<g data-task="5" data-state="none"><rect x="134" y="10" width="28" height="44" rx="4" fill="#1c2030" stroke="#556" stroke-width="1.5" /><text x="148.0" y="38" fill="#dde" font-size="13" text-anchor="middle" style="pointer-events: none;">5</text></g>
+<g data-task="6" data-state="none"><rect x="166" y="10" width="28" height="44" rx="4" fill="#1c2030" stroke="#556" stroke-width="1.5" /><text x="180.0" y="38" fill="#dde" font-size="13" text-anchor="middle" style="pointer-events: none;">6</text></g>
+<g data-task="7" data-state="ok"><rect x="198" y="10" width="28" height="44" rx="4" fill="#1f3a26" stroke="#7d7" stroke-width="1.5" /><text x="212.0" y="38" fill="#dde" font-size="13" text-anchor="middle" style="pointer-events: none;">7</text></g>
+<g data-task="8" data-state="ok"><rect x="230" y="10" width="28" height="44" rx="4" fill="#1f3a26" stroke="#7d7" stroke-width="1.5" /><text x="244.0" y="38" fill="#dde" font-size="13" text-anchor="middle" style="pointer-events: none;">8</text></g>
+<g data-task="9" data-state="none"><rect x="262" y="10" width="28" height="44" rx="4" fill="#1c2030" stroke="#556" stroke-width="1.5" /><text x="276.0" y="38" fill="#dde" font-size="13" text-anchor="middle" style="pointer-events: none;">9</text></g>
+<g data-task="10" data-state="ok"><rect x="294" y="10" width="28" height="44" rx="4" fill="#1f3a26" stroke="#7d7" stroke-width="1.5" /><text x="308.0" y="38" fill="#dde" font-size="13" text-anchor="middle" style="pointer-events: none;">10</text></g>
+<g data-task="11" data-state="none"><rect x="326" y="10" width="28" height="44" rx="4" fill="#1c2030" stroke="#556" stroke-width="1.5" /><text x="340.0" y="38" fill="#dde" font-size="13" text-anchor="middle" style="pointer-events: none;">11</text></g>
+<g data-task="12" data-state="none"><rect x="358" y="10" width="28" height="44" rx="4" fill="#1c2030" stroke="#556" stroke-width="1.5" /><text x="372.0" y="38" fill="#dde" font-size="13" text-anchor="middle" style="pointer-events: none;">12</text></g>
+<g data-task="13" data-state="none"><rect x="390" y="10" width="28" height="44" rx="4" fill="#1c2030" stroke="#556" stroke-width="1.5" /><text x="404.0" y="38" fill="#dde" font-size="13" text-anchor="middle" style="pointer-events: none;">13</text></g>
+<g data-task="14" data-state="ok"><rect x="422" y="10" width="28" height="44" rx="4" fill="#1f3a26" stroke="#7d7" stroke-width="1.5" /><text x="436.0" y="38" fill="#dde" font-size="13" text-anchor="middle" style="pointer-events: none;">14</text></g>
+<g data-task="15" data-state="none"><rect x="454" y="10" width="28" height="44" rx="4" fill="#1c2030" stroke="#556" stroke-width="1.5" /><text x="468.0" y="38" fill="#dde" font-size="13" text-anchor="middle" style="pointer-events: none;">15</text></g>
+<g data-task="16" data-state="none"><rect x="486" y="10" width="28" height="44" rx="4" fill="#1c2030" stroke="#556" stroke-width="1.5" /><text x="500.0" y="38" fill="#dde" font-size="13" text-anchor="middle" style="pointer-events: none;">16</text></g>
+<g data-task="17" data-state="none"><rect x="518" y="10" width="28" height="44" rx="4" fill="#1c2030" stroke="#556" stroke-width="1.5" /><text x="532.0" y="38" fill="#dde" font-size="13" text-anchor="middle" style="pointer-events: none;">17</text></g>
+<g data-task="18" data-state="none"><rect x="550" y="10" width="28" height="44" rx="4" fill="#1c2030" stroke="#556" stroke-width="1.5" /><text x="564.0" y="38" fill="#dde" font-size="13" text-anchor="middle" style="pointer-events: none;">18</text></g>
+<g data-task="19" data-state="none"><rect x="582" y="10" width="28" height="44" rx="4" fill="#1c2030" stroke="#556" stroke-width="1.5" /><text x="596.0" y="38" fill="#dde" font-size="13" text-anchor="middle" style="pointer-events: none;">19</text></g>
+<g data-task="20" data-state="none"><rect x="614" y="10" width="28" height="44" rx="4" fill="#1c2030" stroke="#556" stroke-width="1.5" /><text x="628.0" y="38" fill="#dde" font-size="13" text-anchor="middle" style="pointer-events: none;">20</text></g>
+<g data-task="21" data-state="none"><rect x="646" y="10" width="28" height="44" rx="4" fill="#1c2030" stroke="#556" stroke-width="1.5" /><text x="660.0" y="38" fill="#dde" font-size="13" text-anchor="middle" style="pointer-events: none;">21</text></g>
+<g data-task="22" data-state="none"><rect x="678" y="10" width="28" height="44" rx="4" fill="#1c2030" stroke="#556" stroke-width="1.5" /><text x="692.0" y="38" fill="#dde" font-size="13" text-anchor="middle" style="pointer-events: none;">22</text></g>
+<g data-task="23" data-state="none"><rect x="710" y="10" width="28" height="44" rx="4" fill="#1c2030" stroke="#556" stroke-width="1.5" /><text x="724.0" y="38" fill="#dde" font-size="13" text-anchor="middle" style="pointer-events: none;">23</text></g>
+<g data-task="24" data-state="none"><rect x="742" y="10" width="28" height="44" rx="4" fill="#1c2030" stroke="#556" stroke-width="1.5" /><text x="756.0" y="38" fill="#dde" font-size="13" text-anchor="middle" style="pointer-events: none;">24</text></g>
+<g data-task="25" data-state="bad"><rect x="774" y="10" width="28" height="44" rx="4" fill="#3a1f24" stroke="#f66" stroke-width="1.5" /><text x="788.0" y="38" fill="#dde" font-size="13" text-anchor="middle" style="pointer-events: none;">25</text></g>
+<g data-task="26" data-state="none"><rect x="806" y="10" width="28" height="44" rx="4" fill="#1c2030" stroke="#556" stroke-width="1.5" /><text x="820.0" y="38" fill="#dde" font-size="13" text-anchor="middle" style="pointer-events: none;">26</text></g>
+<g data-task="27" data-state="none"><rect x="838" y="10" width="28" height="44" rx="4" fill="#1c2030" stroke="#556" stroke-width="1.5" /><text x="852.0" y="38" fill="#dde" font-size="13" text-anchor="middle" style="pointer-events: none;">27</text></g>
+</svg>
+<p style="font-size: 0.45em; opacity: 0.6; margin: 0.2em 0;">зелёный - верно, красный - неверно, серый - нет ответа</p>
+<p id="hw-score" style="font-size: 0.7em; margin: 0.3em 0;">решено: 7 из 27, первичных: 7 из 29</p>
+</div>
+<p class="fragment" style="font-size: 0.6em;">три попытки: <strong>6</strong>, <strong>2</strong>, <strong>7</strong> баллов. Порог - 6: <mark class="green">он уже пройден</mark></p>
+<div class="fragment opinion" style="margin-top: 0.4em;">
+    Решены «ручные» номера. Всё, где нужна программа (16, 17, 19-27), пока пустое - а это наша сильная сторона
+</div>
+                </section>
+
+                <!-- где потеряны баллы: 19 пустых номеров, №25 без последнего числа, №10 с третьей попытки -->
+                <section>
+                    <h2>Где потеряны баллы</h2>
+<ul style="font-size: 0.8em; text-align: left;">
+    <li class="fragment"><strong>19 номеров без ответа</strong>: штрафа за неверный ответ нет, а пустое поле - всегда 0</li>
+    <li class="fragment"><strong>№25</strong>: найдено 5 чисел из 6 - и <mark>0 баллов</mark>. Последнее число пропущено: проверь, до какой границы шёл перебор</li>
+    <li class="fragment"><strong>№10</strong> решён только с третьей попытки: идея есть, нужна уверенность</li>
+</ul>
+<div class="fragment opinion" style="margin-top: 0.6em;">
+    Ответ засчитывается только целиком: «почти» в ЕГЭ не бывает
+</div>
+                </section>
+
+                <!-- куда идём: план ближайших занятий, сегодня №19-21 - три номера, три балла, одна идея -->
+                <section>
+                    <h2>Куда идём</h2>
+<div class="timeline" style="font-size: 0.75em;">
+    <div class="timeline-item fragment">
+        <div class="timeline-marker">13.10</div>
+        <div class="timeline-content"><strong>№19-21</strong>: одна куча - сегодня</div>
+    </div>
+    <div class="timeline-item fragment">
+        <div class="timeline-marker">20.10</div>
+        <div class="timeline-content"><strong>№19-21</strong>: две кучи</div>
+    </div>
+    <div class="timeline-item fragment">
+        <div class="timeline-marker">27.10</div>
+        <div class="timeline-content"><strong>№2</strong>: таблицы истинности</div>
+    </div>
+    <div class="timeline-item fragment">
+        <div class="timeline-marker">03.11</div>
+        <div class="timeline-content"><strong>№8</strong>: перебор слов</div>
+    </div>
+</div>
+<div class="fragment opinion" style="margin-top: 0.8em;">
+    Сегодня: <mark>три номера, три балла</mark> - и одна идея на все три
+</div>
+                </section>
+
+            </section>
+
+            <!-- ЧАСТЬ 1: условие игры и связь с играми на графах -->
+            <section>
+
+                <section style="font-size: 70px; height: 100%; width: 100%">
+                    <div class="lesson-time">5</div>
+                    <div class="fragment">
+                        <h1 style="font-size: 1.3em;">Игра с кучей камней</h1>
+                        <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">что спрашивают в №19-21</p>
+                    </div>
+                </section>
+
+                <!-- откуда задачи: открытый банк заданий ЕГЭ ФИПИ - что это и как найти задание по номеру из угла блока -->
+                <section>
+                    <h2>Откуда задачи</h2>
+<ul style="font-size: 0.7em; text-align: left;">
+    <li class="fragment">ФИПИ - институт, который <mark>составляет ЕГЭ</mark>. У него есть открытый банк заданий: настоящие задачи в формате экзамена</li>
+    <li class="fragment">по информатике там около 2350 заданий. Ответ сайт не показывает, но <mark class="green">проверяет</mark> твой</li>
+    <li class="fragment">номер в правом верхнем углу блока - это номер задания или группы в банке</li>
+</ul>
+<div class="timeline fragment" style="font-size: 0.6em;">
+    <div class="timeline-item">
+        <div class="timeline-marker">1</div>
+        <div class="timeline-content"><a href="https://ege.fipi.ru/bank/" target="_blank" rel="noopener">ege.fipi.ru/bank</a> - «Информатика и ИКТ»</div>
+    </div>
+    <div class="timeline-item">
+        <div class="timeline-marker">2</div>
+        <div class="timeline-content">открыть «Подбор заданий», в поле «Номер группы» ввести <code>2B23FD</code> (или в «Номер задания» - <code>FB8AAF</code>), нажать «Найти»</div>
+    </div>
+    <div class="timeline-item">
+        <div class="timeline-marker">3</div>
+        <div class="timeline-content">вписать ответ и нажать «Ответить»: статус станет «Верно» или «Неверно»</div>
+    </div>
+</div>
+                </section>
+
+                <!-- типичное условие №19-21: куча камней, Петя ходит первым, ходы +1 и x2, игра кончается при 29 и больше -->
+                <section>
+                    <h2>Условие</h2>
+<div style="position: relative; font-size: 0.6em; text-align: left; border-left: 4px solid #8ab; padding: 0.3em 5em 0.3em 0.8em; background: rgba(136, 170, 187, 0.08);"><span style="position: absolute; top: 0.3em; right: 0.6em; font-size: 0.75em; opacity: 0.5;">2B23FD</span><p class="fragment">Два игрока, Петя и Ваня, играют в игру. Перед ними куча камней. Ходят по очереди, <mark>первый ход делает Петя</mark>.</p>
+<p class="fragment">За один ход игрок может <mark>добавить в кучу один камень</mark> или <mark>увеличить количество камней в два раза</mark>.</p>
+<p class="fragment">Игра завершается, когда количество камней становится <mark>не менее 29</mark>. Победитель - игрок, сделавший последний ход.</p>
+<p class="fragment">В начале в куче S камней, S от 1 до 28.</p></div>
+<div class="fragment opinion" style="margin-top: 0.6em;">
+    Одно условие - три вопроса: №19, №20 и №21
+</div>
+                </section>
+
+                <!-- сыграем вживую: куча 12, финиш 29, ученик - Петя, я - Ваня (интерактивная куча) -->
+                <section>
+                    <h2>Сыграем</h2>
+<p class="fragment" style="font-size: 0.7em;">в куче <strong>12</strong> камней, финиш - 29. Ты - Петя, ходишь первым</p>
+<div class="fragment" id="play" style="margin-top: 0.4em;">
+    <div style="font-size: 2.2em; font-weight: bold; color: #fd6;" id="play-heap">12</div>
+    <div style="font-size: 0.6em; opacity: 0.7; min-height: 1.4em;" id="play-turn">ходит Петя</div>
+    <div style="display: flex; justify-content: center; gap: 0.6em; margin-top: 0.3em;">
+        <button type="button" data-move="add" style="font: inherit; font-size: 0.7em; padding: 0.1em 0.8em; border-radius: 0.3em; border: 1px solid #8ab; background: none; color: inherit; cursor: pointer;">+1</button>
+        <button type="button" data-move="mul" style="font: inherit; font-size: 0.7em; padding: 0.1em 0.8em; border-radius: 0.3em; border: 1px solid #8ab; background: none; color: inherit; cursor: pointer;">x2</button>
+        <button type="button" data-move="reset" style="font: inherit; font-size: 0.5em; padding: 0.1em 0.8em; border-radius: 0.3em; border: 1px solid rgba(255,255,255,0.3); background: none; color: inherit; cursor: pointer;">заново</button>
+    </div>
+    <div style="font-size: 0.5em; opacity: 0.7; margin-top: 0.4em; min-height: 1.4em;" id="play-log"></div>
+</div>
+<div class="fragment opinion" style="margin-top: 0.6em;">
+    Сыграем пару раз. Почему Петя всё время проигрывает?
+</div>
+                </section>
+
+                <!-- куча = вершина, ход = ребро, 29 и больше = финиш: граф на числовой прямой -->
+                <section>
+                    <h2>Это граф</h2>
+<div class="fragment" data-fragment-index="1">
+<svg width="608" height="180" viewBox="308 0 608 180">
+<defs><marker id="nl10" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#7d7" /></marker><marker id="nl11" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#8ab" /></marker><marker id="nl12" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#f7a" /></marker></defs>
+<g>
+<rect x="313" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="327.0" y="142" fill="#dde" font-size="13" text-anchor="middle">11</text>
+</g>
+<g>
+<rect x="343" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="357.0" y="142" fill="#dde" font-size="13" text-anchor="middle">12</text>
+</g>
+<g>
+<rect x="373" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="387.0" y="142" fill="#dde" font-size="13" text-anchor="middle">13</text>
+</g>
+<g>
+<rect x="403" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="417.0" y="142" fill="#dde" font-size="13" text-anchor="middle">14</text>
+</g>
+<g>
+<rect x="433" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="447.0" y="142" fill="#dde" font-size="13" text-anchor="middle">15</text>
+</g>
+<g>
+<rect x="463" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="477.0" y="142" fill="#dde" font-size="13" text-anchor="middle">16</text>
+</g>
+<g>
+<rect x="493" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="507.0" y="142" fill="#dde" font-size="13" text-anchor="middle">17</text>
+</g>
+<g>
+<rect x="523" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="537.0" y="142" fill="#dde" font-size="13" text-anchor="middle">18</text>
+</g>
+<g>
+<rect x="553" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="567.0" y="142" fill="#dde" font-size="13" text-anchor="middle">19</text>
+</g>
+<g>
+<rect x="583" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="597.0" y="142" fill="#dde" font-size="13" text-anchor="middle">20</text>
+</g>
+<g>
+<rect x="613" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="627.0" y="142" fill="#dde" font-size="13" text-anchor="middle">21</text>
+</g>
+<g>
+<rect x="643" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="657.0" y="142" fill="#dde" font-size="13" text-anchor="middle">22</text>
+</g>
+<g>
+<rect x="673" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="687.0" y="142" fill="#dde" font-size="13" text-anchor="middle">23</text>
+</g>
+<g>
+<rect x="703" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="717.0" y="142" fill="#dde" font-size="13" text-anchor="middle">24</text>
+</g>
+<g>
+<rect x="733" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="747.0" y="142" fill="#dde" font-size="13" text-anchor="middle">25</text>
+</g>
+<g>
+<rect x="763" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="777.0" y="142" fill="#dde" font-size="13" text-anchor="middle">26</text>
+</g>
+<g>
+<rect x="793" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="807.0" y="142" fill="#dde" font-size="13" text-anchor="middle">27</text>
+</g>
+<g>
+<rect x="823" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="837.0" y="142" fill="#dde" font-size="13" text-anchor="middle">28</text>
+</g>
+<rect x="862" y="120" width="50" height="34" rx="3" fill="#2a2a40" stroke="#fd6" stroke-width="2" />
+<text x="887" y="142" fill="#fd6" font-size="13" text-anchor="middle">29+</text>
+<text x="887" y="172" fill="#fd6" font-size="12" text-anchor="middle">финиш</text>
+<g class="fragment" data-fragment-index="1"><path d="M357.0,118 Q372.0,73.2 387.0,116" fill="none" stroke="#8ab" stroke-width="2.5" marker-end="url(#nl11)" /><text x="372.0" y="90.6" fill="#8ab" font-size="13" text-anchor="middle">+1</text></g>
+<g class="fragment" data-fragment-index="1"><path d="M357.0,118 Q537.0,-45.6 717.0,116" fill="none" stroke="#8ab" stroke-width="2.5" marker-end="url(#nl11)" /><text x="537.0" y="31.2" fill="#8ab" font-size="13" text-anchor="middle">x2</text></g>
+<g class="fragment" data-fragment-index="2"><path d="M387.0,118 Q402.0,73.2 417.0,116" fill="none" stroke="#f7a" stroke-width="2.5" marker-end="url(#nl12)" /></g>
+<g class="fragment" data-fragment-index="2"><path d="M387.0,118 Q582.0,-56.4 777.0,116" fill="none" stroke="#f7a" stroke-width="2.5" marker-end="url(#nl12)" /></g>
+<g class="fragment" data-fragment-index="3"><path d="M717.0,118 Q732.0,73.2 747.0,116" fill="none" stroke="#7d7" stroke-width="2.5" marker-end="url(#nl10)" /></g>
+<g class="fragment" data-fragment-index="3"><path d="M717.0,118 Q802.0,22.8 887.0,116" fill="none" stroke="#7d7" stroke-width="2.5" marker-end="url(#nl10)" /></g>
+</svg>
+</div>
+<ul style="font-size: 0.7em; text-align: left;">
+    <li class="fragment" data-fragment-index="1">позиция (вершина) = сколько камней в куче</li>
+    <li class="fragment" data-fragment-index="2">ход = стрелка: <code>+1</code> или <code>x2</code></li>
+    <li class="fragment" data-fragment-index="3">29 и больше - <mark>финиш</mark>: кто туда сходил, тот выиграл</li>
+</ul>
+                </section>
+
+                <!-- напоминание с занятий 36-37: W и L, правило 1 (есть ход в L - W), правило 2 (все ходы в W - L) -->
+                <section>
+                    <h2>Напоминание: W и L</h2>
+<div class="compare">
+    <div class="compare-block fragment">
+        <h3>Правило 1</h3>
+        <p style="font-size: 0.7em;">есть ход в <mark>L</mark> - позиция <mark class="green">W</mark></p>
+        <p style="font-size: 0.55em; opacity: 0.7;">отдаём сопернику проигрышную</p>
+    </div>
+    <div class="compare-block fragment">
+        <h3>Правило 2</h3>
+        <p style="font-size: 0.7em;">все ходы в <mark class="green">W</mark> - позиция <mark>L</mark></p>
+        <p style="font-size: 0.55em; opacity: 0.7;">куда ни пойди, соперник выиграет</p>
+    </div>
+</div>
+<div class="fragment opinion" style="margin-top: 0.8em;">
+    Финиш - как тупик: тому, кто должен ходить после финиша, ходить некуда, он уже проиграл
+</div>
+                </section>
+
+                <!-- чего не хватает: ЕГЭ спрашивает не "кто выиграет", а "за сколько ходов" -->
+                <section>
+                    <h2>Чего не хватает</h2>
+<ul style="font-size: 0.8em; text-align: left;">
+    <li class="fragment">W и L отвечают: <strong>кто</strong> выиграет</li>
+    <li class="fragment">ЕГЭ спрашивает: кто и <mark>каким по счёту ходом</mark></li>
+    <li class="fragment">«Петя не может выиграть за один ход, но может выиграть <mark class="yellow">своим вторым ходом</mark>»</li>
+</ul>
+<div class="fragment opinion" style="margin-top: 0.6em;">
+    Нужна раскраска, где у цвета есть ещё и номер хода
+</div>
+                </section>
+
+                <!-- метки: W1, L1, W2, L2 - для того, кто сейчас ходит, и за сколько своих ходов -->
+                <section>
+                    <h2>Метки</h2>
+<table style="font-size: 0.6em; width: 100%;">
+    <tr class="fragment"><td style="color: #7d7; font-weight: bold;">W1</td><td>кто ходит, выигрывает <mark>первым</mark> своим ходом</td></tr>
+    <tr class="fragment"><td style="color: #f66; font-weight: bold;">L1</td><td>кто ходит, проигрывает: куда ни пойди, соперник выиграет первым ходом</td></tr>
+    <tr class="fragment"><td style="color: #7d7; font-weight: bold;">W2</td><td>кто ходит, выигрывает <mark>вторым</mark> своим ходом при любой игре соперника, а первым не может</td></tr>
+    <tr class="fragment"><td style="color: #f66; font-weight: bold;">L2</td><td>соперник выигрывает первым или вторым ходом при любой игре, а гарантированно первым не может</td></tr>
+</table>
+<div class="fragment opinion" style="margin-top: 0.6em;">
+    Метка - для того, кто <mark>сейчас ходит</mark>. При S камнях ходит Петя: <span style="color: #7d7;">W</span> - выигрывает Петя, <span style="color: #f66;">L</span> - Ваня
+</div>
+                </section>
+
+                <!-- важно: "выиграть" = своим ходом довести кучу до 29; оба играют идеально; "Ваня выиграл" - исключение -->
+                <section>
+                    <h2>Что значит «выиграть»</h2>
+<ul style="font-size: 0.75em; text-align: left;">
+    <li class="fragment">выиграл тот, кто <mark>своим ходом</mark> довёл кучу до 29 и больше</li>
+    <li class="fragment">оба играют идеально: кто выигрывает - выигрывает как можно быстрее, кто проигрывает - тянет время</li>
+    <li class="fragment">«при любой игре соперника» = <mark>гарантированно</mark>, даже если соперник не ошибается</li>
+</ul>
+<div class="fragment opinion" style="margin-top: 0.6em;">
+    Исключение - «Ваня <mark class="yellow">выиграл</mark> первым ходом»: значит, Петя ошибся (будет в №19)
+</div>
+                </section>
+
+            </section>
+
+            <!-- ЧАСТЬ 2: решение руками - разметка числовой прямой -->
+            <section>
+
+                <section style="font-size: 70px; height: 100%; width: 100%">
+                    <div class="lesson-time">20</div>
+                    <div class="fragment">
+                        <h1 style="font-size: 1.3em;">Разметка руками</h1>
+                        <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">раскрашиваем числовую прямую от финиша</p>
+                    </div>
+                </section>
+
+                <!-- шаг 1: W1 - позиции, откуда один ход даёт 29 и больше -->
+                <section>
+                    <h2>Шаг 1: W1</h2>
+<svg width="900" height="178" viewBox="8 0 908 180">
+<defs><marker id="nl20" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#7d7" /></marker><marker id="nl21" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#f7a" /></marker></defs>
+<g>
+<rect x="13" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="27.0" y="142" fill="#dde" font-size="13" text-anchor="middle">1</text>
+</g>
+<g>
+<rect x="43" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="57.0" y="142" fill="#dde" font-size="13" text-anchor="middle">2</text>
+</g>
+<g>
+<rect x="73" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="87.0" y="142" fill="#dde" font-size="13" text-anchor="middle">3</text>
+</g>
+<g>
+<rect x="103" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="117.0" y="142" fill="#dde" font-size="13" text-anchor="middle">4</text>
+</g>
+<g>
+<rect x="133" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="147.0" y="142" fill="#dde" font-size="13" text-anchor="middle">5</text>
+</g>
+<g>
+<rect x="163" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="177.0" y="142" fill="#dde" font-size="13" text-anchor="middle">6</text>
+</g>
+<g>
+<rect x="193" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="207.0" y="142" fill="#dde" font-size="13" text-anchor="middle">7</text>
+</g>
+<g>
+<rect x="223" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="237.0" y="142" fill="#dde" font-size="13" text-anchor="middle">8</text>
+</g>
+<g>
+<rect x="253" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="267.0" y="142" fill="#dde" font-size="13" text-anchor="middle">9</text>
+</g>
+<g>
+<rect x="283" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="297.0" y="142" fill="#dde" font-size="13" text-anchor="middle">10</text>
+</g>
+<g>
+<rect x="313" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="327.0" y="142" fill="#dde" font-size="13" text-anchor="middle">11</text>
+</g>
+<g>
+<rect x="343" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="357.0" y="142" fill="#dde" font-size="13" text-anchor="middle">12</text>
+</g>
+<g>
+<rect x="373" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="387.0" y="142" fill="#dde" font-size="13" text-anchor="middle">13</text>
+</g>
+<g>
+<rect x="403" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="417.0" y="142" fill="#dde" font-size="13" text-anchor="middle">14</text>
+</g>
+<g>
+<rect x="433" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="447.0" y="142" fill="#dde" font-size="13" text-anchor="middle">15</text>
+</g>
+<g class="fragment" data-fragment-index="2">
+<rect x="433" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="447.0" y="142" fill="#dde" font-size="13" text-anchor="middle">15</text>
+<text x="447.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W1</text>
+</g>
+<g>
+<rect x="463" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="477.0" y="142" fill="#dde" font-size="13" text-anchor="middle">16</text>
+</g>
+<g class="fragment" data-fragment-index="2">
+<rect x="463" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="477.0" y="142" fill="#dde" font-size="13" text-anchor="middle">16</text>
+<text x="477.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W1</text>
+</g>
+<g>
+<rect x="493" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="507.0" y="142" fill="#dde" font-size="13" text-anchor="middle">17</text>
+</g>
+<g class="fragment" data-fragment-index="2">
+<rect x="493" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="507.0" y="142" fill="#dde" font-size="13" text-anchor="middle">17</text>
+<text x="507.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W1</text>
+</g>
+<g>
+<rect x="523" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="537.0" y="142" fill="#dde" font-size="13" text-anchor="middle">18</text>
+</g>
+<g class="fragment" data-fragment-index="2">
+<rect x="523" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="537.0" y="142" fill="#dde" font-size="13" text-anchor="middle">18</text>
+<text x="537.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W1</text>
+</g>
+<g>
+<rect x="553" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="567.0" y="142" fill="#dde" font-size="13" text-anchor="middle">19</text>
+</g>
+<g class="fragment" data-fragment-index="2">
+<rect x="553" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="567.0" y="142" fill="#dde" font-size="13" text-anchor="middle">19</text>
+<text x="567.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W1</text>
+</g>
+<g>
+<rect x="583" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="597.0" y="142" fill="#dde" font-size="13" text-anchor="middle">20</text>
+</g>
+<g class="fragment" data-fragment-index="2">
+<rect x="583" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="597.0" y="142" fill="#dde" font-size="13" text-anchor="middle">20</text>
+<text x="597.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W1</text>
+</g>
+<g>
+<rect x="613" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="627.0" y="142" fill="#dde" font-size="13" text-anchor="middle">21</text>
+</g>
+<g class="fragment" data-fragment-index="2">
+<rect x="613" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="627.0" y="142" fill="#dde" font-size="13" text-anchor="middle">21</text>
+<text x="627.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W1</text>
+</g>
+<g>
+<rect x="643" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="657.0" y="142" fill="#dde" font-size="13" text-anchor="middle">22</text>
+</g>
+<g class="fragment" data-fragment-index="2">
+<rect x="643" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="657.0" y="142" fill="#dde" font-size="13" text-anchor="middle">22</text>
+<text x="657.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W1</text>
+</g>
+<g>
+<rect x="673" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="687.0" y="142" fill="#dde" font-size="13" text-anchor="middle">23</text>
+</g>
+<g class="fragment" data-fragment-index="2">
+<rect x="673" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="687.0" y="142" fill="#dde" font-size="13" text-anchor="middle">23</text>
+<text x="687.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W1</text>
+</g>
+<g>
+<rect x="703" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="717.0" y="142" fill="#dde" font-size="13" text-anchor="middle">24</text>
+</g>
+<g class="fragment" data-fragment-index="2">
+<rect x="703" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="717.0" y="142" fill="#dde" font-size="13" text-anchor="middle">24</text>
+<text x="717.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W1</text>
+</g>
+<g>
+<rect x="733" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="747.0" y="142" fill="#dde" font-size="13" text-anchor="middle">25</text>
+</g>
+<g class="fragment" data-fragment-index="2">
+<rect x="733" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="747.0" y="142" fill="#dde" font-size="13" text-anchor="middle">25</text>
+<text x="747.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W1</text>
+</g>
+<g>
+<rect x="763" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="777.0" y="142" fill="#dde" font-size="13" text-anchor="middle">26</text>
+</g>
+<g class="fragment" data-fragment-index="2">
+<rect x="763" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="777.0" y="142" fill="#dde" font-size="13" text-anchor="middle">26</text>
+<text x="777.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W1</text>
+</g>
+<g>
+<rect x="793" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="807.0" y="142" fill="#dde" font-size="13" text-anchor="middle">27</text>
+</g>
+<g class="fragment" data-fragment-index="2">
+<rect x="793" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="807.0" y="142" fill="#dde" font-size="13" text-anchor="middle">27</text>
+<text x="807.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W1</text>
+</g>
+<g>
+<rect x="823" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="837.0" y="142" fill="#dde" font-size="13" text-anchor="middle">28</text>
+</g>
+<g class="fragment" data-fragment-index="2">
+<rect x="823" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="837.0" y="142" fill="#dde" font-size="13" text-anchor="middle">28</text>
+<text x="837.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W1</text>
+</g>
+<rect x="862" y="120" width="50" height="34" rx="3" fill="#2a2a40" stroke="#fd6" stroke-width="2" />
+<text x="887" y="142" fill="#fd6" font-size="13" text-anchor="middle">29+</text>
+<text x="887" y="172" fill="#fd6" font-size="12" text-anchor="middle">финиш</text>
+<g class="fragment" data-fragment-index="1"><path d="M447.0,118 Q667.0,-70.0 887.0,116" fill="none" stroke="#7d7" stroke-width="2.5" marker-end="url(#nl20)" /><text x="667.0" y="19.0" fill="#7d7" font-size="13" text-anchor="middle">x2</text></g>
+<g class="fragment" data-fragment-index="3"><path d="M417.0,118 Q627.0,-67.2 837.0,116" fill="none" stroke="#f7a" stroke-width="2.5" marker-end="url(#nl21)" /><text x="627.0" y="20.4" fill="#f7a" font-size="13" text-anchor="middle">x2</text></g>
+</svg>
+<ul style="font-size: 0.7em; text-align: left;">
+    <li class="fragment" data-fragment-index="1">откуда один ход до финиша? <code>15 x 2 = 30</code> - уже финиш</li>
+    <li class="fragment" data-fragment-index="2">всё от 15 до 28 - <span style="color: #7d7; font-weight: bold;">W1</span></li>
+    <li class="fragment" data-fragment-index="3"><code>14 x 2 = 28</code> - ещё нет, 14 не W1</li>
+</ul>
+                </section>
+
+                <!-- шаг 2: L1 - все ходы ведут в W1 (стрелки из 14), 13 - не все -->
+                <section>
+                    <h2>Шаг 2: L1</h2>
+<svg width="900" height="178" viewBox="8 0 908 180">
+<defs><marker id="nl30" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#8ab" /></marker><marker id="nl31" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#f7a" /></marker></defs>
+<g>
+<rect x="13" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="27.0" y="142" fill="#dde" font-size="13" text-anchor="middle">1</text>
+</g>
+<g>
+<rect x="43" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="57.0" y="142" fill="#dde" font-size="13" text-anchor="middle">2</text>
+</g>
+<g>
+<rect x="73" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="87.0" y="142" fill="#dde" font-size="13" text-anchor="middle">3</text>
+</g>
+<g>
+<rect x="103" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="117.0" y="142" fill="#dde" font-size="13" text-anchor="middle">4</text>
+</g>
+<g>
+<rect x="133" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="147.0" y="142" fill="#dde" font-size="13" text-anchor="middle">5</text>
+</g>
+<g>
+<rect x="163" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="177.0" y="142" fill="#dde" font-size="13" text-anchor="middle">6</text>
+</g>
+<g>
+<rect x="193" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="207.0" y="142" fill="#dde" font-size="13" text-anchor="middle">7</text>
+</g>
+<g>
+<rect x="223" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="237.0" y="142" fill="#dde" font-size="13" text-anchor="middle">8</text>
+</g>
+<g>
+<rect x="253" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="267.0" y="142" fill="#dde" font-size="13" text-anchor="middle">9</text>
+</g>
+<g>
+<rect x="283" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="297.0" y="142" fill="#dde" font-size="13" text-anchor="middle">10</text>
+</g>
+<g>
+<rect x="313" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="327.0" y="142" fill="#dde" font-size="13" text-anchor="middle">11</text>
+</g>
+<g>
+<rect x="343" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="357.0" y="142" fill="#dde" font-size="13" text-anchor="middle">12</text>
+</g>
+<g>
+<rect x="373" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="387.0" y="142" fill="#dde" font-size="13" text-anchor="middle">13</text>
+</g>
+<g>
+<rect x="403" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="417.0" y="142" fill="#dde" font-size="13" text-anchor="middle">14</text>
+</g>
+<g class="fragment" data-fragment-index="2">
+<rect x="403" y="120" width="28" height="34" rx="3" fill="#3a1f24" stroke="#f66" stroke-width="2" />
+<text x="417.0" y="142" fill="#dde" font-size="13" text-anchor="middle">14</text>
+<text x="417.0" y="172" fill="#f66" font-size="12" font-weight="bold" text-anchor="middle">L1</text>
+</g>
+<g>
+<rect x="433" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="447.0" y="142" fill="#dde" font-size="13" text-anchor="middle">15</text>
+</g>
+<g>
+<rect x="433" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="447.0" y="142" fill="#dde" font-size="13" text-anchor="middle">15</text>
+<text x="447.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W1</text>
+</g>
+<g>
+<rect x="463" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="477.0" y="142" fill="#dde" font-size="13" text-anchor="middle">16</text>
+</g>
+<g>
+<rect x="463" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="477.0" y="142" fill="#dde" font-size="13" text-anchor="middle">16</text>
+<text x="477.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W1</text>
+</g>
+<g>
+<rect x="493" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="507.0" y="142" fill="#dde" font-size="13" text-anchor="middle">17</text>
+</g>
+<g>
+<rect x="493" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="507.0" y="142" fill="#dde" font-size="13" text-anchor="middle">17</text>
+<text x="507.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W1</text>
+</g>
+<g>
+<rect x="523" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="537.0" y="142" fill="#dde" font-size="13" text-anchor="middle">18</text>
+</g>
+<g>
+<rect x="523" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="537.0" y="142" fill="#dde" font-size="13" text-anchor="middle">18</text>
+<text x="537.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W1</text>
+</g>
+<g>
+<rect x="553" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="567.0" y="142" fill="#dde" font-size="13" text-anchor="middle">19</text>
+</g>
+<g>
+<rect x="553" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="567.0" y="142" fill="#dde" font-size="13" text-anchor="middle">19</text>
+<text x="567.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W1</text>
+</g>
+<g>
+<rect x="583" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="597.0" y="142" fill="#dde" font-size="13" text-anchor="middle">20</text>
+</g>
+<g>
+<rect x="583" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="597.0" y="142" fill="#dde" font-size="13" text-anchor="middle">20</text>
+<text x="597.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W1</text>
+</g>
+<g>
+<rect x="613" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="627.0" y="142" fill="#dde" font-size="13" text-anchor="middle">21</text>
+</g>
+<g>
+<rect x="613" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="627.0" y="142" fill="#dde" font-size="13" text-anchor="middle">21</text>
+<text x="627.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W1</text>
+</g>
+<g>
+<rect x="643" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="657.0" y="142" fill="#dde" font-size="13" text-anchor="middle">22</text>
+</g>
+<g>
+<rect x="643" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="657.0" y="142" fill="#dde" font-size="13" text-anchor="middle">22</text>
+<text x="657.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W1</text>
+</g>
+<g>
+<rect x="673" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="687.0" y="142" fill="#dde" font-size="13" text-anchor="middle">23</text>
+</g>
+<g>
+<rect x="673" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="687.0" y="142" fill="#dde" font-size="13" text-anchor="middle">23</text>
+<text x="687.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W1</text>
+</g>
+<g>
+<rect x="703" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="717.0" y="142" fill="#dde" font-size="13" text-anchor="middle">24</text>
+</g>
+<g>
+<rect x="703" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="717.0" y="142" fill="#dde" font-size="13" text-anchor="middle">24</text>
+<text x="717.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W1</text>
+</g>
+<g>
+<rect x="733" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="747.0" y="142" fill="#dde" font-size="13" text-anchor="middle">25</text>
+</g>
+<g>
+<rect x="733" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="747.0" y="142" fill="#dde" font-size="13" text-anchor="middle">25</text>
+<text x="747.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W1</text>
+</g>
+<g>
+<rect x="763" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="777.0" y="142" fill="#dde" font-size="13" text-anchor="middle">26</text>
+</g>
+<g>
+<rect x="763" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="777.0" y="142" fill="#dde" font-size="13" text-anchor="middle">26</text>
+<text x="777.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W1</text>
+</g>
+<g>
+<rect x="793" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="807.0" y="142" fill="#dde" font-size="13" text-anchor="middle">27</text>
+</g>
+<g>
+<rect x="793" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="807.0" y="142" fill="#dde" font-size="13" text-anchor="middle">27</text>
+<text x="807.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W1</text>
+</g>
+<g>
+<rect x="823" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="837.0" y="142" fill="#dde" font-size="13" text-anchor="middle">28</text>
+</g>
+<g>
+<rect x="823" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="837.0" y="142" fill="#dde" font-size="13" text-anchor="middle">28</text>
+<text x="837.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W1</text>
+</g>
+<rect x="862" y="120" width="50" height="34" rx="3" fill="#2a2a40" stroke="#fd6" stroke-width="2" />
+<text x="887" y="142" fill="#fd6" font-size="13" text-anchor="middle">29+</text>
+<text x="887" y="172" fill="#fd6" font-size="12" text-anchor="middle">финиш</text>
+<g class="fragment" data-fragment-index="1"><path d="M417.0,118 Q432.0,73.2 447.0,116" fill="none" stroke="#f7a" stroke-width="2.5" marker-end="url(#nl31)" /><text x="432.0" y="90.6" fill="#f7a" font-size="13" text-anchor="middle">+1</text></g>
+<g class="fragment" data-fragment-index="1"><path d="M417.0,118 Q627.0,-67.2 837.0,116" fill="none" stroke="#f7a" stroke-width="2.5" marker-end="url(#nl31)" /><text x="627.0" y="20.4" fill="#f7a" font-size="13" text-anchor="middle">x2</text></g>
+<g class="fragment" data-fragment-index="3"><path d="M387.0,118 Q402.0,73.2 417.0,116" fill="none" stroke="#8ab" stroke-width="2.5" marker-end="url(#nl30)" /><text x="402.0" y="90.6" fill="#8ab" font-size="13" text-anchor="middle">+1</text></g>
+</svg>
+<ul style="font-size: 0.7em; text-align: left;">
+    <li class="fragment" data-fragment-index="1">из 14: <code>+1</code> даёт 15, <code>x2</code> даёт 28 - оба хода в W1, а там ходит уже Ваня</li>
+    <li class="fragment" data-fragment-index="2">Петя ходит куда угодно - Ваня выигрывает первым ходом: <span style="color: #f66; font-weight: bold;">L1</span></li>
+    <li class="fragment" data-fragment-index="3">13 уже не L1: <code>13 + 1 = 14</code> - не W1</li>
+</ul>
+                </section>
+
+                <!-- шаг 3: W2 - есть ход в L1, но нет хода сразу на финиш -->
+                <section>
+                    <h2>Шаг 3: W2</h2>
+<svg width="900" height="178" viewBox="8 0 908 180">
+<defs><marker id="nl40" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#f7a" /></marker></defs>
+<g>
+<rect x="13" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="27.0" y="142" fill="#dde" font-size="13" text-anchor="middle">1</text>
+</g>
+<g>
+<rect x="43" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="57.0" y="142" fill="#dde" font-size="13" text-anchor="middle">2</text>
+</g>
+<g>
+<rect x="73" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="87.0" y="142" fill="#dde" font-size="13" text-anchor="middle">3</text>
+</g>
+<g>
+<rect x="103" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="117.0" y="142" fill="#dde" font-size="13" text-anchor="middle">4</text>
+</g>
+<g>
+<rect x="133" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="147.0" y="142" fill="#dde" font-size="13" text-anchor="middle">5</text>
+</g>
+<g>
+<rect x="163" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="177.0" y="142" fill="#dde" font-size="13" text-anchor="middle">6</text>
+</g>
+<g>
+<rect x="193" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="207.0" y="142" fill="#dde" font-size="13" text-anchor="middle">7</text>
+</g>
+<g class="fragment" data-fragment-index="2">
+<rect x="193" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="207.0" y="142" fill="#dde" font-size="13" text-anchor="middle">7</text>
+<text x="207.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W2</text>
+</g>
+<g>
+<rect x="223" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="237.0" y="142" fill="#dde" font-size="13" text-anchor="middle">8</text>
+</g>
+<g>
+<rect x="253" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="267.0" y="142" fill="#dde" font-size="13" text-anchor="middle">9</text>
+</g>
+<g>
+<rect x="283" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="297.0" y="142" fill="#dde" font-size="13" text-anchor="middle">10</text>
+</g>
+<g>
+<rect x="313" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="327.0" y="142" fill="#dde" font-size="13" text-anchor="middle">11</text>
+</g>
+<g>
+<rect x="343" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="357.0" y="142" fill="#dde" font-size="13" text-anchor="middle">12</text>
+</g>
+<g>
+<rect x="373" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="387.0" y="142" fill="#dde" font-size="13" text-anchor="middle">13</text>
+</g>
+<g class="fragment" data-fragment-index="2">
+<rect x="373" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="387.0" y="142" fill="#dde" font-size="13" text-anchor="middle">13</text>
+<text x="387.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W2</text>
+</g>
+<g>
+<rect x="403" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="417.0" y="142" fill="#dde" font-size="13" text-anchor="middle">14</text>
+</g>
+<g>
+<rect x="403" y="120" width="28" height="34" rx="3" fill="#3a1f24" stroke="#f66" stroke-width="2" />
+<text x="417.0" y="142" fill="#dde" font-size="13" text-anchor="middle">14</text>
+<text x="417.0" y="172" fill="#f66" font-size="12" font-weight="bold" text-anchor="middle">L1</text>
+</g>
+<g>
+<rect x="433" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="447.0" y="142" fill="#dde" font-size="13" text-anchor="middle">15</text>
+</g>
+<g>
+<rect x="433" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="447.0" y="142" fill="#dde" font-size="13" text-anchor="middle">15</text>
+<text x="447.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W1</text>
+</g>
+<g>
+<rect x="463" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="477.0" y="142" fill="#dde" font-size="13" text-anchor="middle">16</text>
+</g>
+<g>
+<rect x="463" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="477.0" y="142" fill="#dde" font-size="13" text-anchor="middle">16</text>
+<text x="477.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W1</text>
+</g>
+<g>
+<rect x="493" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="507.0" y="142" fill="#dde" font-size="13" text-anchor="middle">17</text>
+</g>
+<g>
+<rect x="493" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="507.0" y="142" fill="#dde" font-size="13" text-anchor="middle">17</text>
+<text x="507.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W1</text>
+</g>
+<g>
+<rect x="523" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="537.0" y="142" fill="#dde" font-size="13" text-anchor="middle">18</text>
+</g>
+<g>
+<rect x="523" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="537.0" y="142" fill="#dde" font-size="13" text-anchor="middle">18</text>
+<text x="537.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W1</text>
+</g>
+<g>
+<rect x="553" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="567.0" y="142" fill="#dde" font-size="13" text-anchor="middle">19</text>
+</g>
+<g>
+<rect x="553" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="567.0" y="142" fill="#dde" font-size="13" text-anchor="middle">19</text>
+<text x="567.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W1</text>
+</g>
+<g>
+<rect x="583" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="597.0" y="142" fill="#dde" font-size="13" text-anchor="middle">20</text>
+</g>
+<g>
+<rect x="583" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="597.0" y="142" fill="#dde" font-size="13" text-anchor="middle">20</text>
+<text x="597.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W1</text>
+</g>
+<g>
+<rect x="613" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="627.0" y="142" fill="#dde" font-size="13" text-anchor="middle">21</text>
+</g>
+<g>
+<rect x="613" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="627.0" y="142" fill="#dde" font-size="13" text-anchor="middle">21</text>
+<text x="627.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W1</text>
+</g>
+<g>
+<rect x="643" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="657.0" y="142" fill="#dde" font-size="13" text-anchor="middle">22</text>
+</g>
+<g>
+<rect x="643" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="657.0" y="142" fill="#dde" font-size="13" text-anchor="middle">22</text>
+<text x="657.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W1</text>
+</g>
+<g>
+<rect x="673" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="687.0" y="142" fill="#dde" font-size="13" text-anchor="middle">23</text>
+</g>
+<g>
+<rect x="673" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="687.0" y="142" fill="#dde" font-size="13" text-anchor="middle">23</text>
+<text x="687.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W1</text>
+</g>
+<g>
+<rect x="703" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="717.0" y="142" fill="#dde" font-size="13" text-anchor="middle">24</text>
+</g>
+<g>
+<rect x="703" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="717.0" y="142" fill="#dde" font-size="13" text-anchor="middle">24</text>
+<text x="717.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W1</text>
+</g>
+<g>
+<rect x="733" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="747.0" y="142" fill="#dde" font-size="13" text-anchor="middle">25</text>
+</g>
+<g>
+<rect x="733" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="747.0" y="142" fill="#dde" font-size="13" text-anchor="middle">25</text>
+<text x="747.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W1</text>
+</g>
+<g>
+<rect x="763" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="777.0" y="142" fill="#dde" font-size="13" text-anchor="middle">26</text>
+</g>
+<g>
+<rect x="763" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="777.0" y="142" fill="#dde" font-size="13" text-anchor="middle">26</text>
+<text x="777.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W1</text>
+</g>
+<g>
+<rect x="793" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="807.0" y="142" fill="#dde" font-size="13" text-anchor="middle">27</text>
+</g>
+<g>
+<rect x="793" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="807.0" y="142" fill="#dde" font-size="13" text-anchor="middle">27</text>
+<text x="807.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W1</text>
+</g>
+<g>
+<rect x="823" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="837.0" y="142" fill="#dde" font-size="13" text-anchor="middle">28</text>
+</g>
+<g>
+<rect x="823" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="837.0" y="142" fill="#dde" font-size="13" text-anchor="middle">28</text>
+<text x="837.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W1</text>
+</g>
+<rect x="862" y="120" width="50" height="34" rx="3" fill="#2a2a40" stroke="#fd6" stroke-width="2" />
+<text x="887" y="142" fill="#fd6" font-size="13" text-anchor="middle">29+</text>
+<text x="887" y="172" fill="#fd6" font-size="12" text-anchor="middle">финиш</text>
+<g class="fragment" data-fragment-index="1"><path d="M387.0,118 Q402.0,73.2 417.0,116" fill="none" stroke="#f7a" stroke-width="2.5" marker-end="url(#nl40)" /><text x="402.0" y="90.6" fill="#f7a" font-size="13" text-anchor="middle">+1</text></g>
+<g class="fragment" data-fragment-index="1"><path d="M207.0,118 Q312.0,8.4 417.0,116" fill="none" stroke="#f7a" stroke-width="2.5" marker-end="url(#nl40)" /><text x="312.0" y="58.2" fill="#f7a" font-size="13" text-anchor="middle">x2</text></g>
+</svg>
+<ul style="font-size: 0.7em; text-align: left;">
+    <li class="fragment" data-fragment-index="1">в 14 можно прийти из 13 (<code>+1</code>) и из 7 (<code>x2</code>)</li>
+    <li class="fragment" data-fragment-index="2">Петя отдаёт Ване L1 - и выигрывает своим вторым ходом: <span style="color: #7d7; font-weight: bold;">W2</span></li>
+    <li class="fragment" data-fragment-index="3">и сразу на финиш из 7 и 13 не дойти - значит, не W1</li>
+</ul>
+                </section>
+
+                <!-- шаг 4: L2 - все ходы в W1 или W2, хотя бы один в W2; 11 - не L2 -->
+                <section>
+                    <h2>Шаг 4: L2</h2>
+<svg width="900" height="178" viewBox="8 0 908 180">
+<defs><marker id="nl50" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#8ab" /></marker><marker id="nl51" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#f7a" /></marker></defs>
+<g>
+<rect x="13" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="27.0" y="142" fill="#dde" font-size="13" text-anchor="middle">1</text>
+</g>
+<g>
+<rect x="43" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="57.0" y="142" fill="#dde" font-size="13" text-anchor="middle">2</text>
+</g>
+<g>
+<rect x="73" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="87.0" y="142" fill="#dde" font-size="13" text-anchor="middle">3</text>
+</g>
+<g>
+<rect x="103" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="117.0" y="142" fill="#dde" font-size="13" text-anchor="middle">4</text>
+</g>
+<g>
+<rect x="133" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="147.0" y="142" fill="#dde" font-size="13" text-anchor="middle">5</text>
+</g>
+<g>
+<rect x="163" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="177.0" y="142" fill="#dde" font-size="13" text-anchor="middle">6</text>
+</g>
+<g>
+<rect x="193" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="207.0" y="142" fill="#dde" font-size="13" text-anchor="middle">7</text>
+</g>
+<g>
+<rect x="193" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="207.0" y="142" fill="#dde" font-size="13" text-anchor="middle">7</text>
+<text x="207.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W2</text>
+</g>
+<g>
+<rect x="223" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="237.0" y="142" fill="#dde" font-size="13" text-anchor="middle">8</text>
+</g>
+<g>
+<rect x="253" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="267.0" y="142" fill="#dde" font-size="13" text-anchor="middle">9</text>
+</g>
+<g>
+<rect x="283" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="297.0" y="142" fill="#dde" font-size="13" text-anchor="middle">10</text>
+</g>
+<g>
+<rect x="313" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="327.0" y="142" fill="#dde" font-size="13" text-anchor="middle">11</text>
+</g>
+<g>
+<rect x="343" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="357.0" y="142" fill="#dde" font-size="13" text-anchor="middle">12</text>
+</g>
+<g class="fragment" data-fragment-index="2">
+<rect x="343" y="120" width="28" height="34" rx="3" fill="#3a1f24" stroke="#f66" stroke-width="2" />
+<text x="357.0" y="142" fill="#dde" font-size="13" text-anchor="middle">12</text>
+<text x="357.0" y="172" fill="#f66" font-size="12" font-weight="bold" text-anchor="middle">L2</text>
+</g>
+<g>
+<rect x="373" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="387.0" y="142" fill="#dde" font-size="13" text-anchor="middle">13</text>
+</g>
+<g>
+<rect x="373" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="387.0" y="142" fill="#dde" font-size="13" text-anchor="middle">13</text>
+<text x="387.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W2</text>
+</g>
+<g>
+<rect x="403" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="417.0" y="142" fill="#dde" font-size="13" text-anchor="middle">14</text>
+</g>
+<g>
+<rect x="403" y="120" width="28" height="34" rx="3" fill="#3a1f24" stroke="#f66" stroke-width="2" />
+<text x="417.0" y="142" fill="#dde" font-size="13" text-anchor="middle">14</text>
+<text x="417.0" y="172" fill="#f66" font-size="12" font-weight="bold" text-anchor="middle">L1</text>
+</g>
+<g>
+<rect x="433" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="447.0" y="142" fill="#dde" font-size="13" text-anchor="middle">15</text>
+</g>
+<g>
+<rect x="433" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="447.0" y="142" fill="#dde" font-size="13" text-anchor="middle">15</text>
+<text x="447.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W1</text>
+</g>
+<g>
+<rect x="463" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="477.0" y="142" fill="#dde" font-size="13" text-anchor="middle">16</text>
+</g>
+<g>
+<rect x="463" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="477.0" y="142" fill="#dde" font-size="13" text-anchor="middle">16</text>
+<text x="477.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W1</text>
+</g>
+<g>
+<rect x="493" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="507.0" y="142" fill="#dde" font-size="13" text-anchor="middle">17</text>
+</g>
+<g>
+<rect x="493" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="507.0" y="142" fill="#dde" font-size="13" text-anchor="middle">17</text>
+<text x="507.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W1</text>
+</g>
+<g>
+<rect x="523" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="537.0" y="142" fill="#dde" font-size="13" text-anchor="middle">18</text>
+</g>
+<g>
+<rect x="523" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="537.0" y="142" fill="#dde" font-size="13" text-anchor="middle">18</text>
+<text x="537.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W1</text>
+</g>
+<g>
+<rect x="553" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="567.0" y="142" fill="#dde" font-size="13" text-anchor="middle">19</text>
+</g>
+<g>
+<rect x="553" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="567.0" y="142" fill="#dde" font-size="13" text-anchor="middle">19</text>
+<text x="567.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W1</text>
+</g>
+<g>
+<rect x="583" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="597.0" y="142" fill="#dde" font-size="13" text-anchor="middle">20</text>
+</g>
+<g>
+<rect x="583" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="597.0" y="142" fill="#dde" font-size="13" text-anchor="middle">20</text>
+<text x="597.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W1</text>
+</g>
+<g>
+<rect x="613" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="627.0" y="142" fill="#dde" font-size="13" text-anchor="middle">21</text>
+</g>
+<g>
+<rect x="613" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="627.0" y="142" fill="#dde" font-size="13" text-anchor="middle">21</text>
+<text x="627.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W1</text>
+</g>
+<g>
+<rect x="643" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="657.0" y="142" fill="#dde" font-size="13" text-anchor="middle">22</text>
+</g>
+<g>
+<rect x="643" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="657.0" y="142" fill="#dde" font-size="13" text-anchor="middle">22</text>
+<text x="657.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W1</text>
+</g>
+<g>
+<rect x="673" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="687.0" y="142" fill="#dde" font-size="13" text-anchor="middle">23</text>
+</g>
+<g>
+<rect x="673" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="687.0" y="142" fill="#dde" font-size="13" text-anchor="middle">23</text>
+<text x="687.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W1</text>
+</g>
+<g>
+<rect x="703" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="717.0" y="142" fill="#dde" font-size="13" text-anchor="middle">24</text>
+</g>
+<g>
+<rect x="703" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="717.0" y="142" fill="#dde" font-size="13" text-anchor="middle">24</text>
+<text x="717.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W1</text>
+</g>
+<g>
+<rect x="733" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="747.0" y="142" fill="#dde" font-size="13" text-anchor="middle">25</text>
+</g>
+<g>
+<rect x="733" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="747.0" y="142" fill="#dde" font-size="13" text-anchor="middle">25</text>
+<text x="747.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W1</text>
+</g>
+<g>
+<rect x="763" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="777.0" y="142" fill="#dde" font-size="13" text-anchor="middle">26</text>
+</g>
+<g>
+<rect x="763" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="777.0" y="142" fill="#dde" font-size="13" text-anchor="middle">26</text>
+<text x="777.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W1</text>
+</g>
+<g>
+<rect x="793" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="807.0" y="142" fill="#dde" font-size="13" text-anchor="middle">27</text>
+</g>
+<g>
+<rect x="793" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="807.0" y="142" fill="#dde" font-size="13" text-anchor="middle">27</text>
+<text x="807.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W1</text>
+</g>
+<g>
+<rect x="823" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="837.0" y="142" fill="#dde" font-size="13" text-anchor="middle">28</text>
+</g>
+<g>
+<rect x="823" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="837.0" y="142" fill="#dde" font-size="13" text-anchor="middle">28</text>
+<text x="837.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W1</text>
+</g>
+<rect x="862" y="120" width="50" height="34" rx="3" fill="#2a2a40" stroke="#fd6" stroke-width="2" />
+<text x="887" y="142" fill="#fd6" font-size="13" text-anchor="middle">29+</text>
+<text x="887" y="172" fill="#fd6" font-size="12" text-anchor="middle">финиш</text>
+<g class="fragment" data-fragment-index="1"><path d="M357.0,118 Q372.0,73.2 387.0,116" fill="none" stroke="#f7a" stroke-width="2.5" marker-end="url(#nl51)" /><text x="372.0" y="90.6" fill="#f7a" font-size="13" text-anchor="middle">+1</text></g>
+<g class="fragment" data-fragment-index="1"><path d="M357.0,118 Q537.0,-45.6 717.0,116" fill="none" stroke="#f7a" stroke-width="2.5" marker-end="url(#nl51)" /><text x="537.0" y="31.2" fill="#f7a" font-size="13" text-anchor="middle">x2</text></g>
+<g class="fragment" data-fragment-index="3"><path d="M327.0,118 Q342.0,73.2 357.0,116" fill="none" stroke="#8ab" stroke-width="2.5" marker-end="url(#nl50)" /><text x="342.0" y="90.6" fill="#8ab" font-size="13" text-anchor="middle">+1</text></g>
+</svg>
+<ul style="font-size: 0.7em; text-align: left;">
+    <li class="fragment" data-fragment-index="1">из 12: в 13 (W2) или в 24 (W1) - там ходит Ваня, и он выигрывает</li>
+    <li class="fragment" data-fragment-index="2">хотя бы один ход в W2 - Ваня выигрывает первым <mark>или вторым</mark> ходом: <span style="color: #f66; font-weight: bold;">L2</span></li>
+    <li class="fragment" data-fragment-index="3">из 11 есть ход в 12 (L2): отдаём Ване проигрышную, 11 - не L2</li>
+</ul>
+                </section>
+
+                <!-- итоговая прямая: вся разметка цветом, читаем ответы -->
+                <section>
+                    <h2>Вся прямая</h2>
+<svg width="900" height="178" viewBox="8 0 908 180">
+<defs></defs>
+<g>
+<rect x="13" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="27.0" y="142" fill="#dde" font-size="13" text-anchor="middle">1</text>
+</g>
+<g>
+<rect x="43" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="57.0" y="142" fill="#dde" font-size="13" text-anchor="middle">2</text>
+</g>
+<g>
+<rect x="73" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="87.0" y="142" fill="#dde" font-size="13" text-anchor="middle">3</text>
+</g>
+<g>
+<rect x="103" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="117.0" y="142" fill="#dde" font-size="13" text-anchor="middle">4</text>
+</g>
+<g>
+<rect x="133" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="147.0" y="142" fill="#dde" font-size="13" text-anchor="middle">5</text>
+</g>
+<g>
+<rect x="163" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="177.0" y="142" fill="#dde" font-size="13" text-anchor="middle">6</text>
+</g>
+<g>
+<rect x="193" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="207.0" y="142" fill="#dde" font-size="13" text-anchor="middle">7</text>
+</g>
+<g>
+<rect x="193" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="207.0" y="142" fill="#dde" font-size="13" text-anchor="middle">7</text>
+<text x="207.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W2</text>
+</g>
+<g>
+<rect x="223" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="237.0" y="142" fill="#dde" font-size="13" text-anchor="middle">8</text>
+</g>
+<g>
+<rect x="253" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="267.0" y="142" fill="#dde" font-size="13" text-anchor="middle">9</text>
+</g>
+<g>
+<rect x="283" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="297.0" y="142" fill="#dde" font-size="13" text-anchor="middle">10</text>
+</g>
+<g>
+<rect x="313" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="327.0" y="142" fill="#dde" font-size="13" text-anchor="middle">11</text>
+</g>
+<g>
+<rect x="343" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="357.0" y="142" fill="#dde" font-size="13" text-anchor="middle">12</text>
+</g>
+<g>
+<rect x="343" y="120" width="28" height="34" rx="3" fill="#3a1f24" stroke="#f66" stroke-width="2" />
+<text x="357.0" y="142" fill="#dde" font-size="13" text-anchor="middle">12</text>
+<text x="357.0" y="172" fill="#f66" font-size="12" font-weight="bold" text-anchor="middle">L2</text>
+</g>
+<g>
+<rect x="373" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="387.0" y="142" fill="#dde" font-size="13" text-anchor="middle">13</text>
+</g>
+<g>
+<rect x="373" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="387.0" y="142" fill="#dde" font-size="13" text-anchor="middle">13</text>
+<text x="387.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W2</text>
+</g>
+<g>
+<rect x="403" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="417.0" y="142" fill="#dde" font-size="13" text-anchor="middle">14</text>
+</g>
+<g>
+<rect x="403" y="120" width="28" height="34" rx="3" fill="#3a1f24" stroke="#f66" stroke-width="2" />
+<text x="417.0" y="142" fill="#dde" font-size="13" text-anchor="middle">14</text>
+<text x="417.0" y="172" fill="#f66" font-size="12" font-weight="bold" text-anchor="middle">L1</text>
+</g>
+<g>
+<rect x="433" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="447.0" y="142" fill="#dde" font-size="13" text-anchor="middle">15</text>
+</g>
+<g>
+<rect x="433" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="447.0" y="142" fill="#dde" font-size="13" text-anchor="middle">15</text>
+<text x="447.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W1</text>
+</g>
+<g>
+<rect x="463" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="477.0" y="142" fill="#dde" font-size="13" text-anchor="middle">16</text>
+</g>
+<g>
+<rect x="463" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="477.0" y="142" fill="#dde" font-size="13" text-anchor="middle">16</text>
+<text x="477.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W1</text>
+</g>
+<g>
+<rect x="493" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="507.0" y="142" fill="#dde" font-size="13" text-anchor="middle">17</text>
+</g>
+<g>
+<rect x="493" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="507.0" y="142" fill="#dde" font-size="13" text-anchor="middle">17</text>
+<text x="507.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W1</text>
+</g>
+<g>
+<rect x="523" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="537.0" y="142" fill="#dde" font-size="13" text-anchor="middle">18</text>
+</g>
+<g>
+<rect x="523" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="537.0" y="142" fill="#dde" font-size="13" text-anchor="middle">18</text>
+<text x="537.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W1</text>
+</g>
+<g>
+<rect x="553" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="567.0" y="142" fill="#dde" font-size="13" text-anchor="middle">19</text>
+</g>
+<g>
+<rect x="553" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="567.0" y="142" fill="#dde" font-size="13" text-anchor="middle">19</text>
+<text x="567.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W1</text>
+</g>
+<g>
+<rect x="583" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="597.0" y="142" fill="#dde" font-size="13" text-anchor="middle">20</text>
+</g>
+<g>
+<rect x="583" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="597.0" y="142" fill="#dde" font-size="13" text-anchor="middle">20</text>
+<text x="597.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W1</text>
+</g>
+<g>
+<rect x="613" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="627.0" y="142" fill="#dde" font-size="13" text-anchor="middle">21</text>
+</g>
+<g>
+<rect x="613" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="627.0" y="142" fill="#dde" font-size="13" text-anchor="middle">21</text>
+<text x="627.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W1</text>
+</g>
+<g>
+<rect x="643" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="657.0" y="142" fill="#dde" font-size="13" text-anchor="middle">22</text>
+</g>
+<g>
+<rect x="643" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="657.0" y="142" fill="#dde" font-size="13" text-anchor="middle">22</text>
+<text x="657.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W1</text>
+</g>
+<g>
+<rect x="673" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="687.0" y="142" fill="#dde" font-size="13" text-anchor="middle">23</text>
+</g>
+<g>
+<rect x="673" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="687.0" y="142" fill="#dde" font-size="13" text-anchor="middle">23</text>
+<text x="687.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W1</text>
+</g>
+<g>
+<rect x="703" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="717.0" y="142" fill="#dde" font-size="13" text-anchor="middle">24</text>
+</g>
+<g>
+<rect x="703" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="717.0" y="142" fill="#dde" font-size="13" text-anchor="middle">24</text>
+<text x="717.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W1</text>
+</g>
+<g>
+<rect x="733" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="747.0" y="142" fill="#dde" font-size="13" text-anchor="middle">25</text>
+</g>
+<g>
+<rect x="733" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="747.0" y="142" fill="#dde" font-size="13" text-anchor="middle">25</text>
+<text x="747.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W1</text>
+</g>
+<g>
+<rect x="763" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="777.0" y="142" fill="#dde" font-size="13" text-anchor="middle">26</text>
+</g>
+<g>
+<rect x="763" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="777.0" y="142" fill="#dde" font-size="13" text-anchor="middle">26</text>
+<text x="777.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W1</text>
+</g>
+<g>
+<rect x="793" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="807.0" y="142" fill="#dde" font-size="13" text-anchor="middle">27</text>
+</g>
+<g>
+<rect x="793" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="807.0" y="142" fill="#dde" font-size="13" text-anchor="middle">27</text>
+<text x="807.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W1</text>
+</g>
+<g>
+<rect x="823" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="837.0" y="142" fill="#dde" font-size="13" text-anchor="middle">28</text>
+</g>
+<g>
+<rect x="823" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="837.0" y="142" fill="#dde" font-size="13" text-anchor="middle">28</text>
+<text x="837.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W1</text>
+</g>
+<rect x="862" y="120" width="50" height="34" rx="3" fill="#2a2a40" stroke="#fd6" stroke-width="2" />
+<text x="887" y="142" fill="#fd6" font-size="13" text-anchor="middle">29+</text>
+<text x="887" y="172" fill="#fd6" font-size="12" text-anchor="middle">финиш</text>
+</svg>
+<div style="display: flex; justify-content: center; gap: 1.5em; font-size: 0.7em; margin-top: 0.3em;">
+    <div class="fragment"><span style="color: #7d7; font-weight: bold;">W1</span>: 15-28</div>
+    <div class="fragment"><span style="color: #f66; font-weight: bold;">L1</span>: 14</div>
+    <div class="fragment"><span style="color: #7d7; font-weight: bold;">W2</span>: 7 и 13</div>
+    <div class="fragment"><span style="color: #f66; font-weight: bold;">L2</span>: 12</div>
+</div>
+<div class="fragment opinion" style="margin-top: 0.6em;">
+    Три вопроса - три чтения одной картинки
+</div>
+                </section>
+
+                <!-- №19: две формулировки - демо 2027 "Ваня выиграл первым ходом" (хватает одного хода в W1) и банк ФИПИ "при любом ходе Пети" (L1); сначала размеченная прямая, потом ответ -->
+                <section>
+                    <h2>№19</h2>
+<div class="compare" style="gap: 0.6em;">
+    <div class="compare-block fragment" data-fragment-index="1" style="padding: 0.4em 0.8em;">
+        <p style="font-size: 0.45em; opacity: 0.6; margin: 0;">демоверсия 2027</p>
+        <p style="font-size: 0.5em; margin: 0.2em 0;">«Известно, что Ваня <mark>выиграл</mark> своим первым ходом. Минимальное S?»</p>
+    </div>
+    <div class="compare-block fragment" data-fragment-index="2" style="position: relative; padding: 0.4em 0.8em;">
+        <span style="position: absolute; top: 0.5em; right: 0.8em; font-size: 0.45em; opacity: 0.5;">FB8AAF</span>
+        <p style="font-size: 0.45em; opacity: 0.6; margin: 0;">открытый банк ФИПИ</p>
+        <p style="font-size: 0.5em; margin: 0.2em 0;">«Петя не может выиграть за один ход, но <mark>при любом</mark> ходе Пети Ваня выигрывает первым ходом»</p>
+    </div>
+</div>
+<div class="fragment" data-fragment-index="3">
+<svg width="820" height="163" viewBox="8 0 908 180">
+<defs><marker id="nl70" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#f7a" /></marker><marker id="nl71" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#fd6" /></marker></defs>
+<g>
+<rect x="13" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="27.0" y="142" fill="#dde" font-size="13" text-anchor="middle">1</text>
+</g>
+<g>
+<rect x="43" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="57.0" y="142" fill="#dde" font-size="13" text-anchor="middle">2</text>
+</g>
+<g>
+<rect x="73" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="87.0" y="142" fill="#dde" font-size="13" text-anchor="middle">3</text>
+</g>
+<g>
+<rect x="103" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="117.0" y="142" fill="#dde" font-size="13" text-anchor="middle">4</text>
+</g>
+<g>
+<rect x="133" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="147.0" y="142" fill="#dde" font-size="13" text-anchor="middle">5</text>
+</g>
+<g>
+<rect x="163" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="177.0" y="142" fill="#dde" font-size="13" text-anchor="middle">6</text>
+</g>
+<g>
+<rect x="193" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="207.0" y="142" fill="#dde" font-size="13" text-anchor="middle">7</text>
+</g>
+<g>
+<rect x="193" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="207.0" y="142" fill="#dde" font-size="13" text-anchor="middle">7</text>
+<text x="207.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W2</text>
+</g>
+<g>
+<rect x="223" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="237.0" y="142" fill="#dde" font-size="13" text-anchor="middle">8</text>
+</g>
+<g>
+<rect x="253" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="267.0" y="142" fill="#dde" font-size="13" text-anchor="middle">9</text>
+</g>
+<g>
+<rect x="283" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="297.0" y="142" fill="#dde" font-size="13" text-anchor="middle">10</text>
+</g>
+<g>
+<rect x="313" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="327.0" y="142" fill="#dde" font-size="13" text-anchor="middle">11</text>
+</g>
+<g>
+<rect x="343" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="357.0" y="142" fill="#dde" font-size="13" text-anchor="middle">12</text>
+</g>
+<g>
+<rect x="343" y="120" width="28" height="34" rx="3" fill="#3a1f24" stroke="#f66" stroke-width="2" />
+<text x="357.0" y="142" fill="#dde" font-size="13" text-anchor="middle">12</text>
+<text x="357.0" y="172" fill="#f66" font-size="12" font-weight="bold" text-anchor="middle">L2</text>
+</g>
+<g>
+<rect x="373" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="387.0" y="142" fill="#dde" font-size="13" text-anchor="middle">13</text>
+</g>
+<g>
+<rect x="373" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="387.0" y="142" fill="#dde" font-size="13" text-anchor="middle">13</text>
+<text x="387.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W2</text>
+</g>
+<g>
+<rect x="403" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="417.0" y="142" fill="#dde" font-size="13" text-anchor="middle">14</text>
+</g>
+<g>
+<rect x="403" y="120" width="28" height="34" rx="3" fill="#3a1f24" stroke="#f66" stroke-width="2" />
+<text x="417.0" y="142" fill="#dde" font-size="13" text-anchor="middle">14</text>
+<text x="417.0" y="172" fill="#f66" font-size="12" font-weight="bold" text-anchor="middle">L1</text>
+</g>
+<g>
+<rect x="433" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="447.0" y="142" fill="#dde" font-size="13" text-anchor="middle">15</text>
+</g>
+<g>
+<rect x="433" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="447.0" y="142" fill="#dde" font-size="13" text-anchor="middle">15</text>
+<text x="447.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W1</text>
+</g>
+<g>
+<rect x="463" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="477.0" y="142" fill="#dde" font-size="13" text-anchor="middle">16</text>
+</g>
+<g>
+<rect x="463" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="477.0" y="142" fill="#dde" font-size="13" text-anchor="middle">16</text>
+<text x="477.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W1</text>
+</g>
+<g>
+<rect x="493" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="507.0" y="142" fill="#dde" font-size="13" text-anchor="middle">17</text>
+</g>
+<g>
+<rect x="493" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="507.0" y="142" fill="#dde" font-size="13" text-anchor="middle">17</text>
+<text x="507.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W1</text>
+</g>
+<g>
+<rect x="523" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="537.0" y="142" fill="#dde" font-size="13" text-anchor="middle">18</text>
+</g>
+<g>
+<rect x="523" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="537.0" y="142" fill="#dde" font-size="13" text-anchor="middle">18</text>
+<text x="537.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W1</text>
+</g>
+<g>
+<rect x="553" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="567.0" y="142" fill="#dde" font-size="13" text-anchor="middle">19</text>
+</g>
+<g>
+<rect x="553" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="567.0" y="142" fill="#dde" font-size="13" text-anchor="middle">19</text>
+<text x="567.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W1</text>
+</g>
+<g>
+<rect x="583" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="597.0" y="142" fill="#dde" font-size="13" text-anchor="middle">20</text>
+</g>
+<g>
+<rect x="583" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="597.0" y="142" fill="#dde" font-size="13" text-anchor="middle">20</text>
+<text x="597.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W1</text>
+</g>
+<g>
+<rect x="613" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="627.0" y="142" fill="#dde" font-size="13" text-anchor="middle">21</text>
+</g>
+<g>
+<rect x="613" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="627.0" y="142" fill="#dde" font-size="13" text-anchor="middle">21</text>
+<text x="627.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W1</text>
+</g>
+<g>
+<rect x="643" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="657.0" y="142" fill="#dde" font-size="13" text-anchor="middle">22</text>
+</g>
+<g>
+<rect x="643" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="657.0" y="142" fill="#dde" font-size="13" text-anchor="middle">22</text>
+<text x="657.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W1</text>
+</g>
+<g>
+<rect x="673" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="687.0" y="142" fill="#dde" font-size="13" text-anchor="middle">23</text>
+</g>
+<g>
+<rect x="673" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="687.0" y="142" fill="#dde" font-size="13" text-anchor="middle">23</text>
+<text x="687.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W1</text>
+</g>
+<g>
+<rect x="703" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="717.0" y="142" fill="#dde" font-size="13" text-anchor="middle">24</text>
+</g>
+<g>
+<rect x="703" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="717.0" y="142" fill="#dde" font-size="13" text-anchor="middle">24</text>
+<text x="717.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W1</text>
+</g>
+<g>
+<rect x="733" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="747.0" y="142" fill="#dde" font-size="13" text-anchor="middle">25</text>
+</g>
+<g>
+<rect x="733" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="747.0" y="142" fill="#dde" font-size="13" text-anchor="middle">25</text>
+<text x="747.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W1</text>
+</g>
+<g>
+<rect x="763" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="777.0" y="142" fill="#dde" font-size="13" text-anchor="middle">26</text>
+</g>
+<g>
+<rect x="763" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="777.0" y="142" fill="#dde" font-size="13" text-anchor="middle">26</text>
+<text x="777.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W1</text>
+</g>
+<g>
+<rect x="793" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="807.0" y="142" fill="#dde" font-size="13" text-anchor="middle">27</text>
+</g>
+<g>
+<rect x="793" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="807.0" y="142" fill="#dde" font-size="13" text-anchor="middle">27</text>
+<text x="807.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W1</text>
+</g>
+<g>
+<rect x="823" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="837.0" y="142" fill="#dde" font-size="13" text-anchor="middle">28</text>
+</g>
+<g>
+<rect x="823" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="837.0" y="142" fill="#dde" font-size="13" text-anchor="middle">28</text>
+<text x="837.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W1</text>
+</g>
+<rect x="862" y="120" width="50" height="34" rx="3" fill="#2a2a40" stroke="#fd6" stroke-width="2" />
+<text x="887" y="142" fill="#fd6" font-size="13" text-anchor="middle">29+</text>
+<text x="887" y="172" fill="#fd6" font-size="12" text-anchor="middle">финиш</text>
+<g class="fragment" data-fragment-index="4"><path d="M237.0,118 Q357.0,-2.4 477.0,116" fill="none" stroke="#f7a" stroke-width="2.5" marker-end="url(#nl70)" /><text x="357.0" y="52.8" fill="#f7a" font-size="13" text-anchor="middle">x2</text></g>
+<g class="fragment" data-fragment-index="6"><path d="M417.0,118 Q432.0,73.2 447.0,116" fill="none" stroke="#fd6" stroke-width="2.5" marker-end="url(#nl71)" /></g>
+<g class="fragment" data-fragment-index="6"><path d="M417.0,118 Q627.0,-67.2 837.0,116" fill="none" stroke="#fd6" stroke-width="2.5" marker-end="url(#nl71)" /></g>
+<rect class="fragment" data-fragment-index="4" x="220" y="116" width="34" height="42" rx="5" fill="none" stroke="#fd6" stroke-width="3" />
+<rect class="fragment" data-fragment-index="6" x="400" y="116" width="34" height="42" rx="5" fill="none" stroke="#fd6" stroke-width="3" />
+</svg>
+</div>
+<div style="display: flex; gap: 1em; font-size: 0.55em; text-align: left;">
+    <p class="fragment" data-fragment-index="5" style="flex: 1; margin: 0;">«выиграл»: Петя ошибся, хватит <mark class="yellow">одного</mark> хода в W1: <code style="white-space: nowrap;">8 x 2 = 16</code>. Ответ: <strong>8</strong></p>
+    <p class="fragment" data-fragment-index="7" style="flex: 1; margin: 0;">«при любом»: все ходы Пети в W1 - это <span style="color: #f66; font-weight: bold;">L1</span>. Ответ: <strong>14</strong></p>
+</div>
+                </section>
+
+                <!-- №20: два значения в порядке возрастания - это W2, ответ по прямой -->
+                <section>
+                    <h2>№20</h2>
+<div style="position: relative; font-size: 0.6em; text-align: left; border-left: 4px solid #8ab; padding: 0.3em 5em 0.3em 0.8em; background: rgba(136, 170, 187, 0.08);"><span style="position: absolute; top: 0.3em; right: 0.6em; font-size: 0.75em; opacity: 0.5;">B4B268</span><p>Найдите два таких значения S, при которых у Пети есть выигрышная стратегия, причём одновременно:</p>
+<p class="fragment">- Петя <mark>не может выиграть за один ход</mark>;</p>
+<p class="fragment">- Петя может выиграть <mark>своим вторым ходом</mark> независимо от того, как будет ходить Ваня.</p>
+<p class="fragment">Найденные значения запишите в порядке возрастания.</p></div>
+<div class="fragment">
+<svg width="820" height="163" viewBox="8 0 908 180">
+<defs></defs>
+<g>
+<rect x="13" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="27.0" y="142" fill="#dde" font-size="13" text-anchor="middle">1</text>
+</g>
+<g>
+<rect x="43" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="57.0" y="142" fill="#dde" font-size="13" text-anchor="middle">2</text>
+</g>
+<g>
+<rect x="73" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="87.0" y="142" fill="#dde" font-size="13" text-anchor="middle">3</text>
+</g>
+<g>
+<rect x="103" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="117.0" y="142" fill="#dde" font-size="13" text-anchor="middle">4</text>
+</g>
+<g>
+<rect x="133" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="147.0" y="142" fill="#dde" font-size="13" text-anchor="middle">5</text>
+</g>
+<g>
+<rect x="163" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="177.0" y="142" fill="#dde" font-size="13" text-anchor="middle">6</text>
+</g>
+<g>
+<rect x="193" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="207.0" y="142" fill="#dde" font-size="13" text-anchor="middle">7</text>
+</g>
+<g>
+<rect x="193" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="207.0" y="142" fill="#dde" font-size="13" text-anchor="middle">7</text>
+<text x="207.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W2</text>
+</g>
+<g>
+<rect x="223" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="237.0" y="142" fill="#dde" font-size="13" text-anchor="middle">8</text>
+</g>
+<g>
+<rect x="253" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="267.0" y="142" fill="#dde" font-size="13" text-anchor="middle">9</text>
+</g>
+<g>
+<rect x="283" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="297.0" y="142" fill="#dde" font-size="13" text-anchor="middle">10</text>
+</g>
+<g>
+<rect x="313" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="327.0" y="142" fill="#dde" font-size="13" text-anchor="middle">11</text>
+</g>
+<g>
+<rect x="343" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="357.0" y="142" fill="#dde" font-size="13" text-anchor="middle">12</text>
+</g>
+<g>
+<rect x="343" y="120" width="28" height="34" rx="3" fill="#3a1f24" stroke="#f66" stroke-width="2" />
+<text x="357.0" y="142" fill="#dde" font-size="13" text-anchor="middle">12</text>
+<text x="357.0" y="172" fill="#f66" font-size="12" font-weight="bold" text-anchor="middle">L2</text>
+</g>
+<g>
+<rect x="373" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="387.0" y="142" fill="#dde" font-size="13" text-anchor="middle">13</text>
+</g>
+<g>
+<rect x="373" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="387.0" y="142" fill="#dde" font-size="13" text-anchor="middle">13</text>
+<text x="387.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W2</text>
+</g>
+<g>
+<rect x="403" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="417.0" y="142" fill="#dde" font-size="13" text-anchor="middle">14</text>
+</g>
+<g>
+<rect x="403" y="120" width="28" height="34" rx="3" fill="#3a1f24" stroke="#f66" stroke-width="2" />
+<text x="417.0" y="142" fill="#dde" font-size="13" text-anchor="middle">14</text>
+<text x="417.0" y="172" fill="#f66" font-size="12" font-weight="bold" text-anchor="middle">L1</text>
+</g>
+<g>
+<rect x="433" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="447.0" y="142" fill="#dde" font-size="13" text-anchor="middle">15</text>
+</g>
+<g>
+<rect x="433" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="447.0" y="142" fill="#dde" font-size="13" text-anchor="middle">15</text>
+<text x="447.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W1</text>
+</g>
+<g>
+<rect x="463" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="477.0" y="142" fill="#dde" font-size="13" text-anchor="middle">16</text>
+</g>
+<g>
+<rect x="463" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="477.0" y="142" fill="#dde" font-size="13" text-anchor="middle">16</text>
+<text x="477.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W1</text>
+</g>
+<g>
+<rect x="493" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="507.0" y="142" fill="#dde" font-size="13" text-anchor="middle">17</text>
+</g>
+<g>
+<rect x="493" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="507.0" y="142" fill="#dde" font-size="13" text-anchor="middle">17</text>
+<text x="507.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W1</text>
+</g>
+<g>
+<rect x="523" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="537.0" y="142" fill="#dde" font-size="13" text-anchor="middle">18</text>
+</g>
+<g>
+<rect x="523" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="537.0" y="142" fill="#dde" font-size="13" text-anchor="middle">18</text>
+<text x="537.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W1</text>
+</g>
+<g>
+<rect x="553" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="567.0" y="142" fill="#dde" font-size="13" text-anchor="middle">19</text>
+</g>
+<g>
+<rect x="553" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="567.0" y="142" fill="#dde" font-size="13" text-anchor="middle">19</text>
+<text x="567.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W1</text>
+</g>
+<g>
+<rect x="583" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="597.0" y="142" fill="#dde" font-size="13" text-anchor="middle">20</text>
+</g>
+<g>
+<rect x="583" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="597.0" y="142" fill="#dde" font-size="13" text-anchor="middle">20</text>
+<text x="597.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W1</text>
+</g>
+<g>
+<rect x="613" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="627.0" y="142" fill="#dde" font-size="13" text-anchor="middle">21</text>
+</g>
+<g>
+<rect x="613" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="627.0" y="142" fill="#dde" font-size="13" text-anchor="middle">21</text>
+<text x="627.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W1</text>
+</g>
+<g>
+<rect x="643" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="657.0" y="142" fill="#dde" font-size="13" text-anchor="middle">22</text>
+</g>
+<g>
+<rect x="643" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="657.0" y="142" fill="#dde" font-size="13" text-anchor="middle">22</text>
+<text x="657.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W1</text>
+</g>
+<g>
+<rect x="673" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="687.0" y="142" fill="#dde" font-size="13" text-anchor="middle">23</text>
+</g>
+<g>
+<rect x="673" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="687.0" y="142" fill="#dde" font-size="13" text-anchor="middle">23</text>
+<text x="687.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W1</text>
+</g>
+<g>
+<rect x="703" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="717.0" y="142" fill="#dde" font-size="13" text-anchor="middle">24</text>
+</g>
+<g>
+<rect x="703" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="717.0" y="142" fill="#dde" font-size="13" text-anchor="middle">24</text>
+<text x="717.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W1</text>
+</g>
+<g>
+<rect x="733" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="747.0" y="142" fill="#dde" font-size="13" text-anchor="middle">25</text>
+</g>
+<g>
+<rect x="733" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="747.0" y="142" fill="#dde" font-size="13" text-anchor="middle">25</text>
+<text x="747.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W1</text>
+</g>
+<g>
+<rect x="763" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="777.0" y="142" fill="#dde" font-size="13" text-anchor="middle">26</text>
+</g>
+<g>
+<rect x="763" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="777.0" y="142" fill="#dde" font-size="13" text-anchor="middle">26</text>
+<text x="777.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W1</text>
+</g>
+<g>
+<rect x="793" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="807.0" y="142" fill="#dde" font-size="13" text-anchor="middle">27</text>
+</g>
+<g>
+<rect x="793" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="807.0" y="142" fill="#dde" font-size="13" text-anchor="middle">27</text>
+<text x="807.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W1</text>
+</g>
+<g>
+<rect x="823" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="837.0" y="142" fill="#dde" font-size="13" text-anchor="middle">28</text>
+</g>
+<g>
+<rect x="823" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="837.0" y="142" fill="#dde" font-size="13" text-anchor="middle">28</text>
+<text x="837.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W1</text>
+</g>
+<rect x="862" y="120" width="50" height="34" rx="3" fill="#2a2a40" stroke="#fd6" stroke-width="2" />
+<text x="887" y="142" fill="#fd6" font-size="13" text-anchor="middle">29+</text>
+<text x="887" y="172" fill="#fd6" font-size="12" text-anchor="middle">финиш</text>
+<rect class="fragment" x="190" y="116" width="34" height="42" rx="5" fill="none" stroke="#fd6" stroke-width="3" />
+<rect class="fragment" x="370" y="116" width="34" height="42" rx="5" fill="none" stroke="#fd6" stroke-width="3" />
+</svg>
+</div>
+<p class="fragment" style="font-size: 0.65em; margin: 0;">это <span style="color: #7d7; font-weight: bold;">W2</span>, ответ: <strong>7 13</strong></p>
+                </section>
+
+                <!-- №21: "Ваня выигрывает первым или вторым ходом, но не гарантированно первым" - почему именно L2 -->
+                <section>
+                    <h2>№21</h2>
+<div style="position: relative; font-size: 0.6em; text-align: left; border-left: 4px solid #8ab; padding: 0.3em 5em 0.3em 0.8em; background: rgba(136, 170, 187, 0.08);"><span style="position: absolute; top: 0.3em; right: 0.6em; font-size: 0.75em; opacity: 0.5;">5030FF</span><p>Найдите минимальное значение S, при котором одновременно выполняются два условия:</p>
+<p class="fragment" data-fragment-index="1">- у Вани есть выигрышная стратегия, позволяющая ему выиграть <mark>первым или вторым</mark> ходом при любой игре Пети;</p>
+<p class="fragment" data-fragment-index="2">- у Вани нет стратегии, которая позволит ему <mark>гарантированно выиграть первым</mark> ходом.</p></div>
+<div class="fragment" data-fragment-index="3">
+<svg width="820" height="163" viewBox="8 0 908 180">
+<defs></defs>
+<g>
+<rect x="13" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="27.0" y="142" fill="#dde" font-size="13" text-anchor="middle">1</text>
+</g>
+<g>
+<rect x="43" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="57.0" y="142" fill="#dde" font-size="13" text-anchor="middle">2</text>
+</g>
+<g>
+<rect x="73" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="87.0" y="142" fill="#dde" font-size="13" text-anchor="middle">3</text>
+</g>
+<g>
+<rect x="103" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="117.0" y="142" fill="#dde" font-size="13" text-anchor="middle">4</text>
+</g>
+<g>
+<rect x="133" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="147.0" y="142" fill="#dde" font-size="13" text-anchor="middle">5</text>
+</g>
+<g>
+<rect x="163" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="177.0" y="142" fill="#dde" font-size="13" text-anchor="middle">6</text>
+</g>
+<g>
+<rect x="193" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="207.0" y="142" fill="#dde" font-size="13" text-anchor="middle">7</text>
+</g>
+<g>
+<rect x="193" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="207.0" y="142" fill="#dde" font-size="13" text-anchor="middle">7</text>
+<text x="207.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W2</text>
+</g>
+<g>
+<rect x="223" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="237.0" y="142" fill="#dde" font-size="13" text-anchor="middle">8</text>
+</g>
+<g>
+<rect x="253" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="267.0" y="142" fill="#dde" font-size="13" text-anchor="middle">9</text>
+</g>
+<g>
+<rect x="283" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="297.0" y="142" fill="#dde" font-size="13" text-anchor="middle">10</text>
+</g>
+<g>
+<rect x="313" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="327.0" y="142" fill="#dde" font-size="13" text-anchor="middle">11</text>
+</g>
+<g>
+<rect x="343" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="357.0" y="142" fill="#dde" font-size="13" text-anchor="middle">12</text>
+</g>
+<g>
+<rect x="343" y="120" width="28" height="34" rx="3" fill="#3a1f24" stroke="#f66" stroke-width="2" />
+<text x="357.0" y="142" fill="#dde" font-size="13" text-anchor="middle">12</text>
+<text x="357.0" y="172" fill="#f66" font-size="12" font-weight="bold" text-anchor="middle">L2</text>
+</g>
+<g>
+<rect x="373" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="387.0" y="142" fill="#dde" font-size="13" text-anchor="middle">13</text>
+</g>
+<g>
+<rect x="373" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="387.0" y="142" fill="#dde" font-size="13" text-anchor="middle">13</text>
+<text x="387.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W2</text>
+</g>
+<g>
+<rect x="403" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="417.0" y="142" fill="#dde" font-size="13" text-anchor="middle">14</text>
+</g>
+<g>
+<rect x="403" y="120" width="28" height="34" rx="3" fill="#3a1f24" stroke="#f66" stroke-width="2" />
+<text x="417.0" y="142" fill="#dde" font-size="13" text-anchor="middle">14</text>
+<text x="417.0" y="172" fill="#f66" font-size="12" font-weight="bold" text-anchor="middle">L1</text>
+</g>
+<g>
+<rect x="433" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="447.0" y="142" fill="#dde" font-size="13" text-anchor="middle">15</text>
+</g>
+<g>
+<rect x="433" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="447.0" y="142" fill="#dde" font-size="13" text-anchor="middle">15</text>
+<text x="447.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W1</text>
+</g>
+<g>
+<rect x="463" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="477.0" y="142" fill="#dde" font-size="13" text-anchor="middle">16</text>
+</g>
+<g>
+<rect x="463" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="477.0" y="142" fill="#dde" font-size="13" text-anchor="middle">16</text>
+<text x="477.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W1</text>
+</g>
+<g>
+<rect x="493" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="507.0" y="142" fill="#dde" font-size="13" text-anchor="middle">17</text>
+</g>
+<g>
+<rect x="493" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="507.0" y="142" fill="#dde" font-size="13" text-anchor="middle">17</text>
+<text x="507.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W1</text>
+</g>
+<g>
+<rect x="523" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="537.0" y="142" fill="#dde" font-size="13" text-anchor="middle">18</text>
+</g>
+<g>
+<rect x="523" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="537.0" y="142" fill="#dde" font-size="13" text-anchor="middle">18</text>
+<text x="537.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W1</text>
+</g>
+<g>
+<rect x="553" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="567.0" y="142" fill="#dde" font-size="13" text-anchor="middle">19</text>
+</g>
+<g>
+<rect x="553" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="567.0" y="142" fill="#dde" font-size="13" text-anchor="middle">19</text>
+<text x="567.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W1</text>
+</g>
+<g>
+<rect x="583" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="597.0" y="142" fill="#dde" font-size="13" text-anchor="middle">20</text>
+</g>
+<g>
+<rect x="583" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="597.0" y="142" fill="#dde" font-size="13" text-anchor="middle">20</text>
+<text x="597.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W1</text>
+</g>
+<g>
+<rect x="613" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="627.0" y="142" fill="#dde" font-size="13" text-anchor="middle">21</text>
+</g>
+<g>
+<rect x="613" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="627.0" y="142" fill="#dde" font-size="13" text-anchor="middle">21</text>
+<text x="627.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W1</text>
+</g>
+<g>
+<rect x="643" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="657.0" y="142" fill="#dde" font-size="13" text-anchor="middle">22</text>
+</g>
+<g>
+<rect x="643" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="657.0" y="142" fill="#dde" font-size="13" text-anchor="middle">22</text>
+<text x="657.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W1</text>
+</g>
+<g>
+<rect x="673" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="687.0" y="142" fill="#dde" font-size="13" text-anchor="middle">23</text>
+</g>
+<g>
+<rect x="673" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="687.0" y="142" fill="#dde" font-size="13" text-anchor="middle">23</text>
+<text x="687.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W1</text>
+</g>
+<g>
+<rect x="703" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="717.0" y="142" fill="#dde" font-size="13" text-anchor="middle">24</text>
+</g>
+<g>
+<rect x="703" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="717.0" y="142" fill="#dde" font-size="13" text-anchor="middle">24</text>
+<text x="717.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W1</text>
+</g>
+<g>
+<rect x="733" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="747.0" y="142" fill="#dde" font-size="13" text-anchor="middle">25</text>
+</g>
+<g>
+<rect x="733" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="747.0" y="142" fill="#dde" font-size="13" text-anchor="middle">25</text>
+<text x="747.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W1</text>
+</g>
+<g>
+<rect x="763" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="777.0" y="142" fill="#dde" font-size="13" text-anchor="middle">26</text>
+</g>
+<g>
+<rect x="763" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="777.0" y="142" fill="#dde" font-size="13" text-anchor="middle">26</text>
+<text x="777.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W1</text>
+</g>
+<g>
+<rect x="793" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="807.0" y="142" fill="#dde" font-size="13" text-anchor="middle">27</text>
+</g>
+<g>
+<rect x="793" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="807.0" y="142" fill="#dde" font-size="13" text-anchor="middle">27</text>
+<text x="807.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W1</text>
+</g>
+<g>
+<rect x="823" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="837.0" y="142" fill="#dde" font-size="13" text-anchor="middle">28</text>
+</g>
+<g>
+<rect x="823" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="837.0" y="142" fill="#dde" font-size="13" text-anchor="middle">28</text>
+<text x="837.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W1</text>
+</g>
+<rect x="862" y="120" width="50" height="34" rx="3" fill="#2a2a40" stroke="#fd6" stroke-width="2" />
+<text x="887" y="142" fill="#fd6" font-size="13" text-anchor="middle">29+</text>
+<text x="887" y="172" fill="#fd6" font-size="12" text-anchor="middle">финиш</text>
+<rect class="fragment" data-fragment-index="4" x="400" y="116" width="34" height="42" rx="5" fill="none" stroke="#fd6" stroke-width="3" />
+<rect class="fragment" data-fragment-index="4" x="340" y="116" width="34" height="42" rx="5" fill="none" stroke="#fd6" stroke-width="3" />
+</svg>
+</div>
+<div style="display: flex; gap: 1em; font-size: 0.55em; text-align: left;">
+    <p class="fragment" data-fragment-index="4" style="flex: 1; margin: 0;">первое условие: L1 или L2 - это 14 и 12</p>
+    <p class="fragment" data-fragment-index="5" style="flex: 1; margin: 0;">второе: не L1. Остаётся <span style="color: #f66; font-weight: bold;">L2</span>, ответ: <strong>12</strong></p>
+</div>
+                </section>
+
+                <!-- типичные ошибки: забыть, для кого метка, забыть "не может за один ход", взять L1 в №21, неверный порядок ответов -->
+                <section>
+                    <h2>Типичные ошибки</h2>
+<ul style="font-size: 0.75em; text-align: left;">
+    <li class="fragment">забыть, для кого метка: W и L - для того, кто ходит. При S камнях ходит <mark>Петя</mark></li>
+    <li class="fragment">в №20 взять и W1: забыто «не может выиграть за один ход»</li>
+    <li class="fragment">в №21 взять L1: забыто «нет стратегии выиграть первым»</li>
+    <li class="fragment">в №20 записать числа не по возрастанию</li>
+</ul>
+                </section>
+
+            </section>
+
+            <!-- ЧАСТЬ 3: решение программой -->
+            <section>
+
+                <section style="font-size: 70px; height: 100%; width: 100%">
+                    <div class="lesson-time">35</div>
+                    <div class="fragment">
+                        <h1 style="font-size: 1.3em;">Решаем программой</h1>
+                        <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">рекурсия по числу ходов</p>
+                    </div>
+                </section>
+
+                <!-- зачем программа: S бывает 100+ и ходов три-четыре, руками долго и легко ошибиться -->
+                <section>
+                    <h2>Зачем программа</h2>
+<ul style="font-size: 0.8em; text-align: left;">
+    <li class="fragment">наша прямая до 29 и два хода - руками 5 минут</li>
+    <li class="fragment">в вариантах бывает финиш 100+ и три хода: <code>+1</code>, <code>+4</code>, <code>x3</code></li>
+    <li class="fragment">через неделю две кучи: позиций сотни</li>
+</ul>
+<div class="fragment opinion" style="margin-top: 0.6em;">
+    Программа пишется один раз и отвечает на все три вопроса
+</div>
+                </section>
+
+                <!-- идея (имена сразу как в коде: can_win, must_lose): "может ли игрок, который сейчас ходит, выиграть за k своих ходов" - рекурсия по ходам -->
+                <section>
+                    <h2>Идея</h2>
+<div class="compare">
+    <div class="compare-block fragment">
+        <h3><code>can_win(s, k)</code></h3>
+        <p style="font-size: 0.55em;">кто ходит при s камнях, выиграет не больше чем за k своих ходов</p>
+        <p class="fragment" style="font-size: 0.55em;"><mark class="green">есть</mark> ход: сразу на финиш или туда, где соперник <code>must_lose(t, k - 1)</code></p>
+    </div>
+    <div class="compare-block fragment">
+        <h3><code>must_lose(s, k)</code></h3>
+        <p style="font-size: 0.55em;">кто ходит при s камнях, проиграет: соперник выиграет не больше чем за k своих ходов</p>
+        <p class="fragment" style="font-size: 0.55em;"><mark>все</mark> ходы: не на финиш и туда, где соперник <code>can_win(t, k)</code></p>
+    </div>
+</div>
+<div class="fragment opinion" style="margin-top: 0.6em;">
+    Это правила 1 и 2 с прошлых занятий, только с запасом ходов k
+</div>
+                </section>
+
+                <!-- трассировка, шаг 1: что проверяем для S = 12 - дерево игры: уровни "ходит Петя" / "ходит Ваня", у Пети нужны все ходы, у Вани хватит одного -->
+                <section>
+                    <h2>Трассировка: что проверяем</h2>
+<p class="fragment" data-fragment-index="1" style="font-size: 0.6em;">проверим программой, что 12 - это <span style="color: #f66; font-weight: bold;">L2</span>: Петя ходит и проигрывает, а Ваня выигрывает <mark>не позже своего второго хода</mark></p>
+<div class="fragment" data-fragment-index="2">
+<svg width="820" height="345" viewBox="0 0 900 380">
+<defs><marker id="gt1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#667" /></marker></defs>
+<text x="8" y="50" fill="#99a" font-size="15">ходит Петя</text>
+<line x1="110" y1="45" x2="890" y2="45" stroke="#334" stroke-width="1" stroke-dasharray="3 6" />
+<text x="8" y="130" fill="#99a" font-size="15">ходит Ваня</text>
+<line x1="110" y1="125" x2="890" y2="125" stroke="#334" stroke-width="1" stroke-dasharray="3 6" />
+<text x="8" y="210" fill="#99a" font-size="15">ходит Петя</text>
+<line x1="110" y1="205" x2="890" y2="205" stroke="#334" stroke-width="1" stroke-dasharray="3 6" />
+<text x="8" y="290" fill="#99a" font-size="15">ходит Ваня</text>
+<line x1="110" y1="285" x2="890" y2="285" stroke="#334" stroke-width="1" stroke-dasharray="3 6" />
+<line x1="500" y1="65" x2="330" y2="103" stroke="#667" stroke-width="2" marker-end="url(#gt1)" />
+<text x="399.0" y="90.0" fill="#99a" font-size="14" text-anchor="middle">+1</text>
+<line x1="500" y1="65" x2="690" y2="103" stroke="#667" stroke-width="2" marker-end="url(#gt1)" />
+<text x="611.0" y="90.0" fill="#99a" font-size="14" text-anchor="middle">x2</text>
+<line x1="330" y1="145" x2="260" y2="183" stroke="#667" stroke-width="2" marker-end="url(#gt1)" />
+<text x="279.0" y="170.0" fill="#99a" font-size="14" text-anchor="middle">+1</text>
+<line x1="330" y1="145" x2="410" y2="183" stroke="#667" stroke-width="2" marker-end="url(#gt1)" />
+<text x="386.0" y="170.0" fill="#99a" font-size="14" text-anchor="middle">x2</text>
+<line x1="690" y1="145" x2="610" y2="183" stroke="#667" stroke-width="2" marker-end="url(#gt1)" />
+<text x="634.0" y="170.0" fill="#99a" font-size="14" text-anchor="middle">+1</text>
+<line x1="690" y1="145" x2="770" y2="183" stroke="#667" stroke-width="2" marker-end="url(#gt1)" />
+<text x="746.0" y="170.0" fill="#99a" font-size="14" text-anchor="middle">x2</text>
+<line x1="260" y1="225" x2="190" y2="263" stroke="#667" stroke-width="2" marker-end="url(#gt1)" />
+<text x="209.0" y="250.0" fill="#99a" font-size="14" text-anchor="middle">+1</text>
+<line x1="260" y1="225" x2="330" y2="263" stroke="#667" stroke-width="2" marker-end="url(#gt1)" />
+<text x="311.0" y="250.0" fill="#99a" font-size="14" text-anchor="middle">x2</text>
+<line x1="190" y1="305" x2="190" y2="333" stroke="#667" stroke-width="2" marker-end="url(#gt1)" />
+<text x="174.0" y="325.0" fill="#99a" font-size="14" text-anchor="middle">x2</text>
+<line x1="330" y1="305" x2="330" y2="333" stroke="#667" stroke-width="2" marker-end="url(#gt1)" />
+<text x="314.0" y="325.0" fill="#99a" font-size="14" text-anchor="middle">x2</text>
+<circle cx="500" cy="45" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="500" y="51" fill="#dde" font-size="16" text-anchor="middle">12</text>
+<circle cx="330" cy="125" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="330" y="131" fill="#dde" font-size="16" text-anchor="middle">13</text>
+<circle cx="690" cy="125" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="690" y="131" fill="#dde" font-size="16" text-anchor="middle">24</text>
+<circle cx="260" cy="205" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="260" y="211" fill="#dde" font-size="16" text-anchor="middle">14</text>
+<circle cx="410" cy="205" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="410" y="211" fill="#dde" font-size="16" text-anchor="middle">26</text>
+<circle cx="610" cy="205" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="610" y="211" fill="#dde" font-size="16" text-anchor="middle">25</text>
+<rect x="744" y="187" width="52" height="36" rx="5" fill="#2a2a40" stroke="#fd6" stroke-width="2" />
+<text x="770" y="211" fill="#fd6" font-size="16" text-anchor="middle">48</text>
+<circle cx="190" cy="285" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="190" y="291" fill="#dde" font-size="16" text-anchor="middle">15</text>
+<circle cx="330" cy="285" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="330" y="291" fill="#dde" font-size="16" text-anchor="middle">28</text>
+<rect x="164" y="337" width="52" height="36" rx="5" fill="#2a2a40" stroke="#fd6" stroke-width="2" />
+<text x="190" y="361" fill="#fd6" font-size="16" text-anchor="middle">30</text>
+<rect x="304" y="337" width="52" height="36" rx="5" fill="#2a2a40" stroke="#fd6" stroke-width="2" />
+<text x="330" y="361" fill="#fd6" font-size="16" text-anchor="middle">56</text>
+</svg>
+</div>
+<div style="display: flex; gap: 1em; font-size: 0.55em; text-align: left;">
+    <p class="fragment" data-fragment-index="3" style="flex: 1; margin: 0;">ходит Петя: он проиграет, только если плохи <mark>все</mark> его ходы - это <code>must_lose</code></p>
+    <p class="fragment" data-fragment-index="4" style="flex: 1; margin: 0;">ходит Ваня: ему хватит <mark>одного</mark> хорошего хода - это <code>can_win</code></p>
+</div>
+                </section>
+
+                <!-- трассировка, шаг 2: раскрашиваем дерево игры снизу вверх, как прямую; подпись к каждому шагу, лишние ходы гасим -->
+                <section>
+                    <h2>Трассировка: снизу вверх</h2>
+<svg width="820" height="345" viewBox="0 0 900 380">
+<defs><marker id="gt1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#667" /></marker></defs>
+<text x="8" y="50" fill="#99a" font-size="15">ходит Петя</text>
+<line x1="110" y1="45" x2="890" y2="45" stroke="#334" stroke-width="1" stroke-dasharray="3 6" />
+<text x="8" y="130" fill="#99a" font-size="15">ходит Ваня</text>
+<line x1="110" y1="125" x2="890" y2="125" stroke="#334" stroke-width="1" stroke-dasharray="3 6" />
+<text x="8" y="210" fill="#99a" font-size="15">ходит Петя</text>
+<line x1="110" y1="205" x2="890" y2="205" stroke="#334" stroke-width="1" stroke-dasharray="3 6" />
+<text x="8" y="290" fill="#99a" font-size="15">ходит Ваня</text>
+<line x1="110" y1="285" x2="890" y2="285" stroke="#334" stroke-width="1" stroke-dasharray="3 6" />
+<line x1="500" y1="65" x2="330" y2="103" stroke="#667" stroke-width="2" marker-end="url(#gt1)" />
+<text x="399.0" y="90.0" fill="#99a" font-size="14" text-anchor="middle">+1</text>
+<line x1="500" y1="65" x2="690" y2="103" stroke="#667" stroke-width="2" marker-end="url(#gt1)" />
+<text x="611.0" y="90.0" fill="#99a" font-size="14" text-anchor="middle">x2</text>
+<line x1="330" y1="145" x2="260" y2="183" stroke="#667" stroke-width="2" marker-end="url(#gt1)" />
+<text x="279.0" y="170.0" fill="#99a" font-size="14" text-anchor="middle">+1</text>
+<line x1="330" y1="145" x2="410" y2="183" stroke="#667" stroke-width="2" marker-end="url(#gt1)" />
+<text x="386.0" y="170.0" fill="#99a" font-size="14" text-anchor="middle">x2</text>
+<line x1="690" y1="145" x2="610" y2="183" stroke="#667" stroke-width="2" marker-end="url(#gt1)" />
+<text x="634.0" y="170.0" fill="#99a" font-size="14" text-anchor="middle">+1</text>
+<line x1="690" y1="145" x2="770" y2="183" stroke="#667" stroke-width="2" marker-end="url(#gt1)" />
+<text x="746.0" y="170.0" fill="#99a" font-size="14" text-anchor="middle">x2</text>
+<line x1="260" y1="225" x2="190" y2="263" stroke="#667" stroke-width="2" marker-end="url(#gt1)" />
+<text x="209.0" y="250.0" fill="#99a" font-size="14" text-anchor="middle">+1</text>
+<line x1="260" y1="225" x2="330" y2="263" stroke="#667" stroke-width="2" marker-end="url(#gt1)" />
+<text x="311.0" y="250.0" fill="#99a" font-size="14" text-anchor="middle">x2</text>
+<line x1="190" y1="305" x2="190" y2="333" stroke="#667" stroke-width="2" marker-end="url(#gt1)" />
+<text x="174.0" y="325.0" fill="#99a" font-size="14" text-anchor="middle">x2</text>
+<line x1="330" y1="305" x2="330" y2="333" stroke="#667" stroke-width="2" marker-end="url(#gt1)" />
+<text x="314.0" y="325.0" fill="#99a" font-size="14" text-anchor="middle">x2</text>
+<circle cx="500" cy="45" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="500" y="51" fill="#dde" font-size="16" text-anchor="middle">12</text>
+<g class="fragment" data-fragment-index="5"><circle cx="500" cy="45" r="20" fill="#3a1f24" stroke="#f66" stroke-width="3" /><text x="500" y="51" fill="#dde" font-size="16" text-anchor="middle">12</text><text x="526" y="33" fill="#f66" font-size="15" font-weight="bold">L2</text></g>
+<circle cx="330" cy="125" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="330" y="131" fill="#dde" font-size="16" text-anchor="middle">13</text>
+<g class="fragment" data-fragment-index="4"><circle cx="330" cy="125" r="20" fill="#1f3a26" stroke="#7d7" stroke-width="3" /><text x="330" y="131" fill="#dde" font-size="16" text-anchor="middle">13</text><text x="356" y="113" fill="#7d7" font-size="15" font-weight="bold">W2</text></g>
+<circle cx="690" cy="125" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="690" y="131" fill="#dde" font-size="16" text-anchor="middle">24</text>
+<g class="fragment" data-fragment-index="2"><circle cx="690" cy="125" r="20" fill="#1f3a26" stroke="#7d7" stroke-width="3" /><text x="690" y="131" fill="#dde" font-size="16" text-anchor="middle">24</text><text x="716" y="113" fill="#7d7" font-size="15" font-weight="bold">W1</text></g>
+<circle cx="260" cy="205" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="260" y="211" fill="#dde" font-size="16" text-anchor="middle">14</text>
+<g class="fragment" data-fragment-index="3"><circle cx="260" cy="205" r="20" fill="#3a1f24" stroke="#f66" stroke-width="3" /><text x="260" y="211" fill="#dde" font-size="16" text-anchor="middle">14</text><text x="286" y="193" fill="#f66" font-size="15" font-weight="bold">L1</text></g>
+<circle cx="410" cy="205" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="410" y="211" fill="#dde" font-size="16" text-anchor="middle">26</text>
+<g class="fragment" data-fragment-index="4"><circle cx="410" cy="205" r="23" fill="#111" fill-opacity="0.75" /><text x="410" y="243" fill="#99a" font-size="13" text-anchor="middle">не нужен</text></g>
+<circle cx="610" cy="205" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="610" y="211" fill="#dde" font-size="16" text-anchor="middle">25</text>
+<g class="fragment" data-fragment-index="2"><circle cx="610" cy="205" r="23" fill="#111" fill-opacity="0.75" /><text x="610" y="243" fill="#99a" font-size="13" text-anchor="middle">не нужен</text></g>
+<rect x="744" y="187" width="52" height="36" rx="5" fill="#2a2a40" stroke="#fd6" stroke-width="2" />
+<text x="770" y="211" fill="#fd6" font-size="16" text-anchor="middle">48</text>
+<circle cx="190" cy="285" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="190" y="291" fill="#dde" font-size="16" text-anchor="middle">15</text>
+<g class="fragment" data-fragment-index="2"><circle cx="190" cy="285" r="20" fill="#1f3a26" stroke="#7d7" stroke-width="3" /><text x="190" y="291" fill="#dde" font-size="16" text-anchor="middle">15</text><text x="216" y="273" fill="#7d7" font-size="15" font-weight="bold">W1</text></g>
+<circle cx="330" cy="285" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="330" y="291" fill="#dde" font-size="16" text-anchor="middle">28</text>
+<g class="fragment" data-fragment-index="2"><circle cx="330" cy="285" r="20" fill="#1f3a26" stroke="#7d7" stroke-width="3" /><text x="330" y="291" fill="#dde" font-size="16" text-anchor="middle">28</text><text x="356" y="273" fill="#7d7" font-size="15" font-weight="bold">W1</text></g>
+<rect x="164" y="337" width="52" height="36" rx="5" fill="#2a2a40" stroke="#fd6" stroke-width="2" />
+<text x="190" y="361" fill="#fd6" font-size="16" text-anchor="middle">30</text>
+<rect x="304" y="337" width="52" height="36" rx="5" fill="#2a2a40" stroke="#fd6" stroke-width="2" />
+<text x="330" y="361" fill="#fd6" font-size="16" text-anchor="middle">56</text>
+</svg>
+<div style="display: grid; font-size: 0.6em; min-height: 2.6em;">
+    <p class="fragment current-visible" data-fragment-index="1" style="grid-area: 1 / 1; margin: 0;">идём от финиша: кто сходил в жёлтую клетку, тот выиграл</p>
+    <p class="fragment current-visible" data-fragment-index="2" style="grid-area: 1 / 1; margin: 0;">15, 28, 24: ходит Ваня, и у него есть ход сразу на финиш - <span style="color: #7d7; font-weight: bold;">W1</span>. Ход в 25 ему не нужен</p>
+    <p class="fragment current-visible" data-fragment-index="3" style="grid-area: 1 / 1; margin: 0;">14: ходит Петя, и <mark>оба</mark> его хода ведут в W1 - <span style="color: #f66; font-weight: bold;">L1</span></p>
+    <p class="fragment current-visible" data-fragment-index="4" style="grid-area: 1 / 1; margin: 0;">13: Ваня идёт в 14, где Петя проигрывает, - выигрывает вторым ходом: <span style="color: #7d7; font-weight: bold;">W2</span>. Ход в 26 проверять не нужно</p>
+    <p class="fragment" data-fragment-index="5" style="grid-area: 1 / 1; margin: 0;">12: <mark>оба</mark> хода Пети ведут туда, где Ваня выигрывает (W2 и W1), - <span style="color: #f66; font-weight: bold;">L2</span>. Ровно это и считает функция</p>
+</div>
+                </section>
+
+                <!-- как из функций получить W1, L1, W2, L2: какие k проверять и почему "но не за меньше" -->
+                <section>
+                    <h2>Метки из функций</h2>
+<table style="font-size: 0.6em; width: 100%;">
+    <tr class="fragment"><td style="color: #7d7; font-weight: bold;">W1</td><td><code>can_win(s, 1)</code></td></tr>
+    <tr class="fragment"><td style="color: #f66; font-weight: bold;">L1</td><td><code>must_lose(s, 1)</code></td></tr>
+    <tr class="fragment"><td style="color: #7d7; font-weight: bold;">W2</td><td><code>can_win(s, 2)</code> и не <code>can_win(s, 1)</code></td></tr>
+    <tr class="fragment"><td style="color: #f66; font-weight: bold;">L2</td><td><code>must_lose(s, 2)</code> и не <code>must_lose(s, 1)</code></td></tr>
+</table>
+<div class="fragment opinion" style="margin-top: 0.6em;">
+    Функция отвечает «не больше чем за k», поэтому «вторым, но не первым» - это два вызова
+</div>
+                </section>
+
+                <!-- вариации условия: другие ходы, "не менее S" против "более S", проигрыш при достижении -->
+                <section>
+                    <h2>Вариации условия</h2>
+<table style="font-size: 0.6em; width: 100%;">
+    <tr><td><strong>В условии</strong></td><td><strong>Что меняем в программе</strong></td></tr>
+    <tr class="fragment"><td>другие ходы: <code>+2</code>, <code>x3</code>, «убрать камень»</td><td>только список ходов</td></tr>
+    <tr class="fragment"><td>финиш «более 40», а не «не менее 40»</td><td>только проверку финиша</td></tr>
+    <tr class="fragment"><td>«проигрывает тот, кто довёл кучу до финиша»</td><td>финиш теперь <mark>проигрыш</mark> для того, кто туда сходил</td></tr>
+</table>
+<div class="fragment opinion" style="margin-top: 0.6em;">
+    Идея с k ходами не меняется - меняются только ходы и финиш
+</div>
+                </section>
+
+                <!-- реализуем код: последний слайд части 3 - я пишу код на своём экране и решаю им №19-21 игры со слайдов (ФИПИ 2B23FD), сверяем с прямой -->
+                <section>
+                    <h2>Реализуем код</h2>
+<div class="timeline" style="font-size: 0.65em;">
+    <div class="timeline-item fragment">
+        <div class="timeline-marker">1</div>
+        <div class="timeline-content"><code>can_win</code> и <code>must_lose</code> - правила 1 и 2 с запасом ходов k</div>
+    </div>
+    <div class="timeline-item fragment">
+        <div class="timeline-marker">2</div>
+        <div class="timeline-content"><code>label(s)</code> - метки для всех S от 1 до 28</div>
+    </div>
+    <div class="timeline-item fragment">
+        <div class="timeline-marker">3</div>
+        <div class="timeline-content">ответы на №19, 20, 21 - по меткам</div>
+    </div>
+    <div class="timeline-item fragment">
+        <div class="timeline-marker">4</div>
+        <div class="timeline-content">сверяем с прямой: <strong>8</strong> (или 14), <strong>7 13</strong>, <strong>12</strong></div>
+    </div>
+</div>
+                </section>
+
+            </section>
+
+            <!-- ЧАСТЬ 4: практика - ученик на своём экране решает задачи ФИПИ кодом, потом проверяет руками -->
+            <section>
+
+                <section style="font-size: 70px; height: 100%; width: 100%">
+                    <div class="lesson-time">45</div>
+                    <div class="fragment">
+                        <h1 style="font-size: 1.3em;">Практика</h1>
+                        <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">сначала кодом, потом руками</p>
+                    </div>
+                </section>
+
+                <!-- практика 1: экран ученика - решает кодом задание ФИПИ 4C233B -->
+                <section>
+                    <h2>Практика 1: кодом</h2>
+<div style="position: relative; font-size: 0.6em; text-align: left; border-left: 4px solid #8ab; padding: 0.3em 5em 0.3em 0.8em; background: rgba(136, 170, 187, 0.08); margin-bottom: 0.3em;"><span style="position: absolute; top: 0.3em; right: 0.6em; font-size: 0.75em; opacity: 0.5;">4C233B</span><p>Ходы: <mark>добавить 1</mark>, <mark>добавить 4</mark> или <mark>увеличить в 2 раза</mark>. Игра завершается, когда в куче не менее <mark>31</mark> камней. S от 1 до 30.</p>
+<p>№19: S, при котором Петя не может выиграть за один ход, но при любом ходе Пети Ваня выигрывает первым ходом.</p>
+<p>№20: два наименьших S, когда Петя не может выиграть за один ход, но выигрывает вторым. По возрастанию.</p>
+<p>№21: минимальное S, когда Ваня выигрывает первым или вторым ходом, но гарантированно первым не может.</p></div>
+<div class="timer fragment" data-limit="600">
+    <div class="timer-bar"><div class="timer-fill"></div></div>
+    <div class="timer-row">
+        <span class="timer-time">0:00</span>
+        <span class="timer-hint">клик - старт</span>
+        <button class="timer-reset" type="button">сброс</button>
+    </div>
+</div>
+                </section>
+
+                <!-- практика 1, проверка руками: ученик сам размечает прямую от финиша, потом открываем разметку и ответы -->
+                <section>
+                    <h2>Практика 1: руками</h2>
+<p class="fragment" data-fragment-index="1" style="font-size: 0.55em;">теперь без программы: нарисуй прямую и разметь от финиша - W1, L1, W2, L2. Совпало с ответами кода?</p>
+<div class="fragment" data-fragment-index="2">
+<svg width="880" height="164" viewBox="8 0 968 180">
+<defs></defs>
+<g>
+<rect x="13" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="27.0" y="142" fill="#dde" font-size="13" text-anchor="middle">1</text>
+</g>
+<g>
+<rect x="43" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="57.0" y="142" fill="#dde" font-size="13" text-anchor="middle">2</text>
+</g>
+<g>
+<rect x="73" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="87.0" y="142" fill="#dde" font-size="13" text-anchor="middle">3</text>
+</g>
+<g>
+<rect x="103" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="117.0" y="142" fill="#dde" font-size="13" text-anchor="middle">4</text>
+</g>
+<g>
+<rect x="133" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="147.0" y="142" fill="#dde" font-size="13" text-anchor="middle">5</text>
+</g>
+<g>
+<rect x="163" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="177.0" y="142" fill="#dde" font-size="13" text-anchor="middle">6</text>
+</g>
+<g>
+<rect x="193" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="207.0" y="142" fill="#dde" font-size="13" text-anchor="middle">7</text>
+</g>
+<g>
+<rect x="223" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="237.0" y="142" fill="#dde" font-size="13" text-anchor="middle">8</text>
+</g>
+<g>
+<rect x="253" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="267.0" y="142" fill="#dde" font-size="13" text-anchor="middle">9</text>
+</g>
+<g>
+<rect x="283" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="297.0" y="142" fill="#dde" font-size="13" text-anchor="middle">10</text>
+</g>
+<g>
+<rect x="283" y="120" width="28" height="34" rx="3" fill="#3a1f24" stroke="#f66" stroke-width="2" />
+<text x="297.0" y="142" fill="#dde" font-size="13" text-anchor="middle">10</text>
+<text x="297.0" y="172" fill="#f66" font-size="12" font-weight="bold" text-anchor="middle">L2</text>
+</g>
+<g>
+<rect x="313" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="327.0" y="142" fill="#dde" font-size="13" text-anchor="middle">11</text>
+</g>
+<g>
+<rect x="313" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="327.0" y="142" fill="#dde" font-size="13" text-anchor="middle">11</text>
+<text x="327.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W2</text>
+</g>
+<g>
+<rect x="343" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="357.0" y="142" fill="#dde" font-size="13" text-anchor="middle">12</text>
+</g>
+<g>
+<rect x="373" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="387.0" y="142" fill="#dde" font-size="13" text-anchor="middle">13</text>
+</g>
+<g>
+<rect x="373" y="120" width="28" height="34" rx="3" fill="#3a1f24" stroke="#f66" stroke-width="2" />
+<text x="387.0" y="142" fill="#dde" font-size="13" text-anchor="middle">13</text>
+<text x="387.0" y="172" fill="#f66" font-size="12" font-weight="bold" text-anchor="middle">L2</text>
+</g>
+<g>
+<rect x="403" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="417.0" y="142" fill="#dde" font-size="13" text-anchor="middle">14</text>
+</g>
+<g>
+<rect x="403" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="417.0" y="142" fill="#dde" font-size="13" text-anchor="middle">14</text>
+<text x="417.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W2</text>
+</g>
+<g>
+<rect x="433" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="447.0" y="142" fill="#dde" font-size="13" text-anchor="middle">15</text>
+</g>
+<g>
+<rect x="433" y="120" width="28" height="34" rx="3" fill="#3a1f24" stroke="#f66" stroke-width="2" />
+<text x="447.0" y="142" fill="#dde" font-size="13" text-anchor="middle">15</text>
+<text x="447.0" y="172" fill="#f66" font-size="12" font-weight="bold" text-anchor="middle">L1</text>
+</g>
+<g>
+<rect x="463" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="477.0" y="142" fill="#dde" font-size="13" text-anchor="middle">16</text>
+</g>
+<g>
+<rect x="463" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="477.0" y="142" fill="#dde" font-size="13" text-anchor="middle">16</text>
+<text x="477.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W1</text>
+</g>
+<g>
+<rect x="493" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="507.0" y="142" fill="#dde" font-size="13" text-anchor="middle">17</text>
+</g>
+<g>
+<rect x="493" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="507.0" y="142" fill="#dde" font-size="13" text-anchor="middle">17</text>
+<text x="507.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W1</text>
+</g>
+<g>
+<rect x="523" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="537.0" y="142" fill="#dde" font-size="13" text-anchor="middle">18</text>
+</g>
+<g>
+<rect x="523" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="537.0" y="142" fill="#dde" font-size="13" text-anchor="middle">18</text>
+<text x="537.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W1</text>
+</g>
+<g>
+<rect x="553" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="567.0" y="142" fill="#dde" font-size="13" text-anchor="middle">19</text>
+</g>
+<g>
+<rect x="553" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="567.0" y="142" fill="#dde" font-size="13" text-anchor="middle">19</text>
+<text x="567.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W1</text>
+</g>
+<g>
+<rect x="583" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="597.0" y="142" fill="#dde" font-size="13" text-anchor="middle">20</text>
+</g>
+<g>
+<rect x="583" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="597.0" y="142" fill="#dde" font-size="13" text-anchor="middle">20</text>
+<text x="597.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W1</text>
+</g>
+<g>
+<rect x="613" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="627.0" y="142" fill="#dde" font-size="13" text-anchor="middle">21</text>
+</g>
+<g>
+<rect x="613" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="627.0" y="142" fill="#dde" font-size="13" text-anchor="middle">21</text>
+<text x="627.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W1</text>
+</g>
+<g>
+<rect x="643" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="657.0" y="142" fill="#dde" font-size="13" text-anchor="middle">22</text>
+</g>
+<g>
+<rect x="643" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="657.0" y="142" fill="#dde" font-size="13" text-anchor="middle">22</text>
+<text x="657.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W1</text>
+</g>
+<g>
+<rect x="673" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="687.0" y="142" fill="#dde" font-size="13" text-anchor="middle">23</text>
+</g>
+<g>
+<rect x="673" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="687.0" y="142" fill="#dde" font-size="13" text-anchor="middle">23</text>
+<text x="687.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W1</text>
+</g>
+<g>
+<rect x="703" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="717.0" y="142" fill="#dde" font-size="13" text-anchor="middle">24</text>
+</g>
+<g>
+<rect x="703" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="717.0" y="142" fill="#dde" font-size="13" text-anchor="middle">24</text>
+<text x="717.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W1</text>
+</g>
+<g>
+<rect x="733" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="747.0" y="142" fill="#dde" font-size="13" text-anchor="middle">25</text>
+</g>
+<g>
+<rect x="733" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="747.0" y="142" fill="#dde" font-size="13" text-anchor="middle">25</text>
+<text x="747.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W1</text>
+</g>
+<g>
+<rect x="763" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="777.0" y="142" fill="#dde" font-size="13" text-anchor="middle">26</text>
+</g>
+<g>
+<rect x="763" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="777.0" y="142" fill="#dde" font-size="13" text-anchor="middle">26</text>
+<text x="777.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W1</text>
+</g>
+<g>
+<rect x="793" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="807.0" y="142" fill="#dde" font-size="13" text-anchor="middle">27</text>
+</g>
+<g>
+<rect x="793" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="807.0" y="142" fill="#dde" font-size="13" text-anchor="middle">27</text>
+<text x="807.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W1</text>
+</g>
+<g>
+<rect x="823" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="837.0" y="142" fill="#dde" font-size="13" text-anchor="middle">28</text>
+</g>
+<g>
+<rect x="823" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="837.0" y="142" fill="#dde" font-size="13" text-anchor="middle">28</text>
+<text x="837.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W1</text>
+</g>
+<g>
+<rect x="853" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="867.0" y="142" fill="#dde" font-size="13" text-anchor="middle">29</text>
+</g>
+<g>
+<rect x="853" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="867.0" y="142" fill="#dde" font-size="13" text-anchor="middle">29</text>
+<text x="867.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W1</text>
+</g>
+<g>
+<rect x="883" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="897.0" y="142" fill="#dde" font-size="13" text-anchor="middle">30</text>
+</g>
+<g>
+<rect x="883" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="897.0" y="142" fill="#dde" font-size="13" text-anchor="middle">30</text>
+<text x="897.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W1</text>
+</g>
+<rect x="922" y="120" width="50" height="34" rx="3" fill="#2a2a40" stroke="#fd6" stroke-width="2" />
+<text x="947" y="142" fill="#fd6" font-size="13" text-anchor="middle">31+</text>
+<text x="947" y="172" fill="#fd6" font-size="12" text-anchor="middle">финиш</text>
+<rect class="fragment" data-fragment-index="3" x="430" y="116" width="34" height="42" rx="5" fill="none" stroke="#fd6" stroke-width="3" />
+<rect class="fragment" data-fragment-index="4" x="310" y="116" width="34" height="42" rx="5" fill="none" stroke="#fd6" stroke-width="3" />
+<rect class="fragment" data-fragment-index="4" x="400" y="116" width="34" height="42" rx="5" fill="none" stroke="#fd6" stroke-width="3" />
+<rect class="fragment" data-fragment-index="5" x="280" y="116" width="34" height="42" rx="5" fill="none" stroke="#fd6" stroke-width="3" />
+</svg>
+</div>
+<div style="display: flex; justify-content: center; gap: 1.5em; font-size: 0.6em;">
+    <div class="fragment" data-fragment-index="3">№19: <span style="color: #f66; font-weight: bold;">L1</span> - <strong>15</strong></div>
+    <div class="fragment" data-fragment-index="4">№20: <span style="color: #7d7; font-weight: bold;">W2</span> - <strong>11 14</strong></div>
+    <div class="fragment" data-fragment-index="5">№21: <span style="color: #f66; font-weight: bold;">L2</span> - 10 и 13, наименьшее <strong>10</strong></div>
+</div>
+<p class="fragment" data-fragment-index="6" style="font-size: 0.5em; opacity: 0.7;">проверить на сайте: <a href="https://ege.fipi.ru/bank/questions.php?search=1&amp;proj=B9ACA5BBB2E19E434CD6BEC25284C67F&amp;zid=4C233B" target="_blank" rel="noopener">группа 4C233B в банке ФИПИ</a></p>
+                </section>
+
+                <!-- практика 2: экран ученика - решает кодом задание ФИПИ FABD51 -->
+                <section>
+                    <h2>Практика 2: кодом</h2>
+<div style="position: relative; font-size: 0.6em; text-align: left; border-left: 4px solid #8ab; padding: 0.3em 5em 0.3em 0.8em; background: rgba(136, 170, 187, 0.08); margin-bottom: 0.3em;"><span style="position: absolute; top: 0.3em; right: 0.6em; font-size: 0.75em; opacity: 0.5;">FABD51</span><p>Ходы: <mark>добавить 1</mark>, <mark>добавить 4</mark> или <mark>увеличить в 3 раза</mark>. Игра завершается, когда в куче не менее <mark>43</mark> камней. S от 1 до 42.</p>
+<p>№19: S, при котором Петя не может выиграть за один ход, но при любом ходе Пети Ваня выигрывает первым ходом.</p>
+<p>№20: два наименьших S, когда Петя не может выиграть за один ход, но выигрывает вторым. По возрастанию.</p>
+<p>№21: минимальное S, когда Ваня выигрывает первым или вторым ходом, но гарантированно первым не может.</p></div>
+<div class="timer fragment" data-limit="480">
+    <div class="timer-bar"><div class="timer-fill"></div></div>
+    <div class="timer-row">
+        <span class="timer-time">0:00</span>
+        <span class="timer-hint">клик - старт</span>
+        <button class="timer-reset" type="button">сброс</button>
+    </div>
+</div>
+                </section>
+
+                <!-- практика 2, проверка руками: ученик сам размечает прямую от финиша, потом открываем разметку и ответы -->
+                <section>
+                    <h2>Практика 2: руками</h2>
+<p class="fragment" data-fragment-index="1" style="font-size: 0.55em;">теперь без программы: нарисуй прямую и разметь от финиша - W1, L1, W2, L2. Совпало с ответами кода?</p>
+<div class="fragment" data-fragment-index="2">
+<svg width="880" height="142" viewBox="218 0 1118 180">
+<defs></defs>
+<g>
+<rect x="223" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="237.0" y="142" fill="#dde" font-size="13" text-anchor="middle">8</text>
+</g>
+<g>
+<rect x="253" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="267.0" y="142" fill="#dde" font-size="13" text-anchor="middle">9</text>
+</g>
+<g>
+<rect x="253" y="120" width="28" height="34" rx="3" fill="#3a1f24" stroke="#f66" stroke-width="2" />
+<text x="267.0" y="142" fill="#dde" font-size="13" text-anchor="middle">9</text>
+<text x="267.0" y="172" fill="#f66" font-size="12" font-weight="bold" text-anchor="middle">L2</text>
+</g>
+<g>
+<rect x="283" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="297.0" y="142" fill="#dde" font-size="13" text-anchor="middle">10</text>
+</g>
+<g>
+<rect x="283" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="297.0" y="142" fill="#dde" font-size="13" text-anchor="middle">10</text>
+<text x="297.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W2</text>
+</g>
+<g>
+<rect x="313" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="327.0" y="142" fill="#dde" font-size="13" text-anchor="middle">11</text>
+</g>
+<g>
+<rect x="343" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="357.0" y="142" fill="#dde" font-size="13" text-anchor="middle">12</text>
+</g>
+<g>
+<rect x="343" y="120" width="28" height="34" rx="3" fill="#3a1f24" stroke="#f66" stroke-width="2" />
+<text x="357.0" y="142" fill="#dde" font-size="13" text-anchor="middle">12</text>
+<text x="357.0" y="172" fill="#f66" font-size="12" font-weight="bold" text-anchor="middle">L2</text>
+</g>
+<g>
+<rect x="373" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="387.0" y="142" fill="#dde" font-size="13" text-anchor="middle">13</text>
+</g>
+<g>
+<rect x="373" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="387.0" y="142" fill="#dde" font-size="13" text-anchor="middle">13</text>
+<text x="387.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W2</text>
+</g>
+<g>
+<rect x="403" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="417.0" y="142" fill="#dde" font-size="13" text-anchor="middle">14</text>
+</g>
+<g>
+<rect x="403" y="120" width="28" height="34" rx="3" fill="#3a1f24" stroke="#f66" stroke-width="2" />
+<text x="417.0" y="142" fill="#dde" font-size="13" text-anchor="middle">14</text>
+<text x="417.0" y="172" fill="#f66" font-size="12" font-weight="bold" text-anchor="middle">L1</text>
+</g>
+<g>
+<rect x="433" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="447.0" y="142" fill="#dde" font-size="13" text-anchor="middle">15</text>
+</g>
+<g>
+<rect x="433" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="447.0" y="142" fill="#dde" font-size="13" text-anchor="middle">15</text>
+<text x="447.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W1</text>
+</g>
+<g>
+<rect x="463" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="477.0" y="142" fill="#dde" font-size="13" text-anchor="middle">16</text>
+</g>
+<g>
+<rect x="463" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="477.0" y="142" fill="#dde" font-size="13" text-anchor="middle">16</text>
+<text x="477.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W1</text>
+</g>
+<g>
+<rect x="493" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="507.0" y="142" fill="#dde" font-size="13" text-anchor="middle">17</text>
+</g>
+<g>
+<rect x="493" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="507.0" y="142" fill="#dde" font-size="13" text-anchor="middle">17</text>
+<text x="507.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W1</text>
+</g>
+<g>
+<rect x="523" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="537.0" y="142" fill="#dde" font-size="13" text-anchor="middle">18</text>
+</g>
+<g>
+<rect x="523" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="537.0" y="142" fill="#dde" font-size="13" text-anchor="middle">18</text>
+<text x="537.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W1</text>
+</g>
+<g>
+<rect x="553" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="567.0" y="142" fill="#dde" font-size="13" text-anchor="middle">19</text>
+</g>
+<g>
+<rect x="553" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="567.0" y="142" fill="#dde" font-size="13" text-anchor="middle">19</text>
+<text x="567.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W1</text>
+</g>
+<g>
+<rect x="583" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="597.0" y="142" fill="#dde" font-size="13" text-anchor="middle">20</text>
+</g>
+<g>
+<rect x="583" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="597.0" y="142" fill="#dde" font-size="13" text-anchor="middle">20</text>
+<text x="597.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W1</text>
+</g>
+<g>
+<rect x="613" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="627.0" y="142" fill="#dde" font-size="13" text-anchor="middle">21</text>
+</g>
+<g>
+<rect x="613" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="627.0" y="142" fill="#dde" font-size="13" text-anchor="middle">21</text>
+<text x="627.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W1</text>
+</g>
+<g>
+<rect x="643" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="657.0" y="142" fill="#dde" font-size="13" text-anchor="middle">22</text>
+</g>
+<g>
+<rect x="643" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="657.0" y="142" fill="#dde" font-size="13" text-anchor="middle">22</text>
+<text x="657.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W1</text>
+</g>
+<g>
+<rect x="673" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="687.0" y="142" fill="#dde" font-size="13" text-anchor="middle">23</text>
+</g>
+<g>
+<rect x="673" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="687.0" y="142" fill="#dde" font-size="13" text-anchor="middle">23</text>
+<text x="687.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W1</text>
+</g>
+<g>
+<rect x="703" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="717.0" y="142" fill="#dde" font-size="13" text-anchor="middle">24</text>
+</g>
+<g>
+<rect x="703" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="717.0" y="142" fill="#dde" font-size="13" text-anchor="middle">24</text>
+<text x="717.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W1</text>
+</g>
+<g>
+<rect x="733" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="747.0" y="142" fill="#dde" font-size="13" text-anchor="middle">25</text>
+</g>
+<g>
+<rect x="733" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="747.0" y="142" fill="#dde" font-size="13" text-anchor="middle">25</text>
+<text x="747.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W1</text>
+</g>
+<g>
+<rect x="763" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="777.0" y="142" fill="#dde" font-size="13" text-anchor="middle">26</text>
+</g>
+<g>
+<rect x="763" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="777.0" y="142" fill="#dde" font-size="13" text-anchor="middle">26</text>
+<text x="777.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W1</text>
+</g>
+<g>
+<rect x="793" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="807.0" y="142" fill="#dde" font-size="13" text-anchor="middle">27</text>
+</g>
+<g>
+<rect x="793" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="807.0" y="142" fill="#dde" font-size="13" text-anchor="middle">27</text>
+<text x="807.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W1</text>
+</g>
+<g>
+<rect x="823" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="837.0" y="142" fill="#dde" font-size="13" text-anchor="middle">28</text>
+</g>
+<g>
+<rect x="823" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="837.0" y="142" fill="#dde" font-size="13" text-anchor="middle">28</text>
+<text x="837.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W1</text>
+</g>
+<g>
+<rect x="853" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="867.0" y="142" fill="#dde" font-size="13" text-anchor="middle">29</text>
+</g>
+<g>
+<rect x="853" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="867.0" y="142" fill="#dde" font-size="13" text-anchor="middle">29</text>
+<text x="867.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W1</text>
+</g>
+<g>
+<rect x="883" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="897.0" y="142" fill="#dde" font-size="13" text-anchor="middle">30</text>
+</g>
+<g>
+<rect x="883" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="897.0" y="142" fill="#dde" font-size="13" text-anchor="middle">30</text>
+<text x="897.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W1</text>
+</g>
+<g>
+<rect x="913" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="927.0" y="142" fill="#dde" font-size="13" text-anchor="middle">31</text>
+</g>
+<g>
+<rect x="913" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="927.0" y="142" fill="#dde" font-size="13" text-anchor="middle">31</text>
+<text x="927.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W1</text>
+</g>
+<g>
+<rect x="943" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="957.0" y="142" fill="#dde" font-size="13" text-anchor="middle">32</text>
+</g>
+<g>
+<rect x="943" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="957.0" y="142" fill="#dde" font-size="13" text-anchor="middle">32</text>
+<text x="957.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W1</text>
+</g>
+<g>
+<rect x="973" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="987.0" y="142" fill="#dde" font-size="13" text-anchor="middle">33</text>
+</g>
+<g>
+<rect x="973" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="987.0" y="142" fill="#dde" font-size="13" text-anchor="middle">33</text>
+<text x="987.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W1</text>
+</g>
+<g>
+<rect x="1003" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="1017.0" y="142" fill="#dde" font-size="13" text-anchor="middle">34</text>
+</g>
+<g>
+<rect x="1003" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="1017.0" y="142" fill="#dde" font-size="13" text-anchor="middle">34</text>
+<text x="1017.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W1</text>
+</g>
+<g>
+<rect x="1033" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="1047.0" y="142" fill="#dde" font-size="13" text-anchor="middle">35</text>
+</g>
+<g>
+<rect x="1033" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="1047.0" y="142" fill="#dde" font-size="13" text-anchor="middle">35</text>
+<text x="1047.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W1</text>
+</g>
+<g>
+<rect x="1063" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="1077.0" y="142" fill="#dde" font-size="13" text-anchor="middle">36</text>
+</g>
+<g>
+<rect x="1063" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="1077.0" y="142" fill="#dde" font-size="13" text-anchor="middle">36</text>
+<text x="1077.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W1</text>
+</g>
+<g>
+<rect x="1093" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="1107.0" y="142" fill="#dde" font-size="13" text-anchor="middle">37</text>
+</g>
+<g>
+<rect x="1093" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="1107.0" y="142" fill="#dde" font-size="13" text-anchor="middle">37</text>
+<text x="1107.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W1</text>
+</g>
+<g>
+<rect x="1123" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="1137.0" y="142" fill="#dde" font-size="13" text-anchor="middle">38</text>
+</g>
+<g>
+<rect x="1123" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="1137.0" y="142" fill="#dde" font-size="13" text-anchor="middle">38</text>
+<text x="1137.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W1</text>
+</g>
+<g>
+<rect x="1153" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="1167.0" y="142" fill="#dde" font-size="13" text-anchor="middle">39</text>
+</g>
+<g>
+<rect x="1153" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="1167.0" y="142" fill="#dde" font-size="13" text-anchor="middle">39</text>
+<text x="1167.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W1</text>
+</g>
+<g>
+<rect x="1183" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="1197.0" y="142" fill="#dde" font-size="13" text-anchor="middle">40</text>
+</g>
+<g>
+<rect x="1183" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="1197.0" y="142" fill="#dde" font-size="13" text-anchor="middle">40</text>
+<text x="1197.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W1</text>
+</g>
+<g>
+<rect x="1213" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="1227.0" y="142" fill="#dde" font-size="13" text-anchor="middle">41</text>
+</g>
+<g>
+<rect x="1213" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="1227.0" y="142" fill="#dde" font-size="13" text-anchor="middle">41</text>
+<text x="1227.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W1</text>
+</g>
+<g>
+<rect x="1243" y="120" width="28" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" />
+<text x="1257.0" y="142" fill="#dde" font-size="13" text-anchor="middle">42</text>
+</g>
+<g>
+<rect x="1243" y="120" width="28" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" />
+<text x="1257.0" y="142" fill="#dde" font-size="13" text-anchor="middle">42</text>
+<text x="1257.0" y="172" fill="#7d7" font-size="12" font-weight="bold" text-anchor="middle">W1</text>
+</g>
+<rect x="1282" y="120" width="50" height="34" rx="3" fill="#2a2a40" stroke="#fd6" stroke-width="2" />
+<text x="1307" y="142" fill="#fd6" font-size="13" text-anchor="middle">43+</text>
+<text x="1307" y="172" fill="#fd6" font-size="12" text-anchor="middle">финиш</text>
+<rect class="fragment" data-fragment-index="3" x="400" y="116" width="34" height="42" rx="5" fill="none" stroke="#fd6" stroke-width="3" />
+<rect class="fragment" data-fragment-index="4" x="280" y="116" width="34" height="42" rx="5" fill="none" stroke="#fd6" stroke-width="3" />
+<rect class="fragment" data-fragment-index="4" x="370" y="116" width="34" height="42" rx="5" fill="none" stroke="#fd6" stroke-width="3" />
+<rect class="fragment" data-fragment-index="5" x="250" y="116" width="34" height="42" rx="5" fill="none" stroke="#fd6" stroke-width="3" />
+</svg>
+</div>
+<div style="display: flex; justify-content: center; gap: 1.5em; font-size: 0.6em;">
+    <div class="fragment" data-fragment-index="3">№19: <span style="color: #f66; font-weight: bold;">L1</span> - <strong>14</strong></div>
+    <div class="fragment" data-fragment-index="4">№20: <span style="color: #7d7; font-weight: bold;">W2</span> - <strong>10 13</strong></div>
+    <div class="fragment" data-fragment-index="5">№21: <span style="color: #f66; font-weight: bold;">L2</span> - 9 и 12, наименьшее <strong>9</strong></div>
+</div>
+<p class="fragment" data-fragment-index="6" style="font-size: 0.5em; opacity: 0.7;">проверить на сайте: <a href="https://ege.fipi.ru/bank/questions.php?search=1&amp;proj=B9ACA5BBB2E19E434CD6BEC25284C67F&amp;zid=FABD51" target="_blank" rel="noopener">группа FABD51 в банке ФИПИ</a></p>
+                </section>
+
+            </section>
+
+            <!-- ИТОГ -->
+            <section>
+
+                <!-- итог: игра = граф; W1/L1/W2/L2 = W/L с числом ходов; руками - прямая, программой - рекурсия по числу ходов; внимательно к "не может за один ход" -->
+                <section>
+                    <div class="lesson-time">55</div>
+                    <h2>Что запомнить</h2>
+                    <ul>
+                        <li class="fragment">куча камней - это граф, финиш - тупик</li>
+                        <li class="fragment">W1, L1, W2, L2 - это W и L <mark>с числом ходов</mark>: для того, кто сейчас ходит</li>
+                        <li class="fragment">руками - прямая от финиша, программой - две функции с запасом ходов k</li>
+                        <li class="fragment">читаем вопрос: «выиграл» или «при любом ходе», «не может за один ход», порядок ответов</li>
+                    </ul>
+                </section>
+
+                <!-- домашнее задание: подборка №19-21 одна куча на Решу ЕГЭ + 2-3 задачи на прошлые ошибки варианта -->
+                <section>
+                    <h2>Домашнее задание</h2>
+                    <div class="timeline" style="font-size: 0.75em;">
+                        <div class="timeline-item fragment">
+                            <div class="timeline-marker">1</div>
+                            <div class="timeline-content" style="font-size: 0.85em;">5 игр из банка ФИПИ, в каждой №19-21, решать <strong>программой</strong>: <a href="https://ege.fipi.ru/bank/questions.php?search=1&amp;proj=B9ACA5BBB2E19E434CD6BEC25284C67F&amp;zid=D27F4B" target="_blank" rel="noopener">+1, x2, финиш 69</a>, <a href="https://ege.fipi.ru/bank/questions.php?search=1&amp;proj=B9ACA5BBB2E19E434CD6BEC25284C67F&amp;zid=632026" target="_blank" rel="noopener">+1, +4, x2, финиш 58</a>, <a href="https://ege.fipi.ru/bank/questions.php?search=1&amp;proj=B9ACA5BBB2E19E434CD6BEC25284C67F&amp;zid=8E9976" target="_blank" rel="noopener">+1, +4, x3, финиш 67</a>, <a href="https://ege.fipi.ru/bank/questions.php?search=1&amp;proj=B9ACA5BBB2E19E434CD6BEC25284C67F&amp;zid=F674EB" target="_blank" rel="noopener">+1, +3, x2, финиш 435</a>, <a href="https://ege.fipi.ru/bank/questions.php?search=1&amp;proj=B9ACA5BBB2E19E434CD6BEC25284C67F&amp;zid=9914FB" target="_blank" rel="noopener">куча <mark>уменьшается</mark>: -3, -8, деление на 3</a></div>
+                        </div>
+                        <div class="timeline-item fragment">
+                            <div class="timeline-marker">2</div>
+                            <div class="timeline-content">дорешать практику 2, если не успели</div>
+                        </div>
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        Через неделю - две кучи
+                    </div>
+                </section>
+
+            </section>
+
+        </div>
+    </div>
+
+    <script src="/utils/lib/js/head.min.js"></script>
+    <script src="/utils/js/reveal.js"></script>
+    <script>
+        Reveal.initialize({
+            controls: true,
+            progress: true,
+            history: true,
+            center: true,
+            transition: 'fade',
+            transitionSpeed: 'fast',
+            dependencies: [
+                { src: '/utils/lib/js/classList.js', condition: function () { return !document.body.classList; } },
+                { src: '/utils/plugin/markdown/marked.js', condition: function () { return !!document.querySelector('[data-markdown]'); } },
+                { src: '/utils/plugin/markdown/markdown.js', condition: function () { return !!document.querySelector('[data-markdown]'); } },
+                { src: '/utils/plugin/highlight/highlight.js', async: true, callback: function () { hljs.initHighlightingOnLoad(); } },
+                { src: '/utils/plugin/zoom-js/zoom.js', async: true },
+                { src: '/utils/plugin/notes/notes.js', async: true }
+            ]
+        });
+        Reveal.configure({ slideNumber: 'c/t' });
+    </script>
+    <script>
+        // полоска результатов варианта: клик по номеру - решён / не решён / сброс
+        (function () {
+            var states = ['none', 'ok', 'bad'];
+            var colors = { none: ['#1c2030', '#556'], ok: ['#1f3a26', '#7d7'], bad: ['#3a1f24', '#f66'] };
+            var score = document.getElementById('hw-score');
+            var tasks = document.querySelectorAll('#hw-strip g');
+            function update() {
+                var solved = 0, points = 0;
+                tasks.forEach(function (g) {
+                    if (g.dataset.state === 'ok') {
+                        solved += 1;
+                        points += +g.dataset.task >= 26 ? 2 : 1;
+                    }
+                });
+                score.textContent = 'решено: ' + solved + ' из 27, первичных: ' + points + ' из 29';
+            }
+            tasks.forEach(function (g) {
+                g.addEventListener('click', function (e) {
+                    e.stopPropagation();
+                    var next = states[(states.indexOf(g.dataset.state) + 1) % states.length];
+                    g.dataset.state = next;
+                    var rect = g.querySelector('rect');
+                    rect.setAttribute('fill', colors[next][0]);
+                    rect.setAttribute('stroke', colors[next][1]);
+                    update();
+                });
+            });
+        })();
+
+        // живая игра: куча 12, ходы +1 и x2, финиш 29
+        (function () {
+            var START = 12, FINISH = 29;
+            var heap, turn, log;
+            var heapEl = document.getElementById('play-heap');
+            var turnEl = document.getElementById('play-turn');
+            var logEl = document.getElementById('play-log');
+            var names = ['Петя', 'Ваня'];
+            function draw() {
+                heapEl.textContent = heap;
+                logEl.textContent = log.join('  ');
+                if (heap >= FINISH) {
+                    turnEl.textContent = 'победил ' + names[1 - turn];
+                    turnEl.style.color = '#fd6';
+                } else {
+                    turnEl.textContent = 'ходит ' + names[turn];
+                    turnEl.style.color = '';
+                }
+            }
+            function reset() { heap = START; turn = 0; log = [String(START)]; draw(); }
+            document.querySelectorAll('#play button').forEach(function (b) {
+                b.addEventListener('click', function (e) {
+                    e.stopPropagation();
+                    var move = b.dataset.move;
+                    if (move === 'reset') { reset(); return; }
+                    if (heap >= FINISH) return;
+                    heap = move === 'add' ? heap + 1 : heap * 2;
+                    log.push((move === 'add' ? '+1' : 'x2') + ' = ' + heap);
+                    turn = 1 - turn;
+                    draw();
+                });
+            });
+            reset();
+        })();
+
+        // таймер на слайде: клик - старт/пауза, "сброс" - обнулить
+        document.querySelectorAll('.timer').forEach(function (el) {
+            var limit = +el.dataset.limit || 180;
+            var fill = el.querySelector('.timer-fill');
+            var timeEl = el.querySelector('.timer-time');
+            var hint = el.querySelector('.timer-hint');
+            var spent = 0, startedAt = null, tick = null;
+
+            function fmt(sec) {
+                sec = Math.floor(sec);
+                return Math.floor(sec / 60) + ':' + String(sec % 60).padStart(2, '0');
+            }
+            function elapsed() {
+                return spent + (startedAt ? (Date.now() - startedAt) / 1000 : 0);
+            }
+            function draw() {
+                var t = elapsed();
+                fill.style.width = Math.min(t / limit, 1) * 100 + '%';
+                el.classList.toggle('warn', t >= limit * 0.8 && t < limit);
+                el.classList.toggle('over', t >= limit);
+                timeEl.textContent = t >= limit
+                    ? fmt(limit) + ' + ' + fmt(t - limit)
+                    : fmt(t) + ' / ' + fmt(limit);
+            }
+            function toggle() {
+                if (startedAt) {
+                    spent = elapsed(); startedAt = null;
+                    clearInterval(tick);
+                    hint.textContent = 'пауза - клик, чтобы продолжить';
+                } else {
+                    startedAt = Date.now();
+                    tick = setInterval(draw, 200);
+                    hint.textContent = 'идёт - клик для паузы';
+                }
+                draw();
+            }
+            el.addEventListener('click', function (e) {
+                e.stopPropagation();
+                if (e.target.closest('.timer-reset')) {
+                    clearInterval(tick); spent = 0; startedAt = null;
+                    hint.textContent = 'клик - старт';
+                } else {
+                    toggle();
+                }
+                draw();
+            });
+            draw();
+        });
+    </script>
+</body>
+
+</html>
