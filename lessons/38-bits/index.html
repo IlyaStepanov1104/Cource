@@ -1,0 +1,1032 @@
+<!doctype html>
+<html lang="ru">
+
+<head>
+    <meta charset="utf-8">
+    <title>Занятие 38 - Биты: двоичная система, логические операции, маски</title>
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+
+    <link rel="stylesheet" href="/utils/css/reveal.css">
+    <link rel="stylesheet" href="/utils/lib/css/animate.css">
+    <link rel="stylesheet" href="/utils/css/theme/night.css" id="theme">
+    <link rel="stylesheet" href="/utils/lib/css/zenburn.css">
+    <link rel="stylesheet" href="/utils/css/custom-base.css">
+    <link rel="stylesheet" href="css-custom/custom.css">
+
+    <script>
+        var link = document.createElement('link');
+        link.rel = 'stylesheet'; link.type = 'text/css';
+        link.href = window.location.search.match(/print-pdf/gi)
+            ? '/utils/css/print/pdf.css'
+            : '/utils/css/print/paper.css';
+        document.getElementsByTagName('head')[0].appendChild(link);
+    </script>
+</head>
+
+<body>
+    <div class="reveal">
+        <div class="slides">
+
+            <!-- титульный слайд -->
+            <section style="font-size: 70px; height: 100%; width: 100%">
+                <div class="lesson-time">0</div>
+                <div class="fragment">
+                    <h1 class="animated" style="font-size: 1.8em;">Биты</h1>
+                    <p style="text-align: center; font-size: 0.45em; opacity: 0.6;">двоичная система, логические операции, маски</p>
+                    <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">Занятие 38</p>
+                </div>
+            </section>
+
+            <!-- ЧАСТЬ 0: разбор ДЗ - 464. Can I Win -->
+            <section>
+
+                <section style="font-size: 70px; height: 100%; width: 100%">
+                    <div class="lesson-time">0</div>
+                    <div class="fragment">
+                        <h1 style="font-size: 1.3em;">Разбор ДЗ</h1>
+                        <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">464. Can I Win</p>
+                    </div>
+                </section>
+
+                <!-- условие коротко + ссылка на LeetCode; позиция = кортеж взятых чисел, SVG графа для 3 чисел, цель 4 -->
+                <section>
+                    <h2><a href="https://leetcode.com/problems/can-i-win/" target="_blank" rel="noopener">464. Can I Win</a></h2>
+<div style="display: flex; align-items: center; justify-content: center; gap: 1.2em;">
+<div style="flex: none;">
+<svg width="620" height="330" viewBox="0 0 620 330">
+<defs><marker id="g38at" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#667" /></marker></defs>
+<line x1="310" y1="92" x2="110" y2="216" stroke="#667" stroke-width="2" marker-end="url(#g38at)" />
+<text x="168.0" y="158.0" fill="#99a" font-size="16" text-anchor="middle">взял 1</text>
+<line x1="310" y1="92" x2="310" y2="216" stroke="#667" stroke-width="2" marker-end="url(#g38at)" />
+<text x="350.0" y="158.0" fill="#99a" font-size="16" text-anchor="middle">взял 2</text>
+<line x1="310" y1="92" x2="510" y2="216" stroke="#667" stroke-width="2" marker-end="url(#g38at)" />
+<text x="452.0" y="158.0" fill="#99a" font-size="16" text-anchor="middle">взял 3</text>
+<rect x="248" y="28" width="124" height="64" rx="10" fill="#1c2030" stroke="#8ab" stroke-width="2" /><text x="310" y="56" fill="#dde" font-size="22" text-anchor="middle">( )</text><text x="310" y="80" fill="#99a" font-size="15" text-anchor="middle">осталось 4</text>
+<rect x="48" y="218" width="124" height="64" rx="10" fill="#1c2030" stroke="#8ab" stroke-width="2" /><text x="110" y="246" fill="#dde" font-size="22" text-anchor="middle">(1)</text><text x="110" y="270" fill="#99a" font-size="15" text-anchor="middle">осталось 3</text>
+<rect x="248" y="218" width="124" height="64" rx="10" fill="#1c2030" stroke="#8ab" stroke-width="2" /><text x="310" y="246" fill="#dde" font-size="22" text-anchor="middle">(2)</text><text x="310" y="270" fill="#99a" font-size="15" text-anchor="middle">осталось 2</text>
+<rect x="448" y="218" width="124" height="64" rx="10" fill="#1c2030" stroke="#8ab" stroke-width="2" /><text x="510" y="246" fill="#dde" font-size="22" text-anchor="middle">(3)</text><text x="510" y="270" fill="#99a" font-size="15" text-anchor="middle">осталось 1</text>
+<g class="fragment" data-fragment-index="1"><rect x="48" y="218" width="124" height="64" rx="10" fill="#1f3a26" stroke="#7d7" stroke-width="3" /><text x="110" y="246" fill="#dde" font-size="22" text-anchor="middle">(1)</text><text x="110" y="270" fill="#99a" font-size="15" text-anchor="middle">осталось 3</text><text x="186" y="232" fill="#7d7" font-size="22" font-weight="bold" text-anchor="middle">W</text><text x="110" y="306" fill="#7d7" font-size="15" text-anchor="middle">соперник берёт 3</text></g>
+<g class="fragment" data-fragment-index="2"><rect x="248" y="218" width="124" height="64" rx="10" fill="#1f3a26" stroke="#7d7" stroke-width="3" /><text x="310" y="246" fill="#dde" font-size="22" text-anchor="middle">(2)</text><text x="310" y="270" fill="#99a" font-size="15" text-anchor="middle">осталось 2</text><text x="386" y="232" fill="#7d7" font-size="22" font-weight="bold" text-anchor="middle">W</text><text x="310" y="306" fill="#7d7" font-size="15" text-anchor="middle">соперник берёт 3</text></g>
+<g class="fragment" data-fragment-index="3"><rect x="448" y="218" width="124" height="64" rx="10" fill="#1f3a26" stroke="#7d7" stroke-width="3" /><text x="510" y="246" fill="#dde" font-size="22" text-anchor="middle">(3)</text><text x="510" y="270" fill="#99a" font-size="15" text-anchor="middle">осталось 1</text><text x="586" y="232" fill="#7d7" font-size="22" font-weight="bold" text-anchor="middle">W</text><text x="510" y="306" fill="#7d7" font-size="15" text-anchor="middle">соперник берёт 1</text></g>
+<g class="fragment" data-fragment-index="4"><rect x="248" y="28" width="124" height="64" rx="10" fill="#3a1f24" stroke="#f66" stroke-width="3" /><text x="310" y="56" fill="#dde" font-size="22" text-anchor="middle">( )</text><text x="310" y="80" fill="#99a" font-size="15" text-anchor="middle">осталось 4</text><text x="386" y="42" fill="#f66" font-size="22" font-weight="bold" text-anchor="middle">L</text></g>
+</svg>
+</div>
+<ul style="font-size: 0.81em; text-align: left;">
+    <li class="fragment" data-fragment-index="1">числа 1, 2, 3, цель 4</li>
+    <li class="fragment" data-fragment-index="2">позиция - <mark>кортеж взятых</mark> чисел</li>
+    <li class="fragment" data-fragment-index="3">любой ход отдаёт сопернику добивание</li>
+    <li class="fragment" data-fragment-index="4">( ) - <span style="color: #f66; font-weight: bold;">L</span>: первый проигрывает</li>
+</ul>
+</div>
+                </section>
+
+                <!-- задел на конец урока: на кортеже каждый ход - новый отсортированный кортеж, x in taken - просмотр; в конце урока переделаем решение -->
+                <section>
+                    <h2>Вернёмся в конце урока</h2>
+<p class="fragment" style="font-size: 0.8em; text-align: center;">позиция - кортеж, например <code>(1, 3)</code></p>
+<ul style="font-size: 0.91em; text-align: left;">
+    <li class="fragment">каждый ход - <mark>новый кортеж</mark>, да ещё отсортировать</li>
+    <li class="fragment"><code>x in taken</code> - просмотр всего кортежа</li>
+    <li class="fragment">ключ <code>memo</code> - целый кортеж</li>
+</ul>
+<div class="fragment opinion" style="margin-top: 0.6em;">
+    В конце урока переделаем это решение: станет короче и быстрее
+</div>
+                </section>
+
+            </section>
+
+            <!-- ЧАСТЬ 1: двоичная система счисления -->
+            <section>
+
+                <section style="font-size: 70px; height: 100%; width: 100%">
+                    <div class="lesson-time">5</div>
+                    <div class="fragment">
+                        <h1 style="font-size: 1.3em;">Двоичная система</h1>
+                        <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">числа из лампочек</p>
+                    </div>
+                </section>
+
+                <!-- десятичная запись как сумма разрядов: 305 = 3*100 + 0*10 + 5 -->
+                <section>
+                    <h2>Как устроено 305</h2>
+<div style="display: flex; align-items: center; justify-content: center; gap: 1.2em;">
+<div style="flex: none;">
+<svg width="420" height="180" viewBox="0 0 420 180">
+<rect x="35" y="20" width="90" height="90" rx="10" fill="#1c2030" stroke="#8ab" stroke-width="2" /><text x="80" y="84" fill="#dde" font-size="54" text-anchor="middle">3</text><text class="fragment" data-fragment-index="1" x="80" y="150" fill="#6af" font-size="24" text-anchor="middle">x 100</text>
+<rect x="165" y="20" width="90" height="90" rx="10" fill="#1c2030" stroke="#8ab" stroke-width="2" /><text x="210" y="84" fill="#dde" font-size="54" text-anchor="middle">0</text><text class="fragment" data-fragment-index="1" x="210" y="150" fill="#6af" font-size="24" text-anchor="middle">x 10</text>
+<rect x="295" y="20" width="90" height="90" rx="10" fill="#1c2030" stroke="#8ab" stroke-width="2" /><text x="340" y="84" fill="#dde" font-size="54" text-anchor="middle">5</text><text class="fragment" data-fragment-index="1" x="340" y="150" fill="#6af" font-size="24" text-anchor="middle">x 1</text>
+</svg>
+</div>
+<ul style="font-size: 0.91em; text-align: left;">
+    <li class="fragment" data-fragment-index="1">у каждой цифры свой <mark>вес</mark></li>
+    <li class="fragment" data-fragment-index="2"><code>305 = 3·100 + 0·10 + 5·1</code></li>
+    <li class="fragment" data-fragment-index="3">соседний разряд тяжелее в 10 раз</li>
+    <li class="fragment" data-fragment-index="4">цифры от 0 до 9</li>
+</ul>
+</div>
+                </section>
+
+                <!-- двоичная: разряды 1, 2, 4, 8, 16 - картинка ряда лампочек вкл/выкл -->
+                <section>
+                    <h2>Двоичная: только 0 и 1</h2>
+<div class="fragment">
+<svg width="410" height="116" viewBox="0 0 410 116">
+<text x="49.0" y="22" fill="#8ab" font-size="19" text-anchor="middle">16</text>
+<circle cx="49.0" cy="58" r="24" fill="#1c2030" stroke="#556" stroke-width="2" />
+<text x="49.0" y="108" fill="#dde" font-size="21" text-anchor="middle">0</text>
+<text x="127.0" y="22" fill="#8ab" font-size="19" text-anchor="middle">8</text>
+<circle cx="127.0" cy="58" r="24" fill="#1c2030" stroke="#556" stroke-width="2" />
+<text x="127.0" y="108" fill="#dde" font-size="21" text-anchor="middle">0</text>
+<text x="205.0" y="22" fill="#8ab" font-size="19" text-anchor="middle">4</text>
+<circle cx="205.0" cy="58" r="24" fill="#1c2030" stroke="#556" stroke-width="2" />
+<text x="205.0" y="108" fill="#dde" font-size="21" text-anchor="middle">0</text>
+<text x="283.0" y="22" fill="#8ab" font-size="19" text-anchor="middle">2</text>
+<circle cx="283.0" cy="58" r="24" fill="#1c2030" stroke="#556" stroke-width="2" />
+<text x="283.0" y="108" fill="#dde" font-size="21" text-anchor="middle">0</text>
+<text x="361.0" y="22" fill="#8ab" font-size="19" text-anchor="middle">1</text>
+<circle cx="361.0" cy="58" r="24" fill="#1c2030" stroke="#556" stroke-width="2" />
+<text x="361.0" y="108" fill="#dde" font-size="21" text-anchor="middle">0</text>
+</svg>
+</div>
+<ul style="font-size: 0.91em; text-align: left;">
+    <li class="fragment">цифр всего две: <code>1</code> - лампочка горит, <code>0</code> - нет</li>
+    <li class="fragment">вес соседа справа налево растёт <mark>в 2 раза</mark>: 1, 2, 4, 8, 16, ...</li>
+    <li class="fragment">число = сумма весов горящих лампочек</li>
+</ul>
+                </section>
+
+                <!-- из двоичной в десятичную: сложить веса горящих лампочек (.fragment по одной) -->
+                <section>
+                    <h2>10110<sub>2</sub> = ?<sub>10</sub></h2>
+<svg width="410" height="116" viewBox="0 0 410 116">
+<text x="49.0" y="22" fill="#8ab" font-size="19" text-anchor="middle">16</text>
+<circle cx="49.0" cy="58" r="24" fill="#1c2030" stroke="#556" stroke-width="2" />
+<g class="fragment" data-fragment-index="1"><circle cx="49.0" cy="58" r="30" fill="#db5" opacity="0.18" /><circle cx="49.0" cy="58" r="24" fill="#db5" stroke="#fe8" stroke-width="2" /></g>
+<text x="49.0" y="108" fill="#db5" font-size="21" text-anchor="middle" font-weight="bold">1</text>
+<text x="127.0" y="22" fill="#8ab" font-size="19" text-anchor="middle">8</text>
+<circle cx="127.0" cy="58" r="24" fill="#1c2030" stroke="#556" stroke-width="2" />
+<text x="127.0" y="108" fill="#dde" font-size="21" text-anchor="middle">0</text>
+<text x="205.0" y="22" fill="#8ab" font-size="19" text-anchor="middle">4</text>
+<circle cx="205.0" cy="58" r="24" fill="#1c2030" stroke="#556" stroke-width="2" />
+<g class="fragment" data-fragment-index="2"><circle cx="205.0" cy="58" r="30" fill="#db5" opacity="0.18" /><circle cx="205.0" cy="58" r="24" fill="#db5" stroke="#fe8" stroke-width="2" /></g>
+<text x="205.0" y="108" fill="#db5" font-size="21" text-anchor="middle" font-weight="bold">1</text>
+<text x="283.0" y="22" fill="#8ab" font-size="19" text-anchor="middle">2</text>
+<circle cx="283.0" cy="58" r="24" fill="#1c2030" stroke="#556" stroke-width="2" />
+<g class="fragment" data-fragment-index="3"><circle cx="283.0" cy="58" r="30" fill="#db5" opacity="0.18" /><circle cx="283.0" cy="58" r="24" fill="#db5" stroke="#fe8" stroke-width="2" /></g>
+<text x="283.0" y="108" fill="#db5" font-size="21" text-anchor="middle" font-weight="bold">1</text>
+<text x="361.0" y="22" fill="#8ab" font-size="19" text-anchor="middle">1</text>
+<circle cx="361.0" cy="58" r="24" fill="#1c2030" stroke="#556" stroke-width="2" />
+<text x="361.0" y="108" fill="#dde" font-size="21" text-anchor="middle">0</text>
+</svg>
+<p style="font-size: 0.9em; margin-top: 0.4em; text-align: center;"><span class="fragment" data-fragment-index="1">16</span> <span class="fragment" data-fragment-index="2">+ 4</span> <span class="fragment" data-fragment-index="3">+ 2</span> <span class="fragment" data-fragment-index="4">= <mark>22</mark><sub>10</sub></span></p>
+                </section>
+
+                <!-- из десятичной в двоичную: деление на 2 с остатком, трассировка столбиком -->
+                <section>
+                    <h2>13<sub>10</sub> = ?<sub>2</sub></h2>
+<div style="display: flex; align-items: center; justify-content: center; gap: 1.2em;">
+<div style="flex: none;">
+<table style="font-size: 0.86em; margin: 0.6em auto;">
+<tr><td><strong>делим</strong></td><td><strong>остаток</strong></td></tr>
+<tr class="fragment" data-fragment-index="1"><td><code>13 // 2 = 6</code></td><td><span style="color: #db5; font-weight: bold;">1</span></td></tr>
+<tr class="fragment" data-fragment-index="2"><td><code>6 // 2 = 3</code></td><td><span style="color: #dde; font-weight: bold;">0</span></td></tr>
+<tr class="fragment" data-fragment-index="3"><td><code>3 // 2 = 1</code></td><td><span style="color: #db5; font-weight: bold;">1</span></td></tr>
+<tr class="fragment" data-fragment-index="4"><td><code>1 // 2 = 0</code></td><td><span style="color: #db5; font-weight: bold;">1</span></td></tr>
+</table>
+</div>
+<ul style="font-size: 0.91em; text-align: left;">
+    <li class="fragment" data-fragment-index="5">делим на 2, пока не станет 0</li>
+    <li class="fragment" data-fragment-index="6">остатки читаем <mark>снизу вверх</mark>: <code>1101</code><sub>2</sub></li>
+    <li class="fragment" data-fragment-index="7">проверка: 8 + 4 + 1 = 13<sub>10</sub></li>
+</ul>
+</div>
+                </section>
+
+                <!-- почему снизу вверх - сначала на десятичных: % 10 даёт последнюю цифру, // 10 её отрезает; цифры выходят справа налево -->
+                <section>
+                    <h2>Почему снизу вверх?</h2>
+<p style="font-size: 0.7em; text-align: center;">Сначала на обычных числах: разберём 305 на цифры</p>
+<table style="font-size: 0.75em; margin: 0.6em auto;">
+<tr><td><strong>число</strong></td><td><strong>остаток = последняя цифра</strong></td><td><strong>без последней цифры</strong></td></tr>
+<tr class="fragment" data-fragment-index="1"><td><code>30<mark>5</mark></code></td><td><code>305 % 10 = 5</code></td><td><code>305 // 10 = 30</code></td></tr>
+<tr class="fragment" data-fragment-index="2"><td><code>3<mark>0</mark></code></td><td><code>30 % 10 = 0</code></td><td><code>30 // 10 = 3</code></td></tr>
+<tr class="fragment" data-fragment-index="3"><td><code><mark>3</mark></code></td><td><code>3 % 10 = 3</code></td><td><code>3 // 10 = 0</code></td></tr>
+</table>
+<ul style="font-size: 0.91em; text-align: left;">
+    <li class="fragment" data-fragment-index="4">цифры вышли в порядке 5, 0, 3 - <mark>справа налево</mark></li>
+    <li class="fragment" data-fragment-index="5">чтобы собрать 305, читаем их снизу вверх</li>
+</ul>
+                </section>
+
+                <!-- то же в двоичной: % 2 - последняя (правая) цифра двоичной записи, // 2 отрезает её; поэтому остатки идут справа налево -->
+                <section>
+                    <h2>То же в двоичной</h2>
+<table style="font-size: 0.69em; margin: 0.6em auto;">
+<tr><td><strong>число</strong></td><td><strong>двоичная запись</strong></td><td><strong>остаток = последняя цифра</strong></td><td><strong>без последней цифры</strong></td></tr>
+<tr class="fragment" data-fragment-index="1"><td>13<sub>10</sub></td><td><code>110<mark>1</mark></code><sub>2</sub></td><td><code>13 % 2 = 1</code></td><td><code>13 // 2 = 6</code></td></tr>
+<tr class="fragment" data-fragment-index="2"><td>6<sub>10</sub></td><td><code>11<mark>0</mark></code><sub>2</sub></td><td><code>6 % 2 = 0</code></td><td><code>6 // 2 = 3</code></td></tr>
+<tr class="fragment" data-fragment-index="3"><td>3<sub>10</sub></td><td><code>1<mark>1</mark></code><sub>2</sub></td><td><code>3 % 2 = 1</code></td><td><code>3 // 2 = 1</code></td></tr>
+<tr class="fragment" data-fragment-index="4"><td>1<sub>10</sub></td><td><code><mark>1</mark></code><sub>2</sub></td><td><code>1 % 2 = 1</code></td><td><code>1 // 2 = 0</code></td></tr>
+</table>
+<ul style="font-size: 0.81em; text-align: left;">
+    <li class="fragment" data-fragment-index="5"><code>% 2</code> - последняя цифра: все остальные лампочки весят 2, 4, 8... и делятся на 2 без остатка</li>
+    <li class="fragment" data-fragment-index="6"><code>// 2</code> - отрезать последнюю цифру, как <code>// 10</code> у десятичных</li>
+    <li class="fragment" data-fragment-index="7">первый остаток - <mark>самая правая</mark> цифра, поэтому читаем снизу вверх</li>
+</ul>
+                </section>
+
+                <!-- в Python: bin(n), int(s, 2), format(n, "08b") - только сигнатуры и вывод -->
+                <section>
+                    <h2>В Python</h2>
+<table style="font-size: 0.75em; margin: 0.6em auto;">
+<tr><td><strong>запись</strong></td><td><strong>результат</strong></td><td><strong>что делает</strong></td></tr>
+<tr class="fragment"><td><code>bin(13)</code></td><td><code>'0b1101'</code></td><td>число -> строка, <code>0b</code> = «двоичная»</td></tr>
+<tr class="fragment"><td><code>bin(13)[2:]</code></td><td><code>'1101'</code></td><td>без приставки</td></tr>
+<tr class="fragment"><td><code>int('1101', 2)</code></td><td><code>13</code></td><td>строка -> число</td></tr>
+<tr class="fragment"><td><code>format(13, '08b')</code></td><td><code>'00001101'</code></td><td>дополнить нулями до 8 цифр</td></tr>
+<tr class="fragment"><td><code>0b1101</code></td><td><code>13</code></td><td>двоичное число прямо в коде</td></tr>
+</table>
+                </section>
+
+                <!-- мини-задачи устно: 13 -> ?, 0b10110 -> ?, сколько бит у числа 100 -->
+                <section>
+                    <h2>Устно</h2>
+<ul style="font-size: 0.95em; text-align: left;">
+    <li class="fragment" data-fragment-index="1">6<sub>10</sub> = <span class="fragment" data-fragment-index="2">110<sub>2</sub></span></li>
+    <li class="fragment" data-fragment-index="3">1001<sub>2</sub> = <span class="fragment" data-fragment-index="4">9<sub>10</sub></span></li>
+    <li class="fragment" data-fragment-index="5">11111<sub>2</sub> = <span class="fragment" data-fragment-index="6">31<sub>10</sub> = 32 - 1</span></li>
+    <li class="fragment" data-fragment-index="7">сколько цифр в двоичной записи 100<sub>10</sub>? <span class="fragment" data-fragment-index="8">7: <code>64 &lt;= 100 &lt; 128</code>, 1100100<sub>2</sub></span></li>
+</ul>
+                </section>
+
+                <!-- двоичная запись как строка: дописать/отрезать цифры справа = умножить на 2 / // 2, срезы и count("1") -->
+                <section>
+                    <h2>Запись как строка</h2>
+<p style="font-size: 0.7em;"><code>s = bin(13)[2:]</code> -> <code>'1101'</code></p>
+<table style="font-size: 0.71em; margin: 0.6em auto;">
+<tr><td><strong>действие</strong></td><td><strong>строка</strong></td><td><strong>число</strong></td></tr>
+<tr class="fragment"><td>приписать <code>0</code> справа</td><td><code>'1101' + '0'</code> = <code>'11010'</code></td><td>26 = 13 · 2</td></tr>
+<tr class="fragment"><td>приписать <code>1</code> справа</td><td><code>'1101' + '1'</code> = <code>'11011'</code></td><td>27 = 13 · 2 + 1</td></tr>
+<tr class="fragment"><td>отрезать последнюю</td><td><code>'1101'[:-1]</code> = <code>'110'</code></td><td>6 = 13 // 2</td></tr>
+<tr class="fragment"><td>посчитать единицы</td><td><code>'1101'.count('1')</code></td><td>3</td></tr>
+</table>
+<div class="fragment opinion" style="margin-top: 0.6em;">
+    Как в десятичной: приписали 0 - число выросло в 10 раз. В двоичной - <mark>в 2 раза</mark>
+</div>
+                </section>
+
+            </section>
+
+            <!-- ЧАСТЬ 2: логические операции - сначала бит, потом число -->
+            <section>
+
+                <section style="font-size: 70px; height: 100%; width: 100%">
+                    <div class="lesson-time">22</div>
+                    <div class="fragment">
+                        <h1 style="font-size: 1.3em;">Логические операции</h1>
+                        <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">сначала один бит, потом целое число</p>
+                    </div>
+                </section>
+
+                <!-- таблица истинности & (и) для одного бита: 4 строки (0 0, 0 1, 1 0, 1 1), "1 только если оба 1" -->
+                <section>
+                    <h2><code>&amp;</code> - «и»</h2>
+<div style="display: flex; align-items: center; justify-content: center; gap: 1.2em;">
+<div style="flex: none;">
+<table class="bits truth">
+<tr class="hdr"><td>a</td><td>b</td><td>a &amp; b</td></tr>
+<tr class="fragment" data-fragment-index="1"><td>0</td><td>0</td><td>0</td></tr>
+<tr class="fragment" data-fragment-index="2"><td>0</td><td>1</td><td>0</td></tr>
+<tr class="fragment" data-fragment-index="3"><td>1</td><td>0</td><td>0</td></tr>
+<tr class="fragment" data-fragment-index="4"><td>1</td><td>1</td><td><span class="one">1</span></td></tr>
+</table>
+</div>
+<ul style="font-size: 0.91em; text-align: left;">
+    <li class="fragment" data-fragment-index="5"><mark>1 только если оба 1</mark></li>
+    <li class="fragment" data-fragment-index="6">сейф с двумя ключами: откроется, только если повернули оба</li>
+</ul>
+</div>
+                </section>
+
+                <!-- таблица истинности | (или) для одного бита: "1 если хотя бы один 1" -->
+                <section>
+                    <h2><code>|</code> - «или»</h2>
+<div style="display: flex; align-items: center; justify-content: center; gap: 1.2em;">
+<div style="flex: none;">
+<table class="bits truth">
+<tr class="hdr"><td>a</td><td>b</td><td>a | b</td></tr>
+<tr class="fragment" data-fragment-index="1"><td>0</td><td>0</td><td>0</td></tr>
+<tr class="fragment" data-fragment-index="2"><td>0</td><td>1</td><td><span class="one">1</span></td></tr>
+<tr class="fragment" data-fragment-index="3"><td>1</td><td>0</td><td><span class="one">1</span></td></tr>
+<tr class="fragment" data-fragment-index="4"><td>1</td><td>1</td><td><span class="one">1</span></td></tr>
+</table>
+</div>
+<ul style="font-size: 0.91em; text-align: left;">
+    <li class="fragment" data-fragment-index="5"><mark>1 если хотя бы один 1</mark></li>
+    <li class="fragment" data-fragment-index="6">звонок с двумя кнопками: звенит, если нажата любая</li>
+</ul>
+</div>
+                </section>
+
+                <!-- таблица истинности ^ (xor) для одного бита: "1 если разные" -->
+                <section>
+                    <h2><code>^</code> - «xor», исключающее или</h2>
+<div style="display: flex; align-items: center; justify-content: center; gap: 1.2em;">
+<div style="flex: none;">
+<table class="bits truth">
+<tr class="hdr"><td>a</td><td>b</td><td>a ^ b</td></tr>
+<tr class="fragment" data-fragment-index="1"><td>0</td><td>0</td><td>0</td></tr>
+<tr class="fragment" data-fragment-index="2"><td>0</td><td>1</td><td><span class="one">1</span></td></tr>
+<tr class="fragment" data-fragment-index="3"><td>1</td><td>0</td><td><span class="one">1</span></td></tr>
+<tr class="fragment" data-fragment-index="4"><td>1</td><td>1</td><td>0</td></tr>
+</table>
+</div>
+<ul style="font-size: 0.91em; text-align: left;">
+    <li class="fragment" data-fragment-index="5"><mark>1 если разные</mark></li>
+    <li class="fragment" data-fragment-index="6">свет на лестнице с двумя выключателями: щёлкнул любой - свет переключился</li>
+</ul>
+</div>
+                </section>
+
+                <!-- таблица истинности "не" для одного бита: 2 строки, 0 -> 1, 1 -> 0 -->
+                <section>
+                    <h2><code>¬</code> - «не»</h2>
+<div style="display: flex; align-items: center; justify-content: center; gap: 1.2em;">
+<div style="flex: none;">
+<table class="bits truth">
+<tr class="hdr"><td>a</td><td>¬a</td></tr>
+<tr class="fragment" data-fragment-index="1"><td>0</td><td><span class="one">1</span></td></tr>
+<tr class="fragment" data-fragment-index="2"><td>1</td><td>0</td></tr>
+</table>
+</div>
+<ul style="font-size: 0.91em; text-align: left;">
+    <li class="fragment" data-fragment-index="3"><mark>меняет бит на противоположный</mark></li>
+    <li class="fragment" data-fragment-index="4">для одного бита в Python: <code>1 - a</code></li>
+    <li class="fragment" data-fragment-index="5">у Python есть <code>~</code>, но для чисел он ведёт себя хитро - пока не используем</li>
+</ul>
+</div>
+                </section>
+
+                <!-- четыре таблицы рядом + устно: 1 & 0, 1 | 0, 1 ^ 1, не 0 (.fragment) -->
+                <section>
+                    <h2>Все четыре</h2>
+<div style="display: flex; justify-content: center; gap: 0.8em; align-items: flex-start;">
+<table class="bits truth small"><tr class="hdr"><td>a</td><td>b</td><td>&amp;</td></tr><tr><td>0</td><td>0</td><td>0</td></tr><tr><td>0</td><td>1</td><td>0</td></tr><tr><td>1</td><td>0</td><td>0</td></tr><tr><td>1</td><td>1</td><td><span class="one">1</span></td></tr></table>
+<table class="bits truth small"><tr class="hdr"><td>a</td><td>b</td><td>|</td></tr><tr><td>0</td><td>0</td><td>0</td></tr><tr><td>0</td><td>1</td><td><span class="one">1</span></td></tr><tr><td>1</td><td>0</td><td><span class="one">1</span></td></tr><tr><td>1</td><td>1</td><td><span class="one">1</span></td></tr></table>
+<table class="bits truth small"><tr class="hdr"><td>a</td><td>b</td><td>^</td></tr><tr><td>0</td><td>0</td><td>0</td></tr><tr><td>0</td><td>1</td><td><span class="one">1</span></td></tr><tr><td>1</td><td>0</td><td><span class="one">1</span></td></tr><tr><td>1</td><td>1</td><td>0</td></tr></table>
+<table class="bits truth small"><tr class="hdr"><td>a</td><td>¬</td></tr><tr><td>0</td><td><span class="one">1</span></td></tr><tr><td>1</td><td>0</td></tr></table>
+</div>
+<div style="display: flex; justify-content: center; gap: 1.6em; font-size: 0.8em; margin-top: 0.5em;">
+<span><code>1 &amp; 0</code> = <span class="fragment" data-fragment-index="1"><code>0</code></span></span>
+<span><code>1 | 0</code> = <span class="fragment" data-fragment-index="2"><code>1</code></span></span>
+<span><code>1 ^ 1</code> = <span class="fragment" data-fragment-index="3"><code>0</code></span></span>
+<span><code>¬0</code> = <span class="fragment" data-fragment-index="4"><code>1</code></span></span>
+</div>
+                </section>
+
+                <!-- а если & не между 0 и 1, а между числами покрупнее? число - ряд лампочек; лампочки одного веса друг под другом; & к каждой паре; получаем новое число -->
+                <section>
+                    <h2>А если числа покрупнее?</h2>
+<p style="font-size: 0.75em; text-align: center;"><code>1 &amp; 0</code> мы знаем. А что получится, если взять <code>13 &amp; 24</code>?</p>
+<div style="display: flex; align-items: center; justify-content: center; gap: 0.8em;">
+<div style="flex: none;">
+<svg width="400" height="250" viewBox="0 0 400 250">
+<text x="110" y="22" fill="#8ab" font-size="17" text-anchor="middle">16</text>
+<text x="172" y="22" fill="#8ab" font-size="17" text-anchor="middle">8</text>
+<text x="234" y="22" fill="#8ab" font-size="17" text-anchor="middle">4</text>
+<text x="296" y="22" fill="#8ab" font-size="17" text-anchor="middle">2</text>
+<text x="358" y="22" fill="#8ab" font-size="17" text-anchor="middle">1</text>
+<g class="fragment" data-fragment-index="1"><text x="45" y="82" fill="#dde" font-size="22" text-anchor="middle">13<tspan baseline-shift="sub" font-size="13" fill="#8ab">10</tspan></text>
+<circle cx="110" cy="75" r="22" fill="#1c2030" stroke="#556" stroke-width="2" />
+<text x="110" y="119" fill="#dde" font-size="17" text-anchor="middle">0</text>
+<circle cx="172" cy="75" r="28" fill="#db5" opacity="0.18" /><circle cx="172" cy="75" r="22" fill="#db5" stroke="#fe8" stroke-width="2" />
+<text x="172" y="119" fill="#db5" font-size="17" text-anchor="middle">1</text>
+<circle cx="234" cy="75" r="28" fill="#db5" opacity="0.18" /><circle cx="234" cy="75" r="22" fill="#db5" stroke="#fe8" stroke-width="2" />
+<text x="234" y="119" fill="#db5" font-size="17" text-anchor="middle">1</text>
+<circle cx="296" cy="75" r="22" fill="#1c2030" stroke="#556" stroke-width="2" />
+<text x="296" y="119" fill="#dde" font-size="17" text-anchor="middle">0</text>
+<circle cx="358" cy="75" r="28" fill="#db5" opacity="0.18" /><circle cx="358" cy="75" r="22" fill="#db5" stroke="#fe8" stroke-width="2" />
+<text x="358" y="119" fill="#db5" font-size="17" text-anchor="middle">1</text>
+</g>
+<g class="fragment" data-fragment-index="1"><text x="45" y="162" fill="#dde" font-size="22" text-anchor="middle">24<tspan baseline-shift="sub" font-size="13" fill="#8ab">10</tspan></text>
+<circle cx="110" cy="155" r="28" fill="#db5" opacity="0.18" /><circle cx="110" cy="155" r="22" fill="#db5" stroke="#fe8" stroke-width="2" />
+<text x="110" y="199" fill="#db5" font-size="17" text-anchor="middle">1</text>
+<circle cx="172" cy="155" r="28" fill="#db5" opacity="0.18" /><circle cx="172" cy="155" r="22" fill="#db5" stroke="#fe8" stroke-width="2" />
+<text x="172" y="199" fill="#db5" font-size="17" text-anchor="middle">1</text>
+<circle cx="234" cy="155" r="22" fill="#1c2030" stroke="#556" stroke-width="2" />
+<text x="234" y="199" fill="#dde" font-size="17" text-anchor="middle">0</text>
+<circle cx="296" cy="155" r="22" fill="#1c2030" stroke="#556" stroke-width="2" />
+<text x="296" y="199" fill="#dde" font-size="17" text-anchor="middle">0</text>
+<circle cx="358" cy="155" r="22" fill="#1c2030" stroke="#556" stroke-width="2" />
+<text x="358" y="199" fill="#dde" font-size="17" text-anchor="middle">0</text>
+</g>
+<rect class="fragment" data-fragment-index="2" x="142" y="42" width="60" height="186" rx="10" fill="none" stroke="#6af" stroke-width="3" stroke-dasharray="6 4" />
+</svg>
+</div>
+<ul style="font-size: 0.85em; text-align: left;">
+    <li class="fragment" data-fragment-index="1">13 и 24 - не биты, но каждое число - это <mark>ряд битов</mark></li>
+    <li class="fragment" data-fragment-index="2">биты одного веса стоят друг под другом - получились пары</li>
+    <li class="fragment" data-fragment-index="3">к каждой паре применяем <code>&amp;</code>, как к 1 и 0</li>
+    <li class="fragment" data-fragment-index="4">из ответов собирается новый ряд - это и есть <code>13 &amp; 24</code></li>
+</ul>
+</div>
+                </section>
+
+                <!-- от бита к числу: 13 & 24 - оба числа в двоичной столбиком (01101 / 11000), & в каждом столбце по таблице, ответ 01000 = 8 -->
+                <section>
+                    <h2><code>13 &amp; 24</code></h2>
+<table class="bits">
+<tr class="hdr"><td></td><td>16</td><td>8</td><td>4</td><td>2</td><td>1</td><td></td></tr>
+<tr><td class="lbl">13<sub class="base">10</sub></td><td>0</td><td><span class="one">1</span></td><td><span class="one">1</span></td><td>0</td><td><span class="one">1</span><sub class="base">2</sub></td><td class="rgt"></td></tr>
+<tr><td class="lbl">24<sub class="base">10</sub></td><td><span class="one">1</span></td><td><span class="one">1</span></td><td>0</td><td>0</td><td>0<sub class="base">2</sub></td><td class="rgt"></td></tr>
+<tr class="res"><td class="lbl">13 &amp; 24</td><td class="fragment" data-fragment-index="1">0</td><td class="fragment" data-fragment-index="2"><span class="one">1</span></td><td class="fragment" data-fragment-index="3">0</td><td class="fragment" data-fragment-index="4">0</td><td class="fragment" data-fragment-index="5">0<sub class="base">2</sub></td><td class="rgt fragment" data-fragment-index="6">= <mark>8</mark><sub>10</sub></td></tr>
+</table>
+<div class="fragment opinion" style="margin-top: 0.6em;" data-fragment-index="7">
+    Числа записали столбиком и применили <code>&amp;</code> <mark>к каждому столбцу отдельно</mark>
+</div>
+                </section>
+
+                <!-- те же числа: 13 | 24 = 11101 = 29, 13 ^ 24 = 10101 = 21 - столбцы подсвечиваются по одному -->
+                <section>
+                    <h2><code>|</code> и <code>^</code> на тех же числах</h2>
+<div style="display: flex; justify-content: center; gap: 2em;">
+<table class="bits">
+<tr class="hdr"><td></td><td>16</td><td>8</td><td>4</td><td>2</td><td>1</td><td></td></tr>
+<tr><td class="lbl">13<sub class="base">10</sub></td><td>0</td><td><span class="one">1</span></td><td><span class="one">1</span></td><td>0</td><td><span class="one">1</span><sub class="base">2</sub></td><td class="rgt"></td></tr>
+<tr><td class="lbl">24<sub class="base">10</sub></td><td><span class="one">1</span></td><td><span class="one">1</span></td><td>0</td><td>0</td><td>0<sub class="base">2</sub></td><td class="rgt"></td></tr>
+<tr class="res fragment" data-fragment-index="1"><td class="lbl">13 | 24</td><td><span class="one">1</span></td><td><span class="one">1</span></td><td><span class="one">1</span></td><td>0</td><td><span class="one">1</span><sub class="base">2</sub></td><td class="rgt">= 29<sub>10</sub></td></tr>
+</table>
+<table class="bits">
+<tr class="hdr"><td></td><td>16</td><td>8</td><td>4</td><td>2</td><td>1</td><td></td></tr>
+<tr><td class="lbl">13<sub class="base">10</sub></td><td>0</td><td><span class="one">1</span></td><td><span class="one">1</span></td><td>0</td><td><span class="one">1</span><sub class="base">2</sub></td><td class="rgt"></td></tr>
+<tr><td class="lbl">24<sub class="base">10</sub></td><td><span class="one">1</span></td><td><span class="one">1</span></td><td>0</td><td>0</td><td>0<sub class="base">2</sub></td><td class="rgt"></td></tr>
+<tr class="res fragment" data-fragment-index="2"><td class="lbl">13 ^ 24</td><td><span class="one">1</span></td><td>0</td><td><span class="one">1</span></td><td>0</td><td><span class="one">1</span><sub class="base">2</sub></td><td class="rgt">= 21<sub>10</sub></td></tr>
+</table>
+</div>
+<div class="fragment opinion" style="margin-top: 0.6em;" data-fragment-index="3">
+    <code>|</code>: 1, где есть хоть у одного. <code>^</code>: 1, где биты разные
+</div>
+                </section>
+
+                <!-- свойства xor: x ^ x = 0, x ^ 0 = x - проверить на 13 -->
+                <section>
+                    <h2>Два свойства xor</h2>
+<div style="display: flex; justify-content: center; gap: 2em;">
+<table class="bits">
+<tr class="hdr"><td></td><td>16</td><td>8</td><td>4</td><td>2</td><td>1</td><td></td></tr>
+<tr><td class="lbl">13<sub class="base">10</sub></td><td>0</td><td><span class="one">1</span></td><td><span class="one">1</span></td><td>0</td><td><span class="one">1</span><sub class="base">2</sub></td><td class="rgt"></td></tr>
+<tr><td class="lbl">13<sub class="base">10</sub></td><td>0</td><td><span class="one">1</span></td><td><span class="one">1</span></td><td>0</td><td><span class="one">1</span><sub class="base">2</sub></td><td class="rgt"></td></tr>
+<tr class="res fragment" data-fragment-index="1"><td class="lbl">13 ^ 13</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0<sub class="base">2</sub></td><td class="rgt">= 0<sub>10</sub></td></tr>
+</table>
+<table class="bits">
+<tr class="hdr"><td></td><td>16</td><td>8</td><td>4</td><td>2</td><td>1</td><td></td></tr>
+<tr><td class="lbl">13<sub class="base">10</sub></td><td>0</td><td><span class="one">1</span></td><td><span class="one">1</span></td><td>0</td><td><span class="one">1</span><sub class="base">2</sub></td><td class="rgt"></td></tr>
+<tr><td class="lbl">0<sub class="base">10</sub></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0<sub class="base">2</sub></td><td class="rgt"></td></tr>
+<tr class="res fragment" data-fragment-index="2"><td class="lbl">13 ^ 0</td><td>0</td><td><span class="one">1</span></td><td><span class="one">1</span></td><td>0</td><td><span class="one">1</span><sub class="base">2</sub></td><td class="rgt">= 13<sub>10</sub></td></tr>
+</table>
+</div>
+<ul style="font-size: 0.91em; text-align: left;">
+    <li class="fragment" data-fragment-index="3"><code>x ^ x = 0</code> - одинаковые <mark>гасят друг друга</mark></li>
+    <li class="fragment" data-fragment-index="4"><code>x ^ 0 = x</code> - с нулём ничего не меняется</li>
+</ul>
+                </section>
+
+                <!-- сдвиги << и >>: умножение и деление на 2, картинка уезжающих битов -->
+                <section>
+                    <h2>Сдвиги <code>&lt;&lt;</code> и <code>&gt;&gt;</code></h2>
+<div style="display: flex; align-items: center; justify-content: center; gap: 0.6em;">
+<div style="flex: none;">
+<svg width="640" height="300" viewBox="0 0 640 300">
+<text x="90" y="40" fill="#99a" font-size="20" text-anchor="end">13<tspan baseline-shift="sub" font-size="13" fill="#8ab">10</tspan></text>
+<rect x="120" y="10" width="46" height="46" rx="6" fill="#1c2030" stroke="#8ab" stroke-width="2" /><text x="143" y="42" fill="#dde" font-size="24" text-anchor="middle">0</text>
+<rect x="172" y="10" width="46" height="46" rx="6" fill="#1c2030" stroke="#8ab" stroke-width="2" /><text x="195" y="42" fill="#dde" font-size="24" text-anchor="middle">0</text>
+<rect x="224" y="10" width="46" height="46" rx="6" fill="#1c2030" stroke="#8ab" stroke-width="2" /><text x="247" y="42" fill="#db5" font-size="24" text-anchor="middle">1</text>
+<rect x="276" y="10" width="46" height="46" rx="6" fill="#1c2030" stroke="#8ab" stroke-width="2" /><text x="299" y="42" fill="#db5" font-size="24" text-anchor="middle">1</text>
+<rect x="328" y="10" width="46" height="46" rx="6" fill="#1c2030" stroke="#8ab" stroke-width="2" /><text x="351" y="42" fill="#dde" font-size="24" text-anchor="middle">0</text>
+<rect x="380" y="10" width="46" height="46" rx="6" fill="#1c2030" stroke="#8ab" stroke-width="2" /><text x="403" y="42" fill="#db5" font-size="24" text-anchor="middle">1</text>
+<text x="434" y="54" fill="#8ab" font-size="14">2</text>
+<g class="fragment" data-fragment-index="1"><text x="90" y="110" fill="#99a" font-size="20" text-anchor="end">13 &lt;&lt; 1</text>
+<rect x="120" y="80" width="46" height="46" rx="6" fill="#1c2030" stroke="#8ab" stroke-width="2" /><text x="143" y="112" fill="#dde" font-size="24" text-anchor="middle">0</text>
+<rect x="172" y="80" width="46" height="46" rx="6" fill="#1c2030" stroke="#8ab" stroke-width="2" /><text x="195" y="112" fill="#db5" font-size="24" text-anchor="middle">1</text>
+<rect x="224" y="80" width="46" height="46" rx="6" fill="#1c2030" stroke="#8ab" stroke-width="2" /><text x="247" y="112" fill="#db5" font-size="24" text-anchor="middle">1</text>
+<rect x="276" y="80" width="46" height="46" rx="6" fill="#1c2030" stroke="#8ab" stroke-width="2" /><text x="299" y="112" fill="#dde" font-size="24" text-anchor="middle">0</text>
+<rect x="328" y="80" width="46" height="46" rx="6" fill="#1c2030" stroke="#8ab" stroke-width="2" /><text x="351" y="112" fill="#db5" font-size="24" text-anchor="middle">1</text>
+<rect x="380" y="80" width="46" height="46" rx="6" fill="#38331c" stroke="#db5" stroke-width="2" /><text x="403" y="112" fill="#dde" font-size="24" text-anchor="middle">0</text>
+<text x="434" y="124" fill="#8ab" font-size="14">2</text><text x="440" y="113" fill="#dde" font-size="22">= 26<tspan baseline-shift="sub" font-size="13" fill="#8ab">10</tspan></text></g>
+<g class="fragment" data-fragment-index="3"><text x="90" y="200" fill="#99a" font-size="20" text-anchor="end">13 &gt;&gt; 1</text>
+<rect x="120" y="170" width="46" height="46" rx="6" fill="#38331c" stroke="#db5" stroke-width="2" /><text x="143" y="202" fill="#dde" font-size="24" text-anchor="middle">0</text>
+<rect x="172" y="170" width="46" height="46" rx="6" fill="#1c2030" stroke="#8ab" stroke-width="2" /><text x="195" y="202" fill="#dde" font-size="24" text-anchor="middle">0</text>
+<rect x="224" y="170" width="46" height="46" rx="6" fill="#1c2030" stroke="#8ab" stroke-width="2" /><text x="247" y="202" fill="#dde" font-size="24" text-anchor="middle">0</text>
+<rect x="276" y="170" width="46" height="46" rx="6" fill="#1c2030" stroke="#8ab" stroke-width="2" /><text x="299" y="202" fill="#db5" font-size="24" text-anchor="middle">1</text>
+<rect x="328" y="170" width="46" height="46" rx="6" fill="#1c2030" stroke="#8ab" stroke-width="2" /><text x="351" y="202" fill="#db5" font-size="24" text-anchor="middle">1</text>
+<rect x="380" y="170" width="46" height="46" rx="6" fill="#1c2030" stroke="#8ab" stroke-width="2" /><text x="403" y="202" fill="#dde" font-size="24" text-anchor="middle">0</text>
+<text x="434" y="214" fill="#8ab" font-size="14">2</text><text x="440" y="203" fill="#dde" font-size="22">= 6<tspan baseline-shift="sub" font-size="13" fill="#8ab">10</tspan></text><text x="380" y="255" fill="#f66" font-size="18" text-anchor="middle">последняя 1 выпала</text></g>
+</svg>
+</div>
+<ul style="font-size: 0.8em; text-align: left;">
+    <li class="fragment" data-fragment-index="2"><code>&lt;&lt; 1</code>: все биты влево, справа новый 0 - <mark>умножить на 2</mark></li>
+    <li class="fragment" data-fragment-index="4"><code>&gt;&gt; 1</code>: все биты вправо, последний выпал - <mark>разделить нацело на 2</mark></li>
+    <li class="fragment" data-fragment-index="5"><code>&lt;&lt; k</code> и <code>&gt;&gt; k</code> - то же k раз</li>
+</ul>
+</div>
+                </section>
+
+                <!-- 1 << i: число с одной горящей лампочкой номер i -->
+                <section>
+                    <h2><code>1 &lt;&lt; i</code></h2>
+<div style="display: flex; align-items: center; justify-content: center; gap: 1.2em;">
+<div style="flex: none;">
+<table style="font-size: 0.80em; margin: 0.6em auto;">
+<tr><td><strong>запись</strong></td><td><strong>число</strong></td><td><strong>двоичная</strong></td></tr>
+<tr class="fragment" data-fragment-index="1"><td><code>1 &lt;&lt; 0</code></td><td><code>1</code></td><td><code style="letter-spacing: 0.15em;">0000<span class="one">1</span></code><sub>2</sub></td></tr>
+<tr class="fragment" data-fragment-index="2"><td><code>1 &lt;&lt; 1</code></td><td><code>2</code></td><td><code style="letter-spacing: 0.15em;">000<span class="one">1</span>0</code><sub>2</sub></td></tr>
+<tr class="fragment" data-fragment-index="3"><td><code>1 &lt;&lt; 2</code></td><td><code>4</code></td><td><code style="letter-spacing: 0.15em;">00<span class="one">1</span>00</code><sub>2</sub></td></tr>
+<tr class="fragment" data-fragment-index="4"><td><code>1 &lt;&lt; 3</code></td><td><code>8</code></td><td><code style="letter-spacing: 0.15em;">0<span class="one">1</span>000</code><sub>2</sub></td></tr>
+<tr class="fragment" data-fragment-index="5"><td><code>1 &lt;&lt; 4</code></td><td><code>16</code></td><td><code style="letter-spacing: 0.15em;"><span class="one">1</span>0000</code><sub>2</sub></td></tr>
+</table>
+</div>
+<ul style="font-size: 0.85em; text-align: left;">
+    <li class="fragment" data-fragment-index="6">одна горящая лампочка - <mark>номер i</mark></li>
+    <li class="fragment" data-fragment-index="7">номера считаем <mark>справа, с нуля</mark></li>
+    <li class="fragment" data-fragment-index="8">вес лампочки i = 2<sup>i</sup></li>
+</ul>
+</div>
+                </section>
+
+                <!-- проверка бита i: (n >> i) & 1 - трассировка на n = 13 -->
+                <section>
+                    <h2>Горит ли лампочка i?</h2>
+<svg width="332" height="116" viewBox="0 0 332 116">
+<text x="49.0" y="22" fill="#6af" font-size="19" text-anchor="middle">3</text>
+<circle cx="49.0" cy="58" r="30" fill="#db5" opacity="0.18" /><circle cx="49.0" cy="58" r="24" fill="#db5" stroke="#fe8" stroke-width="2" />
+<text x="49.0" y="108" fill="#db5" font-size="21" text-anchor="middle" font-weight="bold">1</text>
+<text x="127.0" y="22" fill="#6af" font-size="19" text-anchor="middle">2</text>
+<circle cx="127.0" cy="58" r="30" fill="#db5" opacity="0.18" /><circle cx="127.0" cy="58" r="24" fill="#db5" stroke="#fe8" stroke-width="2" />
+<text x="127.0" y="108" fill="#db5" font-size="21" text-anchor="middle" font-weight="bold">1</text>
+<text x="205.0" y="22" fill="#6af" font-size="19" text-anchor="middle">1</text>
+<circle cx="205.0" cy="58" r="24" fill="#1c2030" stroke="#556" stroke-width="2" />
+<text x="205.0" y="108" fill="#dde" font-size="21" text-anchor="middle">0</text>
+<text x="283.0" y="22" fill="#6af" font-size="19" text-anchor="middle">0</text>
+<circle cx="283.0" cy="58" r="30" fill="#db5" opacity="0.18" /><circle cx="283.0" cy="58" r="24" fill="#db5" stroke="#fe8" stroke-width="2" />
+<text x="283.0" y="108" fill="#db5" font-size="21" text-anchor="middle" font-weight="bold">1</text>
+</svg>
+<div style="display: flex; align-items: center; justify-content: center; gap: 1.2em;">
+<div style="flex: none;">
+<table style="font-size: 0.75em; margin: 0.6em auto;">
+<tr><td><strong>i</strong></td><td><strong>13 &gt;&gt; i</strong></td><td><strong>&amp; 1</strong></td></tr>
+<tr class="fragment" data-fragment-index="1"><td><code>0</code></td><td><code>110<mark>1</mark></code><sub>2</sub></td><td><code>1</code></td></tr>
+<tr class="fragment" data-fragment-index="2"><td><code>1</code></td><td><code>11<mark>0</mark></code><sub>2</sub></td><td><code>0</code></td></tr>
+<tr class="fragment" data-fragment-index="3"><td><code>2</code></td><td><code>1<mark>1</mark></code><sub>2</sub></td><td><code>1</code></td></tr>
+<tr class="fragment" data-fragment-index="4"><td><code>3</code></td><td><code><mark>1</mark></code><sub>2</sub></td><td><code>1</code></td></tr>
+</table>
+</div>
+<div class="fragment opinion" style="margin-top: 0;" data-fragment-index="5">
+    <code>(n &gt;&gt; i) &amp; 1</code>: сдвинули лампочку i в самый правый разряд, <code>&amp; 1</code> оставил только её
+</div>
+</div>
+                </section>
+
+            </section>
+
+            <!-- ЧАСТЬ 3: биты в задачах -->
+            <section>
+
+                <section style="font-size: 70px; height: 100%; width: 100%">
+                    <div class="lesson-time">45</div>
+                    <div class="fragment">
+                        <h1 style="font-size: 1.3em;">Биты в задачах</h1>
+                        <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">три задачи с LeetCode</p>
+                    </div>
+                </section>
+
+                <!-- задача: LeetCode 191 Number of 1 Bits - явный цикл со сдвигом -->
+                <section>
+                    <h2><a href="https://leetcode.com/problems/number-of-1-bits/" target="_blank" rel="noopener">191. Number of 1 Bits</a></h2>
+<p style="font-size: 0.7em;">Сколько единиц в двоичной записи <code>n</code>? Без <code>bin()</code> и строк</p>
+<div style="display: flex; align-items: center; justify-content: center; gap: 1.2em;">
+<div style="flex: none;">
+<svg width="332" height="116" viewBox="0 0 332 116">
+<text x="49.0" y="22" fill="#8ab" font-size="19" text-anchor="middle">8</text>
+<circle cx="49.0" cy="58" r="30" fill="#db5" opacity="0.18" /><circle cx="49.0" cy="58" r="24" fill="#db5" stroke="#fe8" stroke-width="2" />
+<text x="49.0" y="108" fill="#db5" font-size="21" text-anchor="middle" font-weight="bold">1</text>
+<text x="127.0" y="22" fill="#8ab" font-size="19" text-anchor="middle">4</text>
+<circle cx="127.0" cy="58" r="24" fill="#1c2030" stroke="#556" stroke-width="2" />
+<text x="127.0" y="108" fill="#dde" font-size="21" text-anchor="middle">0</text>
+<text x="205.0" y="22" fill="#8ab" font-size="19" text-anchor="middle">2</text>
+<circle cx="205.0" cy="58" r="30" fill="#db5" opacity="0.18" /><circle cx="205.0" cy="58" r="24" fill="#db5" stroke="#fe8" stroke-width="2" />
+<text x="205.0" y="108" fill="#db5" font-size="21" text-anchor="middle" font-weight="bold">1</text>
+<text x="283.0" y="22" fill="#8ab" font-size="19" text-anchor="middle">1</text>
+<circle cx="283.0" cy="58" r="30" fill="#db5" opacity="0.18" /><circle cx="283.0" cy="58" r="24" fill="#db5" stroke="#fe8" stroke-width="2" />
+<text x="283.0" y="108" fill="#db5" font-size="21" text-anchor="middle" font-weight="bold">1</text>
+</svg>
+</div>
+<ul style="font-size: 0.85em; text-align: left;">
+    <li class="fragment">11<sub>10</sub> = 1011<sub>2</sub> - ответ 3</li>
+    <li class="fragment">последний бит: <code>n &amp; 1</code></li>
+    <li class="fragment">выкинуть последний бит: <code>n &gt;&gt; 1</code></li>
+    <li class="fragment">повторять, пока <code>n</code> не 0</li>
+</ul>
+</div>
+<p class="fragment" style="font-size: 0.55em; opacity: 0.75; margin-top: 0.6em;"><code>practice/38-bits/1_hamming_weight.py</code> - <code>hamming_weight(n: int) -&gt; int</code></p>
+                </section>
+
+                <!-- задача: LeetCode 136 Single Number - xor всех чисел, трассировка -->
+                <section>
+                    <h2><a href="https://leetcode.com/problems/single-number/" target="_blank" rel="noopener">136. Single Number</a></h2>
+<p style="font-size: 0.65em;">Все числа встречаются дважды, одно - один раз. Найти его без словаря</p>
+<div style="display: flex; align-items: center; justify-content: center; gap: 1.2em;">
+<div style="flex: none;">
+<table style="font-size: 0.69em; margin: 0.6em auto;">
+<tr><td><strong>шаг</strong></td><td><strong>число</strong></td><td><strong>результат</strong></td></tr>
+<tr><td></td><td></td><td><code>000</code><sub>2</sub></td></tr>
+<tr class="fragment" data-fragment-index="2"><td><code>^ 4</code></td><td><code>100</code><sub>2</sub></td><td><code><span class="one">1</span>00</code><sub>2</sub> = 4<sub>10</sub></td></tr>
+<tr class="fragment" data-fragment-index="3"><td><code>^ 1</code></td><td><code>001</code><sub>2</sub></td><td><code><span class="one">1</span>0<span class="one">1</span></code><sub>2</sub> = 5<sub>10</sub></td></tr>
+<tr class="fragment" data-fragment-index="4"><td><code>^ 2</code></td><td><code>010</code><sub>2</sub></td><td><code><span class="one">1</span><span class="one">1</span><span class="one">1</span></code><sub>2</sub> = 7<sub>10</sub></td></tr>
+<tr class="fragment" data-fragment-index="5"><td><code>^ 1</code></td><td><code>001</code><sub>2</sub></td><td><code><span class="one">1</span><span class="one">1</span>0</code><sub>2</sub> = 6<sub>10</sub></td></tr>
+<tr class="fragment" data-fragment-index="6"><td><code>^ 2</code></td><td><code>010</code><sub>2</sub></td><td><code><span class="one">1</span>00</code><sub>2</sub> = 4<sub>10</sub></td></tr>
+</table>
+</div>
+<div class="fragment opinion" style="margin-top: 0;" data-fragment-index="7">
+    Пары <mark>гасят друг друга</mark>: <code>1 ^ 1 = 0</code>, <code>2 ^ 2 = 0</code>. Остаётся одиночка <code>4</code>
+</div>
+</div>
+<p class="fragment" style="font-size: 0.55em; opacity: 0.75; margin-top: 0.6em;"><code>practice/38-bits/2_single_number.py</code> - <code>single_number(nums: list[int]) -&gt; int</code></p>
+                </section>
+
+                <!-- задача: LeetCode 461 Hamming Distance - xor и подсчёт единиц -->
+                <section>
+                    <h2><a href="https://leetcode.com/problems/hamming-distance/" target="_blank" rel="noopener">461. Hamming Distance</a></h2>
+<p style="font-size: 0.65em;">В скольких разрядах двоичные записи <code>x</code> и <code>y</code> различаются?</p>
+<div style="display: flex; align-items: center; justify-content: center; gap: 1.2em;">
+<div style="flex: none;">
+<table class="bits">
+<tr class="hdr"><td></td><td>4</td><td>2</td><td>1</td><td></td></tr>
+<tr><td class="lbl">1<sub class="base">10</sub></td><td>0</td><td>0</td><td><span class="one">1</span><sub class="base">2</sub></td><td class="rgt"></td></tr>
+<tr><td class="lbl">4<sub class="base">10</sub></td><td><span class="one">1</span></td><td>0</td><td>0<sub class="base">2</sub></td><td class="rgt"></td></tr>
+<tr class="res fragment" data-fragment-index="1"><td class="lbl">1 ^ 4</td><td><span class="one">1</span></td><td>0</td><td><span class="one">1</span><sub class="base">2</sub></td><td class="rgt">-&gt; две единицы</td></tr>
+</table>
+</div>
+<ul style="font-size: 0.85em; text-align: left;">
+    <li class="fragment" data-fragment-index="2"><code>^</code> ставит 1 ровно там, где биты <mark>разные</mark></li>
+    <li class="fragment" data-fragment-index="3">дальше - посчитать единицы, как в 191</li>
+</ul>
+</div>
+<p class="fragment" style="font-size: 0.55em; opacity: 0.75; margin-top: 0.6em;"><code>practice/38-bits/3_hamming_distance.py</code> - <code>hamming_distance(x: int, y: int) -&gt; int</code></p>
+                </section>
+
+            </section>
+
+            <!-- ЧАСТЬ 4: переделываем ДЗ - кортеж -> двоичное число -->
+            <section>
+
+                <section style="font-size: 70px; height: 100%; width: 100%">
+                    <div class="lesson-time">60</div>
+                    <div class="fragment">
+                        <h1 style="font-size: 1.3em;">Переделываем ДЗ</h1>
+                        <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">Can I Win: кортеж -> двоичное число</p>
+                    </div>
+                </section>
+
+                <!-- наше решение на кортеже: 4 места, где трогаем позицию - начальная, взято ли x, ход, ключ memo -->
+                <section>
+                    <h2>Где решение трогает позицию</h2>
+<table style="font-size: 0.80em; margin: 0.6em auto;">
+<tr><td><strong>что делаем</strong></td><td><strong>на кортеже</strong></td></tr>
+<tr class="fragment"><td>начальная позиция</td><td><code>()</code></td></tr>
+<tr class="fragment"><td>взято ли <code>x</code></td><td><code>x in taken</code></td></tr>
+<tr class="fragment"><td>сходить <code>x</code></td><td><code>tuple(sorted(taken + (x,)))</code></td></tr>
+<tr class="fragment"><td>ключ <code>memo</code></td><td><code>taken</code></td></tr>
+</table>
+<div class="fragment opinion" style="margin-top: 0.6em;">
+    Если заменить кортеж чем-то другим - поменяются <mark>только эти четыре места</mark>
+</div>
+                </section>
+
+                <!-- кортеж -> лампочки: про каждое число 1..3 только да/нет, (1, 3) = горят 1 и 3; лампочки пишем справа налево, как разряды -->
+                <section>
+                    <h2>Кортеж -> лампочки</h2>
+<p style="font-size: 0.8em; text-align: center;">числа 1, 2, 3, взяты <code>(1, 3)</code></p>
+<svg width="440" height="116" viewBox="0 0 440 116">
+<text x="80.0" y="22" fill="#8ab" font-size="19" text-anchor="middle">число 3</text>
+<circle cx="80.0" cy="58" r="24" fill="#1c2030" stroke="#556" stroke-width="2" />
+<g class="fragment" data-fragment-index="2"><circle cx="80.0" cy="58" r="30" fill="#db5" opacity="0.18" /><circle cx="80.0" cy="58" r="24" fill="#db5" stroke="#fe8" stroke-width="2" /></g>
+<text x="80.0" y="108" fill="#db5" font-size="21" text-anchor="middle" font-weight="bold">1</text>
+<text x="220.0" y="22" fill="#8ab" font-size="19" text-anchor="middle">число 2</text>
+<circle cx="220.0" cy="58" r="24" fill="#1c2030" stroke="#556" stroke-width="2" />
+<text x="220.0" y="108" fill="#dde" font-size="21" text-anchor="middle">0</text>
+<text x="360.0" y="22" fill="#8ab" font-size="19" text-anchor="middle">число 1</text>
+<circle cx="360.0" cy="58" r="24" fill="#1c2030" stroke="#556" stroke-width="2" />
+<g class="fragment" data-fragment-index="1"><circle cx="360.0" cy="58" r="30" fill="#db5" opacity="0.18" /><circle cx="360.0" cy="58" r="24" fill="#db5" stroke="#fe8" stroke-width="2" /></g>
+<text x="360.0" y="108" fill="#db5" font-size="21" text-anchor="middle" font-weight="bold">1</text>
+</svg>
+<ul style="font-size: 0.85em; text-align: left;">
+    <li class="fragment" data-fragment-index="1">про каждое число один вопрос: <mark>взято или нет</mark></li>
+    <li class="fragment" data-fragment-index="2">взято - лампочка горит, <code>1</code>; нет - <code>0</code></li>
+    <li class="fragment" data-fragment-index="3">число 1 - справа, как младший разряд</li>
+</ul>
+                </section>
+
+                <!-- лампочки -> число: 101 - двоичная запись, 101 = 4 + 1 = 5; набор (1, 3) хранится как число 5 -->
+                <section>
+                    <h2>Лампочки -> число</h2>
+<svg width="440" height="116" viewBox="0 0 440 116">
+<text x="80.0" y="22" fill="#8ab" font-size="19" text-anchor="middle">4</text>
+<circle cx="80.0" cy="58" r="30" fill="#db5" opacity="0.18" /><circle cx="80.0" cy="58" r="24" fill="#db5" stroke="#fe8" stroke-width="2" />
+<text x="80.0" y="108" fill="#db5" font-size="21" text-anchor="middle" font-weight="bold">1</text>
+<text x="220.0" y="22" fill="#8ab" font-size="19" text-anchor="middle">2</text>
+<circle cx="220.0" cy="58" r="24" fill="#1c2030" stroke="#556" stroke-width="2" />
+<text x="220.0" y="108" fill="#dde" font-size="21" text-anchor="middle">0</text>
+<text x="360.0" y="22" fill="#8ab" font-size="19" text-anchor="middle">1</text>
+<circle cx="360.0" cy="58" r="30" fill="#db5" opacity="0.18" /><circle cx="360.0" cy="58" r="24" fill="#db5" stroke="#fe8" stroke-width="2" />
+<text x="360.0" y="108" fill="#db5" font-size="21" text-anchor="middle" font-weight="bold">1</text>
+</svg>
+<p style="font-size: 0.9em; margin-top: 0.3em; text-align: center;"><span class="fragment" data-fragment-index="1">101<sub>2</sub></span> <span class="fragment" data-fragment-index="2">= 4 + 1 = <mark>5</mark><sub>10</sub></span></p>
+<div class="fragment opinion" style="margin-top: 0.6em;" data-fragment-index="3">
+    Набор <code>(1, 3)</code> можно хранить как <mark>одно число 5</mark>. Число <code>x</code> - это лампочка (бит) номер <code>x - 1</code>
+</div>
+                </section>
+
+                <!-- каждому набору - своё число: все 8 наборов из 1, 2, 3 = числа 0..7 -->
+                <section>
+                    <h2>Каждому набору - своё число</h2>
+<div style="display: flex; justify-content: center; gap: 1.5em;">
+<table style="font-size: 0.69em; margin: 0.6em auto;">
+<tr><td><strong>лампочки</strong></td><td><strong>набор</strong></td><td><strong>число</strong></td></tr>
+<tr class="fragment" data-fragment-index="1"><td><code>000</code><sub>2</sub></td><td>( )</td><td><code>0</code><sub>10</sub></td></tr>
+<tr class="fragment" data-fragment-index="2"><td><code>00<span class="one">1</span></code><sub>2</sub></td><td>(1,)</td><td><code>1</code><sub>10</sub></td></tr>
+<tr class="fragment" data-fragment-index="3"><td><code>0<span class="one">1</span>0</code><sub>2</sub></td><td>(2,)</td><td><code>2</code><sub>10</sub></td></tr>
+<tr class="fragment" data-fragment-index="4"><td><code>0<span class="one">1</span><span class="one">1</span></code><sub>2</sub></td><td>(1, 2)</td><td><code>3</code><sub>10</sub></td></tr>
+</table>
+<table style="font-size: 0.69em; margin: 0.6em auto;">
+<tr><td><strong>лампочки</strong></td><td><strong>набор</strong></td><td><strong>число</strong></td></tr>
+<tr class="fragment" data-fragment-index="5"><td><code><span class="one">1</span>00</code><sub>2</sub></td><td>(3,)</td><td><code>4</code><sub>10</sub></td></tr>
+<tr class="fragment" data-fragment-index="6"><td><code><span class="one">1</span>0<span class="one">1</span></code><sub>2</sub></td><td>(1, 3)</td><td><code>5</code><sub>10</sub></td></tr>
+<tr class="fragment" data-fragment-index="7"><td><code><span class="one">1</span><span class="one">1</span>0</code><sub>2</sub></td><td>(2, 3)</td><td><code>6</code><sub>10</sub></td></tr>
+<tr class="fragment" data-fragment-index="8"><td><code><span class="one">1</span><span class="one">1</span><span class="one">1</span></code><sub>2</sub></td><td>(1, 2, 3)</td><td><code>7</code><sub>10</sub></td></tr>
+</table>
+</div>
+<div class="fragment opinion" style="margin-top: 0.6em;" data-fragment-index="9">
+    Наборы из 1, 2, 3 - это ровно числа от 0 до 7 (<code>range(1 &lt;&lt; 3)</code>). Разные наборы - разные числа
+</div>
+                </section>
+
+                <!-- та же позиция числом: граф с занятия, у каждой вершины подпись-число -->
+                <section>
+                    <h2>Тот же граф</h2>
+<div style="display: flex; align-items: center; justify-content: center; gap: 1.2em;">
+<div style="flex: none;">
+<svg width="620" height="330" viewBox="0 0 620 330">
+<defs><marker id="g38am" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#667" /></marker></defs>
+<line x1="310" y1="92" x2="110" y2="216" stroke="#667" stroke-width="2" marker-end="url(#g38am)" />
+<text x="168.0" y="158.0" fill="#99a" font-size="16" text-anchor="middle">взял 1</text>
+<line x1="310" y1="92" x2="310" y2="216" stroke="#667" stroke-width="2" marker-end="url(#g38am)" />
+<text x="350.0" y="158.0" fill="#99a" font-size="16" text-anchor="middle">взял 2</text>
+<line x1="310" y1="92" x2="510" y2="216" stroke="#667" stroke-width="2" marker-end="url(#g38am)" />
+<text x="452.0" y="158.0" fill="#99a" font-size="16" text-anchor="middle">взял 3</text>
+<rect x="248" y="28" width="124" height="64" rx="10" fill="#1c2030" stroke="#8ab" stroke-width="2" /><text x="310" y="56" fill="#dde" font-size="22" text-anchor="middle">( )</text><text x="310" y="80" fill="#99a" font-size="15" text-anchor="middle">осталось 4</text>
+<rect x="48" y="218" width="124" height="64" rx="10" fill="#1c2030" stroke="#8ab" stroke-width="2" /><text x="110" y="246" fill="#dde" font-size="22" text-anchor="middle">(1)</text><text x="110" y="270" fill="#99a" font-size="15" text-anchor="middle">осталось 3</text>
+<rect x="248" y="218" width="124" height="64" rx="10" fill="#1c2030" stroke="#8ab" stroke-width="2" /><text x="310" y="246" fill="#dde" font-size="22" text-anchor="middle">(2)</text><text x="310" y="270" fill="#99a" font-size="15" text-anchor="middle">осталось 2</text>
+<rect x="448" y="218" width="124" height="64" rx="10" fill="#1c2030" stroke="#8ab" stroke-width="2" /><text x="510" y="246" fill="#dde" font-size="22" text-anchor="middle">(3)</text><text x="510" y="270" fill="#99a" font-size="15" text-anchor="middle">осталось 1</text>
+<rect x="248" y="28" width="124" height="64" rx="10" fill="#3a1f24" stroke="#f66" stroke-width="3" /><text x="310" y="56" fill="#dde" font-size="22" text-anchor="middle">( )</text><text x="310" y="80" fill="#99a" font-size="15" text-anchor="middle">осталось 4</text><text x="386" y="42" fill="#f66" font-size="22" font-weight="bold" text-anchor="middle">L</text>
+<rect x="48" y="218" width="124" height="64" rx="10" fill="#1f3a26" stroke="#7d7" stroke-width="3" /><text x="110" y="246" fill="#dde" font-size="22" text-anchor="middle">(1)</text><text x="110" y="270" fill="#99a" font-size="15" text-anchor="middle">осталось 3</text><text x="186" y="232" fill="#7d7" font-size="22" font-weight="bold" text-anchor="middle">W</text>
+<rect x="248" y="218" width="124" height="64" rx="10" fill="#1f3a26" stroke="#7d7" stroke-width="3" /><text x="310" y="246" fill="#dde" font-size="22" text-anchor="middle">(2)</text><text x="310" y="270" fill="#99a" font-size="15" text-anchor="middle">осталось 2</text><text x="386" y="232" fill="#7d7" font-size="22" font-weight="bold" text-anchor="middle">W</text>
+<rect x="448" y="218" width="124" height="64" rx="10" fill="#1f3a26" stroke="#7d7" stroke-width="3" /><text x="510" y="246" fill="#dde" font-size="22" text-anchor="middle">(3)</text><text x="510" y="270" fill="#99a" font-size="15" text-anchor="middle">осталось 1</text><text x="586" y="232" fill="#7d7" font-size="22" font-weight="bold" text-anchor="middle">W</text>
+<g class="fragment" data-fragment-index="1"><rect x="64" y="28" width="112" height="28" rx="6" fill="#2a2440" stroke="#6af" stroke-width="1.5" /><text x="120" y="48" fill="#6af" font-size="17" font-family="monospace" text-anchor="middle">000<tspan baseline-shift="sub" font-size="11">2</tspan> = 0<tspan baseline-shift="sub" font-size="11">10</tspan></text></g>
+<g class="fragment" data-fragment-index="2"><rect x="54" y="288" width="112" height="28" rx="6" fill="#2a2440" stroke="#6af" stroke-width="1.5" /><text x="110" y="308" fill="#6af" font-size="17" font-family="monospace" text-anchor="middle">001<tspan baseline-shift="sub" font-size="11">2</tspan> = 1<tspan baseline-shift="sub" font-size="11">10</tspan></text></g>
+<g class="fragment" data-fragment-index="3"><rect x="254" y="288" width="112" height="28" rx="6" fill="#2a2440" stroke="#6af" stroke-width="1.5" /><text x="310" y="308" fill="#6af" font-size="17" font-family="monospace" text-anchor="middle">010<tspan baseline-shift="sub" font-size="11">2</tspan> = 2<tspan baseline-shift="sub" font-size="11">10</tspan></text></g>
+<g class="fragment" data-fragment-index="4"><rect x="454" y="288" width="112" height="28" rx="6" fill="#2a2440" stroke="#6af" stroke-width="1.5" /><text x="510" y="308" fill="#6af" font-size="17" font-family="monospace" text-anchor="middle">100<tspan baseline-shift="sub" font-size="11">2</tspan> = 4<tspan baseline-shift="sub" font-size="11">10</tspan></text></g>
+</svg>
+</div>
+<ul style="font-size: 0.81em; text-align: left;">
+    <li class="fragment" data-fragment-index="1"><code>( )</code> -> <code>0</code></li>
+    <li class="fragment" data-fragment-index="2"><code>(1)</code> -> <code>001</code><sub>2</sub> = 1<sub>10</sub></li>
+    <li class="fragment" data-fragment-index="3"><code>(2)</code> -> <code>010</code><sub>2</sub> = 2<sub>10</sub></li>
+    <li class="fragment" data-fragment-index="4"><code>(3)</code> -> <code>100</code><sub>2</sub> = 4<sub>10</sub></li>
+</ul>
+</div>
+                </section>
+
+                <!-- четыре места в коде: кортеж -> число (0, сдвиг и &, |, ключ - число) -->
+                <section>
+                    <h2>Четыре места - на числе</h2>
+<table style="font-size: 0.69em; margin: 0.6em auto;">
+<tr><td><strong>что делаем</strong></td><td><strong>на кортеже</strong></td><td><strong>на числе</strong></td></tr>
+<tr class="fragment"><td>начальная позиция</td><td><code>()</code></td><td><code>0</code></td></tr>
+<tr class="fragment"><td>взято ли <code>x</code></td><td><code>x in taken</code></td><td><code>(taken &gt;&gt; (x - 1)) &amp; 1</code></td></tr>
+<tr class="fragment"><td>сходить <code>x</code></td><td><code>tuple(sorted(taken + (x,)))</code></td><td><code>taken | (1 &lt;&lt; (x - 1))</code></td></tr>
+<tr class="fragment"><td>ключ <code>memo</code></td><td><code>taken</code></td><td><code>taken</code> - просто число</td></tr>
+</table>
+                </section>
+
+                <!-- ход = поставить бит, проверка "свободно" = бит равен 0 - на примере taken = 5 -->
+                <section>
+                    <h2>Ход = зажечь лампочку</h2>
+<svg width="440" height="116" viewBox="0 0 440 116">
+<text x="80.0" y="22" fill="#8ab" font-size="19" text-anchor="middle">число 3</text>
+<circle cx="80.0" cy="58" r="30" fill="#db5" opacity="0.18" /><circle cx="80.0" cy="58" r="24" fill="#db5" stroke="#fe8" stroke-width="2" />
+<text x="80.0" y="108" fill="#dde" font-size="21" text-anchor="middle">взято</text>
+<text x="220.0" y="22" fill="#8ab" font-size="19" text-anchor="middle">число 2</text>
+<circle cx="220.0" cy="58" r="24" fill="#1c2030" stroke="#556" stroke-width="2" />
+<text x="220.0" y="108" fill="#dde" font-size="21" text-anchor="middle">свободно</text>
+<text x="360.0" y="22" fill="#8ab" font-size="19" text-anchor="middle">число 1</text>
+<circle cx="360.0" cy="58" r="30" fill="#db5" opacity="0.18" /><circle cx="360.0" cy="58" r="24" fill="#db5" stroke="#fe8" stroke-width="2" />
+<text x="360.0" y="108" fill="#dde" font-size="21" text-anchor="middle">взято</text>
+</svg>
+<ul style="font-size: 0.81em; text-align: left;">
+    <li class="fragment"><code>taken = 5</code> = <code>101</code><sub>2</sub></li>
+    <li class="fragment">свободно ли 2: <code>(5 &gt;&gt; 1) &amp; 1</code> = 0 - да</li>
+    <li class="fragment">берём 2: <code>101 | 010 = 111</code><sub>2</sub> = 7<sub>10</sub></li>
+    <li class="fragment">сортировать не нужно: у числа нет порядка</li>
+</ul>
+<p class="fragment" style="font-size: 0.55em; opacity: 0.75; margin-top: 0.6em;"><code>practice/38-bits/4_can_i_win_mask.py</code> - <code>can_i_win(max_choosable: int, desired_total: int) -&gt; bool</code></p>
+                </section>
+
+                <!-- memo по числу: замер времени кортеж vs число на худших тестах -->
+                <section>
+                    <h2>Быстрее?</h2>
+<p style="font-size: 0.65em;"><code>memo</code> тот же словарь, ключ - число <code>taken</code></p>
+<table style="font-size: 0.80em; margin: 0.6em auto;">
+<tr><td><strong>тест</strong></td><td><strong>кортеж</strong></td><td><strong>число</strong></td></tr>
+<tr class="fragment"><td><code>(18, 100)</code></td><td>0.5 с</td><td>0.2 с</td></tr>
+<tr class="fragment"><td><code>(20, 180)</code></td><td>2.8 с</td><td>1.3 с</td></tr>
+<tr class="fragment"><td><code>(20, 150)</code></td><td>4.2 с</td><td>3.8 с</td></tr>
+</table>
+<div class="fragment opinion" style="margin-top: 0.6em;">
+    Быстрее, но <mark>не в разы</mark>: основное время уходит на рекурсию, а не на ключи
+</div>
+                </section>
+
+                <!-- сравнение кортежа и числа: читаемость, ход, проверка, ключ словаря -->
+                <section>
+                    <h2>Кортеж или число</h2>
+<table style="font-size: 0.71em; margin: 0.6em auto;">
+<tr><td><strong></strong></td><td><strong>кортеж</strong></td><td><strong>число</strong></td></tr>
+<tr class="fragment"><td>читать</td><td><span style="color: #7d7;">сразу видно числа</span></td><td>надо расшифровать биты</td></tr>
+<tr class="fragment"><td>сделать ход</td><td><code>sorted</code> + новый кортеж</td><td><span style="color: #7d7;">одна операция</span> <code>|</code></td></tr>
+<tr class="fragment"><td>взято ли x</td><td><code>x in taken</code> - просмотр кортежа</td><td><span style="color: #7d7;">один сдвиг и</span> <code>&amp;</code></td></tr>
+<tr class="fragment"><td>ключ словаря</td><td>кортеж из 10 чисел ~120 байт</td><td><span style="color: #7d7;">одно число ~28 байт</span></td></tr>
+</table>
+                </section>
+
+                <!-- кто такие C и C++: языки для того, что должно работать очень быстро (Windows, Linux, игры, сам Python написан на C); там берегут каждый бит -->
+                <section>
+                    <h2>Языки C и C++</h2>
+<ul style="font-size: 0.91em; text-align: left;">
+    <li class="fragment">C и C++ - тоже языки программирования, но «ближе к железу»</li>
+    <li class="fragment">на них пишут то, что должно работать <mark>очень быстро</mark>: Windows и Linux, движки игр</li>
+    <li class="fragment">даже сам Python написан на C: когда запускаешь программу, её выполняет программа на C</li>
+    <li class="fragment">там берегут каждый бит памяти и каждую команду процессора - поэтому приём с лампочками там на каждом шагу</li>
+</ul>
+                </section>
+
+                <!-- зачем там биты: флаги в пакетах интернета (SYN + ACK = 18); 64 флага в 8 байтах; IP & маска = адрес сети -->
+                <section>
+                    <h2>Зачем им биты</h2>
+<p class="fragment" data-fragment-index="1" style="font-size: 0.62em; text-align: center;">когда ты открываешь сайт, компьютеры пересылают друг другу пакеты. В каждом пакете - 6 флагов «да/нет» в одном числе</p>
+<div class="fragment" data-fragment-index="1">
+<svg width="560" height="116" viewBox="0 0 560 116">
+<text x="55.0" y="22" fill="#8ab" font-size="19" text-anchor="middle">URG</text>
+<circle cx="55.0" cy="58" r="24" fill="#1c2030" stroke="#556" stroke-width="2" />
+<text x="55.0" y="108" fill="#dde" font-size="21" text-anchor="middle">0</text>
+<text x="145.0" y="22" fill="#8ab" font-size="19" text-anchor="middle">ACK</text>
+<circle cx="145.0" cy="58" r="30" fill="#db5" opacity="0.18" /><circle cx="145.0" cy="58" r="24" fill="#db5" stroke="#fe8" stroke-width="2" />
+<text x="145.0" y="108" fill="#db5" font-size="21" text-anchor="middle" font-weight="bold">1</text>
+<text x="235.0" y="22" fill="#8ab" font-size="19" text-anchor="middle">PSH</text>
+<circle cx="235.0" cy="58" r="24" fill="#1c2030" stroke="#556" stroke-width="2" />
+<text x="235.0" y="108" fill="#dde" font-size="21" text-anchor="middle">0</text>
+<text x="325.0" y="22" fill="#8ab" font-size="19" text-anchor="middle">RST</text>
+<circle cx="325.0" cy="58" r="24" fill="#1c2030" stroke="#556" stroke-width="2" />
+<text x="325.0" y="108" fill="#dde" font-size="21" text-anchor="middle">0</text>
+<text x="415.0" y="22" fill="#8ab" font-size="19" text-anchor="middle">SYN</text>
+<circle cx="415.0" cy="58" r="30" fill="#db5" opacity="0.18" /><circle cx="415.0" cy="58" r="24" fill="#db5" stroke="#fe8" stroke-width="2" />
+<text x="415.0" y="108" fill="#db5" font-size="21" text-anchor="middle" font-weight="bold">1</text>
+<text x="505.0" y="22" fill="#8ab" font-size="19" text-anchor="middle">FIN</text>
+<circle cx="505.0" cy="58" r="24" fill="#1c2030" stroke="#556" stroke-width="2" />
+<text x="505.0" y="108" fill="#dde" font-size="21" text-anchor="middle">0</text>
+</svg>
+</div>
+<p class="fragment" data-fragment-index="1" style="font-size: 0.6em; text-align: center; margin-top: 0;">SYN + ACK («привет, слышу тебя») = 010010<sub>2</sub> = 18<sub>10</sub></p>
+<ul style="font-size: 0.81em; text-align: left;">
+    <li class="fragment" data-fragment-index="2">64 флага «да/нет» в одном числе - <mark>8 байт</mark>; 64 отдельных «да/нет» - 64 байта</li>
+    <li class="fragment" data-fragment-index="3">проверить или поставить бит - <mark>одна команда</mark> процессора</li>
+    <li class="fragment" data-fragment-index="4">IP-адрес <code>&amp;</code> маска подсети = адрес сети: тот самый <code>&amp;</code> по столбцам</li>
+</ul>
+                </section>
+
+                <!-- бэкенд (и на Python): права пользователя - каждое право свой бит, в базе одно число, проверка через &; права Discord-бота - одно число -->
+                <section>
+                    <h2>Бэкенд: права пользователя</h2>
+<div style="display: flex; align-items: center; justify-content: center; gap: 1.2em;">
+<div style="flex: none;">
+<table style="font-size: 0.69em; margin: 0.6em auto;">
+<tr><td><strong>право</strong></td><td><strong>бит</strong></td><td><strong>число</strong></td></tr>
+<tr><td>READ</td><td><code>0001</code><sub>2</sub></td><td>1</td></tr>
+<tr><td>WRITE</td><td><code>0010</code><sub>2</sub></td><td>2</td></tr>
+<tr><td>DELETE</td><td><code>0100</code><sub>2</sub></td><td>4</td></tr>
+<tr><td>ADMIN</td><td><code>1000</code><sub>2</sub></td><td>8</td></tr>
+</table>
+</div>
+<ul style="font-size: 0.81em; text-align: left;">
+    <li class="fragment" data-fragment-index="1">у пользователя <code>READ | WRITE</code> = 3 - в базе хранится <mark>одно число</mark></li>
+    <li class="fragment" data-fragment-index="2">можно ли удалять: <code>perms &amp; DELETE</code> - 0, нельзя</li>
+    <li class="fragment" data-fragment-index="3">выдать право: <code>perms | DELETE</code>, без новых таблиц и столбцов</li>
+    <li class="fragment" data-fragment-index="4">так устроены, например, права ботов в Discord: одно число на все права</li>
+</ul>
+</div>
+                </section>
+
+                <!-- и в самом Python и Linux: chmod 755 - лампочки rwx r-x r-x; флаги re.IGNORECASE | re.MULTILINE -->
+                <section>
+                    <h2>Это уже рядом с нами</h2>
+<p class="fragment" data-fragment-index="1" style="font-size: 0.7em; text-align: center;">права на файл в Linux: <code>chmod 755</code></p>
+<div class="fragment" data-fragment-index="1">
+<svg width="640" height="130" viewBox="0 0 640 130">
+<text x="50" y="22" fill="#8ab" font-size="18" text-anchor="middle">r</text>
+<circle cx="50" cy="55" r="26" fill="#db5" opacity="0.18" /><circle cx="50" cy="55" r="20" fill="#db5" stroke="#fe8" stroke-width="2" />
+<text x="110" y="22" fill="#8ab" font-size="18" text-anchor="middle">w</text>
+<circle cx="110" cy="55" r="26" fill="#db5" opacity="0.18" /><circle cx="110" cy="55" r="20" fill="#db5" stroke="#fe8" stroke-width="2" />
+<text x="170" y="22" fill="#8ab" font-size="18" text-anchor="middle">x</text>
+<circle cx="170" cy="55" r="26" fill="#db5" opacity="0.18" /><circle cx="170" cy="55" r="20" fill="#db5" stroke="#fe8" stroke-width="2" />
+<text x="110" y="108" fill="#dde" font-size="17" text-anchor="middle">владелец: 111<tspan baseline-shift="sub" font-size="11" fill="#8ab">2</tspan> = 7</text>
+<text x="260" y="22" fill="#8ab" font-size="18" text-anchor="middle">r</text>
+<circle cx="260" cy="55" r="26" fill="#db5" opacity="0.18" /><circle cx="260" cy="55" r="20" fill="#db5" stroke="#fe8" stroke-width="2" />
+<text x="320" y="22" fill="#8ab" font-size="18" text-anchor="middle">w</text>
+<circle cx="320" cy="55" r="20" fill="#1c2030" stroke="#556" stroke-width="2" />
+<text x="380" y="22" fill="#8ab" font-size="18" text-anchor="middle">x</text>
+<circle cx="380" cy="55" r="26" fill="#db5" opacity="0.18" /><circle cx="380" cy="55" r="20" fill="#db5" stroke="#fe8" stroke-width="2" />
+<text x="320" y="108" fill="#dde" font-size="17" text-anchor="middle">группа: 101<tspan baseline-shift="sub" font-size="11" fill="#8ab">2</tspan> = 5</text>
+<text x="470" y="22" fill="#8ab" font-size="18" text-anchor="middle">r</text>
+<circle cx="470" cy="55" r="26" fill="#db5" opacity="0.18" /><circle cx="470" cy="55" r="20" fill="#db5" stroke="#fe8" stroke-width="2" />
+<text x="530" y="22" fill="#8ab" font-size="18" text-anchor="middle">w</text>
+<circle cx="530" cy="55" r="20" fill="#1c2030" stroke="#556" stroke-width="2" />
+<text x="590" y="22" fill="#8ab" font-size="18" text-anchor="middle">x</text>
+<circle cx="590" cy="55" r="26" fill="#db5" opacity="0.18" /><circle cx="590" cy="55" r="20" fill="#db5" stroke="#fe8" stroke-width="2" />
+<text x="530" y="108" fill="#dde" font-size="17" text-anchor="middle">остальные: 101<tspan baseline-shift="sub" font-size="11" fill="#8ab">2</tspan> = 5</text>
+</svg>
+</div>
+<ul style="font-size: 0.81em; text-align: left;">
+    <li class="fragment" data-fragment-index="2">r - читать, w - менять, x - запускать: три лампочки на каждого</li>
+    <li class="fragment" data-fragment-index="3">в Python флаги склеиваются через <code>|</code>: <code>re.findall(p, s, re.IGNORECASE | re.MULTILINE)</code></li>
+</ul>
+<div class="fragment opinion" style="margin-top: 0.6em;" data-fragment-index="4">
+    Много «да/нет» - одно число. Склеить - <code>|</code>, проверить - <code>&amp;</code>
+</div>
+                </section>
+
+            </section>
+
+            <!-- ИТОГ -->
+            <section>
+
+                <!-- итог: что запомнить, 3-4 пункта -->
+                <section>
+                    <div class="lesson-time">85</div>
+                    <h2>Что запомнить</h2>
+<ul style="font-size: 0.95em; text-align: left;">
+    <li class="fragment">двоичная запись: веса 1, 2, 4, 8, ...; <code>bin(n)</code>, <code>int(s, 2)</code></li>
+    <li class="fragment"><code>&amp;</code>, <code>|</code>, <code>^</code> считаются <mark>по каждому биту отдельно</mark> по таблице истинности</li>
+    <li class="fragment"><code>1 &lt;&lt; i</code> - лампочка i, <code>(n &gt;&gt; i) &amp; 1</code> - горит ли она</li>
+    <li class="fragment">набор чисел 1..n можно хранить одним числом: число <code>x</code> - бит <code>x - 1</code></li>
+</ul>
+                </section>
+
+                <!-- ДЗ: LeetCode 231 Power of Two, 338 Counting Bits -->
+                <section>
+                    <h2>Домашнее задание</h2>
+<ul style="font-size: 0.85em; text-align: left;">
+    <li class="fragment"><a href="https://leetcode.com/problems/power-of-two/" target="_blank" rel="noopener">231. Power of Two</a> - степень двойки ли <code>n</code></li>
+    <li class="fragment"><a href="https://leetcode.com/problems/counting-bits/" target="_blank" rel="noopener">338. Counting Bits</a> - единицы у всех чисел от 0 до n; подсказка: <code>i</code> и <code>i &gt;&gt; 1</code></li>
+</ul>
+                </section>
+
+            </section>
+
+        </div>
+    </div>
+
+    <script src="/utils/lib/js/head.min.js"></script>
+    <script src="/utils/js/reveal.js"></script>
+    <script>
+        Reveal.initialize({
+            controls: true,
+            progress: true,
+            history: true,
+            center: true,
+            transition: 'fade',
+            transitionSpeed: 'fast',
+            dependencies: [
+                { src: '/utils/lib/js/classList.js', condition: function () { return !document.body.classList; } },
+                { src: '/utils/plugin/markdown/marked.js', condition: function () { return !!document.querySelector('[data-markdown]'); } },
+                { src: '/utils/plugin/markdown/markdown.js', condition: function () { return !!document.querySelector('[data-markdown]'); } },
+                { src: '/utils/plugin/highlight/highlight.js', async: true, callback: function () { hljs.initHighlightingOnLoad(); } },
+                { src: '/utils/plugin/zoom-js/zoom.js', async: true },
+                { src: '/utils/plugin/notes/notes.js', async: true }
+            ]
+        });
+        Reveal.configure({ slideNumber: 'c/t' });
+    </script>
+</body>
+
+</html>

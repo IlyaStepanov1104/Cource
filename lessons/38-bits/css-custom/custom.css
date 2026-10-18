@@ -1,0 +1,51 @@
+/* Занятие 38 - Биты: двоичная система, логические операции, маски */
+/* .bits - числа столбиком по битам: в custom-base.css нет таблицы с выравниванием по разрядам */
+
+.reveal table.bits {
+    margin: 0.4em auto;
+    border-collapse: collapse;
+    font-family: monospace;
+    font-size: 0.85em;
+}
+
+.reveal table.bits td {
+    padding: 0.1em 0.45em;
+    text-align: center;
+    border: none;
+}
+
+.reveal table.bits tr.hdr td {
+    color: #8ab;
+    font-size: 0.6em;
+}
+
+.reveal table.bits td.lbl {
+    text-align: right;
+    opacity: 0.75;
+    padding-right: 0.8em;
+}
+
+.reveal table.bits td.rgt {
+    text-align: left;
+    padding-left: 0.8em;
+}
+
+.reveal table.bits tr.res td {
+    border-top: 2px solid #8ab;
+}
+
+.reveal table.bits .one {
+    color: #db5;
+    font-weight: bold;
+}
+
+.reveal table.bits.small {
+    font-size: 0.75em;
+}
+
+/* индекс основания в тексте и заголовках - тема Reveal не уменьшает sub */
+.reveal sub {
+    font-size: 0.5em;
+    vertical-align: sub;
+    color: #8ab;
+}

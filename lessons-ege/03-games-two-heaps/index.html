@@ -1,0 +1,656 @@
+<!doctype html>
+<html lang="ru">
+
+<head>
+    <meta charset="utf-8">
+    <title>ЕГЭ, занятие 3 - №19-21: теория игр, две кучи</title>
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+
+    <link rel="stylesheet" href="/utils/css/reveal.css">
+    <link rel="stylesheet" href="/utils/lib/css/animate.css">
+    <link rel="stylesheet" href="/utils/css/theme/night.css" id="theme">
+    <link rel="stylesheet" href="/utils/lib/css/zenburn.css">
+    <link rel="stylesheet" href="/utils/css/custom-base.css">
+    <link rel="stylesheet" href="css-custom/custom.css">
+
+    <script>
+        var link = document.createElement('link');
+        link.rel = 'stylesheet'; link.type = 'text/css';
+        link.href = window.location.search.match(/print-pdf/gi)
+            ? '/utils/css/print/pdf.css'
+            : '/utils/css/print/paper.css';
+        document.getElementsByTagName('head')[0].appendChild(link);
+    </script>
+</head>
+
+<body>
+    <div class="reveal">
+        <div class="slides">
+
+            <!-- титульный слайд: «Теория игр: две кучи», задания 19, 20 и 21, ЕГЭ, занятие 3 -->
+            <section style="font-size: 70px; height: 100%; width: 100%">
+                <div class="lesson-time">0</div>
+                <div class="fragment">
+                    <h1 class="animated" style="font-size: 1.5em;">Теория игр: две кучи</h1>
+                    <p style="text-align: center; font-size: 0.45em; opacity: 0.6;">задания 19, 20 и 21</p>
+                    <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">ЕГЭ, занятие 3</p>
+                </div>
+            </section>
+
+            <!-- РАЗБОР ДЗ: 5 игр с одной кучей из банка ФИПИ -->
+            <section>
+
+                <!-- разделитель «Разбор ДЗ» -->
+                <section style="font-size: 70px; height: 100%; width: 100%">
+                    <div class="lesson-time">0</div>
+                    <div class="fragment">
+                        <h1 style="font-size: 1.3em;">Разбор ДЗ</h1>
+                        <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">5 игр с одной кучей</p>
+                    </div>
+                </section>
+<!-- 
+                <section>
+                    <h2>Сверка ответов</h2>
+<p class="fragment" style="font-size: 0.55em;">называй свои ответы - открываем верные</p>
+<table style="font-size: 0.55em; width: 100%;">
+    <tr><td><strong>Группа</strong></td><td><strong>Ходы и финиш</strong></td><td><strong>№19</strong></td><td><strong>№20</strong></td><td><strong>№21</strong></td></tr>
+    <tr class="fragment"><td>D27F4B</td><td><code>+1</code>, <code>x2</code>, от 69</td><td>34</td><td>17 33</td><td>32</td></tr>
+    <tr class="fragment"><td>632026</td><td><code>+1</code>, <code>+4</code>, <code>x2</code>, от 58</td><td>28</td><td>14 24</td><td>23</td></tr>
+    <tr class="fragment"><td>8E9976</td><td><code>+1</code>, <code>+4</code>, <code>x3</code>, от 67</td><td>22</td><td>18 21</td><td>17</td></tr>
+    <tr class="fragment"><td>F674EB</td><td><code>+1</code>, <code>+3</code>, <code>x2</code>, от 435</td><td>217</td><td>214 216</td><td>213</td></tr>
+    <tr class="fragment"><td>9914FB</td><td><code>-3</code>, <code>-8</code>, <code>//3</code>, до 16</td><td>51</td><td>54 55</td><td>57</td></tr>
+</table>
+<div class="fragment opinion" style="margin-top: 0.5em;">
+    В коде от игры к игре менялись только две вещи: <code>moves</code> и <code>FINISH</code>
+</div>
+                </section> -->
+
+                <!-- 9914FB, куча уменьшается: что поменялось - финиш «не больше», moves со знаком минус и делением; прямая размечается от финиша в другую сторону -->
+                <section>
+                    <h2>Куча уменьшается</h2>
+<div class="compare" style="font-size: 0.8em;">
+    <div class="compare-block fragment" data-fragment-index="1">
+        <h4>ходы</h4>
+        <p style="font-size: 0.7em;"><code>s - 3</code>, <code>s - 8</code>, <code>s // 3</code></p>
+        <p style="font-size: 0.55em; opacity: 0.7;"><code>//</code> - деление с округлением вниз</p>
+    </div>
+    <div class="compare-block fragment" data-fragment-index="2">
+        <h4>финиш</h4>
+        <p style="font-size: 0.7em;"><code>t &lt;= 16</code> вместо <code>t &gt;= ...</code></p>
+        <p style="font-size: 0.55em; opacity: 0.7;">S перебираем от 17 вверх</p>
+    </div>
+</div>
+<div class="fragment" data-fragment-index="3" style="margin-top: 0.3em;">
+<svg width="780" height="120" viewBox="0 0 780 120">
+<rect x="10" y="40" width="70" height="40" rx="4" fill="#2a2a40" stroke="#fd6" stroke-width="2" /><text x="45" y="66" fill="#fd6" font-size="15" text-anchor="middle">16 и -</text><text x="45" y="102" fill="#fd6" font-size="13" text-anchor="middle">финиш</text><g class="fragment" data-fragment-index="4"><rect x="90" y="40" width="200" height="40" rx="4" fill="#1f3a26" stroke="#7d7" stroke-width="2" /><text x="190" y="66" fill="#dde" font-size="15" text-anchor="middle">17 ... 50</text><text x="190" y="102" fill="#7d7" font-size="13" text-anchor="middle">can_win(s, 1): s // 3 &lt;= 16</text></g><g class="fragment" data-fragment-index="5"><rect x="300" y="40" width="52" height="40" rx="4" fill="#3a1f24" stroke="#f66" stroke-width="2" /><text x="326" y="66" fill="#dde" font-size="15" text-anchor="middle">51</text><text x="326" y="102" fill="#f66" font-size="13" text-anchor="middle">k = 1</text><rect x="358" y="40" width="52" height="40" rx="4" fill="#3a1f24" stroke="#f66" stroke-width="2" /><text x="384" y="66" fill="#dde" font-size="15" text-anchor="middle">52</text><text x="384" y="102" fill="#f66" font-size="13" text-anchor="middle">k = 1</text><rect x="416" y="40" width="52" height="40" rx="4" fill="#3a1f24" stroke="#f66" stroke-width="2" /><text x="442" y="66" fill="#dde" font-size="15" text-anchor="middle">53</text><text x="442" y="102" fill="#f66" font-size="13" text-anchor="middle">k = 1</text></g><g class="fragment" data-fragment-index="6"><rect x="474" y="40" width="52" height="40" rx="4" fill="#1f3a26" stroke="#7d7" stroke-width="2" /><text x="500" y="66" fill="#dde" font-size="15" text-anchor="middle">54</text><text x="500" y="102" fill="#7d7" font-size="13" text-anchor="middle">k = 2</text><rect x="532" y="40" width="52" height="40" rx="4" fill="#1f3a26" stroke="#7d7" stroke-width="2" /><text x="558" y="66" fill="#dde" font-size="15" text-anchor="middle">55</text><text x="558" y="102" fill="#7d7" font-size="13" text-anchor="middle">k = 2</text><rect x="590" y="40" width="52" height="40" rx="4" fill="#1f3a26" stroke="#7d7" stroke-width="2" /><text x="616" y="66" fill="#dde" font-size="15" text-anchor="middle">56</text><text x="616" y="102" fill="#7d7" font-size="13" text-anchor="middle">k = 2</text></g><g class="fragment" data-fragment-index="7"><rect x="648" y="40" width="52" height="40" rx="4" fill="#3a1f24" stroke="#f66" stroke-width="2" /><text x="674" y="66" fill="#dde" font-size="15" text-anchor="middle">57</text><text x="674" y="102" fill="#f66" font-size="13" text-anchor="middle">k = 2</text><rect x="706" y="40" width="52" height="40" rx="4" fill="#3a1f24" stroke="#f66" stroke-width="2" /><text x="732" y="66" fill="#dde" font-size="15" text-anchor="middle">58</text><text x="732" y="102" fill="#f66" font-size="13" text-anchor="middle">k = 2</text></g><text x="300" y="20" fill="#99a" font-size="14">дальше - вправо от финиша</text>
+</svg>
+</div>
+<p class="fragment" data-fragment-index="8" style="font-size: 0.6em;">зелёный - <code>can_win(s, k)</code>, красный - <code>must_lose(s, k)</code>. Ответы: <strong>51</strong>, <strong>54 55</strong>, <strong>57</strong></p>
+                </section>
+
+            </section>
+
+            <!-- ЧАСТЬ 1: две кучи - что изменилось в условии -->
+            <section>
+
+                <!-- разделитель части 1 -->
+                <section style="font-size: 70px; height: 100%; width: 100%">
+                    <div class="lesson-time">5</div>
+                    <div class="fragment">
+                        <h1 style="font-size: 1.3em;">Две кучи</h1>
+                        <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">что изменилось в условии</p>
+                    </div>
+                </section>
+
+                <!-- типичное условие: две кучи (7, S), ход - добавить камень в одну из куч или удвоить одну из куч, финиш - в сумме 77 и больше -->
+                <section>
+                    <h2>Условие</h2>
+<div style="position: relative; font-size: 0.55em; text-align: left; border-left: 4px solid #8ab; padding: 0.3em 5em 0.3em 0.8em; background: rgba(136, 170, 187, 0.08);"><span style="position: absolute; top: 0.3em; right: 0.6em; font-size: 0.75em; opacity: 0.5;">106EB7</span><p class="fragment">Перед игроками лежат <mark>две кучи</mark> камней. Ходят по очереди, первый ход делает Петя.</p>
+<p class="fragment">За один ход игрок может <mark>добавить в одну из куч</mark> (по своему выбору) один камень или <mark>увеличить количество камней в куче в два раза</mark>.</p>
+<p class="fragment">Игра завершается, когда <mark>суммарное</mark> количество камней в кучах становится не менее 59. Победитель - игрок, сделавший последний ход.</p>
+<p class="fragment">В начале в первой куче <strong>5</strong> камней, во второй - <strong>S</strong> камней, S от 1 до 53.</p></div>
+<div class="fragment opinion" style="margin-top: 0.5em;">
+    Ход меняет только <mark>одну</mark> кучу, а финиш считается по <mark>сумме</mark>
+</div>
+                </section>
+
+                <!-- сыграем вживую: позиция (7, 30), ученик - Петя, я - Ваня (интерактивные две кучи, сумма под ними) -->
+                <section>
+                    <h2>Сыграем</h2>
+<p class="fragment" style="font-size: 0.65em;">кучи <strong>5</strong> и <strong>23</strong>, финиш - сумма 59. Ты - Петя, ходишь первым</p>
+<div class="fragment" id="play" style="margin-top: 0.3em;">
+    <div style="display: flex; justify-content: center; gap: 1.2em;">
+        <div>
+            <div style="font-size: 0.45em; opacity: 0.6;">первая куча</div>
+            <div style="font-size: 1.8em; font-weight: bold; color: #8ab;" id="play-a">5</div>
+            <div style="display: flex; gap: 0.3em; justify-content: center;">
+                <button type="button" data-move="a+" style="font: inherit; font-size: 0.6em; padding: 0.1em 0.6em; border-radius: 0.3em; border: 1px solid #8ab; background: none; color: inherit; cursor: pointer;">+1</button>
+                <button type="button" data-move="a*" style="font: inherit; font-size: 0.6em; padding: 0.1em 0.6em; border-radius: 0.3em; border: 1px solid #8ab; background: none; color: inherit; cursor: pointer;">x2</button>
+            </div>
+        </div>
+        <div>
+            <div style="font-size: 0.45em; opacity: 0.6;">вторая куча</div>
+            <div style="font-size: 1.8em; font-weight: bold; color: #f7a;" id="play-b">23</div>
+            <div style="display: flex; gap: 0.3em; justify-content: center;">
+                <button type="button" data-move="b+" style="font: inherit; font-size: 0.6em; padding: 0.1em 0.6em; border-radius: 0.3em; border: 1px solid #f7a; background: none; color: inherit; cursor: pointer;">+1</button>
+                <button type="button" data-move="b*" style="font: inherit; font-size: 0.6em; padding: 0.1em 0.6em; border-radius: 0.3em; border: 1px solid #f7a; background: none; color: inherit; cursor: pointer;">x2</button>
+            </div>
+        </div>
+    </div>
+    <div style="font-size: 0.6em; margin-top: 0.3em;">сумма: <strong id="play-sum" style="color: #fd6;">28</strong> из 59</div>
+    <div style="font-size: 0.55em; opacity: 0.7; min-height: 1.4em;" id="play-turn">ходит Петя</div>
+    <div style="font-size: 0.45em; opacity: 0.7; min-height: 1.4em;" id="play-log"></div>
+    <button type="button" data-move="reset" style="font: inherit; font-size: 0.45em; padding: 0.1em 0.8em; border-radius: 0.3em; border: 1px solid rgba(255,255,255,0.3); background: none; color: inherit; cursor: pointer;">заново</button>
+</div>
+<div class="fragment opinion" style="margin-top: 0.4em;">
+    Сыграем пару раз. Почему Петя опять проигрывает?
+</div>
+<aside class="notes">
+    Ответы Вани: (6, 23) -> (12, 23); (5, 24) -> (10, 24); (10, 23) -> (10, 24); (5, 46) -> (5, 92) сразу финиш.
+    Дальше Петя в позиции must_lose(pos, 1): после любого его хода Ваня удваивает бОльшую кучу и доходит до 59.
+</aside>
+                </section>
+
+                <!-- сколько ходов теперь: из одной позиции 4 хода, а не 2 - картинка позиции и четыре стрелки -->
+                <section>
+                    <h2>Четыре хода вместо двух</h2>
+<div class="fragment" data-fragment-index="1">
+<svg width="760" height="290" viewBox="0 0 760 290">
+<defs><marker id="fm" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#8ab" /></marker></defs><rect x="334.0" y="133.0" width="92" height="34" rx="6" fill="#1c2030" stroke="#8ab" stroke-width="2" /><text x="380" y="156" fill="#dde" font-size="16" text-anchor="middle">(5, 14)</text><text x="380" y="184.0" fill="#dde" font-size="13" text-anchor="middle">сумма 19</text><g class="fragment" data-fragment-index="2"><line x1="334.0" y1="142" x2="250.0" y2="50" stroke="#8ab" stroke-width="2.5" marker-end="url(#fm)" /><text x="144.0" y="55" fill="#8ab" font-size="15" text-anchor="end">+1 в первую</text><rect x="154.0" y="33.0" width="92" height="34" rx="6" fill="#1c2030" stroke="#8ab" stroke-width="2" /><text x="200" y="56" fill="#dde" font-size="16" text-anchor="middle">(6, 14)</text><text x="200" y="84.0" fill="#99a" font-size="13" text-anchor="middle">сумма 20</text></g><g class="fragment" data-fragment-index="3"><line x1="334.0" y1="158" x2="250.0" y2="250" stroke="#8ab" stroke-width="2.5" marker-end="url(#fm)" /><text x="144.0" y="255" fill="#8ab" font-size="15" text-anchor="end">x2 первую</text><rect x="154.0" y="233.0" width="92" height="34" rx="6" fill="#1c2030" stroke="#8ab" stroke-width="2" /><text x="200" y="256" fill="#dde" font-size="16" text-anchor="middle">(10, 14)</text><text x="200" y="284.0" fill="#99a" font-size="13" text-anchor="middle">сумма 24</text></g><g class="fragment" data-fragment-index="4"><line x1="426.0" y1="142" x2="510.0" y2="50" stroke="#8ab" stroke-width="2.5" marker-end="url(#fm)" /><text x="616.0" y="55" fill="#8ab" font-size="15" text-anchor="start">+1 во вторую</text><rect x="514.0" y="33.0" width="92" height="34" rx="6" fill="#1c2030" stroke="#8ab" stroke-width="2" /><text x="560" y="56" fill="#dde" font-size="16" text-anchor="middle">(5, 15)</text><text x="560" y="84.0" fill="#99a" font-size="13" text-anchor="middle">сумма 20</text></g><g class="fragment" data-fragment-index="5"><line x1="426.0" y1="158" x2="510.0" y2="250" stroke="#8ab" stroke-width="2.5" marker-end="url(#fm)" /><text x="616.0" y="255" fill="#8ab" font-size="15" text-anchor="start">x2 вторую</text><rect x="514.0" y="233.0" width="92" height="34" rx="6" fill="#1c2030" stroke="#8ab" stroke-width="2" /><text x="560" y="256" fill="#dde" font-size="16" text-anchor="middle">(5, 28)</text><text x="560" y="284.0" fill="#99a" font-size="13" text-anchor="middle">сумма 33</text></g>
+</svg>
+</div>
+<div class="fragment opinion" data-fragment-index="6" style="margin-top: 0.2em;">
+    Было 2 хода (<code>+1</code>, <code>x2</code>), стало 4: каждый ход - в первую или во вторую кучу
+</div>
+                </section>
+
+                <!-- позиция = пара чисел (tuple), а не одно число: граф уже не прямая, а сетка (клетка = позиция, по осям - кучи) -->
+                <section>
+                    <h2>Позиция - пара чисел</h2>
+<div class="fragment" data-fragment-index="1">
+<svg width="720" height="300" viewBox="0 0 720 300">
+<defs><marker id="gr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#fd6" /></marker></defs><rect x="91.0" y="205.0" width="36" height="36" rx="3" fill="#1c2030" stroke="#334" stroke-width="1" /><rect x="129.0" y="205.0" width="36" height="36" rx="3" fill="#1c2030" stroke="#334" stroke-width="1" /><rect x="167.0" y="205.0" width="36" height="36" rx="3" fill="#1c2030" stroke="#334" stroke-width="1" /><rect x="205.0" y="205.0" width="36" height="36" rx="3" fill="#1c2030" stroke="#334" stroke-width="1" /><rect x="243.0" y="205.0" width="36" height="36" rx="3" fill="#1c2030" stroke="#334" stroke-width="1" /><rect x="281.0" y="205.0" width="36" height="36" rx="3" fill="#1c2030" stroke="#334" stroke-width="1" /><rect x="319.0" y="205.0" width="36" height="36" rx="3" fill="#1c2030" stroke="#334" stroke-width="1" /><rect x="357.0" y="205.0" width="36" height="36" rx="3" fill="#1c2030" stroke="#334" stroke-width="1" /><rect x="395.0" y="205.0" width="36" height="36" rx="3" fill="#1c2030" stroke="#334" stroke-width="1" /><rect x="433.0" y="205.0" width="36" height="36" rx="3" fill="#1c2030" stroke="#334" stroke-width="1" /><rect x="471.0" y="205.0" width="36" height="36" rx="3" fill="#1c2030" stroke="#334" stroke-width="1" /><rect x="509.0" y="205.0" width="36" height="36" rx="3" fill="#1c2030" stroke="#334" stroke-width="1" /><rect x="547.0" y="205.0" width="36" height="36" rx="3" fill="#1c2030" stroke="#334" stroke-width="1" /><rect x="585.0" y="205.0" width="36" height="36" rx="3" fill="#1c2030" stroke="#334" stroke-width="1" /><rect x="623.0" y="205.0" width="36" height="36" rx="3" fill="#1c2030" stroke="#334" stroke-width="1" /><rect x="661.0" y="205.0" width="36" height="36" rx="3" fill="#1c2030" stroke="#334" stroke-width="1" /><text x="80" y="228.0" fill="#99a" font-size="14" text-anchor="end">5</text><rect x="91.0" y="167.0" width="36" height="36" rx="3" fill="#1c2030" stroke="#334" stroke-width="1" /><rect x="129.0" y="167.0" width="36" height="36" rx="3" fill="#1c2030" stroke="#334" stroke-width="1" /><rect x="167.0" y="167.0" width="36" height="36" rx="3" fill="#1c2030" stroke="#334" stroke-width="1" /><rect x="205.0" y="167.0" width="36" height="36" rx="3" fill="#1c2030" stroke="#334" stroke-width="1" /><rect x="243.0" y="167.0" width="36" height="36" rx="3" fill="#1c2030" stroke="#334" stroke-width="1" /><rect x="281.0" y="167.0" width="36" height="36" rx="3" fill="#1c2030" stroke="#334" stroke-width="1" /><rect x="319.0" y="167.0" width="36" height="36" rx="3" fill="#1c2030" stroke="#334" stroke-width="1" /><rect x="357.0" y="167.0" width="36" height="36" rx="3" fill="#1c2030" stroke="#334" stroke-width="1" /><rect x="395.0" y="167.0" width="36" height="36" rx="3" fill="#1c2030" stroke="#334" stroke-width="1" /><rect x="433.0" y="167.0" width="36" height="36" rx="3" fill="#1c2030" stroke="#334" stroke-width="1" /><rect x="471.0" y="167.0" width="36" height="36" rx="3" fill="#1c2030" stroke="#334" stroke-width="1" /><rect x="509.0" y="167.0" width="36" height="36" rx="3" fill="#1c2030" stroke="#334" stroke-width="1" /><rect x="547.0" y="167.0" width="36" height="36" rx="3" fill="#1c2030" stroke="#334" stroke-width="1" /><rect x="585.0" y="167.0" width="36" height="36" rx="3" fill="#1c2030" stroke="#334" stroke-width="1" /><rect x="623.0" y="167.0" width="36" height="36" rx="3" fill="#1c2030" stroke="#334" stroke-width="1" /><rect x="661.0" y="167.0" width="36" height="36" rx="3" fill="#1c2030" stroke="#334" stroke-width="1" /><text x="80" y="190.0" fill="#99a" font-size="14" text-anchor="end">6</text><rect x="91.0" y="129.0" width="36" height="36" rx="3" fill="#1c2030" stroke="#334" stroke-width="1" /><rect x="129.0" y="129.0" width="36" height="36" rx="3" fill="#1c2030" stroke="#334" stroke-width="1" /><rect x="167.0" y="129.0" width="36" height="36" rx="3" fill="#1c2030" stroke="#334" stroke-width="1" /><rect x="205.0" y="129.0" width="36" height="36" rx="3" fill="#1c2030" stroke="#334" stroke-width="1" /><rect x="243.0" y="129.0" width="36" height="36" rx="3" fill="#1c2030" stroke="#334" stroke-width="1" /><rect x="281.0" y="129.0" width="36" height="36" rx="3" fill="#1c2030" stroke="#334" stroke-width="1" /><rect x="319.0" y="129.0" width="36" height="36" rx="3" fill="#1c2030" stroke="#334" stroke-width="1" /><rect x="357.0" y="129.0" width="36" height="36" rx="3" fill="#1c2030" stroke="#334" stroke-width="1" /><rect x="395.0" y="129.0" width="36" height="36" rx="3" fill="#1c2030" stroke="#334" stroke-width="1" /><rect x="433.0" y="129.0" width="36" height="36" rx="3" fill="#1c2030" stroke="#334" stroke-width="1" /><rect x="471.0" y="129.0" width="36" height="36" rx="3" fill="#1c2030" stroke="#334" stroke-width="1" /><rect x="509.0" y="129.0" width="36" height="36" rx="3" fill="#1c2030" stroke="#334" stroke-width="1" /><rect x="547.0" y="129.0" width="36" height="36" rx="3" fill="#1c2030" stroke="#334" stroke-width="1" /><rect x="585.0" y="129.0" width="36" height="36" rx="3" fill="#1c2030" stroke="#334" stroke-width="1" /><rect x="623.0" y="129.0" width="36" height="36" rx="3" fill="#1c2030" stroke="#334" stroke-width="1" /><rect x="661.0" y="129.0" width="36" height="36" rx="3" fill="#1c2030" stroke="#334" stroke-width="1" /><text x="80" y="152.0" fill="#99a" font-size="14" text-anchor="end">7</text><rect x="91.0" y="91.0" width="36" height="36" rx="3" fill="#1c2030" stroke="#334" stroke-width="1" /><rect x="129.0" y="91.0" width="36" height="36" rx="3" fill="#1c2030" stroke="#334" stroke-width="1" /><rect x="167.0" y="91.0" width="36" height="36" rx="3" fill="#1c2030" stroke="#334" stroke-width="1" /><rect x="205.0" y="91.0" width="36" height="36" rx="3" fill="#1c2030" stroke="#334" stroke-width="1" /><rect x="243.0" y="91.0" width="36" height="36" rx="3" fill="#1c2030" stroke="#334" stroke-width="1" /><rect x="281.0" y="91.0" width="36" height="36" rx="3" fill="#1c2030" stroke="#334" stroke-width="1" /><rect x="319.0" y="91.0" width="36" height="36" rx="3" fill="#1c2030" stroke="#334" stroke-width="1" /><rect x="357.0" y="91.0" width="36" height="36" rx="3" fill="#1c2030" stroke="#334" stroke-width="1" /><rect x="395.0" y="91.0" width="36" height="36" rx="3" fill="#1c2030" stroke="#334" stroke-width="1" /><rect x="433.0" y="91.0" width="36" height="36" rx="3" fill="#1c2030" stroke="#334" stroke-width="1" /><rect x="471.0" y="91.0" width="36" height="36" rx="3" fill="#1c2030" stroke="#334" stroke-width="1" /><rect x="509.0" y="91.0" width="36" height="36" rx="3" fill="#1c2030" stroke="#334" stroke-width="1" /><rect x="547.0" y="91.0" width="36" height="36" rx="3" fill="#1c2030" stroke="#334" stroke-width="1" /><rect x="585.0" y="91.0" width="36" height="36" rx="3" fill="#1c2030" stroke="#334" stroke-width="1" /><rect x="623.0" y="91.0" width="36" height="36" rx="3" fill="#1c2030" stroke="#334" stroke-width="1" /><rect x="661.0" y="91.0" width="36" height="36" rx="3" fill="#1c2030" stroke="#334" stroke-width="1" /><text x="80" y="114.0" fill="#99a" font-size="14" text-anchor="end">8</text><rect x="91.0" y="53.0" width="36" height="36" rx="3" fill="#1c2030" stroke="#334" stroke-width="1" /><rect x="129.0" y="53.0" width="36" height="36" rx="3" fill="#1c2030" stroke="#334" stroke-width="1" /><rect x="167.0" y="53.0" width="36" height="36" rx="3" fill="#1c2030" stroke="#334" stroke-width="1" /><rect x="205.0" y="53.0" width="36" height="36" rx="3" fill="#1c2030" stroke="#334" stroke-width="1" /><rect x="243.0" y="53.0" width="36" height="36" rx="3" fill="#1c2030" stroke="#334" stroke-width="1" /><rect x="281.0" y="53.0" width="36" height="36" rx="3" fill="#1c2030" stroke="#334" stroke-width="1" /><rect x="319.0" y="53.0" width="36" height="36" rx="3" fill="#1c2030" stroke="#334" stroke-width="1" /><rect x="357.0" y="53.0" width="36" height="36" rx="3" fill="#1c2030" stroke="#334" stroke-width="1" /><rect x="395.0" y="53.0" width="36" height="36" rx="3" fill="#1c2030" stroke="#334" stroke-width="1" /><rect x="433.0" y="53.0" width="36" height="36" rx="3" fill="#1c2030" stroke="#334" stroke-width="1" /><rect x="471.0" y="53.0" width="36" height="36" rx="3" fill="#1c2030" stroke="#334" stroke-width="1" /><rect x="509.0" y="53.0" width="36" height="36" rx="3" fill="#1c2030" stroke="#334" stroke-width="1" /><rect x="547.0" y="53.0" width="36" height="36" rx="3" fill="#1c2030" stroke="#334" stroke-width="1" /><rect x="585.0" y="53.0" width="36" height="36" rx="3" fill="#1c2030" stroke="#334" stroke-width="1" /><rect x="623.0" y="53.0" width="36" height="36" rx="3" fill="#1c2030" stroke="#334" stroke-width="1" /><rect x="661.0" y="53.0" width="36" height="36" rx="3" fill="#1c2030" stroke="#334" stroke-width="1" /><text x="80" y="76.0" fill="#99a" font-size="14" text-anchor="end">9</text><rect x="91.0" y="15.0" width="36" height="36" rx="3" fill="#1c2030" stroke="#334" stroke-width="1" /><rect x="129.0" y="15.0" width="36" height="36" rx="3" fill="#1c2030" stroke="#334" stroke-width="1" /><rect x="167.0" y="15.0" width="36" height="36" rx="3" fill="#1c2030" stroke="#334" stroke-width="1" /><rect x="205.0" y="15.0" width="36" height="36" rx="3" fill="#1c2030" stroke="#334" stroke-width="1" /><rect x="243.0" y="15.0" width="36" height="36" rx="3" fill="#1c2030" stroke="#334" stroke-width="1" /><rect x="281.0" y="15.0" width="36" height="36" rx="3" fill="#1c2030" stroke="#334" stroke-width="1" /><rect x="319.0" y="15.0" width="36" height="36" rx="3" fill="#1c2030" stroke="#334" stroke-width="1" /><rect x="357.0" y="15.0" width="36" height="36" rx="3" fill="#1c2030" stroke="#334" stroke-width="1" /><rect x="395.0" y="15.0" width="36" height="36" rx="3" fill="#1c2030" stroke="#334" stroke-width="1" /><rect x="433.0" y="15.0" width="36" height="36" rx="3" fill="#1c2030" stroke="#334" stroke-width="1" /><rect x="471.0" y="15.0" width="36" height="36" rx="3" fill="#1c2030" stroke="#334" stroke-width="1" /><rect x="509.0" y="15.0" width="36" height="36" rx="3" fill="#1c2030" stroke="#334" stroke-width="1" /><rect x="547.0" y="15.0" width="36" height="36" rx="3" fill="#1c2030" stroke="#334" stroke-width="1" /><rect x="585.0" y="15.0" width="36" height="36" rx="3" fill="#1c2030" stroke="#334" stroke-width="1" /><rect x="623.0" y="15.0" width="36" height="36" rx="3" fill="#1c2030" stroke="#334" stroke-width="1" /><rect x="661.0" y="15.0" width="36" height="36" rx="3" fill="#1c2030" stroke="#334" stroke-width="1" /><text x="80" y="38.0" fill="#99a" font-size="14" text-anchor="end">10</text><text x="109.0" y="260" fill="#99a" font-size="14" text-anchor="middle">14</text><text x="147.0" y="260" fill="#99a" font-size="14" text-anchor="middle">15</text><text x="185.0" y="260" fill="#99a" font-size="14" text-anchor="middle">16</text><text x="223.0" y="260" fill="#99a" font-size="14" text-anchor="middle">17</text><text x="261.0" y="260" fill="#99a" font-size="14" text-anchor="middle">18</text><text x="299.0" y="260" fill="#99a" font-size="14" text-anchor="middle">19</text><text x="337.0" y="260" fill="#99a" font-size="14" text-anchor="middle">20</text><text x="375.0" y="260" fill="#99a" font-size="14" text-anchor="middle">21</text><text x="413.0" y="260" fill="#99a" font-size="14" text-anchor="middle">22</text><text x="451.0" y="260" fill="#99a" font-size="14" text-anchor="middle">23</text><text x="489.0" y="260" fill="#99a" font-size="14" text-anchor="middle">24</text><text x="527.0" y="260" fill="#99a" font-size="14" text-anchor="middle">25</text><text x="565.0" y="260" fill="#99a" font-size="14" text-anchor="middle">26</text><text x="603.0" y="260" fill="#99a" font-size="14" text-anchor="middle">27</text><text x="641.0" y="260" fill="#99a" font-size="14" text-anchor="middle">28</text><text x="679.0" y="260" fill="#99a" font-size="14" text-anchor="middle">29</text><text x="394.0" y="284" fill="#99a" font-size="15" text-anchor="middle">вторая куча</text><text x="22" y="128.0" fill="#99a" font-size="15" text-anchor="middle" transform="rotate(-90 22 128.0)">первая куча</text><rect x="91.0" y="205.0" width="36" height="36" rx="3" fill="#8ab" fill-opacity="0.35" stroke="#8ab" stroke-width="2" /><g class="fragment" data-fragment-index="2"><rect x="91.0" y="167.0" width="36" height="36" rx="3" fill="#fd6" fill-opacity="0.25" stroke="#fd6" stroke-width="2" /><line x1="109.0" y1="215.0" x2="109.0" y2="195.0" stroke="#fd6" stroke-width="2.5" marker-end="url(#gr)" /></g><g class="fragment" data-fragment-index="3"><rect x="91.0" y="15.0" width="36" height="36" rx="3" fill="#fd6" fill-opacity="0.25" stroke="#fd6" stroke-width="2" /><line x1="109.0" y1="215.0" x2="109.0" y2="43.0" stroke="#fd6" stroke-width="2.5" marker-end="url(#gr)" /><text x="127.0" y="133.0" fill="#fd6" font-size="14">x2</text></g><g class="fragment" data-fragment-index="4"><rect x="129.0" y="205.0" width="36" height="36" rx="3" fill="#fd6" fill-opacity="0.25" stroke="#fd6" stroke-width="2" /><line x1="117.0" y1="223.0" x2="137.0" y2="223.0" stroke="#fd6" stroke-width="2.5" marker-end="url(#gr)" /></g><g class="fragment" data-fragment-index="5"><rect x="623.0" y="205.0" width="36" height="36" rx="3" fill="#fd6" fill-opacity="0.25" stroke="#fd6" stroke-width="2" /><path d="M115.0,213.0 Q375.0,113.0 637.0,211.0" fill="none" stroke="#fd6" stroke-width="2.5" marker-end="url(#gr)" /><text x="375.0" y="157.0" fill="#fd6" font-size="14" text-anchor="middle">x2</text></g>
+</svg>
+</div>
+<ul style="font-size: 0.6em; text-align: left;">
+    <li class="fragment" data-fragment-index="6">позиция - пара <code>(5, 14)</code>: в Python это кортеж (tuple)</li>
+    <li class="fragment" data-fragment-index="7">клетка сетки = позиция. Граф уже не прямая, а <mark>сетка</mark>: позиций сотни</li>
+</ul>
+                </section>
+
+                <!-- что НЕ изменилось: can_win(pos, k) и must_lose(pos, k) - тот же смысл, только pos теперь пара; вспоминаем словами, для того, кто сейчас ходит -->
+                <section>
+                    <h2>Что не изменилось</h2>
+<div class="compare">
+    <div class="compare-block fragment">
+        <h3><code>can_win(pos, k)</code></h3>
+        <p style="font-size: 0.55em;">кто ходит в позиции pos, выиграет не больше чем за k своих ходов</p>
+        <p class="fragment" style="font-size: 0.55em;"><mark class="green">есть</mark> ход: сразу на финиш или туда, где соперник <code>must_lose(t, k - 1)</code></p>
+    </div>
+    <div class="compare-block fragment">
+        <h3><code>must_lose(pos, k)</code></h3>
+        <p style="font-size: 0.55em;">кто ходит в позиции pos, проиграет: соперник выиграет не больше чем за k своих ходов</p>
+        <p class="fragment" style="font-size: 0.55em;"><mark>все</mark> ходы: не на финиш и туда, где соперник <code>can_win(t, k)</code></p>
+    </div>
+</div>
+<div class="fragment opinion" style="margin-top: 0.5em;">
+    Функции те же, что на прошлом занятии: было <code>s</code>, стало <code>pos</code>. Считаем для того, кто <mark>сейчас ходит</mark>
+</div>
+                </section>
+
+                <!-- главная ловушка: «выгодно удваивать бОльшую кучу» - почему can_win(pos, 1) зависит от суммы и наибольшей кучи -->
+                <section>
+                    <h2>Какую кучу удваивать</h2>
+<div class="fragment" data-fragment-index="1">
+<svg width="780" height="214" viewBox="0 0 780 214">
+<text x="138" y="42" fill="#99a" font-size="15" text-anchor="end">сейчас</text><rect x="150" y="20" width="50" height="32" fill="#8ab" fill-opacity="0.55" stroke="#8ab" /><rect x="200" y="20" width="140" height="32" fill="#f7a" fill-opacity="0.45" stroke="#f7a" /><text x="175.0" y="42" fill="#dde" font-size="14" text-anchor="middle">5</text><text x="270.0" y="42" fill="#dde" font-size="14" text-anchor="middle">14</text><text x="350" y="42" fill="#dde" font-size="14">сумма 19</text><g class="fragment" data-fragment-index="2"><text x="138" y="104" fill="#99a" font-size="15" text-anchor="end">x2 первую</text><rect x="150" y="82" width="100" height="32" fill="#8ab" fill-opacity="0.55" stroke="#8ab" /><rect x="250" y="82" width="140" height="32" fill="#f7a" fill-opacity="0.45" stroke="#f7a" /><text x="200.0" y="104" fill="#dde" font-size="14" text-anchor="middle">10</text><text x="320.0" y="104" fill="#dde" font-size="14" text-anchor="middle">14</text><text x="400" y="104" fill="#dde" font-size="14">сумма 24</text><rect x="200" y="79" width="50" height="38" fill="none" stroke="#fd6" stroke-width="2.5" stroke-dasharray="5 3" /><text x="225.0" y="75" fill="#fd6" font-size="14" text-anchor="middle">+5</text></g><g class="fragment" data-fragment-index="3"><text x="138" y="166" fill="#99a" font-size="15" text-anchor="end">x2 вторую</text><rect x="150" y="144" width="50" height="32" fill="#8ab" fill-opacity="0.55" stroke="#8ab" /><rect x="200" y="144" width="280" height="32" fill="#f7a" fill-opacity="0.45" stroke="#f7a" /><text x="175.0" y="166" fill="#dde" font-size="14" text-anchor="middle">5</text><text x="340.0" y="166" fill="#dde" font-size="14" text-anchor="middle">28</text><text x="490" y="166" fill="#dde" font-size="14">сумма 33</text><rect x="340" y="141" width="140" height="38" fill="none" stroke="#fd6" stroke-width="2.5" stroke-dasharray="5 3" /><text x="410.0" y="137" fill="#fd6" font-size="14" text-anchor="middle">+14</text></g><line x1="740" y1="6" x2="740" y2="190" stroke="#fd6" stroke-width="2" stroke-dasharray="6 4" /><text x="740" y="208" fill="#fd6" font-size="14" text-anchor="middle">финиш 59</text>
+</svg>
+</div>
+<p class="fragment" data-fragment-index="4" style="font-size: 0.6em;">удвоение добавляет столько камней, сколько <mark>уже было</mark> в этой куче</p>
+<div class="fragment opinion" data-fragment-index="5" style="margin-top: 0.3em;">
+    Быстрее всего к финишу - <mark>удвоить бОльшую кучу</mark>: сумма вырастает на бОльшую кучу
+</div>
+                </section>
+
+            </section>
+
+            <!-- ЧАСТЬ 2: вопрос ЕГЭ -> логическое условие на can_win / must_lose -->
+            <section>
+
+                <!-- разделитель части 2 -->
+                <section style="font-size: 70px; height: 100%; width: 100%">
+                    <div class="lesson-time">15</div>
+                    <div class="fragment">
+                        <h1 style="font-size: 1.3em;">Вопрос -> условие</h1>
+                        <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">переводим фразы ЕГЭ в can_win и must_lose</p>
+                    </div>
+                </section>
+
+                <!-- приём: каждый вопрос №19-21 переводим в условие из can_win / must_lose с and / not; при (7, S) ходит Петя -->
+                <section>
+                    <h2>Приём</h2>
+<div class="timeline" style="font-size: 0.65em;">
+    <div class="timeline-item fragment">
+        <div class="timeline-marker">1</div>
+        <div class="timeline-content">в начале ходит Петя: <code>pos = (5, S)</code></div>
+    </div>
+    <div class="timeline-item fragment">
+        <div class="timeline-marker">2</div>
+        <div class="timeline-content">«Петя выигрывает за k ходов» - <code>can_win(pos, k)</code></div>
+    </div>
+    <div class="timeline-item fragment">
+        <div class="timeline-marker">3</div>
+        <div class="timeline-content">«Ваня выигрывает за k ходов при любой игре Пети» - <code>must_lose(pos, k)</code>: Петя ходит и проигрывает</div>
+    </div>
+    <div class="timeline-item fragment">
+        <div class="timeline-marker">4</div>
+        <div class="timeline-content">«но не может за один ход» - <code>not</code> ... <code>(pos, 1)</code>, части склеиваем через <code>and</code></div>
+    </div>
+</div>
+<div class="fragment opinion" style="margin-top: 0.5em;">
+    Каждый номер - одна строчка условия. Сначала проверим её руками на дереве
+</div>
+                </section>
+
+                <!-- can_win(pos, 1) руками: при каких S Петя выигрывает одним ходом (удвоить бОльшую кучу) - картинка куч до и после -->
+                <section>
+                    <h2><code>can_win(pos, 1)</code> руками</h2>
+<p class="fragment" data-fragment-index="1" style="font-size: 0.55em;">лучший ход Пети - удвоить бОльшую кучу, то есть вторую</p>
+<svg width="760" height="290" viewBox="0 0 760 290">
+<defs><marker id="c1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#667" /></marker></defs><g class="fragment" data-fragment-index="1"><rect x="154.0" y="23.0" width="92" height="34" rx="6" fill="#1c2030" stroke="#8ab" stroke-width="2" /><text x="200" y="46" fill="#dde" font-size="16" text-anchor="middle">(5, 26)</text><line x1="200" y1="59.0" x2="200" y2="99.0" stroke="#667" stroke-width="2" marker-end="url(#c1)" /><text x="222.0" y="85.0" fill="#99a" font-size="13" text-anchor="middle">x2 вторую</text><rect x="154.0" y="103.0" width="92" height="34" rx="6" fill="#1c2030" stroke="#556" stroke-width="2" /><text x="200" y="126" fill="#dde" font-size="16" text-anchor="middle">(5, 52)</text><text x="200" y="154.0" fill="#f66" font-size="13" text-anchor="middle">сумма 57 - мало</text></g><g class="fragment" data-fragment-index="2"><rect x="514.0" y="23.0" width="92" height="34" rx="6" fill="#1f3a26" stroke="#7d7" stroke-width="3" /><text x="560" y="46" fill="#dde" font-size="16" text-anchor="middle">(5, 27)</text><line x1="560" y1="59.0" x2="560" y2="99.0" stroke="#667" stroke-width="2" marker-end="url(#c1)" /><text x="582.0" y="85.0" fill="#99a" font-size="13" text-anchor="middle">x2 вторую</text><rect x="514.0" y="103.0" width="92" height="34" rx="6" fill="#2a2a40" stroke="#fd6" stroke-width="2" /><text x="560" y="126" fill="#fd6" font-size="16" text-anchor="middle">(5, 54)</text><text x="560" y="154.0" fill="#fd6" font-size="13" text-anchor="middle">сумма 59 - финиш</text></g><g class="fragment" data-fragment-index="3"><rect x="120" y="225" width="44" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" /><text x="142" y="247" fill="#dde" font-size="14" text-anchor="middle">20</text><rect x="170" y="225" width="44" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" /><text x="192" y="247" fill="#dde" font-size="14" text-anchor="middle">21</text><rect x="220" y="225" width="44" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" /><text x="242" y="247" fill="#dde" font-size="14" text-anchor="middle">22</text><rect x="270" y="225" width="44" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" /><text x="292" y="247" fill="#dde" font-size="14" text-anchor="middle">23</text><rect x="320" y="225" width="44" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" /><text x="342" y="247" fill="#dde" font-size="14" text-anchor="middle">24</text><rect x="370" y="225" width="44" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" /><text x="392" y="247" fill="#dde" font-size="14" text-anchor="middle">25</text><rect x="420" y="225" width="44" height="34" rx="3" fill="#1c2030" stroke="#556" stroke-width="1" /><text x="442" y="247" fill="#dde" font-size="14" text-anchor="middle">26</text><rect x="470" y="225" width="44" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" /><text x="492" y="247" fill="#dde" font-size="14" text-anchor="middle">27</text><rect x="520" y="225" width="44" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" /><text x="542" y="247" fill="#dde" font-size="14" text-anchor="middle">28</text><rect x="570" y="225" width="44" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" /><text x="592" y="247" fill="#dde" font-size="14" text-anchor="middle">29</text><rect x="620" y="225" width="44" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" /><text x="642" y="247" fill="#dde" font-size="14" text-anchor="middle">30</text><rect x="670" y="225" width="44" height="34" rx="3" fill="#1f3a26" stroke="#7d7" stroke-width="2" /><text x="692" y="247" fill="#dde" font-size="14" text-anchor="middle">31</text><text x="108" y="247" fill="#99a" font-size="15" text-anchor="end">S</text><text x="617" y="281" fill="#7d7" font-size="14" text-anchor="middle">can_win((5, S), 1)</text></g>
+</svg>
+<p class="fragment" data-fragment-index="4" style="font-size: 0.6em;">нужно <code>5 + 2 * S &gt;= 59</code>, то есть <mark class="green">S от 27</mark> - Петя выигрывает первым ходом</p>
+                </section>
+
+                <!-- №19 «при любом ходе Пети Ваня выигрывает первым ходом»: must_lose(pos, 1); дерево (7, S) из 4 веток, каждая ветка - can_win(..., 1) для Вани -> ответ -->
+                <section>
+                    <h2>№19: «при любом ходе Пети»</h2>
+<p style="font-size: 0.55em;">«Петя не может выиграть за один ход, но при любом ходе Пети Ваня выигрывает первым ходом» - <code>must_lose(pos, 1)</code>. Берём самое большое S = 26:</p>
+<svg width="820" height="300" viewBox="0 0 900 330">
+<defs><marker id="s1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#667" /></marker></defs><text x="8" y="50" fill="#99a" font-size="15">ходит Петя</text><line x1="104" y1="45" x2="890" y2="45" stroke="#334" stroke-width="1" stroke-dasharray="3 6" /><text x="8" y="140" fill="#99a" font-size="15">ходит Ваня</text><line x1="104" y1="135" x2="890" y2="135" stroke="#334" stroke-width="1" stroke-dasharray="3 6" /><text x="8" y="230" fill="#99a" font-size="15"></text><line x1="104" y1="225" x2="890" y2="225" stroke="#334" stroke-width="1" stroke-dasharray="3 6" /><rect x="449.0" y="28.0" width="92" height="34" rx="6" fill="#1c2030" stroke="#8ab" stroke-width="2" /><text x="495" y="51" fill="#dde" font-size="16" text-anchor="middle">(5, 26)</text><g class="fragment" data-fragment-index="1"><line x1="495" y1="64.0" x2="225" y2="114.0" stroke="#667" stroke-width="2" marker-end="url(#s1)" /><text x="346.0" y="95.0" fill="#99a" font-size="13" text-anchor="middle">+1</text><rect x="179.0" y="118.0" width="92" height="34" rx="6" fill="#1c2030" stroke="#8ab" stroke-width="2" /><text x="225" y="141" fill="#dde" font-size="16" text-anchor="middle">(6, 26)</text><line x1="495" y1="64.0" x2="405" y2="114.0" stroke="#667" stroke-width="2" marker-end="url(#s1)" /><text x="436.0" y="95.0" fill="#99a" font-size="13" text-anchor="middle">+1</text><rect x="359.0" y="118.0" width="92" height="34" rx="6" fill="#1c2030" stroke="#8ab" stroke-width="2" /><text x="405" y="141" fill="#dde" font-size="16" text-anchor="middle">(5, 27)</text><line x1="495" y1="64.0" x2="585" y2="114.0" stroke="#667" stroke-width="2" marker-end="url(#s1)" /><text x="554.0" y="95.0" fill="#99a" font-size="13" text-anchor="middle">x2</text><rect x="539.0" y="118.0" width="92" height="34" rx="6" fill="#1c2030" stroke="#8ab" stroke-width="2" /><text x="585" y="141" fill="#dde" font-size="16" text-anchor="middle">(10, 26)</text><line x1="495" y1="64.0" x2="765" y2="114.0" stroke="#667" stroke-width="2" marker-end="url(#s1)" /><text x="644.0" y="95.0" fill="#99a" font-size="13" text-anchor="middle">x2</text><rect x="719.0" y="118.0" width="92" height="34" rx="6" fill="#1c2030" stroke="#8ab" stroke-width="2" /><text x="765" y="141" fill="#dde" font-size="16" text-anchor="middle">(5, 52)</text></g><g class="fragment" data-fragment-index="2"><line x1="405" y1="154.0" x2="405" y2="204.0" stroke="#667" stroke-width="2" marker-end="url(#s1)" /><text x="427.0" y="185.0" fill="#99a" font-size="13" text-anchor="middle">x2</text><rect x="359.0" y="208.0" width="92" height="34" rx="6" fill="#2a2a40" stroke="#fd6" stroke-width="2" /><text x="405" y="231" fill="#fd6" font-size="16" text-anchor="middle">(5, 54)</text><text x="405" y="259.0" fill="#fd6" font-size="13" text-anchor="middle">сумма 59</text><rect x="359.0" y="118.0" width="92" height="34" rx="6" fill="#1f3a26" stroke="#7d7" stroke-width="3" /><text x="405" y="141" fill="#dde" font-size="16" text-anchor="middle">(5, 27)</text><text x="457.0" y="120.0" fill="#7d7" font-size="13" font-weight="bold">can_win</text><line x1="585" y1="154.0" x2="585" y2="204.0" stroke="#667" stroke-width="2" marker-end="url(#s1)" /><text x="607.0" y="185.0" fill="#99a" font-size="13" text-anchor="middle">x2</text><rect x="539.0" y="208.0" width="92" height="34" rx="6" fill="#2a2a40" stroke="#fd6" stroke-width="2" /><text x="585" y="231" fill="#fd6" font-size="16" text-anchor="middle">(10, 52)</text><text x="585" y="259.0" fill="#fd6" font-size="13" text-anchor="middle">сумма 62</text><rect x="539.0" y="118.0" width="92" height="34" rx="6" fill="#1f3a26" stroke="#7d7" stroke-width="3" /><text x="585" y="141" fill="#dde" font-size="16" text-anchor="middle">(10, 26)</text><text x="637.0" y="120.0" fill="#7d7" font-size="13" font-weight="bold">can_win</text><line x1="765" y1="154.0" x2="765" y2="204.0" stroke="#667" stroke-width="2" marker-end="url(#s1)" /><text x="787.0" y="185.0" fill="#99a" font-size="13" text-anchor="middle">x2</text><rect x="719.0" y="208.0" width="92" height="34" rx="6" fill="#2a2a40" stroke="#fd6" stroke-width="2" /><text x="765" y="231" fill="#fd6" font-size="16" text-anchor="middle">(5, 104)</text><text x="765" y="259.0" fill="#fd6" font-size="13" text-anchor="middle">сумма 109</text><rect x="719.0" y="118.0" width="92" height="34" rx="6" fill="#1f3a26" stroke="#7d7" stroke-width="3" /><text x="765" y="141" fill="#dde" font-size="16" text-anchor="middle">(5, 52)</text><text x="817.0" y="120.0" fill="#7d7" font-size="13" font-weight="bold">can_win</text></g><g class="fragment" data-fragment-index="3"><line x1="225" y1="154.0" x2="225" y2="204.0" stroke="#667" stroke-width="2" marker-end="url(#s1)" /><text x="247.0" y="185.0" fill="#99a" font-size="13" text-anchor="middle">x2</text><rect x="179.0" y="208.0" width="92" height="34" rx="6" fill="#1c2030" stroke="#556" stroke-width="2" /><text x="225" y="231" fill="#dde" font-size="16" text-anchor="middle">(6, 52)</text><text x="225" y="259.0" fill="#f66" font-size="13" text-anchor="middle">сумма 58 - мало</text><rect x="179.0" y="118.0" width="92" height="34" rx="6" fill="#1c2030" stroke="#8ab" stroke-width="2" /><text x="225" y="141" fill="#dde" font-size="16" text-anchor="middle">(6, 26)</text><text x="277.0" y="120.0" fill="#f66" font-size="13" font-weight="bold">не can_win</text></g>
+</svg>
+<div class="fragment opinion" data-fragment-index="4" style="margin-top: 0.2em; font-size: 0.85em;">
+    Ход <code>+1</code> в первую кучу спасает Петю при любом S: 6 + 2 * 26 = 58. <code>must_lose((5, S), 1)</code> здесь <mark>не бывает</mark>
+</div>
+                </section>
+
+                <!-- №19 в формулировке демо 2027 «Ваня выиграл первым ходом»: not can_win(pos, 1) и есть ход в позицию, где can_win(..., 1) - отличие от «при любом ходе» -->
+                <section>
+                    <h2>№19: «Ваня выиграл первым ходом»</h2>
+<p style="font-size: 0.5em;">«Известно, что Ваня выиграл своим первым ходом после <mark>неудачного</mark> первого хода Пети. Найдите минимальное S» - так в ФИПИ для двух куч и в демо 2027</p>
+<p class="fragment" data-fragment-index="1" style="font-size: 0.5em;"><code>not can_win(pos, 1)</code> и <mark class="yellow">есть</mark> ход Пети в t, где <code>can_win(t, 1)</code> - хватит одной плохой ветки</p>
+<svg width="820" height="300" viewBox="0 0 900 330">
+<defs><marker id="s2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#667" /></marker></defs><text x="8" y="50" fill="#99a" font-size="15">ходит Петя</text><line x1="104" y1="45" x2="640" y2="45" stroke="#334" stroke-width="1" stroke-dasharray="3 6" /><text x="8" y="140" fill="#99a" font-size="15">ходит Ваня</text><line x1="104" y1="135" x2="640" y2="135" stroke="#334" stroke-width="1" stroke-dasharray="3 6" /><text x="8" y="230" fill="#99a" font-size="15"></text><line x1="104" y1="225" x2="640" y2="225" stroke="#334" stroke-width="1" stroke-dasharray="3 6" /><rect x="324.0" y="28.0" width="92" height="34" rx="6" fill="#1c2030" stroke="#8ab" stroke-width="2" /><text x="370" y="51" fill="#dde" font-size="16" text-anchor="middle">(5, 14)</text><g class="fragment" data-fragment-index="1"><line x1="370" y1="64.0" x2="175" y2="114.0" stroke="#667" stroke-width="2" marker-end="url(#s2)" /><text x="258.5" y="95.0" fill="#99a" font-size="13" text-anchor="middle">+1</text><rect x="129.0" y="118.0" width="92" height="34" rx="6" fill="#1c2030" stroke="#8ab" stroke-width="2" /><text x="175" y="141" fill="#dde" font-size="16" text-anchor="middle">(6, 14)</text><line x1="370" y1="64.0" x2="305" y2="114.0" stroke="#667" stroke-width="2" marker-end="url(#s2)" /><text x="323.5" y="95.0" fill="#99a" font-size="13" text-anchor="middle">+1</text><rect x="259.0" y="118.0" width="92" height="34" rx="6" fill="#1c2030" stroke="#8ab" stroke-width="2" /><text x="305" y="141" fill="#dde" font-size="16" text-anchor="middle">(5, 15)</text><line x1="370" y1="64.0" x2="435" y2="114.0" stroke="#667" stroke-width="2" marker-end="url(#s2)" /><text x="416.5" y="95.0" fill="#99a" font-size="13" text-anchor="middle">x2</text><rect x="389.0" y="118.0" width="92" height="34" rx="6" fill="#1c2030" stroke="#8ab" stroke-width="2" /><text x="435" y="141" fill="#dde" font-size="16" text-anchor="middle">(10, 14)</text><line x1="370" y1="64.0" x2="565" y2="114.0" stroke="#667" stroke-width="2" marker-end="url(#s2)" /><text x="481.5" y="95.0" fill="#99a" font-size="13" text-anchor="middle">x2</text><rect x="519.0" y="118.0" width="92" height="34" rx="6" fill="#1c2030" stroke="#8ab" stroke-width="2" /><text x="565" y="141" fill="#dde" font-size="16" text-anchor="middle">(5, 28)</text></g><g class="fragment" data-fragment-index="2"><rect x="126.0" y="115.0" width="98" height="40" rx="7" fill="#111" fill-opacity="0.75" /><rect x="256.0" y="115.0" width="98" height="40" rx="7" fill="#111" fill-opacity="0.75" /><rect x="386.0" y="115.0" width="98" height="40" rx="7" fill="#111" fill-opacity="0.75" /><rect x="519.0" y="118.0" width="92" height="34" rx="6" fill="#1f3a26" stroke="#7d7" stroke-width="3" /><text x="565" y="141" fill="#dde" font-size="16" text-anchor="middle">(5, 28)</text><text x="617.0" y="120.0" fill="#fd6" font-size="13" font-weight="bold">неудачный</text><line x1="565" y1="154.0" x2="565" y2="204.0" stroke="#667" stroke-width="2" marker-end="url(#s2)" /><text x="587.0" y="185.0" fill="#99a" font-size="13" text-anchor="middle">x2</text><rect x="519.0" y="208.0" width="92" height="34" rx="6" fill="#2a2a40" stroke="#fd6" stroke-width="2" /><text x="565" y="231" fill="#fd6" font-size="16" text-anchor="middle">(5, 56)</text><text x="565" y="259.0" fill="#fd6" font-size="13" text-anchor="middle">сумма 61</text></g><g class="fragment" data-fragment-index="3"><line x1="660" y1="20" x2="660" y2="300" stroke="#334" stroke-width="1" /><text x="780" y="30" fill="#99a" font-size="15" text-anchor="middle">а если S = 13?</text><rect x="734.0" y="58.0" width="92" height="34" rx="6" fill="#1c2030" stroke="#8ab" stroke-width="2" /><text x="780" y="81" fill="#dde" font-size="16" text-anchor="middle">(5, 13)</text><line x1="780" y1="94.0" x2="780" y2="129.0" stroke="#667" stroke-width="2" marker-end="url(#s2)" /><text x="802.0" y="117.5" fill="#99a" font-size="13" text-anchor="middle">x2</text><rect x="734.0" y="133.0" width="92" height="34" rx="6" fill="#1c2030" stroke="#8ab" stroke-width="2" /><text x="780" y="156" fill="#dde" font-size="16" text-anchor="middle">(5, 26)</text><line x1="780" y1="169.0" x2="780" y2="204.0" stroke="#667" stroke-width="2" marker-end="url(#s2)" /><text x="802.0" y="192.5" fill="#99a" font-size="13" text-anchor="middle">x2</text><rect x="734.0" y="208.0" width="92" height="34" rx="6" fill="#1c2030" stroke="#556" stroke-width="2" /><text x="780" y="231" fill="#dde" font-size="16" text-anchor="middle">(5, 52)</text><text x="780" y="259.0" fill="#f66" font-size="13" text-anchor="middle">сумма 57 - мало</text></g>
+</svg>
+<p class="fragment" data-fragment-index="4" style="font-size: 0.6em;">ответ №19: <strong>14</strong></p>
+                </section>
+
+                <!-- №20 «Петя не может выиграть за один ход, но выигрывает вторым»: not can_win(pos, 1) and can_win(pos, 2); дерево с выделенной выигрышной веткой -> два значения по возрастанию -->
+                <section>
+                    <h2>№20</h2>
+<p style="font-size: 0.5em;">«Петя не может выиграть за один ход, но может выиграть своим вторым ходом при любой игре Вани»: <code>not can_win(pos, 1) and can_win(pos, 2)</code>. Проверим S = 24:</p>
+<svg width="820" height="315" viewBox="0 0 900 345">
+<defs><marker id="q2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#667" /></marker><marker id="q2g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#7d7" /></marker></defs><text x="8" y="45" fill="#99a" font-size="15">ходит Петя</text><line x1="104" y1="40" x2="890" y2="40" stroke="#334" stroke-width="1" stroke-dasharray="3 6" /><text x="8" y="125" fill="#99a" font-size="15">ходит Ваня</text><line x1="104" y1="120" x2="890" y2="120" stroke="#334" stroke-width="1" stroke-dasharray="3 6" /><text x="8" y="205" fill="#99a" font-size="15">ходит Петя</text><line x1="104" y1="200" x2="890" y2="200" stroke="#334" stroke-width="1" stroke-dasharray="3 6" /><text x="8" y="285" fill="#99a" font-size="15"></text><line x1="104" y1="280" x2="890" y2="280" stroke="#334" stroke-width="1" stroke-dasharray="3 6" /><rect x="479.0" y="23.0" width="92" height="34" rx="6" fill="#1c2030" stroke="#8ab" stroke-width="2" /><text x="525" y="46" fill="#dde" font-size="16" text-anchor="middle">(5, 24)</text><g class="fragment" data-fragment-index="1"><line x1="525" y1="59.0" x2="170" y2="99.0" stroke="#667" stroke-width="2" marker-end="url(#q2)" /><text x="333.5" y="85.0" fill="#99a" font-size="13" text-anchor="middle">+1</text><rect x="124.0" y="103.0" width="92" height="34" rx="6" fill="#1c2030" stroke="#8ab" stroke-width="2" /><text x="170" y="126" fill="#dde" font-size="16" text-anchor="middle">(6, 24)</text><line x1="525" y1="59.0" x2="290" y2="99.0" stroke="#667" stroke-width="2" marker-end="url(#q2)" /><text x="393.5" y="85.0" fill="#99a" font-size="13" text-anchor="middle">+1</text><rect x="244.0" y="103.0" width="92" height="34" rx="6" fill="#1c2030" stroke="#8ab" stroke-width="2" /><text x="290" y="126" fill="#dde" font-size="16" text-anchor="middle">(5, 25)</text><line x1="525" y1="59.0" x2="525" y2="99.0" stroke="#667" stroke-width="2" marker-end="url(#q2)" /><text x="547.0" y="85.0" fill="#99a" font-size="13" text-anchor="middle">x2</text><rect x="479.0" y="103.0" width="92" height="34" rx="6" fill="#1c2030" stroke="#8ab" stroke-width="2" /><text x="525" y="126" fill="#dde" font-size="16" text-anchor="middle">(10, 24)</text><line x1="525" y1="59.0" x2="820" y2="99.0" stroke="#667" stroke-width="2" marker-end="url(#q2)" /><text x="686.5" y="85.0" fill="#99a" font-size="13" text-anchor="middle">x2</text><rect x="774.0" y="103.0" width="92" height="34" rx="6" fill="#1c2030" stroke="#8ab" stroke-width="2" /><text x="820" y="126" fill="#dde" font-size="16" text-anchor="middle">(5, 48)</text></g><g class="fragment" data-fragment-index="2"><line x1="525" y1="139.0" x2="300" y2="179.0" stroke="#667" stroke-width="2" marker-end="url(#q2)" /><rect x="254.0" y="183.0" width="92" height="34" rx="6" fill="#1c2030" stroke="#8ab" stroke-width="2" /><text x="300" y="206" fill="#dde" font-size="16" text-anchor="middle">(11, 24)</text><line x1="525" y1="139.0" x2="450" y2="179.0" stroke="#667" stroke-width="2" marker-end="url(#q2)" /><rect x="404.0" y="183.0" width="92" height="34" rx="6" fill="#1c2030" stroke="#8ab" stroke-width="2" /><text x="450" y="206" fill="#dde" font-size="16" text-anchor="middle">(10, 25)</text><line x1="525" y1="139.0" x2="600" y2="179.0" stroke="#667" stroke-width="2" marker-end="url(#q2)" /><rect x="554.0" y="183.0" width="92" height="34" rx="6" fill="#1c2030" stroke="#8ab" stroke-width="2" /><text x="600" y="206" fill="#dde" font-size="16" text-anchor="middle">(20, 24)</text><line x1="525" y1="139.0" x2="750" y2="179.0" stroke="#667" stroke-width="2" marker-end="url(#q2)" /><rect x="704.0" y="183.0" width="92" height="34" rx="6" fill="#1c2030" stroke="#8ab" stroke-width="2" /><text x="750" y="206" fill="#dde" font-size="16" text-anchor="middle">(10, 48)</text></g><g class="fragment" data-fragment-index="3"><line x1="300" y1="219.0" x2="300" y2="259.0" stroke="#667" stroke-width="2" marker-end="url(#q2)" /><text x="322.0" y="245.0" fill="#99a" font-size="13" text-anchor="middle">x2</text><rect x="254.0" y="263.0" width="92" height="34" rx="6" fill="#2a2a40" stroke="#fd6" stroke-width="2" /><text x="300" y="286" fill="#fd6" font-size="16" text-anchor="middle">(11, 48)</text><text x="300" y="314.0" fill="#fd6" font-size="13" text-anchor="middle">сумма 59</text><rect x="254.0" y="183.0" width="92" height="34" rx="6" fill="#1f3a26" stroke="#7d7" stroke-width="3" /><text x="300" y="206" fill="#dde" font-size="16" text-anchor="middle">(11, 24)</text><line x1="450" y1="219.0" x2="450" y2="259.0" stroke="#667" stroke-width="2" marker-end="url(#q2)" /><text x="472.0" y="245.0" fill="#99a" font-size="13" text-anchor="middle">x2</text><rect x="404.0" y="263.0" width="92" height="34" rx="6" fill="#2a2a40" stroke="#fd6" stroke-width="2" /><text x="450" y="286" fill="#fd6" font-size="16" text-anchor="middle">(10, 50)</text><text x="450" y="314.0" fill="#fd6" font-size="13" text-anchor="middle">сумма 60</text><rect x="404.0" y="183.0" width="92" height="34" rx="6" fill="#1f3a26" stroke="#7d7" stroke-width="3" /><text x="450" y="206" fill="#dde" font-size="16" text-anchor="middle">(10, 25)</text><line x1="600" y1="219.0" x2="600" y2="259.0" stroke="#667" stroke-width="2" marker-end="url(#q2)" /><text x="622.0" y="245.0" fill="#99a" font-size="13" text-anchor="middle">x2</text><rect x="554.0" y="263.0" width="92" height="34" rx="6" fill="#2a2a40" stroke="#fd6" stroke-width="2" /><text x="600" y="286" fill="#fd6" font-size="16" text-anchor="middle">(20, 48)</text><text x="600" y="314.0" fill="#fd6" font-size="13" text-anchor="middle">сумма 68</text><rect x="554.0" y="183.0" width="92" height="34" rx="6" fill="#1f3a26" stroke="#7d7" stroke-width="3" /><text x="600" y="206" fill="#dde" font-size="16" text-anchor="middle">(20, 24)</text><line x1="750" y1="219.0" x2="750" y2="259.0" stroke="#667" stroke-width="2" marker-end="url(#q2)" /><text x="772.0" y="245.0" fill="#99a" font-size="13" text-anchor="middle">x2</text><rect x="704.0" y="263.0" width="92" height="34" rx="6" fill="#2a2a40" stroke="#fd6" stroke-width="2" /><text x="750" y="286" fill="#fd6" font-size="16" text-anchor="middle">(10, 96)</text><text x="750" y="314.0" fill="#fd6" font-size="13" text-anchor="middle">сумма 106</text><rect x="704.0" y="183.0" width="92" height="34" rx="6" fill="#1f3a26" stroke="#7d7" stroke-width="3" /><text x="750" y="206" fill="#dde" font-size="16" text-anchor="middle">(10, 48)</text><rect x="479.0" y="103.0" width="92" height="34" rx="6" fill="#3a1f24" stroke="#f66" stroke-width="3" /><text x="525" y="126" fill="#dde" font-size="16" text-anchor="middle">(10, 24)</text><text x="577.0" y="105.0" fill="#f66" font-size="13" font-weight="bold">must_lose(t, 1)</text></g><g class="fragment" data-fragment-index="4"><rect x="479.0" y="23.0" width="92" height="34" rx="6" fill="#1f3a26" stroke="#7d7" stroke-width="3" /><text x="525" y="46" fill="#dde" font-size="16" text-anchor="middle">(5, 24)</text><text x="577.0" y="25.0" fill="#7d7" font-size="13" font-weight="bold">can_win(pos, 2)</text><rect x="121.0" y="100.0" width="98" height="40" rx="7" fill="#111" fill-opacity="0.75" /><rect x="241.0" y="100.0" width="98" height="40" rx="7" fill="#111" fill-opacity="0.75" /><rect x="771.0" y="100.0" width="98" height="40" rx="7" fill="#111" fill-opacity="0.75" /></g>
+</svg>
+<p class="fragment" data-fragment-index="5" style="font-size: 0.55em;">S = 26 - так же, через ход в (6, 26). Ответ №20: <strong>24 26</strong></p>
+                </section>
+
+                <!-- №21 «Ваня выигрывает первым или вторым ходом, но не гарантированно первым»: not must_lose(pos, 1) and must_lose(pos, 2) - разбор каждой части фразы -->
+                <section>
+                    <h2>№21: разбираем фразу</h2>
+<table style="font-size: 0.6em; width: 100%;">
+    <tr><td><strong>Фраза</strong></td><td><strong>Условие</strong></td></tr>
+    <tr class="fragment"><td>у Вани есть стратегия выиграть <mark>первым или вторым</mark> ходом при любой игре Пети</td><td><code>must_lose(pos, 2)</code></td></tr>
+    <tr class="fragment"><td>у Вани нет стратегии гарантированно выиграть <mark>первым</mark> ходом</td><td><code>not must_lose(pos, 1)</code></td></tr>
+    <tr class="fragment"><td>оба условия сразу</td><td><code>not must_lose(pos, 1) and must_lose(pos, 2)</code></td></tr>
+</table>
+<div class="fragment opinion" style="margin-top: 0.5em;">
+    «Первым или вторым» = не больше чем за 2 хода. Ровно это и значит <code>k = 2</code>
+</div>
+                </section>
+
+                <!-- №21 проверка: дерево глубины 4 - сколько веток, почему руками уже тяжело; переход к программе -->
+                <section>
+                    <h2>№21: проверка</h2>
+<p style="font-size: 0.5em;">проверим S = 23: куда бы ни пошёл Петя, Ваня выигрывает</p>
+<svg width="820" height="300" viewBox="0 0 900 330">
+<defs><marker id="q3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#667" /></marker></defs><text x="8" y="45" fill="#99a" font-size="15">ходит Петя</text><line x1="104" y1="40" x2="890" y2="40" stroke="#334" stroke-width="1" stroke-dasharray="3 6" /><text x="8" y="130" fill="#99a" font-size="15">ходит Ваня</text><line x1="104" y1="125" x2="890" y2="125" stroke="#334" stroke-width="1" stroke-dasharray="3 6" /><text x="8" y="215" fill="#99a" font-size="15">ходит Петя</text><line x1="104" y1="210" x2="890" y2="210" stroke="#334" stroke-width="1" stroke-dasharray="3 6" /><text x="8" y="295" fill="#99a" font-size="15"></text><line x1="104" y1="290" x2="890" y2="290" stroke="#334" stroke-width="1" stroke-dasharray="3 6" /><rect x="479.0" y="23.0" width="92" height="34" rx="6" fill="#1c2030" stroke="#8ab" stroke-width="2" /><text x="525" y="46" fill="#dde" font-size="16" text-anchor="middle">(5, 23)</text><g class="fragment" data-fragment-index="1"><line x1="525" y1="59.0" x2="210" y2="104.0" stroke="#667" stroke-width="2" marker-end="url(#q3)" /><text x="353.5" y="87.5" fill="#99a" font-size="13" text-anchor="middle">+1</text><rect x="164.0" y="108.0" width="92" height="34" rx="6" fill="#1c2030" stroke="#8ab" stroke-width="2" /><text x="210" y="131" fill="#dde" font-size="16" text-anchor="middle">(6, 23)</text><line x1="525" y1="59.0" x2="420" y2="104.0" stroke="#667" stroke-width="2" marker-end="url(#q3)" /><text x="458.5" y="87.5" fill="#99a" font-size="13" text-anchor="middle">+1</text><rect x="374.0" y="108.0" width="92" height="34" rx="6" fill="#1c2030" stroke="#8ab" stroke-width="2" /><text x="420" y="131" fill="#dde" font-size="16" text-anchor="middle">(5, 24)</text><line x1="525" y1="59.0" x2="630" y2="104.0" stroke="#667" stroke-width="2" marker-end="url(#q3)" /><text x="591.5" y="87.5" fill="#99a" font-size="13" text-anchor="middle">x2</text><rect x="584.0" y="108.0" width="92" height="34" rx="6" fill="#1c2030" stroke="#8ab" stroke-width="2" /><text x="630" y="131" fill="#dde" font-size="16" text-anchor="middle">(10, 23)</text><line x1="525" y1="59.0" x2="830" y2="104.0" stroke="#667" stroke-width="2" marker-end="url(#q3)" /><text x="691.5" y="87.5" fill="#99a" font-size="13" text-anchor="middle">x2</text><rect x="784.0" y="108.0" width="92" height="34" rx="6" fill="#1c2030" stroke="#8ab" stroke-width="2" /><text x="830" y="131" fill="#dde" font-size="16" text-anchor="middle">(5, 46)</text></g><g class="fragment" data-fragment-index="2"><line x1="830" y1="144.0" x2="830" y2="189.0" stroke="#667" stroke-width="2" marker-end="url(#q3)" /><text x="852.0" y="172.5" fill="#99a" font-size="13" text-anchor="middle">x2</text><rect x="784.0" y="193.0" width="92" height="34" rx="6" fill="#2a2a40" stroke="#fd6" stroke-width="2" /><text x="830" y="216" fill="#fd6" font-size="16" text-anchor="middle">(5, 92)</text><text x="830" y="244.0" fill="#fd6" font-size="13" text-anchor="middle">сумма 97</text><rect x="784.0" y="108.0" width="92" height="34" rx="6" fill="#1f3a26" stroke="#7d7" stroke-width="3" /><text x="830" y="131" fill="#dde" font-size="16" text-anchor="middle">(5, 46)</text><text x="830" y="290" fill="#7d7" font-size="13" text-anchor="middle">Ваня - 1-м ходом</text></g><g class="fragment" data-fragment-index="3"><line x1="210" y1="144.0" x2="210" y2="189.0" stroke="#667" stroke-width="2" marker-end="url(#q3)" /><rect x="164.0" y="193.0" width="92" height="34" rx="6" fill="#3a1f24" stroke="#f66" stroke-width="3" /><text x="210" y="216" fill="#dde" font-size="16" text-anchor="middle">(12, 23)</text><text x="210" y="244.0" fill="#f66" font-size="13" text-anchor="middle">must_lose(t, 1)</text><rect x="164.0" y="108.0" width="92" height="34" rx="6" fill="#1f3a26" stroke="#7d7" stroke-width="3" /><text x="210" y="131" fill="#dde" font-size="16" text-anchor="middle">(6, 23)</text><text x="210" y="290" fill="#7d7" font-size="13" text-anchor="middle">Ваня - 2-м ходом</text><line x1="420" y1="144.0" x2="420" y2="189.0" stroke="#667" stroke-width="2" marker-end="url(#q3)" /><rect x="374.0" y="193.0" width="92" height="34" rx="6" fill="#3a1f24" stroke="#f66" stroke-width="3" /><text x="420" y="216" fill="#dde" font-size="16" text-anchor="middle">(10, 24)</text><text x="420" y="244.0" fill="#f66" font-size="13" text-anchor="middle">must_lose(t, 1)</text><rect x="374.0" y="108.0" width="92" height="34" rx="6" fill="#1f3a26" stroke="#7d7" stroke-width="3" /><text x="420" y="131" fill="#dde" font-size="16" text-anchor="middle">(5, 24)</text><text x="420" y="290" fill="#7d7" font-size="13" text-anchor="middle">Ваня - 2-м ходом</text><line x1="630" y1="144.0" x2="630" y2="189.0" stroke="#667" stroke-width="2" marker-end="url(#q3)" /><rect x="584.0" y="193.0" width="92" height="34" rx="6" fill="#3a1f24" stroke="#f66" stroke-width="3" /><text x="630" y="216" fill="#dde" font-size="16" text-anchor="middle">(10, 24)</text><text x="630" y="244.0" fill="#f66" font-size="13" text-anchor="middle">must_lose(t, 1)</text><rect x="584.0" y="108.0" width="92" height="34" rx="6" fill="#1f3a26" stroke="#7d7" stroke-width="3" /><text x="630" y="131" fill="#dde" font-size="16" text-anchor="middle">(10, 23)</text><text x="630" y="290" fill="#7d7" font-size="13" text-anchor="middle">Ваня - 2-м ходом</text></g><g class="fragment" data-fragment-index="4"><rect x="479.0" y="23.0" width="92" height="34" rx="6" fill="#3a1f24" stroke="#f66" stroke-width="3" /><text x="525" y="46" fill="#dde" font-size="16" text-anchor="middle">(5, 23)</text><text x="577.0" y="25.0" fill="#f66" font-size="13" font-weight="bold">must_lose(pos, 2)</text></g>
+</svg>
+<p class="fragment" data-fragment-index="5" style="font-size: 0.55em;">ответ №21: <strong>23</strong>. Здесь лучшие ответы Вани уже выбраны, а полное дерево: 4 x 4 x 4 x 4 = <mark>256 веток</mark> - руками долго</p>
+                </section>
+
+                <!-- шпаргалка: таблица «фраза из условия -> условие в коде» для №19, 20, 21 -->
+                <section>
+                    <h2>Шпаргалка</h2>
+<table style="font-size: 0.55em; width: 100%;">
+    <tr><td><strong>№</strong></td><td><strong>Фраза</strong></td><td><strong>Условие для pos = (5, S)</strong></td></tr>
+    <tr class="fragment"><td>19</td><td>при любом ходе Пети Ваня выигрывает первым ходом</td><td><code>not can_win(pos, 1) and must_lose(pos, 1)</code></td></tr>
+    <tr class="fragment"><td>19</td><td>Ваня выиграл первым ходом после неудачного хода Пети</td><td><code>not can_win(pos, 1)</code> и есть ход t: <code>can_win(t, 1)</code></td></tr>
+    <tr class="fragment"><td>20</td><td>Петя не может за один, но выигрывает вторым</td><td><code>not can_win(pos, 1) and can_win(pos, 2)</code></td></tr>
+    <tr class="fragment"><td>21</td><td>Ваня первым или вторым, но не гарантированно первым</td><td><code>not must_lose(pos, 1) and must_lose(pos, 2)</code></td></tr>
+</table>
+<div class="fragment opinion" style="margin-top: 0.5em;">
+    Шпаргалка одна и та же для одной кучи и для двух
+</div>
+                </section>
+
+            </section>
+
+            <!-- ЧАСТЬ 3: решение программой - меняем две строчки -->
+            <section>
+
+                <!-- разделитель части 3 -->
+                <section style="font-size: 70px; height: 100%; width: 100%">
+                    <div class="lesson-time">30</div>
+                    <div class="fragment">
+                        <h1 style="font-size: 1.3em;">Решаем программой</h1>
+                        <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">меняем две функции</p>
+                    </div>
+                </section>
+
+                <!-- что меняется в коде с прошлого занятия: s -> пара (a, b), moves возвращает 4 пары, финиш по сумме a + b; can_win / must_lose не меняются -->
+                <section>
+                    <h2>Что меняется в коде</h2>
+<table style="font-size: 0.6em; width: 100%;">
+    <tr><td></td><td><strong>Одна куча</strong></td><td><strong>Две кучи</strong></td></tr>
+    <tr class="fragment"><td>позиция</td><td><code>s</code></td><td><code>pos = (a, b)</code></td></tr>
+    <tr class="fragment"><td><code>moves</code></td><td>2 числа</td><td><mark>4 пары</mark></td></tr>
+    <tr class="fragment"><td>финиш</td><td><code>t &gt;= FINISH</code></td><td>сумма двух куч: <code>is_finish(t)</code></td></tr>
+    <tr class="fragment"><td><code>can_win</code>, <code>must_lose</code></td><td colspan="2" style="text-align: center;"><mark class="green">не меняются</mark></td></tr>
+</table>
+                </section>
+
+                <!-- moves для двух куч: только новая функция, остальной код - как на занятии 2 -->
+                <section>
+                    <h2><code>moves</code> для двух куч</h2>
+<p class="fragment" style="font-size: 0.6em;">пару можно разобрать на две переменные, а вернуть - список пар</p>
+<div class="code-block fragment">
+    <pre class="python size-m"><code>def moves(pos):
+    a, b = pos
+    return [(a + 1, b), (a, b + 1), (a * 2, b), (a, b * 2)]</code></pre>
+</div>
+<p class="fragment" style="font-size: 0.6em;"><code>is_finish(pos)</code> - камней в двух кучах вместе не меньше 59</p>
+<div class="fragment opinion" style="margin-top: 0.4em;">
+    <code>can_win</code> и <code>must_lose</code> копируем с прошлого занятия, только <code>t &gt;= FINISH</code> -> <code>is_finish(t)</code>
+</div>
+                </section>
+
+                <!-- перебор S: цикл по второй куче при фиксированной первой, где кончается range; в if - условия из шпаргалки части 2 -->
+                <section>
+                    <h2>Перебор S</h2>
+<ul style="font-size: 0.7em; text-align: left;">
+    <li class="fragment">первая куча всегда 5, меняется только вторая: <code>pos = (5, s)</code></li>
+    <li class="fragment">S от 1 до 53 <mark>включительно</mark>: <code>range(1, 53 + 1)</code></li>
+    <li class="fragment">в <code>if</code> - строчка из шпаргалки, для №19 ещё цикл по ходам Пети</li>
+</ul>
+<div class="fragment opinion" style="margin-top: 0.5em;">
+    Граница включительно: иначе последнее S не проверим
+</div>
+                </section>
+
+                <!-- вариации условия: «добавить в меньшую кучу», «ход в одну из куч или в обе», финиш «больше» против «не менее», проигрыш при достижении (поддавки), кучи уменьшаются -->
+                <section>
+                    <h2>Вариации условия</h2>
+<table style="font-size: 0.55em; width: 100%;">
+    <tr><td><strong>В условии</strong></td><td><strong>Что меняем</strong></td></tr>
+    <tr class="fragment"><td>другие ходы: <code>+2</code>, <code>+3</code>, <code>x3</code></td><td>числа в <code>moves</code></td></tr>
+    <tr class="fragment"><td>«добавить камень в меньшую кучу», «в обе кучи сразу»</td><td>список пар в <code>moves</code></td></tr>
+    <tr class="fragment"><td>«сумма более 59», а не «не менее»</td><td>сравнение в <code>is_finish</code></td></tr>
+    <tr class="fragment"><td>кучи уменьшаются, финиш «не более»</td><td><code>moves</code> и <code>is_finish</code>, как в 9914FB</td></tr>
+    <tr class="fragment"><td>«проигрывает тот, кто довёл до финиша»</td><td>ход на финиш - <mark>проигрыш</mark>: такие ходы не годятся</td></tr>
+</table>
+                </section>
+
+                <!-- типичные ошибки: забыть ход во вторую кучу, финиш по одной куче вместо суммы, неверная граница S, забыть not can_win(pos, 1) в №20 -->
+                <section>
+                    <h2>Типичные ошибки</h2>
+<ul style="font-size: 0.7em; text-align: left;">
+    <li class="fragment">в <code>moves</code> только ходы в одну кучу - 2 пары вместо 4</li>
+    <li class="fragment">финиш по одной куче, а не по сумме</li>
+    <li class="fragment"><code>range(1, 53)</code>: последнее S не проверено</li>
+    <li class="fragment">в №20 забыли <code>not can_win(pos, 1)</code> - в ответ попадут S от 27</li>
+</ul>
+<div class="fragment opinion" style="margin-top: 0.5em;">
+    №19 «выиграл после неудачного хода» решили как «при любом ходе» - программа ничего не найдёт
+</div>
+                </section>
+
+                <!-- реализуем код: я на своём экране переделываю программу с занятия 2 и решаю игру со слайдов, сверяем с деревом -->
+                <section>
+                    <h2>Реализуем код</h2>
+<div class="timeline" style="font-size: 0.65em;">
+    <div class="timeline-item fragment">
+        <div class="timeline-marker">1</div>
+        <div class="timeline-content"><code>moves</code> и <code>is_finish</code> для пары</div>
+    </div>
+    <div class="timeline-item fragment">
+        <div class="timeline-marker">2</div>
+        <div class="timeline-content"><code>can_win</code> и <code>must_lose</code> - с прошлого занятия, <code>s</code> -> <code>pos</code></div>
+    </div>
+    <div class="timeline-item fragment">
+        <div class="timeline-marker">3</div>
+        <div class="timeline-content">№19, 20, 21 - строчки из шпаргалки в цикле по S</div>
+    </div>
+    <div class="timeline-item fragment">
+        <div class="timeline-marker">4</div>
+        <div class="timeline-content">сверяем с деревьями: <strong>14</strong>, <strong>24 26</strong>, <strong>23</strong></div>
+    </div>
+</div>
+                </section>
+
+            </section>
+
+            <!-- ЧАСТЬ 4: практика - ученик решает задачи ФИПИ кодом -->
+            <section>
+
+                <!-- разделитель части 4 -->
+                <section style="font-size: 70px; height: 100%; width: 100%">
+                    <div class="lesson-time">45</div>
+                    <div class="fragment">
+                        <h1 style="font-size: 1.3em;">Практика</h1>
+                        <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">кодом на своём экране</p>
+                    </div>
+                </section>
+
+                <!-- практика 1: экран ученика - две кучи, сложение и удвоение (задание ФИПИ, подобрать группу); таймер -->
+                <section>
+                    <h2>Практика 1</h2>
+<div style="position: relative; font-size: 0.55em; text-align: left; border-left: 4px solid #8ab; padding: 0.3em 5em 0.3em 0.8em; background: rgba(136, 170, 187, 0.08); margin-bottom: 0.3em;"><span style="position: absolute; top: 0.3em; right: 0.6em; font-size: 0.75em; opacity: 0.5;">FAE4DA</span><p>Две кучи. Ход: <mark>добавить 1 камень</mark> в одну из куч или <mark>удвоить</mark> одну из куч. Игра завершается, когда в кучах вместе не менее <mark>81</mark> камня. В первой куче <strong>7</strong> камней, во второй S, S от 1 до 73.</p>
+<p>№19: минимальное S, при котором Ваня выиграл своим первым ходом после неудачного первого хода Пети.</p>
+<p>№20: два наименьших S, когда Петя не может выиграть за один ход, но выигрывает вторым. По возрастанию.</p>
+<p>№21: минимальное S, когда Ваня выигрывает первым или вторым ходом, но гарантированно первым не может.</p></div>
+<p class="fragment" style="font-size: 0.5em;">файл <code>2_two_heaps_81.py</code>: что поменять в коде с демонстрации?</p>
+<div class="timer fragment" data-limit="480">
+    <div class="timer-bar"><div class="timer-fill"></div></div>
+    <div class="timer-row">
+        <span class="timer-time">0:00</span>
+        <span class="timer-hint">клик - старт</span>
+        <button class="timer-reset" type="button">сброс</button>
+    </div>
+</div>
+                </section>
+
+                <!-- практика 1, проверка: дерево для №19 руками, сверяем с программой -->
+                <section>
+                    <h2>Практика 1: проверка</h2>
+<p class="fragment" data-fragment-index="1" style="font-size: 0.55em;">№19 руками: Петя неудачно удваивает вторую кучу, Ваня удваивает её ещё раз</p>
+<svg width="800" height="260" viewBox="0 0 800 260">
+<defs><marker id="p1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#667" /></marker></defs><g class="fragment" data-fragment-index="2"><text x="220" y="22" fill="#99a" font-size="15" text-anchor="middle">S = 18</text><rect x="174.0" y="43.0" width="92" height="34" rx="6" fill="#1c2030" stroke="#8ab" stroke-width="2" /><text x="220" y="66" fill="#dde" font-size="16" text-anchor="middle">(7, 18)</text><line x1="220" y1="79.0" x2="220" y2="119.0" stroke="#667" stroke-width="2" marker-end="url(#p1)" /><text x="242.0" y="105.0" fill="#99a" font-size="13" text-anchor="middle">x2 вторую</text><rect x="174.0" y="123.0" width="92" height="34" rx="6" fill="#1c2030" stroke="#8ab" stroke-width="2" /><text x="220" y="146" fill="#dde" font-size="16" text-anchor="middle">(7, 36)</text><line x1="220" y1="159.0" x2="220" y2="199.0" stroke="#667" stroke-width="2" marker-end="url(#p1)" /><text x="242.0" y="185.0" fill="#99a" font-size="13" text-anchor="middle">x2 вторую</text><rect x="174.0" y="203.0" width="92" height="34" rx="6" fill="#1c2030" stroke="#556" stroke-width="2" /><text x="220" y="226" fill="#dde" font-size="16" text-anchor="middle">(7, 72)</text><text x="220" y="254.0" fill="#f66" font-size="13" text-anchor="middle">сумма 79 - мало</text></g><g class="fragment" data-fragment-index="3"><text x="580" y="22" fill="#99a" font-size="15" text-anchor="middle">S = 19</text><rect x="534.0" y="43.0" width="92" height="34" rx="6" fill="#1c2030" stroke="#8ab" stroke-width="2" /><text x="580" y="66" fill="#dde" font-size="16" text-anchor="middle">(7, 19)</text><line x1="580" y1="79.0" x2="580" y2="119.0" stroke="#667" stroke-width="2" marker-end="url(#p1)" /><text x="602.0" y="105.0" fill="#99a" font-size="13" text-anchor="middle">x2 вторую</text><rect x="534.0" y="123.0" width="92" height="34" rx="6" fill="#1f3a26" stroke="#7d7" stroke-width="3" /><text x="580" y="146" fill="#dde" font-size="16" text-anchor="middle">(7, 38)</text><line x1="580" y1="159.0" x2="580" y2="199.0" stroke="#667" stroke-width="2" marker-end="url(#p1)" /><text x="602.0" y="185.0" fill="#99a" font-size="13" text-anchor="middle">x2 вторую</text><rect x="534.0" y="203.0" width="92" height="34" rx="6" fill="#2a2a40" stroke="#fd6" stroke-width="2" /><text x="580" y="226" fill="#fd6" font-size="16" text-anchor="middle">(7, 76)</text><text x="580" y="254.0" fill="#fd6" font-size="13" text-anchor="middle">сумма 83 - финиш</text></g>
+</svg>
+<p class="fragment" data-fragment-index="4" style="font-size: 0.6em;">№19: <strong>19</strong>. Программа: №20 - <strong>33 36</strong>, №21 - <strong>32</strong></p>
+                </section>
+
+                <!-- практика 2: экран ученика - вариация (поддавки или «в меньшую кучу»), задание ФИПИ; что поменять в коде -->
+                <section>
+                    <h2>Практика 2: другие ходы</h2>
+<div style="position: relative; font-size: 0.55em; text-align: left; border-left: 4px solid #8ab; padding: 0.3em 5em 0.3em 0.8em; background: rgba(136, 170, 187, 0.08); margin-bottom: 0.3em;"><span style="position: absolute; top: 0.3em; right: 0.6em; font-size: 0.75em; opacity: 0.5;">F78447</span><p>Ход: <mark>добавить 3 камня</mark> в одну из куч или <mark>увеличить одну из куч в 3 раза</mark>. Игра завершается, когда в кучах вместе не менее <mark>176</mark> камней. В первой куче <strong>14</strong> камней, во второй S, S от 1 до 161.</p>
+<p>Вопросы №19-21 - как в практике 1.</p></div>
+<ul style="font-size: 0.55em; text-align: left;">
+    <li class="fragment">что поменять: ходы в <code>moves</code>, первую кучу, финиш, границу S</li>
+    <li class="fragment">файл <code>3_plus3_times3.py</code>; ответы проверяем в банке ФИПИ</li>
+</ul>
+<div class="timer fragment" data-limit="300">
+    <div class="timer-bar"><div class="timer-fill"></div></div>
+    <div class="timer-row">
+        <span class="timer-time">0:00</span>
+        <span class="timer-hint">клик - старт</span>
+        <button class="timer-reset" type="button">сброс</button>
+    </div>
+</div>
+                </section>
+
+            </section>
+
+            <!-- ИТОГ -->
+            <section>
+
+                <!-- итог: две кучи = та же игра, позиция - пара; вопрос ЕГЭ = условие из can_win / must_lose; программой меняем только moves и финиш; внимательно к «не может за один ход» -->
+                <section>
+                    <div class="lesson-time">55</div>
+                    <h2>Что запомнить</h2>
+                    <ul>
+                        <li class="fragment">две кучи - та же игра, позиция - <mark>пара</mark> чисел</li>
+                        <li class="fragment">каждый вопрос №19-21 - строчка из <code>can_win</code> / <code>must_lose</code> с <code>not</code> и <code>and</code></li>
+                        <li class="fragment">в программе меняются только <code>moves</code> и финиш</li>
+                        <li class="fragment">читаем №19: «выиграл после неудачного хода» или «при любом ходе»</li>
+                    </ul>
+                </section>
+
+                <!-- домашнее задание: лёгкое (завтра занятие 38) - 2 игры с двумя кучами из банка ФИПИ программой, минут на 10 -->
+                <section>
+                    <h2>Домашнее задание</h2>
+                    <div class="timeline" style="font-size: 0.75em;">
+                        <div class="timeline-item fragment">
+                            <div class="timeline-marker">1</div>
+                            <div class="timeline-content">2 игры с двумя кучами из банка ФИПИ, решать <strong>программой</strong> с занятия: <a href="https://ege.fipi.ru/bank/questions.php?search=1&amp;proj=B9ACA5BBB2E19E434CD6BEC25284C67F&amp;zid=F75090" target="_blank" rel="noopener">+2, x2, финиш 169</a> и <a href="https://ege.fipi.ru/bank/questions.php?search=1&amp;proj=B9ACA5BBB2E19E434CD6BEC25284C67F&amp;zid=D0596B" target="_blank" rel="noopener">+3, x2, финиш 135</a></div>
+                        </div>
+                        <div class="timeline-item fragment">
+                            <div class="timeline-marker">2</div>
+                            <div class="timeline-content">дорешать практику 2, если не успели</div>
+                        </div>
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 1em;">
+                        Минут на 10: меняешь только ходы и числа. Завтра - занятие по программированию
+                    </div>
+                </section>
+
+            </section>
+
+        </div>
+    </div>
+
+    <script src="/utils/lib/js/head.min.js"></script>
+    <script src="/utils/js/reveal.js"></script>
+    <script>
+        Reveal.initialize({
+            controls: true,
+            progress: true,
+            history: true,
+            center: true,
+            transition: 'fade',
+            transitionSpeed: 'fast',
+            dependencies: [
+                { src: '/utils/lib/js/classList.js', condition: function () { return !document.body.classList; } },
+                { src: '/utils/plugin/markdown/marked.js', condition: function () { return !!document.querySelector('[data-markdown]'); } },
+                { src: '/utils/plugin/markdown/markdown.js', condition: function () { return !!document.querySelector('[data-markdown]'); } },
+                { src: '/utils/plugin/highlight/highlight.js', async: true, callback: function () { hljs.initHighlightingOnLoad(); } },
+                { src: '/utils/plugin/zoom-js/zoom.js', async: true },
+                { src: '/utils/plugin/notes/notes.js', async: true }
+            ]
+        });
+        Reveal.configure({ slideNumber: 'c/t' });
+    </script>
+    <script>
+        // живая игра: кучи 5 и 23, ход - +1 или x2 в одну из куч, финиш - сумма 59
+        (function () {
+            var START_A = 5, START_B = 23, FINISH = 59;
+            var a, b, turn, log;
+            var names = ['Петя', 'Ваня'];
+            var labels = { 'a+': '+1 в первую', 'a*': 'x2 первую', 'b+': '+1 во вторую', 'b*': 'x2 вторую' };
+            function el(id) { return document.getElementById(id); }
+            function draw() {
+                el('play-a').textContent = a;
+                el('play-b').textContent = b;
+                el('play-sum').textContent = a + b;
+                el('play-log').textContent = log.join('   ');
+                var turnEl = el('play-turn');
+                if (a + b >= FINISH) {
+                    turnEl.textContent = 'победил ' + names[1 - turn];
+                    turnEl.style.color = '#fd6';
+                } else {
+                    turnEl.textContent = 'ходит ' + names[turn];
+                    turnEl.style.color = '';
+                }
+            }
+            function reset() { a = START_A; b = START_B; turn = 0; log = ['(' + a + ', ' + b + ')']; draw(); }
+            document.querySelectorAll('#play button').forEach(function (btn) {
+                btn.addEventListener('click', function (e) {
+                    e.stopPropagation();
+                    var move = btn.dataset.move;
+                    if (move === 'reset') { reset(); return; }
+                    if (a + b >= FINISH) return;
+                    if (move === 'a+') a += 1;
+                    if (move === 'a*') a *= 2;
+                    if (move === 'b+') b += 1;
+                    if (move === 'b*') b *= 2;
+                    log.push(names[turn] + ': ' + labels[move] + ' = (' + a + ', ' + b + ')');
+                    turn = 1 - turn;
+                    draw();
+                });
+            });
+            reset();
+        })();
+
+        // таймер на слайде: клик - старт/пауза, "сброс" - обнулить
+        document.querySelectorAll('.timer').forEach(function (el) {
+            var limit = +el.dataset.limit || 180;
+            var fill = el.querySelector('.timer-fill');
+            var timeEl = el.querySelector('.timer-time');
+            var hint = el.querySelector('.timer-hint');
+            var spent = 0, startedAt = null, tick = null;
+
+            function fmt(sec) {
+                sec = Math.floor(sec);
+                return Math.floor(sec / 60) + ':' + String(sec % 60).padStart(2, '0');
+            }
+            function elapsed() {
+                return spent + (startedAt ? (Date.now() - startedAt) / 1000 : 0);
+            }
+            function draw() {
+                var t = elapsed();
+                fill.style.width = Math.min(t / limit, 1) * 100 + '%';
+                el.classList.toggle('warn', t >= limit * 0.8 && t < limit);
+                el.classList.toggle('over', t >= limit);
+                timeEl.textContent = t >= limit
+                    ? fmt(limit) + ' + ' + fmt(t - limit)
+                    : fmt(t) + ' / ' + fmt(limit);
+            }
+            function toggle() {
+                if (startedAt) {
+                    spent = elapsed(); startedAt = null;
+                    clearInterval(tick);
+                    hint.textContent = 'пауза - клик, чтобы продолжить';
+                } else {
+                    startedAt = Date.now();
+                    tick = setInterval(draw, 200);
+                    hint.textContent = 'идёт - клик для паузы';
+                }
+                draw();
+            }
+            el.addEventListener('click', function (e) {
+                e.stopPropagation();
+                if (e.target.closest('.timer-reset')) {
+                    clearInterval(tick); spent = 0; startedAt = null;
+                    hint.textContent = 'клик - старт';
+                } else {
+                    toggle();
+                }
+                draw();
+            });
+            draw();
+        });
+    </script>
+</body>
+
+</html>
