@@ -2,9 +2,11 @@
 # Дано неотрицательное целое n. Вернуть, сколько единиц в его двоичной записи.
 # Без bin() и строк: только операции с битами.
 def hamming_weight(n: int) -> int:
-    pass
-
-
+    count = 0
+    while n > 0:
+        count += n & 1
+        n = n >> 1
+    return count
 
 
 print(hamming_weight(11), 3)

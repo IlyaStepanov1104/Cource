@@ -1,9 +1,12 @@
 # LeetCode 461. Hamming Distance.
 # Даны два неотрицательных числа x и y. Вернуть, в скольких разрядах их двоичные записи различаются.
 def hamming_distance(x: int, y: int) -> int:
-    pass
-
-
+    diff = x ^ y
+    count = 0
+    while diff > 0:
+        count += diff & 1
+        diff >>= 1
+    return count
 
 
 print(hamming_distance(1, 4), 2)

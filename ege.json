@@ -99,8 +99,45 @@
       "title": "№5: алгоритмы с двоичной записью числа",
       "date": "2026-10-20T19:00:00",
       "duration": 60,
-      "presentations": [],
-      "homeworks": []
+      "presentations": [
+        {
+          "title": "Презентация",
+          "link": "/lessons-ege/04-binary-algorithm/",
+          "order": 1
+        }
+      ],
+      "homeworks": [
+        {
+          "title": "ФИПИ D32E0F",
+          "description": "№5: чётное - 1 слева и 0 справа, нечётное - 11 с двух сторон; наименьшее R больше 52. Сначала build_r на примере из условия",
+          "link": "https://ege.fipi.ru/bank/questions.php?search=1&proj=B9ACA5BBB2E19E434CD6BEC25284C67F&qid=D32E0F"
+        },
+        {
+          "title": "ФИПИ B9FDF9",
+          "description": "№5: остаток от деления на 3; наибольшее R не больше 162",
+          "link": "https://ege.fipi.ru/bank/questions.php?search=1&proj=B9ACA5BBB2E19E434CD6BEC25284C67F&qid=B9FDF9"
+        },
+        {
+          "title": "ФИПИ 2A4EB2",
+          "description": "№5: замена двух левых разрядов; наибольшее N, при котором R меньше 40",
+          "link": "https://ege.fipi.ru/bank/questions.php?search=1&proj=B9ACA5BBB2E19E434CD6BEC25284C67F&qid=2A4EB2"
+        },
+        {
+          "title": "ФИПИ C30EF4",
+          "description": "№5: два бита чётности; наименьшее R больше 396",
+          "link": "https://ege.fipi.ru/bank/questions.php?search=1&proj=B9ACA5BBB2E19E434CD6BEC25284C67F&qid=C30EF4"
+        },
+        {
+          "title": "ФИПИ C412B3",
+          "description": "№5: сумма цифр в двоичной; наименьшее N, при котором R больше 190",
+          "link": "https://ege.fipi.ru/bank/questions.php?search=1&proj=B9ACA5BBB2E19E434CD6BEC25284C67F&qid=C412B3"
+        },
+        {
+          "title": "ФИПИ F81739",
+          "description": "Повторение №19-21: две кучи, +1 и x3, первая куча 6, финиш 65. Программой с занятия 3",
+          "link": "https://ege.fipi.ru/bank/questions.php?search=1&proj=B9ACA5BBB2E19E434CD6BEC25284C67F&zid=F81739"
+        }
+      ]
     },
     {
       "number": 5,

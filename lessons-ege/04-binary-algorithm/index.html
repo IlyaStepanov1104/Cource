@@ -1,0 +1,472 @@
+<!doctype html>
+<html lang="ru">
+
+<head>
+    <meta charset="utf-8">
+    <title>ЕГЭ, занятие 4 - №5: алгоритмы с двоичной записью числа</title>
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+
+    <link rel="stylesheet" href="/utils/css/reveal.css">
+    <link rel="stylesheet" href="/utils/lib/css/animate.css">
+    <link rel="stylesheet" href="/utils/css/theme/night.css" id="theme">
+    <link rel="stylesheet" href="/utils/lib/css/zenburn.css">
+    <link rel="stylesheet" href="/utils/css/custom-base.css">
+    <link rel="stylesheet" href="css-custom/custom.css">
+
+    <script>
+        var link = document.createElement('link');
+        link.rel = 'stylesheet'; link.type = 'text/css';
+        link.href = window.location.search.match(/print-pdf/gi)
+            ? '/utils/css/print/pdf.css'
+            : '/utils/css/print/paper.css';
+        document.getElementsByTagName('head')[0].appendChild(link);
+    </script>
+</head>
+
+<body>
+    <div class="reveal">
+        <div class="slides">
+
+            <!-- титульный слайд: №5, алгоритмы с двоичной записью числа -->
+            <section style="font-size: 70px; height: 100%; width: 100%">
+                <div class="lesson-time">0</div>
+                <div class="fragment">
+                    <h1 class="animated" style="font-size: 1.5em;">Двоичная запись числа</h1>
+                    <p style="text-align: center; font-size: 0.45em; opacity: 0.6;">задание 5</p>
+                    <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">ЕГЭ, занятие 4</p>
+                </div>
+            </section>
+
+            <!-- ЧАСТЬ 1: что такое №5 - алгоритм руками -->
+            <section>
+
+                <!-- место №5 в экзамене: 1 балл, базовый уровень, решается программой за 3-5 минут -->
+                <section>
+                    <div class="lesson-time">5</div>
+                    <h2>Задание 5</h2>
+<div class="timeline" style="font-size: 0.65em;">
+    <div class="timeline-item fragment">
+        <div class="timeline-marker">1</div>
+        <div class="timeline-content"><strong>1 балл</strong>, базовый уровень</div>
+    </div>
+    <div class="timeline-item fragment">
+        <div class="timeline-marker">2</div>
+        <div class="timeline-content">в 2026 решили <strong>61%</strong>: каждый третий потерял лёгкий балл</div>
+    </div>
+    <div class="timeline-item fragment">
+        <div class="timeline-marker">3</div>
+        <div class="timeline-content">по числу N строят R через двоичную запись - <mark>то, что было вчера</mark></div>
+    </div>
+</div>
+<div class="fragment opinion" style="margin-top: 0.6em;">
+    Программой - 3-5 минут. Цель занятия: решать №5 без ошибок
+</div>
+                </section>
+
+                <!-- условие из демо-2027: N -> двоичная запись -> дописываем цифры по правилу -> R -->
+                <section>
+                    <h2>Условие из демо-2027</h2>
+<div style="position: relative; font-size: 0.5em; text-align: left; border-left: 4px solid #8ab; padding: 0.3em 5em 0.3em 0.8em; background: rgba(136, 170, 187, 0.08);"><span style="position: absolute; top: 0.3em; right: 0.6em; font-size: 0.75em; opacity: 0.5;">155886</span><p class="fragment">На вход алгоритма подаётся натуральное число <strong>N</strong>. Алгоритм строит по нему новое число <strong>R</strong>:</p>
+<p class="fragment">1. Строится <mark>двоичная запись</mark> числа N.</p>
+<p class="fragment">2. Если N <mark>чётное</mark>, к записи справа и слева дописываются по две единицы. Если N <mark>нечётное</mark>, справа дописываются два нуля, слева - единица.</p>
+<p class="fragment">3. Полученная запись - двоичная запись R.</p>
+<p class="fragment">Укажите <mark>наименьшее число R</mark>, превышающее 95, которое может быть результатом работы алгоритма.</p></div>
+                </section>
+
+                <!-- вспоминаем с понедельника: 13 в двоичную (картинка разряды/степени двойки) -->
+                <section>
+                    <h2>13 в двоичную</h2>
+<p class="fragment" data-fragment-index="1" style="font-size: 0.55em;">разряды - степени двойки, берём самую большую, которая влезает</p>
+<svg width="780" height="234" viewBox="0 0 600 180"><g class="fragment" data-fragment-index="1"><text x="240.0" y="22" fill="#99a" font-size="14" text-anchor="middle">8</text><text x="280.0" y="22" fill="#99a" font-size="14" text-anchor="middle">4</text><text x="320.0" y="22" fill="#99a" font-size="14" text-anchor="middle">2</text><text x="360.0" y="22" fill="#99a" font-size="14" text-anchor="middle">1</text></g><g class="fragment" data-fragment-index="2"><rect x="222.0" y="34" width="36" height="46" rx="4" fill="#8ab" fill-opacity="0.3" stroke="#8ab" stroke-width="2" /><text x="240.0" y="65" fill="#dde" font-size="24" font-family="monospace" text-anchor="middle">1</text></g><g class="fragment" data-fragment-index="3"><rect x="262.0" y="34" width="36" height="46" rx="4" fill="#8ab" fill-opacity="0.3" stroke="#8ab" stroke-width="2" /><text x="280.0" y="65" fill="#dde" font-size="24" font-family="monospace" text-anchor="middle">1</text></g><g class="fragment" data-fragment-index="4"><rect x="302.0" y="34" width="36" height="46" rx="4" fill="#556" fill-opacity="0.1" stroke="#556" stroke-width="2" /><text x="320.0" y="65" fill="#778" font-size="24" font-family="monospace" text-anchor="middle">0</text></g><g class="fragment" data-fragment-index="5"><rect x="342.0" y="34" width="36" height="46" rx="4" fill="#8ab" fill-opacity="0.3" stroke="#8ab" stroke-width="2" /><text x="360.0" y="65" fill="#dde" font-size="24" font-family="monospace" text-anchor="middle">1</text></g><g class="fragment" data-fragment-index="2"><text x="240.0" y="104" fill="#99a" font-size="13" text-anchor="middle">13 - 8 = 5</text></g><g class="fragment" data-fragment-index="3"><text x="280.0" y="124" fill="#99a" font-size="13" text-anchor="middle">5 - 4 = 1</text></g><g class="fragment" data-fragment-index="4"><text x="320.0" y="104" fill="#99a" font-size="13" text-anchor="middle">2 не влезает</text></g><g class="fragment" data-fragment-index="5"><text x="360.0" y="124" fill="#99a" font-size="13" text-anchor="middle">1 - 1 = 0</text></g><g class="fragment" data-fragment-index="6"><text x="300" y="168" fill="#fd6" font-size="18" text-anchor="middle">13 = 8 + 4 + 1 = 1101<tspan font-size="12">2</tspan></text></g></svg>
+                </section>
+
+                <!-- трассировка руками для N = 13: запись -> шаг 1 -> шаг 2 -> R, каждая цифра фрагментом -->
+                <section>
+                    <h2>Алгоритм руками: N = 13</h2>
+<svg width="780" height="273" viewBox="0 0 600 210"><defs><marker id="t13" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#667" /></marker></defs><g class="fragment" data-fragment-index="1"><text x="20" y="50" fill="#99a" font-size="17" text-anchor="start">N = 13</text><rect x="120" y="20" width="36" height="46" rx="4" fill="#8ab" fill-opacity="0.3" stroke="#8ab" stroke-width="2" /><text x="138.0" y="51" fill="#dde" font-size="24" font-family="monospace" text-anchor="middle">1</text><rect x="160" y="20" width="36" height="46" rx="4" fill="#8ab" fill-opacity="0.3" stroke="#8ab" stroke-width="2" /><text x="178.0" y="51" fill="#dde" font-size="24" font-family="monospace" text-anchor="middle">1</text><rect x="200" y="20" width="36" height="46" rx="4" fill="#8ab" fill-opacity="0.3" stroke="#8ab" stroke-width="2" /><text x="218.0" y="51" fill="#dde" font-size="24" font-family="monospace" text-anchor="middle">0</text><rect x="240" y="20" width="36" height="46" rx="4" fill="#8ab" fill-opacity="0.3" stroke="#8ab" stroke-width="2" /><text x="258.0" y="51" fill="#dde" font-size="24" font-family="monospace" text-anchor="middle">1</text></g><g class="fragment" data-fragment-index="2"><text x="300" y="50" fill="#f7a" font-size="17" text-anchor="start">нечётное</text></g><g class="fragment" data-fragment-index="3"><line x1="178" y1="72" x2="178" y2="104" stroke="#667" stroke-width="2" marker-end="url(#t13)" /></g><g class="fragment" data-fragment-index="3"><g class="fragment" data-fragment-index="4"><rect x="120" y="110" width="36" height="46" rx="4" fill="#f7a" fill-opacity="0.4" stroke="#f7a" stroke-width="2" /><text x="138.0" y="141" fill="#dde" font-size="24" font-family="monospace" text-anchor="middle">1</text></g><rect x="160" y="110" width="36" height="46" rx="4" fill="#8ab" fill-opacity="0.3" stroke="#8ab" stroke-width="2" /><text x="178.0" y="141" fill="#dde" font-size="24" font-family="monospace" text-anchor="middle">1</text><rect x="200" y="110" width="36" height="46" rx="4" fill="#8ab" fill-opacity="0.3" stroke="#8ab" stroke-width="2" /><text x="218.0" y="141" fill="#dde" font-size="24" font-family="monospace" text-anchor="middle">1</text><rect x="240" y="110" width="36" height="46" rx="4" fill="#8ab" fill-opacity="0.3" stroke="#8ab" stroke-width="2" /><text x="258.0" y="141" fill="#dde" font-size="24" font-family="monospace" text-anchor="middle">0</text><rect x="280" y="110" width="36" height="46" rx="4" fill="#8ab" fill-opacity="0.3" stroke="#8ab" stroke-width="2" /><text x="298.0" y="141" fill="#dde" font-size="24" font-family="monospace" text-anchor="middle">1</text><g class="fragment" data-fragment-index="5"><rect x="320" y="110" width="36" height="46" rx="4" fill="#fd6" fill-opacity="0.3" stroke="#fd6" stroke-width="2" /><text x="338.0" y="141" fill="#dde" font-size="24" font-family="monospace" text-anchor="middle">0</text></g><g class="fragment" data-fragment-index="5"><rect x="360" y="110" width="36" height="46" rx="4" fill="#fd6" fill-opacity="0.3" stroke="#fd6" stroke-width="2" /><text x="378.0" y="141" fill="#dde" font-size="24" font-family="monospace" text-anchor="middle">0</text></g></g><g class="fragment" data-fragment-index="4"><text x="110" y="140" fill="#f7a" font-size="14" text-anchor="end">слева 1</text></g><g class="fragment" data-fragment-index="5"><text x="410" y="140" fill="#fd6" font-size="14" text-anchor="start">справа 00</text></g><g class="fragment" data-fragment-index="6"><text x="120" y="196" fill="#fd6" font-size="18" text-anchor="start">R = 1110100<tspan font-size="12">2</tspan></text></g></svg>
+                </section>
+
+                <!-- R обратно в десятичную: картинка разрядов, как в занятии 38 -->
+                <section>
+                    <h2>R обратно в десятичную</h2>
+<svg width="780" height="176" viewBox="0 0 600 135"><g class="fragment" data-fragment-index="1"><rect x="162.0" y="34" width="36" height="46" rx="4" fill="#8ab" fill-opacity="0.3" stroke="#8ab" stroke-width="2" /><text x="180.0" y="65" fill="#dde" font-size="24" font-family="monospace" text-anchor="middle">1</text><rect x="202.0" y="34" width="36" height="46" rx="4" fill="#8ab" fill-opacity="0.3" stroke="#8ab" stroke-width="2" /><text x="220.0" y="65" fill="#dde" font-size="24" font-family="monospace" text-anchor="middle">1</text><rect x="242.0" y="34" width="36" height="46" rx="4" fill="#8ab" fill-opacity="0.3" stroke="#8ab" stroke-width="2" /><text x="260.0" y="65" fill="#dde" font-size="24" font-family="monospace" text-anchor="middle">1</text><rect x="282.0" y="34" width="36" height="46" rx="4" fill="#556" fill-opacity="0.1" stroke="#556" stroke-width="2" /><text x="300.0" y="65" fill="#778" font-size="24" font-family="monospace" text-anchor="middle">0</text><rect x="322.0" y="34" width="36" height="46" rx="4" fill="#8ab" fill-opacity="0.3" stroke="#8ab" stroke-width="2" /><text x="340.0" y="65" fill="#dde" font-size="24" font-family="monospace" text-anchor="middle">1</text><rect x="362.0" y="34" width="36" height="46" rx="4" fill="#556" fill-opacity="0.1" stroke="#556" stroke-width="2" /><text x="380.0" y="65" fill="#778" font-size="24" font-family="monospace" text-anchor="middle">0</text><rect x="402.0" y="34" width="36" height="46" rx="4" fill="#556" fill-opacity="0.1" stroke="#556" stroke-width="2" /><text x="420.0" y="65" fill="#778" font-size="24" font-family="monospace" text-anchor="middle">0</text></g><g class="fragment" data-fragment-index="2"><text x="180.0" y="22" fill="#99a" font-size="14" text-anchor="middle">64</text><text x="220.0" y="22" fill="#99a" font-size="14" text-anchor="middle">32</text><text x="260.0" y="22" fill="#99a" font-size="14" text-anchor="middle">16</text><text x="300.0" y="22" fill="#99a" font-size="14" text-anchor="middle">8</text><text x="340.0" y="22" fill="#99a" font-size="14" text-anchor="middle">4</text><text x="380.0" y="22" fill="#99a" font-size="14" text-anchor="middle">2</text><text x="420.0" y="22" fill="#99a" font-size="14" text-anchor="middle">1</text></g><g class="fragment" data-fragment-index="3"><text x="300" y="120" fill="#fd6" font-size="20" text-anchor="middle">64 + 32 + 16 + 4 = 116</text></g></svg>
+<p class="fragment" data-fragment-index="4" style="font-size: 0.55em;">совпало с примером из условия: 13 -> <strong>116</strong></p>
+                </section>
+
+                <!-- ещё одно N устно: ученик проходит алгоритм сам -->
+                <section>
+                    <h2>Теперь ты: N = 6</h2>
+<p style="font-size: 0.55em; opacity: 0.8;">проговори вслух каждый шаг, потом открываем</p>
+<svg width="780" height="273" viewBox="0 0 600 210"><defs><marker id="t6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#667" /></marker></defs><g class="fragment" data-fragment-index="1"><text x="20" y="50" fill="#99a" font-size="17" text-anchor="start">N = 6</text><rect x="120" y="20" width="36" height="46" rx="4" fill="#8ab" fill-opacity="0.3" stroke="#8ab" stroke-width="2" /><text x="138.0" y="51" fill="#dde" font-size="24" font-family="monospace" text-anchor="middle">1</text><rect x="160" y="20" width="36" height="46" rx="4" fill="#8ab" fill-opacity="0.3" stroke="#8ab" stroke-width="2" /><text x="178.0" y="51" fill="#dde" font-size="24" font-family="monospace" text-anchor="middle">1</text><rect x="200" y="20" width="36" height="46" rx="4" fill="#8ab" fill-opacity="0.3" stroke="#8ab" stroke-width="2" /><text x="218.0" y="51" fill="#dde" font-size="24" font-family="monospace" text-anchor="middle">0</text></g><g class="fragment" data-fragment-index="2"><text x="260" y="50" fill="#8ab" font-size="17" text-anchor="start">чётное</text></g><g class="fragment" data-fragment-index="3"><line x1="158" y1="72" x2="158" y2="104" stroke="#667" stroke-width="2" marker-end="url(#t6)" /></g><g class="fragment" data-fragment-index="3"><rect x="120" y="110" width="36" height="46" rx="4" fill="#f7a" fill-opacity="0.4" stroke="#f7a" stroke-width="2" /><text x="138.0" y="141" fill="#dde" font-size="24" font-family="monospace" text-anchor="middle">1</text><rect x="160" y="110" width="36" height="46" rx="4" fill="#f7a" fill-opacity="0.4" stroke="#f7a" stroke-width="2" /><text x="178.0" y="141" fill="#dde" font-size="24" font-family="monospace" text-anchor="middle">1</text><rect x="200" y="110" width="36" height="46" rx="4" fill="#8ab" fill-opacity="0.3" stroke="#8ab" stroke-width="2" /><text x="218.0" y="141" fill="#dde" font-size="24" font-family="monospace" text-anchor="middle">1</text><rect x="240" y="110" width="36" height="46" rx="4" fill="#8ab" fill-opacity="0.3" stroke="#8ab" stroke-width="2" /><text x="258.0" y="141" fill="#dde" font-size="24" font-family="monospace" text-anchor="middle">1</text><rect x="280" y="110" width="36" height="46" rx="4" fill="#8ab" fill-opacity="0.3" stroke="#8ab" stroke-width="2" /><text x="298.0" y="141" fill="#dde" font-size="24" font-family="monospace" text-anchor="middle">0</text><rect x="320" y="110" width="36" height="46" rx="4" fill="#fd6" fill-opacity="0.3" stroke="#fd6" stroke-width="2" /><text x="338.0" y="141" fill="#dde" font-size="24" font-family="monospace" text-anchor="middle">1</text><rect x="360" y="110" width="36" height="46" rx="4" fill="#fd6" fill-opacity="0.3" stroke="#fd6" stroke-width="2" /><text x="378.0" y="141" fill="#dde" font-size="24" font-family="monospace" text-anchor="middle">1</text><text x="110" y="140" fill="#f7a" font-size="14" text-anchor="end">11</text><text x="410" y="140" fill="#fd6" font-size="14" text-anchor="start">11</text></g><g class="fragment" data-fragment-index="4"><text x="120" y="196" fill="#fd6" font-size="17" text-anchor="start">R = 1111011<tspan font-size="12">2</tspan> = 64 + 32 + 16 + 8 + 2 + 1 = 123</text></g></svg>
+                </section>
+
+                <!-- вопрос задачи: «наименьшее N, при котором R > X» - почему руками это долго -->
+                <section>
+                    <h2>Почему руками долго</h2>
+<p style="font-size: 0.55em;">R для первых восьми N: <span style="color: #f7a;">нечётные</span> и <span style="color: #8ab;">чётные</span></p>
+<svg width="832" height="364" viewBox="0 0 640 280"><g class="fragment" data-fragment-index="1"><text x="62" y="28" fill="#99a" font-size="15" text-anchor="end">N = 1</text><rect x="70" y="12" width="25" height="22" rx="3" fill="#f7a" fill-opacity="0.45" stroke="#f7a" /><text x="101" y="28" fill="#dde" font-size="15">12</text><text x="62" y="58" fill="#99a" font-size="15" text-anchor="end">N = 2</text><rect x="70" y="42" width="125" height="22" rx="3" fill="#8ab" fill-opacity="0.45" stroke="#8ab" /><text x="201" y="58" fill="#dde" font-size="15">59</text><text x="62" y="88" fill="#99a" font-size="15" text-anchor="end">N = 3</text><rect x="70" y="72" width="59" height="22" rx="3" fill="#f7a" fill-opacity="0.45" stroke="#f7a" /><text x="135" y="88" fill="#dde" font-size="15">28</text><text x="62" y="118" fill="#99a" font-size="15" text-anchor="end">N = 4</text><rect x="70" y="102" width="243" height="22" rx="3" fill="#8ab" fill-opacity="0.45" stroke="#8ab" /><text x="319" y="118" fill="#dde" font-size="15">115</text><text x="62" y="148" fill="#99a" font-size="15" text-anchor="end">N = 5</text><rect x="70" y="132" width="110" height="22" rx="3" fill="#f7a" fill-opacity="0.45" stroke="#f7a" /><text x="186" y="148" fill="#dde" font-size="15">52</text><text x="62" y="178" fill="#99a" font-size="15" text-anchor="end">N = 6</text><rect x="70" y="162" width="260" height="22" rx="3" fill="#8ab" fill-opacity="0.45" stroke="#8ab" /><text x="336" y="178" fill="#dde" font-size="15">123</text><text x="62" y="208" fill="#99a" font-size="15" text-anchor="end">N = 7</text><rect x="70" y="192" width="127" height="22" rx="3" fill="#f7a" fill-opacity="0.45" stroke="#f7a" /><text x="203" y="208" fill="#dde" font-size="15">60</text><text x="62" y="238" fill="#99a" font-size="15" text-anchor="end">N = 8</text><rect x="70" y="222" width="480" height="22" rx="3" fill="#8ab" fill-opacity="0.45" stroke="#8ab" /><text x="556" y="238" fill="#dde" font-size="15">227</text></g><g class="fragment" data-fragment-index="2"><line x1="271" y1="4" x2="271" y2="255" stroke="#fd6" stroke-width="2" stroke-dasharray="6 4" /><text x="271" y="272" fill="#fd6" font-size="14" text-anchor="middle">95</text></g></svg>
+<div class="fragment opinion" data-fragment-index="3" style="margin-top: 0.2em;">
+    R прыгает: чётные N получают на разряд больше. Перебирать будет компьютер
+</div>
+                </section>
+
+            </section>
+
+            <!-- ЧАСТЬ 2: решаем программой - перебор N -->
+            <section>
+
+                <!-- идея: перебираем N подряд, для каждого строим R, первое подходящее - ответ -->
+                <section>
+                    <div class="lesson-time">17</div>
+                    <h2>Идея: перебор</h2>
+<div class="timeline" style="font-size: 0.65em;">
+    <div class="timeline-item fragment">
+        <div class="timeline-marker">1</div>
+        <div class="timeline-content">берём N = 1, 2, 3, ... до 1000</div>
+    </div>
+    <div class="timeline-item fragment">
+        <div class="timeline-marker">2</div>
+        <div class="timeline-content">для каждого строим R <strong>точно по условию</strong></div>
+    </div>
+    <div class="timeline-item fragment">
+        <div class="timeline-marker">3</div>
+        <div class="timeline-content">проверяем условие на R и выбираем то, что <mark>спросили</mark></div>
+    </div>
+</div>
+<div class="fragment opinion" style="margin-top: 0.6em;">
+    Думать не надо - надо аккуратно переписать правило
+</div>
+                </section>
+
+                <!-- инструменты: bin(n)[2:] и int(s, 2) - вспоминаем «запись как строка» с занятия 38 -->
+                <section>
+                    <h2>Запись как строка</h2>
+<p class="fragment" style="font-size: 0.55em;">как вчера: число -> строка из 0 и 1 -> число</p>
+<div class="code-block fragment">
+<pre class="python size-m"><code>bin(13)            # '0b1101'
+bin(13)[2:]        # '1101'
+'1' + '1101' + '00'  # '1110100'
+int('1110100', 2)  # 116</code></pre>
+</div>
+<div class="fragment opinion" style="margin-top: 0.4em;">
+    <code>[2:]</code> отрезает <code>0b</code>. <code>int(s, 2)</code> - прочитать строку как двоичную
+</div>
+                </section>
+
+                <!-- правило «сумма цифр чётная/нечётная»: count('1') и % 2 -->
+                <section>
+                    <h2>Сумма цифр</h2>
+<p style="font-size: 0.55em;">в двоичной записи сумма цифр = сколько единиц</p>
+<svg width="780" height="117" viewBox="0 0 600 90"><g class="fragment" data-fragment-index="1"><rect x="40" y="10" width="36" height="46" rx="4" fill="#8ab" fill-opacity="0.3" stroke="#8ab" stroke-width="2" /><text x="58.0" y="41" fill="#dde" font-size="24" font-family="monospace" text-anchor="middle">1</text><rect x="80" y="10" width="36" height="46" rx="4" fill="#8ab" fill-opacity="0.3" stroke="#8ab" stroke-width="2" /><text x="98.0" y="41" fill="#dde" font-size="24" font-family="monospace" text-anchor="middle">1</text><rect x="120" y="10" width="36" height="46" rx="4" fill="#556" fill-opacity="0.1" stroke="#556" stroke-width="2" /><text x="138.0" y="41" fill="#778" font-size="24" font-family="monospace" text-anchor="middle">0</text><rect x="160" y="10" width="36" height="46" rx="4" fill="#8ab" fill-opacity="0.3" stroke="#8ab" stroke-width="2" /><text x="178.0" y="41" fill="#dde" font-size="24" font-family="monospace" text-anchor="middle">1</text></g><g class="fragment" data-fragment-index="2"><text x="220" y="40" fill="#dde" font-size="18" text-anchor="start"><tspan font-family="monospace">'1101'.count('1')</tspan> = 3</text></g><g class="fragment" data-fragment-index="3"><text x="220" y="75" fill="#f7a" font-size="16" text-anchor="start">3 % 2 = 1 - сумма нечётная</text></g></svg>
+<div class="code-block fragment" data-fragment-index="4">
+<pre class="python size-s"><code>s.count('1') % 2 == 0   # сумма чётная</code></pre>
+</div>
+                </section>
+
+                <!-- схема программы словами: функция build_r(n) + цикл перебора, без кода на слайде -->
+                <section>
+                    <h2>Схема программы</h2>
+<div class="compare" style="font-size: 0.8em;">
+    <div class="compare-block fragment">
+        <h4><code>build_r(n)</code></h4>
+        <p style="font-size: 0.6em;">строка из <code>n</code> -> дописали по правилу -> число</p>
+        <p style="font-size: 0.55em; opacity: 0.7;">меняется от задачи к задаче</p>
+    </div>
+    <div class="compare-block fragment">
+        <h4><code>answer()</code></h4>
+        <p style="font-size: 0.6em;">перебор N, проверка R, выбор ответа</p>
+        <p style="font-size: 0.55em; opacity: 0.7;">почти всегда одинаковый</p>
+    </div>
+</div>
+<div class="fragment opinion" style="margin-top: 0.6em;">
+    Сначала проверяем <code>build_r</code> на примерах из условия, потом ищем ответ
+</div>
+                </section>
+
+                <!-- реализуем код вместе в PyCharm на задаче из демо -->
+                <section>
+                    <h2>Пишем вместе</h2>
+<ul style="font-size: 0.6em; text-align: left;">
+    <li class="fragment" data-fragment-index="1">файл <code>1_demo.py</code></li>
+    <li class="fragment" data-fragment-index="2">проверка: <code>build_r(13)</code> = 116, <code>build_r(6)</code> = 123</li>
+    <li class="fragment" data-fragment-index="3">ответ: наименьшее R больше 95</li>
+</ul>
+<p class="fragment" data-fragment-index="4" style="font-size: 0.55em;">ответ <strong>100</strong> - проверим руками:</p>
+<svg width="936" height="78" viewBox="0 0 720 60"><defs><marker id="s9" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#667" /></marker></defs><g class="fragment" data-fragment-index="5"><text x="20" y="36" fill="#99a" font-size="16" text-anchor="start">N = 9</text><rect x="110" y="6" width="36" height="46" rx="4" fill="#8ab" fill-opacity="0.3" stroke="#8ab" stroke-width="2" /><text x="128.0" y="37" fill="#dde" font-size="24" font-family="monospace" text-anchor="middle">1</text><rect x="150" y="6" width="36" height="46" rx="4" fill="#8ab" fill-opacity="0.3" stroke="#8ab" stroke-width="2" /><text x="168.0" y="37" fill="#dde" font-size="24" font-family="monospace" text-anchor="middle">0</text><rect x="190" y="6" width="36" height="46" rx="4" fill="#8ab" fill-opacity="0.3" stroke="#8ab" stroke-width="2" /><text x="208.0" y="37" fill="#dde" font-size="24" font-family="monospace" text-anchor="middle">0</text><rect x="230" y="6" width="36" height="46" rx="4" fill="#8ab" fill-opacity="0.3" stroke="#8ab" stroke-width="2" /><text x="248.0" y="37" fill="#dde" font-size="24" font-family="monospace" text-anchor="middle">1</text><line x1="276" y1="29" x2="296" y2="29" stroke="#667" stroke-width="2" marker-end="url(#s9)" /><rect x="300" y="6" width="36" height="46" rx="4" fill="#f7a" fill-opacity="0.4" stroke="#f7a" stroke-width="2" /><text x="318.0" y="37" fill="#dde" font-size="24" font-family="monospace" text-anchor="middle">1</text><rect x="340" y="6" width="36" height="46" rx="4" fill="#8ab" fill-opacity="0.3" stroke="#8ab" stroke-width="2" /><text x="358.0" y="37" fill="#dde" font-size="24" font-family="monospace" text-anchor="middle">1</text><rect x="380" y="6" width="36" height="46" rx="4" fill="#8ab" fill-opacity="0.3" stroke="#8ab" stroke-width="2" /><text x="398.0" y="37" fill="#dde" font-size="24" font-family="monospace" text-anchor="middle">0</text><rect x="420" y="6" width="36" height="46" rx="4" fill="#8ab" fill-opacity="0.3" stroke="#8ab" stroke-width="2" /><text x="438.0" y="37" fill="#dde" font-size="24" font-family="monospace" text-anchor="middle">0</text><rect x="460" y="6" width="36" height="46" rx="4" fill="#8ab" fill-opacity="0.3" stroke="#8ab" stroke-width="2" /><text x="478.0" y="37" fill="#dde" font-size="24" font-family="monospace" text-anchor="middle">1</text><rect x="500" y="6" width="36" height="46" rx="4" fill="#fd6" fill-opacity="0.3" stroke="#fd6" stroke-width="2" /><text x="518.0" y="37" fill="#dde" font-size="24" font-family="monospace" text-anchor="middle">0</text><rect x="540" y="6" width="36" height="46" rx="4" fill="#fd6" fill-opacity="0.3" stroke="#fd6" stroke-width="2" /><text x="558.0" y="37" fill="#dde" font-size="24" font-family="monospace" text-anchor="middle">0</text><text x="586" y="36" fill="#fd6" font-size="17" text-anchor="start">= 100</text></g></svg>
+                </section>
+
+                <!-- что спрашивают: наименьшее N / наименьшее R / наибольшее N - где менять цикл -->
+                <section>
+                    <h2>Что спрашивают</h2>
+<table style="font-size: 0.55em; width: 100%; margin-top: 0.5em;">
+    <tr><td><strong>Вопрос</strong></td><td><strong>Что делает цикл</strong></td></tr>
+    <tr class="fragment"><td>наименьшее <mark>N</mark>, при котором R ...</td><td>первое подходящее N - сразу <code>return</code></td></tr>
+    <tr class="fragment"><td>наибольшее <mark>N</mark>, при котором R ...</td><td>идём до конца, запоминаем последнее подходящее</td></tr>
+    <tr class="fragment"><td>наименьшее / наибольшее <mark class="yellow">R</mark></td><td>идём до конца, храним лучшее R</td></tr>
+</table>
+<div class="fragment opinion" style="margin-top: 0.5em;">
+    В демо спрашивают <mark class="yellow">R</mark>: первое N с R &gt; 95 - это N = 4 и R = 115. Неверно!
+</div>
+                </section>
+
+                <!-- ловушки: «больше» vs «не меньше», N или R в ответ, хватает ли диапазона перебора -->
+                <section>
+                    <h2>Ловушки</h2>
+<div class="compare" style="font-size: 0.75em;">
+    <div class="compare-block fragment">
+        <h4>знак</h4>
+        <p style="font-size: 0.6em;">«больше», «превышает» - <code>&gt;</code></p>
+        <p style="font-size: 0.6em;">«не меньше» - <code>&gt;=</code></p>
+    </div>
+    <div class="compare-block fragment">
+        <h4>что в ответ</h4>
+        <p style="font-size: 0.6em;">N или R? Подчеркни в условии</p>
+    </div>
+    <div class="compare-block fragment">
+        <h4>диапазон</h4>
+        <p style="font-size: 0.6em;">ответ не должен быть у самой границы перебора</p>
+    </div>
+</div>
+                </section>
+
+            </section>
+
+            <!-- ЧАСТЬ 3: вариации правила -->
+            <section>
+
+                <!-- вариация 1: N чётное - дописать справа, нечётное - слева (картинка: куда встаёт цифра) -->
+                <section>
+                    <div class="lesson-time">32</div>
+                    <h2>Справа или слева</h2>
+<p style="font-size: 0.5em; opacity: 0.8;">ФИПИ 4D0976. Наименьшее N, при котором R больше 441</p>
+<svg width="936" height="237" viewBox="0 0 720 182"><defs><marker id="sd" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#667" /></marker></defs><g class="fragment" data-fragment-index="1"><text x="20" y="40" fill="#99a" font-size="16" text-anchor="start">N = 4</text><rect x="110" y="10" width="36" height="46" rx="4" fill="#8ab" fill-opacity="0.3" stroke="#8ab" stroke-width="2" /><text x="128.0" y="41" fill="#dde" font-size="24" font-family="monospace" text-anchor="middle">1</text><rect x="150" y="10" width="36" height="46" rx="4" fill="#8ab" fill-opacity="0.3" stroke="#8ab" stroke-width="2" /><text x="168.0" y="41" fill="#dde" font-size="24" font-family="monospace" text-anchor="middle">0</text><rect x="190" y="10" width="36" height="46" rx="4" fill="#8ab" fill-opacity="0.3" stroke="#8ab" stroke-width="2" /><text x="208.0" y="41" fill="#dde" font-size="24" font-family="monospace" text-anchor="middle">0</text><line x1="236" y1="33" x2="256" y2="33" stroke="#667" stroke-width="2" marker-end="url(#sd)" /><rect x="260" y="10" width="36" height="46" rx="4" fill="#f7a" fill-opacity="0.4" stroke="#f7a" stroke-width="2" /><text x="278.0" y="41" fill="#dde" font-size="24" font-family="monospace" text-anchor="middle">1</text><rect x="300" y="10" width="36" height="46" rx="4" fill="#f7a" fill-opacity="0.4" stroke="#f7a" stroke-width="2" /><text x="318.0" y="41" fill="#dde" font-size="24" font-family="monospace" text-anchor="middle">0</text><rect x="340" y="10" width="36" height="46" rx="4" fill="#8ab" fill-opacity="0.3" stroke="#8ab" stroke-width="2" /><text x="358.0" y="41" fill="#dde" font-size="24" font-family="monospace" text-anchor="middle">1</text><rect x="380" y="10" width="36" height="46" rx="4" fill="#8ab" fill-opacity="0.3" stroke="#8ab" stroke-width="2" /><text x="398.0" y="41" fill="#dde" font-size="24" font-family="monospace" text-anchor="middle">0</text><rect x="420" y="10" width="36" height="46" rx="4" fill="#8ab" fill-opacity="0.3" stroke="#8ab" stroke-width="2" /><text x="438.0" y="41" fill="#dde" font-size="24" font-family="monospace" text-anchor="middle">0</text><text x="466" y="40" fill="#fd6" font-size="17" text-anchor="start">= 20</text><text x="110" y="78" fill="#99a" font-size="13" text-anchor="start">чётное: слева 10</text></g><g class="fragment" data-fragment-index="2"><text x="20" y="130" fill="#99a" font-size="16" text-anchor="start">N = 5</text><rect x="110" y="100" width="36" height="46" rx="4" fill="#8ab" fill-opacity="0.3" stroke="#8ab" stroke-width="2" /><text x="128.0" y="131" fill="#dde" font-size="24" font-family="monospace" text-anchor="middle">1</text><rect x="150" y="100" width="36" height="46" rx="4" fill="#8ab" fill-opacity="0.3" stroke="#8ab" stroke-width="2" /><text x="168.0" y="131" fill="#dde" font-size="24" font-family="monospace" text-anchor="middle">0</text><rect x="190" y="100" width="36" height="46" rx="4" fill="#8ab" fill-opacity="0.3" stroke="#8ab" stroke-width="2" /><text x="208.0" y="131" fill="#dde" font-size="24" font-family="monospace" text-anchor="middle">1</text><line x1="236" y1="123" x2="256" y2="123" stroke="#667" stroke-width="2" marker-end="url(#sd)" /><rect x="260" y="100" width="36" height="46" rx="4" fill="#f7a" fill-opacity="0.4" stroke="#f7a" stroke-width="2" /><text x="278.0" y="131" fill="#dde" font-size="24" font-family="monospace" text-anchor="middle">1</text><rect x="300" y="100" width="36" height="46" rx="4" fill="#8ab" fill-opacity="0.3" stroke="#8ab" stroke-width="2" /><text x="318.0" y="131" fill="#dde" font-size="24" font-family="monospace" text-anchor="middle">1</text><rect x="340" y="100" width="36" height="46" rx="4" fill="#8ab" fill-opacity="0.3" stroke="#8ab" stroke-width="2" /><text x="358.0" y="131" fill="#dde" font-size="24" font-family="monospace" text-anchor="middle">0</text><rect x="380" y="100" width="36" height="46" rx="4" fill="#8ab" fill-opacity="0.3" stroke="#8ab" stroke-width="2" /><text x="398.0" y="131" fill="#dde" font-size="24" font-family="monospace" text-anchor="middle">1</text><rect x="420" y="100" width="36" height="46" rx="4" fill="#fd6" fill-opacity="0.3" stroke="#fd6" stroke-width="2" /><text x="438.0" y="131" fill="#dde" font-size="24" font-family="monospace" text-anchor="middle">0</text><rect x="460" y="100" width="36" height="46" rx="4" fill="#fd6" fill-opacity="0.3" stroke="#fd6" stroke-width="2" /><text x="478.0" y="131" fill="#dde" font-size="24" font-family="monospace" text-anchor="middle">1</text><text x="506" y="130" fill="#fd6" font-size="17" text-anchor="start">= 53</text><text x="110" y="168" fill="#99a" font-size="13" text-anchor="start">нечётное: слева 1, справа 01</text></g></svg>
+<ul style="font-size: 0.55em; text-align: left;">
+    <li class="fragment" data-fragment-index="3">слева - <code>'10' + s</code>, справа - <code>s + '01'</code></li>
+    <li class="fragment" data-fragment-index="4">файл <code>2_sides.py</code>: меняешь только <code>build_r</code>. Ответ: <span class="fragment" data-fragment-index="5"><strong>47</strong></span></li>
+</ul>
+                </section>
+
+                <!-- вариация 2: дописать двоичную запись остатка от деления (n % 3, n % 4) -->
+                <section>
+                    <h2>Остаток от деления</h2>
+<p style="font-size: 0.5em; opacity: 0.8;">ФИПИ AB1E4C. Наименьшее N, при котором R не меньше 76</p>
+<svg width="936" height="237" viewBox="0 0 720 182"><defs><marker id="rm" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#667" /></marker></defs><g class="fragment" data-fragment-index="1"><text x="20" y="40" fill="#99a" font-size="16" text-anchor="start">N = 12</text><rect x="110" y="10" width="36" height="46" rx="4" fill="#8ab" fill-opacity="0.3" stroke="#8ab" stroke-width="2" /><text x="128.0" y="41" fill="#dde" font-size="24" font-family="monospace" text-anchor="middle">1</text><rect x="150" y="10" width="36" height="46" rx="4" fill="#fd6" fill-opacity="0.3" stroke="#fd6" stroke-width="2" /><text x="168.0" y="41" fill="#dde" font-size="24" font-family="monospace" text-anchor="middle">1</text><rect x="190" y="10" width="36" height="46" rx="4" fill="#fd6" fill-opacity="0.3" stroke="#fd6" stroke-width="2" /><text x="208.0" y="41" fill="#dde" font-size="24" font-family="monospace" text-anchor="middle">0</text><rect x="230" y="10" width="36" height="46" rx="4" fill="#fd6" fill-opacity="0.3" stroke="#fd6" stroke-width="2" /><text x="248.0" y="41" fill="#dde" font-size="24" font-family="monospace" text-anchor="middle">0</text><line x1="276" y1="33" x2="296" y2="33" stroke="#667" stroke-width="2" marker-end="url(#rm)" /><rect x="300" y="10" width="36" height="46" rx="4" fill="#8ab" fill-opacity="0.3" stroke="#8ab" stroke-width="2" /><text x="318.0" y="41" fill="#dde" font-size="24" font-family="monospace" text-anchor="middle">1</text><rect x="340" y="10" width="36" height="46" rx="4" fill="#8ab" fill-opacity="0.3" stroke="#8ab" stroke-width="2" /><text x="358.0" y="41" fill="#dde" font-size="24" font-family="monospace" text-anchor="middle">1</text><rect x="380" y="10" width="36" height="46" rx="4" fill="#8ab" fill-opacity="0.3" stroke="#8ab" stroke-width="2" /><text x="398.0" y="41" fill="#dde" font-size="24" font-family="monospace" text-anchor="middle">0</text><rect x="420" y="10" width="36" height="46" rx="4" fill="#8ab" fill-opacity="0.3" stroke="#8ab" stroke-width="2" /><text x="438.0" y="41" fill="#dde" font-size="24" font-family="monospace" text-anchor="middle">0</text><rect x="460" y="10" width="36" height="46" rx="4" fill="#fd6" fill-opacity="0.3" stroke="#fd6" stroke-width="2" /><text x="478.0" y="41" fill="#dde" font-size="24" font-family="monospace" text-anchor="middle">1</text><rect x="500" y="10" width="36" height="46" rx="4" fill="#fd6" fill-opacity="0.3" stroke="#fd6" stroke-width="2" /><text x="518.0" y="41" fill="#dde" font-size="24" font-family="monospace" text-anchor="middle">0</text><rect x="540" y="10" width="36" height="46" rx="4" fill="#fd6" fill-opacity="0.3" stroke="#fd6" stroke-width="2" /><text x="558.0" y="41" fill="#dde" font-size="24" font-family="monospace" text-anchor="middle">0</text><text x="586" y="40" fill="#fd6" font-size="17" text-anchor="start">= 100</text><text x="110" y="78" fill="#99a" font-size="13" text-anchor="start">делится на 3: три последние цифры копируем в конец</text></g><g class="fragment" data-fragment-index="2"><text x="20" y="130" fill="#99a" font-size="16" text-anchor="start">N = 4</text><rect x="110" y="100" width="36" height="46" rx="4" fill="#8ab" fill-opacity="0.3" stroke="#8ab" stroke-width="2" /><text x="128.0" y="131" fill="#dde" font-size="24" font-family="monospace" text-anchor="middle">1</text><rect x="150" y="100" width="36" height="46" rx="4" fill="#8ab" fill-opacity="0.3" stroke="#8ab" stroke-width="2" /><text x="168.0" y="131" fill="#dde" font-size="24" font-family="monospace" text-anchor="middle">0</text><rect x="190" y="100" width="36" height="46" rx="4" fill="#8ab" fill-opacity="0.3" stroke="#8ab" stroke-width="2" /><text x="208.0" y="131" fill="#dde" font-size="24" font-family="monospace" text-anchor="middle">0</text><line x1="236" y1="123" x2="256" y2="123" stroke="#667" stroke-width="2" marker-end="url(#rm)" /><rect x="260" y="100" width="36" height="46" rx="4" fill="#8ab" fill-opacity="0.3" stroke="#8ab" stroke-width="2" /><text x="278.0" y="131" fill="#dde" font-size="24" font-family="monospace" text-anchor="middle">1</text><rect x="300" y="100" width="36" height="46" rx="4" fill="#8ab" fill-opacity="0.3" stroke="#8ab" stroke-width="2" /><text x="318.0" y="131" fill="#dde" font-size="24" font-family="monospace" text-anchor="middle">0</text><rect x="340" y="100" width="36" height="46" rx="4" fill="#8ab" fill-opacity="0.3" stroke="#8ab" stroke-width="2" /><text x="358.0" y="131" fill="#dde" font-size="24" font-family="monospace" text-anchor="middle">0</text><rect x="380" y="100" width="36" height="46" rx="4" fill="#fd6" fill-opacity="0.3" stroke="#fd6" stroke-width="2" /><text x="398.0" y="131" fill="#dde" font-size="24" font-family="monospace" text-anchor="middle">1</text><rect x="420" y="100" width="36" height="46" rx="4" fill="#fd6" fill-opacity="0.3" stroke="#fd6" stroke-width="2" /><text x="438.0" y="131" fill="#dde" font-size="24" font-family="monospace" text-anchor="middle">1</text><text x="466" y="130" fill="#fd6" font-size="17" text-anchor="start">= 19</text><text x="110" y="168" fill="#99a" font-size="13" text-anchor="start">4 % 3 = 1, 1 * 3 = 3 = 11 - дописываем в конец</text></g></svg>
+<ul style="font-size: 0.55em; text-align: left;">
+    <li class="fragment" data-fragment-index="3">остаток сначала <mark>умножаем на 3</mark>, потом переводим: <code>bin(n % 3 * 3)[2:]</code></li>
+    <li class="fragment" data-fragment-index="4">файл <code>3_remainder.py</code>. Ответ: <span class="fragment" data-fragment-index="5"><strong>11</strong></span></li>
+</ul>
+                </section>
+
+                <!-- вариация 3: инвертировать все цифры / заменить старшую - replace и срезы -->
+                <section>
+                    <h2>Замена левых разрядов</h2>
+<p style="font-size: 0.5em; opacity: 0.8;">ФИПИ 930BF4. Сумма цифр чётная - справа 0, два левых -> 10; нечётная - справа 1, два левых -> 11</p>
+<div style="display: flex; align-items: center; gap: 0.5em;">
+<div><svg width="728" height="302" viewBox="0 0 560 232"><text x="20" y="40" fill="#99a" font-size="16" text-anchor="start">N = 6</text><rect x="110" y="10" width="36" height="46" rx="4" fill="#8ab" fill-opacity="0.3" stroke="#8ab" stroke-width="2" /><text x="128.0" y="41" fill="#dde" font-size="24" font-family="monospace" text-anchor="middle">1</text><rect x="150" y="10" width="36" height="46" rx="4" fill="#8ab" fill-opacity="0.3" stroke="#8ab" stroke-width="2" /><text x="168.0" y="41" fill="#dde" font-size="24" font-family="monospace" text-anchor="middle">1</text><rect x="190" y="10" width="36" height="46" rx="4" fill="#8ab" fill-opacity="0.3" stroke="#8ab" stroke-width="2" /><text x="208.0" y="41" fill="#dde" font-size="24" font-family="monospace" text-anchor="middle">0</text><text x="250" y="40" fill="#8ab" font-size="15" text-anchor="start">две единицы - чётная</text><g class="fragment" data-fragment-index="1"><text x="20" y="110" fill="#99a" font-size="14" text-anchor="start">дописали</text><rect x="110" y="80" width="36" height="46" rx="4" fill="#8ab" fill-opacity="0.3" stroke="#8ab" stroke-width="2" /><text x="128.0" y="111" fill="#dde" font-size="24" font-family="monospace" text-anchor="middle">1</text><rect x="150" y="80" width="36" height="46" rx="4" fill="#8ab" fill-opacity="0.3" stroke="#8ab" stroke-width="2" /><text x="168.0" y="111" fill="#dde" font-size="24" font-family="monospace" text-anchor="middle">1</text><rect x="190" y="80" width="36" height="46" rx="4" fill="#8ab" fill-opacity="0.3" stroke="#8ab" stroke-width="2" /><text x="208.0" y="111" fill="#dde" font-size="24" font-family="monospace" text-anchor="middle">0</text><rect x="230" y="80" width="36" height="46" rx="4" fill="#fd6" fill-opacity="0.3" stroke="#fd6" stroke-width="2" /><text x="248.0" y="111" fill="#dde" font-size="24" font-family="monospace" text-anchor="middle">0</text><text x="280" y="110" fill="#fd6" font-size="14" text-anchor="start">справа 0</text></g><g class="fragment" data-fragment-index="2"><text x="20" y="180" fill="#99a" font-size="14" text-anchor="start">заменили</text><rect x="110" y="150" width="36" height="46" rx="4" fill="#7d7" fill-opacity="0.35" stroke="#7d7" stroke-width="2" /><text x="128.0" y="181" fill="#dde" font-size="24" font-family="monospace" text-anchor="middle">1</text><rect x="150" y="150" width="36" height="46" rx="4" fill="#7d7" fill-opacity="0.35" stroke="#7d7" stroke-width="2" /><text x="168.0" y="181" fill="#dde" font-size="24" font-family="monospace" text-anchor="middle">0</text><rect x="190" y="150" width="36" height="46" rx="4" fill="#8ab" fill-opacity="0.3" stroke="#8ab" stroke-width="2" /><text x="208.0" y="181" fill="#dde" font-size="24" font-family="monospace" text-anchor="middle">0</text><rect x="230" y="150" width="36" height="46" rx="4" fill="#fd6" fill-opacity="0.3" stroke="#fd6" stroke-width="2" /><text x="248.0" y="181" fill="#dde" font-size="24" font-family="monospace" text-anchor="middle">0</text><text x="280" y="180" fill="#fd6" font-size="17" text-anchor="start">= 8</text><text x="110" y="220" fill="#7d7" font-size="13" text-anchor="start">два левых разряда -> 10</text></g></svg></div>
+<div class="code-block fragment" data-fragment-index="3">
+<pre class="python size-s"><code>s = '1100'
+s[2:]         # '00'
+'10' + s[2:]  # '1000'</code></pre>
+</div>
+</div>
+<p class="fragment" data-fragment-index="4" style="font-size: 0.55em;">порядок: <mark>сначала</mark> дописать, <mark>потом</mark> заменить. Файл <code>4_replace_left.py</code>, ответ: <span class="fragment" data-fragment-index="5"><strong>11</strong></span></p>
+                </section>
+
+                <!-- то же через биты: дописать справа = n << 1 | bit, связь с понедельником -->
+                <section>
+                    <h2>То же через биты</h2>
+<p style="font-size: 0.55em;">вчерашние сдвиги - тоже «дописать справа»</p>
+<svg width="936" height="318" viewBox="0 0 720 245"><text x="20" y="40" fill="#99a" font-size="16" text-anchor="start">13</text><rect x="110" y="10" width="36" height="46" rx="4" fill="#8ab" fill-opacity="0.3" stroke="#8ab" stroke-width="2" /><text x="128.0" y="41" fill="#dde" font-size="24" font-family="monospace" text-anchor="middle">1</text><rect x="150" y="10" width="36" height="46" rx="4" fill="#8ab" fill-opacity="0.3" stroke="#8ab" stroke-width="2" /><text x="168.0" y="41" fill="#dde" font-size="24" font-family="monospace" text-anchor="middle">1</text><rect x="190" y="10" width="36" height="46" rx="4" fill="#8ab" fill-opacity="0.3" stroke="#8ab" stroke-width="2" /><text x="208.0" y="41" fill="#dde" font-size="24" font-family="monospace" text-anchor="middle">0</text><rect x="230" y="10" width="36" height="46" rx="4" fill="#8ab" fill-opacity="0.3" stroke="#8ab" stroke-width="2" /><text x="248.0" y="41" fill="#dde" font-size="24" font-family="monospace" text-anchor="middle">1</text><g class="fragment" data-fragment-index="1"><text x="20" y="100" fill="#99a" font-size="15" text-anchor="start">13 &lt;&lt; 1</text><rect x="110" y="70" width="36" height="46" rx="4" fill="#8ab" fill-opacity="0.3" stroke="#8ab" stroke-width="2" /><text x="128.0" y="101" fill="#dde" font-size="24" font-family="monospace" text-anchor="middle">1</text><rect x="150" y="70" width="36" height="46" rx="4" fill="#8ab" fill-opacity="0.3" stroke="#8ab" stroke-width="2" /><text x="168.0" y="101" fill="#dde" font-size="24" font-family="monospace" text-anchor="middle">1</text><rect x="190" y="70" width="36" height="46" rx="4" fill="#8ab" fill-opacity="0.3" stroke="#8ab" stroke-width="2" /><text x="208.0" y="101" fill="#dde" font-size="24" font-family="monospace" text-anchor="middle">0</text><rect x="230" y="70" width="36" height="46" rx="4" fill="#8ab" fill-opacity="0.3" stroke="#8ab" stroke-width="2" /><text x="248.0" y="101" fill="#dde" font-size="24" font-family="monospace" text-anchor="middle">1</text><rect x="270" y="70" width="36" height="46" rx="4" fill="#fd6" fill-opacity="0.3" stroke="#fd6" stroke-width="2" /><text x="288.0" y="101" fill="#dde" font-size="24" font-family="monospace" text-anchor="middle">0</text><text x="320" y="100" fill="#fd6" font-size="15" text-anchor="start">= 26: дописали 0</text></g><g class="fragment" data-fragment-index="2"><text x="20" y="160" fill="#99a" font-size="15" text-anchor="start">26 | 1</text><rect x="110" y="130" width="36" height="46" rx="4" fill="#8ab" fill-opacity="0.3" stroke="#8ab" stroke-width="2" /><text x="128.0" y="161" fill="#dde" font-size="24" font-family="monospace" text-anchor="middle">1</text><rect x="150" y="130" width="36" height="46" rx="4" fill="#8ab" fill-opacity="0.3" stroke="#8ab" stroke-width="2" /><text x="168.0" y="161" fill="#dde" font-size="24" font-family="monospace" text-anchor="middle">1</text><rect x="190" y="130" width="36" height="46" rx="4" fill="#8ab" fill-opacity="0.3" stroke="#8ab" stroke-width="2" /><text x="208.0" y="161" fill="#dde" font-size="24" font-family="monospace" text-anchor="middle">0</text><rect x="230" y="130" width="36" height="46" rx="4" fill="#8ab" fill-opacity="0.3" stroke="#8ab" stroke-width="2" /><text x="248.0" y="161" fill="#dde" font-size="24" font-family="monospace" text-anchor="middle">1</text><rect x="270" y="130" width="36" height="46" rx="4" fill="#fd6" fill-opacity="0.3" stroke="#fd6" stroke-width="2" /><text x="288.0" y="161" fill="#dde" font-size="24" font-family="monospace" text-anchor="middle">1</text><text x="320" y="160" fill="#fd6" font-size="15" text-anchor="start">= 27: последний стал 1</text></g><g class="fragment" data-fragment-index="3"><text x="20" y="220" fill="#99a" font-size="15" text-anchor="start">13 &lt;&lt; 2</text><rect x="110" y="190" width="36" height="46" rx="4" fill="#8ab" fill-opacity="0.3" stroke="#8ab" stroke-width="2" /><text x="128.0" y="221" fill="#dde" font-size="24" font-family="monospace" text-anchor="middle">1</text><rect x="150" y="190" width="36" height="46" rx="4" fill="#8ab" fill-opacity="0.3" stroke="#8ab" stroke-width="2" /><text x="168.0" y="221" fill="#dde" font-size="24" font-family="monospace" text-anchor="middle">1</text><rect x="190" y="190" width="36" height="46" rx="4" fill="#8ab" fill-opacity="0.3" stroke="#8ab" stroke-width="2" /><text x="208.0" y="221" fill="#dde" font-size="24" font-family="monospace" text-anchor="middle">0</text><rect x="230" y="190" width="36" height="46" rx="4" fill="#8ab" fill-opacity="0.3" stroke="#8ab" stroke-width="2" /><text x="248.0" y="221" fill="#dde" font-size="24" font-family="monospace" text-anchor="middle">1</text><rect x="270" y="190" width="36" height="46" rx="4" fill="#fd6" fill-opacity="0.3" stroke="#fd6" stroke-width="2" /><text x="288.0" y="221" fill="#dde" font-size="24" font-family="monospace" text-anchor="middle">0</text><rect x="310" y="190" width="36" height="46" rx="4" fill="#fd6" fill-opacity="0.3" stroke="#fd6" stroke-width="2" /><text x="328.0" y="221" fill="#dde" font-size="24" font-family="monospace" text-anchor="middle">0</text><text x="360" y="220" fill="#fd6" font-size="15" text-anchor="start">= 52 = 13 * 4: дописали 00</text></g></svg>
+<div class="fragment opinion" data-fragment-index="4" style="margin-top: 0.2em;">
+    В ЕГЭ пишем строкой - так проще не ошибиться. Зато видно: два разряда справа = R примерно в 4 раза больше N
+</div>
+                </section>
+
+                <!-- шпаргалка: какое правило -> какая строковая операция (таблица) -->
+                <section>
+                    <h2>Шпаргалка</h2>
+<table style="font-size: 0.5em; width: 100%;">
+    <tr><td><strong>В условии</strong></td><td><strong>В коде</strong></td></tr>
+    <tr class="fragment"><td>двоичная запись N</td><td><code>s = bin(n)[2:]</code></td></tr>
+    <tr class="fragment"><td>дописать справа / слева</td><td><code>s + '01'</code> / <code>'1' + s</code></td></tr>
+    <tr class="fragment"><td>сумма цифр, её чётность</td><td><code>s.count('1')</code>, <code>% 2</code></td></tr>
+    <tr class="fragment"><td>три последние цифры</td><td><code>s[-3:]</code></td></tr>
+    <tr class="fragment"><td>заменить два левых разряда</td><td><code>'10' + s[2:]</code></td></tr>
+    <tr class="fragment"><td>запись -> R</td><td><code>int(s, 2)</code></td></tr>
+</table>
+                </section>
+
+            </section>
+
+            <!-- ЧАСТЬ 4: практика - задачи ФИПИ кодом -->
+            <section>
+
+                <!-- практика 1: задача ФИПИ из открытого банка, таймер 5 минут -->
+                <section>
+                    <div class="lesson-time">45</div>
+                    <h2>Практика 1</h2>
+<div style="position: relative; font-size: 0.5em; text-align: left; border-left: 4px solid #8ab; padding: 0.3em 5em 0.3em 0.8em; background: rgba(136, 170, 187, 0.08); margin-bottom: 0.3em;"><span style="position: absolute; top: 0.3em; right: 0.6em; font-size: 0.75em; opacity: 0.5;">9AE10D</span><p>1. Строится двоичная запись числа N.</p>
+<p>2. К записи справа дописываются ещё два разряда: <mark>остаток от деления суммы цифр на 2</mark>, затем то же самое над уже удлинённой записью.</p>
+<p>Например, 12 = 1100<sub>2</sub> -> 110000<sub>2</sub> = 48, 7 = 111<sub>2</sub> -> 11110<sub>2</sub> = 30.</p>
+<p>Укажите наименьшее число <mark>N</mark>, для которого R больше 253.</p></div>
+<p class="fragment" style="font-size: 0.5em;">файл <code>5_parity.py</code></p>
+<div class="timer fragment" data-limit="300">
+    <div class="timer-bar"><div class="timer-fill"></div></div>
+    <div class="timer-row">
+        <span class="timer-time">0:00</span>
+        <span class="timer-hint">клик - старт</span>
+        <button class="timer-reset" type="button">сброс</button>
+    </div>
+</div>
+                </section>
+
+                <!-- практика 1: проверка - трассировка найденного N руками -->
+                <section>
+                    <h2>Практика 1: проверка</h2>
+<svg width="936" height="176" viewBox="0 0 720 135"><g class="fragment" data-fragment-index="1"><text x="20" y="40" fill="#99a" font-size="16" text-anchor="start">N = 63</text><rect x="110" y="10" width="36" height="46" rx="4" fill="#8ab" fill-opacity="0.3" stroke="#8ab" stroke-width="2" /><text x="128.0" y="41" fill="#dde" font-size="24" font-family="monospace" text-anchor="middle">1</text><rect x="150" y="10" width="36" height="46" rx="4" fill="#8ab" fill-opacity="0.3" stroke="#8ab" stroke-width="2" /><text x="168.0" y="41" fill="#dde" font-size="24" font-family="monospace" text-anchor="middle">1</text><rect x="190" y="10" width="36" height="46" rx="4" fill="#8ab" fill-opacity="0.3" stroke="#8ab" stroke-width="2" /><text x="208.0" y="41" fill="#dde" font-size="24" font-family="monospace" text-anchor="middle">1</text><rect x="230" y="10" width="36" height="46" rx="4" fill="#8ab" fill-opacity="0.3" stroke="#8ab" stroke-width="2" /><text x="248.0" y="41" fill="#dde" font-size="24" font-family="monospace" text-anchor="middle">1</text><rect x="270" y="10" width="36" height="46" rx="4" fill="#8ab" fill-opacity="0.3" stroke="#8ab" stroke-width="2" /><text x="288.0" y="41" fill="#dde" font-size="24" font-family="monospace" text-anchor="middle">1</text><rect x="310" y="10" width="36" height="46" rx="4" fill="#8ab" fill-opacity="0.3" stroke="#8ab" stroke-width="2" /><text x="328.0" y="41" fill="#dde" font-size="24" font-family="monospace" text-anchor="middle">1</text><rect x="350" y="10" width="36" height="46" rx="4" fill="#fd6" fill-opacity="0.3" stroke="#fd6" stroke-width="2" /><text x="368.0" y="41" fill="#dde" font-size="24" font-family="monospace" text-anchor="middle">0</text><rect x="390" y="10" width="36" height="46" rx="4" fill="#fd6" fill-opacity="0.3" stroke="#fd6" stroke-width="2" /><text x="408.0" y="41" fill="#dde" font-size="24" font-family="monospace" text-anchor="middle">0</text><text x="440" y="40" fill="#f66" font-size="15" text-anchor="start">= 252, не больше 253</text></g><g class="fragment" data-fragment-index="2"><text x="20" y="110" fill="#99a" font-size="16" text-anchor="start">N = 64</text><rect x="110" y="80" width="36" height="46" rx="4" fill="#8ab" fill-opacity="0.3" stroke="#8ab" stroke-width="2" /><text x="128.0" y="111" fill="#dde" font-size="24" font-family="monospace" text-anchor="middle">1</text><rect x="150" y="80" width="36" height="46" rx="4" fill="#8ab" fill-opacity="0.3" stroke="#8ab" stroke-width="2" /><text x="168.0" y="111" fill="#dde" font-size="24" font-family="monospace" text-anchor="middle">0</text><rect x="190" y="80" width="36" height="46" rx="4" fill="#8ab" fill-opacity="0.3" stroke="#8ab" stroke-width="2" /><text x="208.0" y="111" fill="#dde" font-size="24" font-family="monospace" text-anchor="middle">0</text><rect x="230" y="80" width="36" height="46" rx="4" fill="#8ab" fill-opacity="0.3" stroke="#8ab" stroke-width="2" /><text x="248.0" y="111" fill="#dde" font-size="24" font-family="monospace" text-anchor="middle">0</text><rect x="270" y="80" width="36" height="46" rx="4" fill="#8ab" fill-opacity="0.3" stroke="#8ab" stroke-width="2" /><text x="288.0" y="111" fill="#dde" font-size="24" font-family="monospace" text-anchor="middle">0</text><rect x="310" y="80" width="36" height="46" rx="4" fill="#8ab" fill-opacity="0.3" stroke="#8ab" stroke-width="2" /><text x="328.0" y="111" fill="#dde" font-size="24" font-family="monospace" text-anchor="middle">0</text><rect x="350" y="80" width="36" height="46" rx="4" fill="#8ab" fill-opacity="0.3" stroke="#8ab" stroke-width="2" /><text x="368.0" y="111" fill="#dde" font-size="24" font-family="monospace" text-anchor="middle">0</text><rect x="390" y="80" width="36" height="46" rx="4" fill="#fd6" fill-opacity="0.3" stroke="#fd6" stroke-width="2" /><text x="408.0" y="111" fill="#dde" font-size="24" font-family="monospace" text-anchor="middle">1</text><rect x="430" y="80" width="36" height="46" rx="4" fill="#fd6" fill-opacity="0.3" stroke="#fd6" stroke-width="2" /><text x="448.0" y="111" fill="#dde" font-size="24" font-family="monospace" text-anchor="middle">0</text><text x="480" y="110" fill="#7d7" font-size="15" text-anchor="start">= 258</text></g></svg>
+<p class="fragment" data-fragment-index="3" style="font-size: 0.6em;">ответ: <strong>64</strong></p>
+<div class="fragment opinion" data-fragment-index="4" style="margin-top: 0.3em;">
+    После первого бита единиц всегда чётное число - второй бит всегда 0
+</div>
+                </section>
+
+                <!-- практика 2: другая вариация правила, ученик меняет только build_r -->
+                <section>
+                    <h2>Практика 2</h2>
+<div style="position: relative; font-size: 0.5em; text-align: left; border-left: 4px solid #8ab; padding: 0.3em 5em 0.3em 0.8em; background: rgba(136, 170, 187, 0.08); margin-bottom: 0.3em;"><span style="position: absolute; top: 0.3em; right: 0.6em; font-size: 0.75em; opacity: 0.5;">FD3C06</span><p>Если N <mark>чётное</mark>, справа приписываются два нуля, слева единица. Если N <mark>нечётное</mark>, справа приписывается в двоичном виде <mark>сумма цифр</mark> его двоичной записи.</p>
+<p>Например, 4 = 100<sub>2</sub> -> 110000<sub>2</sub> = 48, 13 = 1101<sub>2</sub> -> 110111<sub>2</sub> = 55.</p>
+<p>Укажите <mark>наибольшее</mark> число N, для которого R не превышает 210.</p></div>
+<ul style="font-size: 0.5em; text-align: left;">
+    <li class="fragment">файл <code>6_digit_sum.py</code>: что поменять в <code>answer</code>?</li>
+    <li class="fragment">ответ: <span class="fragment"><strong>49</strong></span></li>
+</ul>
+<div class="timer fragment" data-limit="300">
+    <div class="timer-bar"><div class="timer-fill"></div></div>
+    <div class="timer-row">
+        <span class="timer-time">0:00</span>
+        <span class="timer-hint">клик - старт</span>
+        <button class="timer-reset" type="button">сброс</button>
+    </div>
+</div>
+                </section>
+
+            </section>
+
+            <!-- ИТОГ -->
+            <section>
+
+                <!-- итог: перебор N, bin/int(s, 2), правило - в отдельную функцию, читать что просят в ответ -->
+                <section>
+                    <div class="lesson-time">55</div>
+                    <h2>Что запомнить</h2>
+                    <ul>
+                        <li class="fragment">№5 - перебор N от 1 до 1000, руками не считаем</li>
+                        <li class="fragment"><code>bin(n)[2:]</code> -> дописали -> <code>int(s, 2)</code></li>
+                        <li class="fragment">правило - в <code>build_r</code>, сначала проверка на примерах</li>
+                        <li class="fragment">подчеркни, что спрашивают: <mark>N</mark> или <mark class="yellow">R</mark>, наименьшее или наибольшее</li>
+                    </ul>
+                </section>
+
+                <!-- домашнее задание: 4-5 задач №5 из открытого банка ФИПИ + 1 задача №19-21 на повторение -->
+                <section>
+                    <h2>Домашнее задание</h2>
+                    <div class="timeline" style="font-size: 0.6em;">
+                        <div class="timeline-item fragment">
+                            <div class="timeline-marker">1</div>
+                            <div class="timeline-content">5 задач №5 из банка ФИПИ, файлы <code>hw_1</code> ... <code>hw_5</code>:
+                                <a href="https://ege.fipi.ru/bank/questions.php?search=1&amp;proj=B9ACA5BBB2E19E434CD6BEC25284C67F&amp;qid=D32E0F" target="_blank" rel="noopener">D32E0F</a>,
+                                <a href="https://ege.fipi.ru/bank/questions.php?search=1&amp;proj=B9ACA5BBB2E19E434CD6BEC25284C67F&amp;qid=B9FDF9" target="_blank" rel="noopener">B9FDF9</a>,
+                                <a href="https://ege.fipi.ru/bank/questions.php?search=1&amp;proj=B9ACA5BBB2E19E434CD6BEC25284C67F&amp;qid=2A4EB2" target="_blank" rel="noopener">2A4EB2</a>,
+                                <a href="https://ege.fipi.ru/bank/questions.php?search=1&amp;proj=B9ACA5BBB2E19E434CD6BEC25284C67F&amp;qid=C30EF4" target="_blank" rel="noopener">C30EF4</a>,
+                                <a href="https://ege.fipi.ru/bank/questions.php?search=1&amp;proj=B9ACA5BBB2E19E434CD6BEC25284C67F&amp;qid=C412B3" target="_blank" rel="noopener">C412B3</a></div>
+                        </div>
+                        <div class="timeline-item fragment">
+                            <div class="timeline-marker">2</div>
+                            <div class="timeline-content">повторение №19-21: <a href="https://ege.fipi.ru/bank/questions.php?search=1&amp;proj=B9ACA5BBB2E19E434CD6BEC25284C67F&amp;zid=F81739" target="_blank" rel="noopener">две кучи, +1 и x3, финиш 65</a>, файл <code>hw_6_two_heaps_65.py</code></div>
+                        </div>
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 0.8em;">
+                        В каждой задаче сначала <code>build_r</code> на примерах из условия, потом ответ. Ответ проверяй кнопкой на сайте ФИПИ
+                    </div>
+                </section>
+
+            </section>
+
+        </div>
+    </div>
+
+    <script src="/utils/lib/js/head.min.js"></script>
+    <script src="/utils/js/reveal.js"></script>
+    <script>
+        Reveal.initialize({
+            controls: true,
+            progress: true,
+            history: true,
+            center: true,
+            transition: 'fade',
+            transitionSpeed: 'fast',
+            dependencies: [
+                { src: '/utils/lib/js/classList.js', condition: function () { return !document.body.classList; } },
+                { src: '/utils/plugin/markdown/marked.js', condition: function () { return !!document.querySelector('[data-markdown]'); } },
+                { src: '/utils/plugin/markdown/markdown.js', condition: function () { return !!document.querySelector('[data-markdown]'); } },
+                { src: '/utils/plugin/highlight/highlight.js', async: true, callback: function () { hljs.initHighlightingOnLoad(); } },
+                { src: '/utils/plugin/zoom-js/zoom.js', async: true },
+                { src: '/utils/plugin/notes/notes.js', async: true }
+            ]
+        });
+        Reveal.configure({ slideNumber: 'c/t' });
+    </script>
+    <script>
+        // таймер на слайде: клик - старт/пауза, "сброс" - обнулить
+        document.querySelectorAll('.timer').forEach(function (el) {
+            var limit = +el.dataset.limit || 180;
+            var fill = el.querySelector('.timer-fill');
+            var timeEl = el.querySelector('.timer-time');
+            var hint = el.querySelector('.timer-hint');
+            var spent = 0, startedAt = null, tick = null;
+
+            function fmt(sec) {
+                sec = Math.floor(sec);
+                return Math.floor(sec / 60) + ':' + String(sec % 60).padStart(2, '0');
+            }
+            function elapsed() {
+                return spent + (startedAt ? (Date.now() - startedAt) / 1000 : 0);
+            }
+            function draw() {
+                var t = elapsed();
+                fill.style.width = Math.min(t / limit, 1) * 100 + '%';
+                el.classList.toggle('warn', t >= limit * 0.8 && t < limit);
+                el.classList.toggle('over', t >= limit);
+                timeEl.textContent = t >= limit
+                    ? fmt(limit) + ' + ' + fmt(t - limit)
+                    : fmt(t) + ' / ' + fmt(limit);
+            }
+            function toggle() {
+                if (startedAt) {
+                    spent = elapsed(); startedAt = null;
+                    clearInterval(tick);
+                    hint.textContent = 'пауза - клик, чтобы продолжить';
+                } else {
+                    startedAt = Date.now();
+                    tick = setInterval(draw, 200);
+                    hint.textContent = 'идёт - клик для паузы';
+                }
+                draw();
+            }
+            el.addEventListener('click', function (e) {
+                e.stopPropagation();
+                if (e.target.closest('.timer-reset')) {
+                    clearInterval(tick); spent = 0; startedAt = null;
+                    hint.textContent = 'клик - старт';
+                } else {
+                    toggle();
+                }
+                draw();
+            });
+            draw();
+        });
+    </script>
+</body>
+
+</html>
