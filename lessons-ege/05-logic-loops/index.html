@@ -1,0 +1,533 @@
+<!doctype html>
+<html lang="ru">
+
+<head>
+    <meta charset="utf-8">
+    <title>ЕГЭ, занятие 5 - №2 и №15: логика перебором в циклах</title>
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+
+    <link rel="stylesheet" href="/utils/css/reveal.css">
+    <link rel="stylesheet" href="/utils/lib/css/animate.css">
+    <link rel="stylesheet" href="/utils/css/theme/night.css" id="theme">
+    <link rel="stylesheet" href="/utils/lib/css/zenburn.css">
+    <link rel="stylesheet" href="/utils/css/custom-base.css">
+    <link rel="stylesheet" href="css-custom/custom.css">
+
+    <script>
+        var link = document.createElement('link');
+        link.rel = 'stylesheet'; link.type = 'text/css';
+        link.href = window.location.search.match(/print-pdf/gi)
+            ? '/utils/css/print/pdf.css'
+            : '/utils/css/print/paper.css';
+        document.getElementsByTagName('head')[0].appendChild(link);
+    </script>
+</head>
+
+<body>
+    <div class="reveal">
+        <div class="slides">
+
+            <!-- титульный слайд: №2 и №15, логика перебором; подпись «до пробника 4 дня» -->
+            <section style="font-size: 70px; height: 100%; width: 100%">
+                <div class="lesson-time">0</div>
+                <div class="fragment">
+                    <h1 class="animated" style="font-size: 1.5em;">Логика перебором</h1>
+                    <p style="text-align: center; font-size: 0.45em; opacity: 0.6;">задания 2 и 15</p>
+                    <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">ЕГЭ, занятие 5 - до пробника 4 дня</p>
+                </div>
+            </section>
+
+            <!-- ЧАСТЬ 1: №2 - таблица истинности -->
+            <section>
+
+                <!-- план до пробника: 3 занятия, только номера, которые решаем уже известным; сегодня №2 и №15 -->
+                <section>
+                    <div class="lesson-time">0</div>
+                    <h2>До пробника</h2>
+<div class="timeline" style="font-size: 0.6em;">
+    <div class="timeline-item fragment">
+        <div class="timeline-marker">вс</div>
+        <div class="timeline-content"><strong>сегодня</strong>: №2 и №15 - логика циклами</div>
+    </div>
+    <div class="timeline-item fragment">
+        <div class="timeline-marker">пн</div>
+        <div class="timeline-content">№16, №13, №23 - рекурсия и графы</div>
+    </div>
+    <div class="timeline-item fragment">
+        <div class="timeline-marker">вт</div>
+        <div class="timeline-content">наш список номеров, порядок, прогоны на время</div>
+    </div>
+</div>
+<div class="fragment opinion" style="margin-top: 0.6em;">
+    Ничего нового: только номера, которые решаются тем, что ты уже знаешь
+</div>
+                </section>
+
+                <!-- условие демо-2027 №2 по фрагментам: формула, фрагмент таблицы из 3 строк с пропусками, что в ответ -->
+                <section>
+                    <h2>№2 из демо-2027</h2>
+<div style="position: relative; font-size: 0.5em; text-align: left; border-left: 4px solid #8ab; padding: 0.3em 5em 0.3em 0.8em; background: rgba(136, 170, 187, 0.08);"><span style="position: absolute; top: 0.3em; right: 0.6em; font-size: 0.75em; opacity: 0.5;">033FB4</span><p class="fragment">Миша заполнял таблицу истинности функции F = <mark>((x ≡ ¬y) → ¬(w → x)) ∨ ¬z</mark>, но успел заполнить лишь фрагмент из трёх различных её строк, не указав, какому столбцу соответствует каждая из переменных w, x, y, z.</p>
+<table class="fragment" style="font-size: 0.95em; width: 50%; margin: 0.3em auto; text-align: center;">
+    <tr><td>?</td><td>?</td><td>?</td><td>?</td><td><strong>F</strong></td></tr>
+    <tr><td></td><td>0</td><td>1</td><td>0</td><td>0</td></tr>
+    <tr><td>0</td><td></td><td></td><td>0</td><td>0</td></tr>
+    <tr><td></td><td>1</td><td>1</td><td></td><td>0</td></tr>
+</table>
+<p class="fragment">В ответе - <mark>буквы в порядке столбцов</mark>, подряд, без разделителей.</p></div>
+                </section>
+
+                <!-- перевод знаков в Python: таблица ¬ -> not, ∧ -> and, ∨ -> or, ≡ -> ==, → -> <= (почему <= работает: картинка 4 строк импликации) -->
+                <section>
+                    <h2>Знаки -> Python</h2>
+<div style="display: flex; gap: 1.5em; justify-content: center; align-items: flex-start;">
+<table style="font-size: 0.55em;">
+    <tr><td><strong>в задаче</strong></td><td><strong>Python</strong></td></tr>
+    <tr class="fragment" data-fragment-index="1"><td>¬a</td><td><code>not a</code></td></tr>
+    <tr class="fragment" data-fragment-index="1"><td>a ∧ b</td><td><code>a and b</code></td></tr>
+    <tr class="fragment" data-fragment-index="1"><td>a ∨ b</td><td><code>a or b</code></td></tr>
+    <tr class="fragment" data-fragment-index="2"><td>a ≡ b</td><td><code>a == b</code></td></tr>
+    <tr class="fragment" data-fragment-index="3"><td>a → b</td><td><mark><code>a &lt;= b</code></mark></td></tr>
+</table>
+<table class="fragment" data-fragment-index="4" style="font-size: 0.55em; text-align: center;">
+    <tr><td><strong>a</strong></td><td><strong>b</strong></td><td><strong>a → b</strong></td><td><strong>a &lt;= b</strong></td></tr>
+    <tr><td>0</td><td>0</td><td>1</td><td>1</td></tr>
+    <tr><td>0</td><td>1</td><td>1</td><td>1</td></tr>
+    <tr style="color: #f7a;"><td>1</td><td>0</td><td>0</td><td>0</td></tr>
+    <tr><td>1</td><td>1</td><td>1</td><td>1</td></tr>
+</table>
+</div>
+<div class="fragment opinion" data-fragment-index="5" style="margin-top: 0.5em;">
+    Импликация ложна только в «1 -> 0». И <code>1 &lt;= 0</code> - тоже единственная ложь
+</div>
+                </section>
+
+                <!-- идея: 4 вложенных цикла по 0 и 1 перебирают все 16 строк, печатаем только строки с F = 0 (словами, без кода) -->
+                <section>
+                    <h2>Идея: все строки</h2>
+<div class="timeline" style="font-size: 0.6em;">
+    <div class="timeline-item fragment">
+        <div class="timeline-marker">1</div>
+        <div class="timeline-content">функция <code>f(w, x, y, z)</code> - формула из условия, переведённая знак в знак</div>
+    </div>
+    <div class="timeline-item fragment">
+        <div class="timeline-marker">2</div>
+        <div class="timeline-content">4 вложенных цикла, каждая переменная - 0 и 1: <strong>16 строк</strong></div>
+    </div>
+    <div class="timeline-item fragment">
+        <div class="timeline-marker">3</div>
+        <div class="timeline-content">печатаем только строки, где F = <mark>0</mark> - как во фрагменте</div>
+    </div>
+</div>
+<div class="fragment opinion" style="margin-top: 0.6em;">
+    Компьютер строит таблицу, мы только сопоставляем столбцы
+</div>
+                </section>
+
+                <!-- пишем вместе 1_demo_truth.py: печать w x y z для F = 0, получили ровно 3 строки -->
+                <section>
+                    <h2>Пишем вместе</h2>
+<ul style="font-size: 0.6em; text-align: left;">
+    <li class="fragment">файл <code>1_demo_truth.py</code></li>
+    <li class="fragment">скобки в <code>f</code> - ровно как в условии, лишние не мешают</li>
+    <li class="fragment">порядок циклов w, x, y, z - печатаем строки в этом порядке</li>
+</ul>
+<table class="fragment" style="font-size: 0.6em; width: 40%; margin: 0.4em auto; text-align: center;">
+    <tr><td><strong>w</strong></td><td><strong>x</strong></td><td><strong>y</strong></td><td><strong>z</strong></td></tr>
+    <tr><td>0</td><td>0</td><td>1</td><td>1</td></tr>
+    <tr><td>0</td><td>1</td><td>0</td><td>1</td></tr>
+    <tr><td>1</td><td>1</td><td>0</td><td>1</td></tr>
+</table>
+<p class="fragment" style="font-size: 0.5em;">F = 0 ровно в трёх строках - это и есть три строки фрагмента</p>
+                </section>
+
+                <!-- сопоставляем руками: картинка «столбцы фрагмента против столбцов w x y z»; z всегда 1 -> z только в столбце без нулей -->
+                <section>
+                    <h2>Сопоставляем: z</h2>
+<div style="display: flex; gap: 2em; justify-content: center; align-items: center;">
+<table style="font-size: 0.6em; text-align: center;">
+    <tr><td colspan="4" style="opacity: 0.6;">фрагмент</td></tr>
+    <tr><td>1</td><td>2</td><td><span class="fragment highlight-current-blue" data-fragment-index="3">3</span></td><td>4</td></tr>
+    <tr><td></td><td>0</td><td>1</td><td><span class="fragment highlight-red" data-fragment-index="2">0</span></td></tr>
+    <tr><td><span class="fragment highlight-red" data-fragment-index="2">0</span></td><td></td><td></td><td><span class="fragment highlight-red" data-fragment-index="2">0</span></td></tr>
+    <tr><td></td><td>1</td><td>1</td><td></td></tr>
+</table>
+<table style="font-size: 0.6em; text-align: center;">
+    <tr><td colspan="4" style="opacity: 0.6;">программа</td></tr>
+    <tr><td>w</td><td>x</td><td>y</td><td><span class="fragment highlight-current-blue" data-fragment-index="1">z</span></td></tr>
+    <tr><td>0</td><td>0</td><td>1</td><td><mark class="fragment" data-fragment-index="1">1</mark></td></tr>
+    <tr><td>0</td><td>1</td><td>0</td><td><mark class="fragment" data-fragment-index="1">1</mark></td></tr>
+    <tr><td>1</td><td>1</td><td>0</td><td><mark class="fragment" data-fragment-index="1">1</mark></td></tr>
+</table>
+</div>
+<p class="fragment" data-fragment-index="1" style="font-size: 0.5em;">z во всех строках = 1</p>
+<p class="fragment" data-fragment-index="2" style="font-size: 0.5em;">в столбцах 1, 2, 4 есть нули - там не z</p>
+<div class="fragment opinion" data-fragment-index="3" style="margin-top: 0.3em;">
+    Столбец 3 - это <strong>z</strong>
+</div>
+                </section>
+
+                <!-- дальше по количеству единиц в столбцах: x - две единицы, w и y - по одной; заполняем фрагмент, ответ yxzw -->
+                <section>
+                    <h2>Сопоставляем: w, x, y</h2>
+<div style="display: flex; gap: 2em; justify-content: center; align-items: center;">
+<table style="font-size: 0.6em; text-align: center;">
+    <tr><td colspan="4" style="opacity: 0.6;">фрагмент</td></tr>
+    <tr><td>1</td><td>2</td><td>3</td><td>4</td></tr>
+    <tr><td><span class="fragment" data-fragment-index="4" style="color: #fd6;">y</span></td><td><span class="fragment" data-fragment-index="3" style="color: #fd6;">x</span></td><td style="color: #8ab;">z</td><td><span class="fragment" data-fragment-index="2" style="color: #fd6;">w</span></td></tr>
+    <tr><td><span class="fragment" data-fragment-index="4" style="color: #fd6;">1</span></td><td><span class="fragment highlight-current-blue" data-fragment-index="1"><span class="fragment highlight-current-blue" data-fragment-index="3">0</span></span></td><td>1</td><td><span class="fragment highlight-current-blue" data-fragment-index="1"><span class="fragment highlight-current-blue" data-fragment-index="2">0</span></span></td></tr>
+    <tr><td><span class="fragment highlight-current-blue" data-fragment-index="1"><span class="fragment highlight-current-blue" data-fragment-index="4">0</span></span></td><td><span class="fragment" data-fragment-index="3" style="color: #fd6;">1</span></td><td><span class="fragment" data-fragment-index="5" style="color: #fd6;">1</span></td><td><span class="fragment highlight-current-blue" data-fragment-index="1"><span class="fragment highlight-current-blue" data-fragment-index="2">0</span></span></td></tr>
+    <tr class="fragment highlight-current-red" data-fragment-index="1"><td><span class="fragment" data-fragment-index="4" style="color: #fd6;">0</span></td><td><span class="fragment highlight-current-blue" data-fragment-index="3">1</span></td><td>1</td><td><span class="fragment" data-fragment-index="2" style="color: #fd6;">1</span></td></tr>
+</table>
+<table style="font-size: 0.6em; text-align: center;">
+    <tr><td colspan="4" style="opacity: 0.6;">программа</td></tr>
+    <tr><td><span class="fragment highlight-current-blue" data-fragment-index="2">w</span></td><td><span class="fragment highlight-current-blue" data-fragment-index="3">x</span></td><td><span class="fragment highlight-current-blue" data-fragment-index="4">y</span></td><td style="opacity: 0.4;">z</td></tr>
+    <tr class="fragment highlight-current-blue" data-fragment-index="1"><td><span class="fragment highlight-current-blue" data-fragment-index="2">0</span></td><td><span class="fragment highlight-current-blue" data-fragment-index="3">0</span></td><td><span class="fragment highlight-current-blue" data-fragment-index="4">1</span></td><td style="opacity: 0.4;">1</td></tr>
+    <tr class="fragment highlight-current-blue" data-fragment-index="1"><td><span class="fragment highlight-current-blue" data-fragment-index="2">0</span></td><td><span class="fragment highlight-current-blue" data-fragment-index="3">1</span></td><td><span class="fragment highlight-current-blue" data-fragment-index="4">0</span></td><td style="opacity: 0.4;">1</td></tr>
+    <tr class="fragment highlight-current-red" data-fragment-index="1"><td><span class="fragment highlight-current-blue" data-fragment-index="2">1</span></td><td><span class="fragment highlight-current-blue" data-fragment-index="3">1</span></td><td><span class="fragment highlight-current-blue" data-fragment-index="4">0</span></td><td style="opacity: 0.4;">1</td></tr>
+</table>
+</div>
+<p class="fragment" data-fragment-index="1" style="font-size: 0.45em;">строки 1 и 2: два нуля из трёх -> это <code>001</code> и <code>010</code>, строка 3 - <code>110</code></p>
+<p class="fragment" data-fragment-index="2" style="font-size: 0.45em;">столбец 4: нули в обеих строках с одной единицей -> <strong>w</strong></p>
+<p class="fragment" data-fragment-index="3" style="font-size: 0.45em;">столбец 2: в строке 3 единица, у <code>110</code> единицы только у w и x -> <strong>x</strong></p>
+<p class="fragment" data-fragment-index="4" style="font-size: 0.45em;">остался столбец 1 -> <strong>y</strong></p>
+<div class="fragment opinion" data-fragment-index="5" style="margin-top: 0.3em;">
+    Пропуски заполнились, все строки совпали. Ответ: <strong>yxzw</strong>
+</div>
+                </section>
+
+                <!-- ловушки: F = 0 или F = 1 во фрагменте, порядок букв в ответе = порядок столбцов, проверить все три строки -->
+                <section>
+                    <h2>Ловушки</h2>
+<div class="compare" style="font-size: 0.75em;">
+    <div class="compare-block fragment">
+        <h4>F = 0 или 1?</h4>
+        <p style="font-size: 0.6em;">смотри столбец F: печатаем строки с <mark>тем же</mark> значением</p>
+    </div>
+    <div class="compare-block fragment">
+        <h4>порядок букв</h4>
+        <p style="font-size: 0.6em;">ответ - по столбцам слева направо, а не wxyz</p>
+    </div>
+    <div class="compare-block fragment">
+        <h4>проверка</h4>
+        <p style="font-size: 0.6em;">подставь ответ во все строки фрагмента</p>
+    </div>
+</div>
+<div class="fragment opinion" style="margin-top: 0.5em;">
+    Перебор столбцов целиком программой - научимся потом
+</div>
+                </section>
+
+                <!-- практика с таймером 6 минут: задача ФИПИ №2 той же формы -> 2_truth.py -->
+                <section>
+                    <h2>Практика: №2</h2>
+<div style="position: relative; font-size: 0.5em; text-align: left; border-left: 4px solid #8ab; padding: 0.3em 5em 0.3em 0.8em; background: rgba(136, 170, 187, 0.08); margin-bottom: 0.3em;"><span style="position: absolute; top: 0.3em; right: 0.6em; font-size: 0.75em; opacity: 0.5;">C0CB32</span><p>F = <mark>¬(x → y) ∨ (z → w) ∨ ¬z</mark>, фрагмент из трёх строк:</p>
+<table style="font-size: 0.95em; width: 50%; margin: 0.2em auto; text-align: center;">
+    <tr><td>?</td><td>?</td><td>?</td><td>?</td><td><strong>F</strong></td></tr>
+    <tr><td></td><td>0</td><td></td><td>0</td><td>0</td></tr>
+    <tr><td>1</td><td></td><td></td><td></td><td>0</td></tr>
+    <tr><td>0</td><td>1</td><td></td><td></td><td>0</td></tr>
+</table></div>
+<ul style="font-size: 0.5em; text-align: left;">
+    <li class="fragment">файл <code>2_truth.py</code>, сопоставление - руками</li>
+</ul>
+<div class="timer fragment" data-limit="360">
+    <div class="timer-bar"><div class="timer-fill"></div></div>
+    <div class="timer-row">
+        <span class="timer-time">0:00</span>
+        <span class="timer-hint">клик - старт</span>
+        <button class="timer-reset" type="button">сброс</button>
+    </div>
+</div>
+<p class="fragment" style="font-size: 0.5em; margin-top: 0.4em;">ответ: <strong>xyzw</strong> (в программе у w 0 единиц, x - 1, y - 2, z - 3)</p>
+                </section>
+
+            </section>
+
+            <!-- ЧАСТЬ 2: №15 - найти A перебором -->
+            <section>
+
+                <!-- условие демо-2027 №15 по фрагментам: ДЕЛ(x, A), отрезок B = [70; 90], наибольшее A, «при любом x» -->
+                <section>
+                    <div class="lesson-time">27</div>
+                    <h2>№15 из демо-2027</h2>
+<div style="font-size: 0.5em; text-align: left; border-left: 4px solid #8ab; padding: 0.3em 0.8em; background: rgba(136, 170, 187, 0.08);"><p class="fragment">Обозначим через <mark>ДЕЛ(n, m)</mark> утверждение «натуральное число n делится без остатка на натуральное число m»; пусть на числовой прямой дан отрезок <mark>B = [70; 90]</mark>.</p>
+<p class="fragment">Для какого <mark>наибольшего</mark> натурального числа A логическое выражение</p>
+<p class="fragment" style="text-align: center; font-size: 1.3em;">ДЕЛ(x, A) ∨ ((x ∈ B) → ¬ДЕЛ(x, 22))</p>
+<p class="fragment">истинно <mark>при любом</mark> целом положительном значении переменной x?</p></div>
+                </section>
+
+                <!-- перевод на Python: ДЕЛ(x, A) -> x % A == 0, x ∈ B -> 70 <= x <= 90, импликация -> <= (как в №2) -->
+                <section>
+                    <h2>Перевод на Python</h2>
+<table style="font-size: 0.55em; width: 90%;">
+    <tr><td><strong>в задаче</strong></td><td><strong>Python</strong></td></tr>
+    <tr class="fragment"><td>ДЕЛ(x, A)</td><td><code>x % a == 0</code></td></tr>
+    <tr class="fragment"><td>¬ДЕЛ(x, 22)</td><td><code>x % 22 != 0</code></td></tr>
+    <tr class="fragment"><td>x ∈ B</td><td><code>70 &lt;= x &lt;= 90</code></td></tr>
+    <tr class="fragment"><td>→</td><td><code>&lt;=</code> - как в №2</td></tr>
+</table>
+<div class="fragment opinion" style="margin-top: 0.5em;">
+    Каждую часть - в свои скобки, иначе <code>&lt;=</code> склеится с соседями
+</div>
+                </section>
+
+                <!-- картинка: числовая прямая, отрезок [70; 90], кратные 22 на нём - только 88 -->
+                <section>
+                    <h2>Где ловушка для x</h2>
+<svg width="832" height="234" viewBox="0 0 640 180"><g class="fragment" data-fragment-index="1"><line x1="20" y1="90" x2="620" y2="90" stroke="#667" stroke-width="2" /><line x1="60" y1="84" x2="60" y2="96" stroke="#667" stroke-width="2" /><text x="60" y="116" fill="#99a" font-size="14" text-anchor="middle">60</text><line x1="580" y1="84" x2="580" y2="96" stroke="#667" stroke-width="2" /><text x="580" y="116" fill="#99a" font-size="14" text-anchor="middle">100</text></g><g class="fragment" data-fragment-index="2"><rect x="190" y="80" width="260" height="20" rx="4" fill="#8ab" fill-opacity="0.35" stroke="#8ab" stroke-width="2" /><text x="190" y="116" fill="#8ab" font-size="15" text-anchor="middle">70</text><text x="450" y="116" fill="#8ab" font-size="15" text-anchor="middle">90</text><text x="320" y="70" fill="#8ab" font-size="16" text-anchor="middle">B = [70; 90]</text></g><g class="fragment" data-fragment-index="3"><circle cx="138" cy="90" r="8" fill="#556" stroke="#99a" stroke-width="2" /><text x="138" y="146" fill="#99a" font-size="15" text-anchor="middle">66 = 22 x 3</text><text x="138" y="166" fill="#778" font-size="13" text-anchor="middle">вне B</text></g><g class="fragment" data-fragment-index="4"><circle cx="424" cy="90" r="9" fill="#f7a" stroke="#f7a" stroke-width="2" /><text x="424" y="146" fill="#f7a" font-size="15" text-anchor="middle">88 = 22 x 4</text><text x="424" y="166" fill="#f7a" font-size="13" text-anchor="middle">в B</text></g><g class="fragment" data-fragment-index="5"><text x="600" y="60" fill="#778" font-size="13" text-anchor="end">110 = 22 x 5 - тоже вне B</text></g></svg>
+<div class="fragment opinion" data-fragment-index="6" style="margin-top: 0.2em;">
+    В отрезке ровно одно число, кратное 22 - это <strong>88</strong>
+</div>
+                </section>
+
+                <!-- смысл условия на картинке: для x = 88 правая часть ложна -> 88 обязано делиться на A -> A = 88 -->
+                <section>
+                    <h2>Почему A = 88</h2>
+<div class="timeline" style="font-size: 0.55em;">
+    <div class="timeline-item fragment">
+        <div class="timeline-marker">1</div>
+        <div class="timeline-content">x = 88: x ∈ B = 1, ¬ДЕЛ(88, 22) = 0, значит <mark>1 -> 0 = 0</mark></div>
+    </div>
+    <div class="timeline-item fragment">
+        <div class="timeline-marker">2</div>
+        <div class="timeline-content">выражение спасает только ДЕЛ(88, A) = 1: <strong>88 делится на A</strong></div>
+    </div>
+    <div class="timeline-item fragment">
+        <div class="timeline-marker">3</div>
+        <div class="timeline-content">при любом другом x правая часть уже истинна - A не важно</div>
+    </div>
+    <div class="timeline-item fragment">
+        <div class="timeline-marker">4</div>
+        <div class="timeline-content">наибольший делитель 88 - само <strong>88</strong></div>
+    </div>
+</div>
+<div class="fragment opinion" style="margin-top: 0.4em;">
+    Рассуждение - для проверки. На экзамене считает программа
+</div>
+                </section>
+
+                <!-- схема программы словами: цикл по A, внутри цикл по x, флаг «нашёлся x, где выражение ложно»; наибольшее A - идём до конца -->
+                <section>
+                    <h2>Схема программы</h2>
+<div class="compare" style="font-size: 0.8em;">
+    <div class="compare-block fragment">
+        <h4><code>ok(a)</code></h4>
+        <p style="font-size: 0.6em;">x от 1 до 1000: нашёлся x, где выражение ложно -> <code>False</code></p>
+        <p style="font-size: 0.55em; opacity: 0.7;">не нашёлся ни один -> <code>True</code></p>
+    </div>
+    <div class="compare-block fragment">
+        <h4><code>answer()</code></h4>
+        <p style="font-size: 0.6em;">A от 1 до 1000, запоминаем последнее подходящее</p>
+        <p style="font-size: 0.55em; opacity: 0.7;">как «наибольшее N» в №5</p>
+    </div>
+</div>
+<div class="fragment opinion" style="margin-top: 0.6em;">
+    «При любом x» = «нет ни одного x, где ложно»
+</div>
+                </section>
+
+                <!-- пишем вместе 3_demo_div.py: функция ok(a) + перебор A, ответ 88 совпал с картинкой -->
+                <section>
+                    <h2>Пишем вместе</h2>
+<ul style="font-size: 0.6em; text-align: left;">
+    <li class="fragment">файл <code>3_demo_div.py</code></li>
+    <li class="fragment">сначала проверка: <code>ok(88)</code> = True, <code>ok(89)</code> = False</li>
+    <li class="fragment">потом <code>answer()</code></li>
+</ul>
+<p class="fragment" style="font-size: 0.6em;">ответ <strong>88</strong> - совпал с картинкой</p>
+                </section>
+
+                <!-- ловушки: «при любом x» = ни одного x, где ложно; диапазон x с запасом (до 1000); наибольшее/наименьшее A -->
+                <section>
+                    <h2>Ловушки</h2>
+<div class="compare" style="font-size: 0.75em;">
+    <div class="compare-block fragment">
+        <h4>при любом x</h4>
+        <p style="font-size: 0.6em;"><code>return True</code> - только после цикла по x</p>
+    </div>
+    <div class="compare-block fragment">
+        <h4>диапазон x</h4>
+        <p style="font-size: 0.6em;">с запасом за отрезок: до 1000</p>
+    </div>
+    <div class="compare-block fragment">
+        <h4>что спрашивают</h4>
+        <p style="font-size: 0.6em;">наибольшее A - до конца, наименьшее - первое</p>
+    </div>
+</div>
+                </section>
+
+                <!-- практика с таймером 6 минут: задача ФИПИ №15 с ДЕЛ и отрезком -> 4_div.py -->
+                <section>
+                    <h2>Практика: №15</h2>
+<div style="position: relative; font-size: 0.5em; text-align: left; border-left: 4px solid #8ab; padding: 0.3em 5em 0.3em 0.8em; background: rgba(136, 170, 187, 0.08); margin-bottom: 0.3em;"><span style="position: absolute; top: 0.3em; right: 0.6em; font-size: 0.75em; opacity: 0.5;">2EE07F</span><p>Отрезок <mark>B = [50; 70]</mark>. Для какого наибольшего натурального A выражение</p>
+<p style="text-align: center;">ДЕЛ(x, A) ∨ ((x ∈ B) → ¬ДЕЛ(x, <mark>15</mark>))</p>
+<p>истинно при любом натуральном x?</p></div>
+<ul style="font-size: 0.5em; text-align: left;">
+    <li class="fragment">файл <code>4_div.py</code>: поменять только числа</li>
+</ul>
+<div class="timer fragment" data-limit="360">
+    <div class="timer-bar"><div class="timer-fill"></div></div>
+    <div class="timer-row">
+        <span class="timer-time">0:00</span>
+        <span class="timer-hint">клик - старт</span>
+        <button class="timer-reset" type="button">сброс</button>
+    </div>
+</div>
+<p class="fragment" style="font-size: 0.5em; margin-top: 0.4em;">ответ: <strong>60</strong> (в [50; 70] из кратных 15 только 60)</p>
+                </section>
+
+            </section>
+
+            <!-- ЧАСТЬ 3: тактика пробника -->
+            <section>
+
+                <!-- что уже решаем программой: №2, 5, 15, 19-21 (плюс завтра 13, 16, 23) - шаблоны держать под рукой -->
+                <section>
+                    <div class="lesson-time">50</div>
+                    <h2>Что уже решаем программой</h2>
+<table style="font-size: 0.55em; width: 90%;">
+    <tr><td><strong>номер</strong></td><td><strong>шаблон</strong></td></tr>
+    <tr class="fragment"><td>№2</td><td>4 цикла по 0/1, печать строк F = 0</td></tr>
+    <tr class="fragment"><td>№5</td><td><code>build_r</code> + перебор N</td></tr>
+    <tr class="fragment"><td>№15</td><td><code>ok(a)</code> + перебор A</td></tr>
+    <tr class="fragment"><td>№19-21</td><td><code>can_win</code> / <code>must_lose</code></td></tr>
+    <tr class="fragment" style="opacity: 0.6;"><td>завтра</td><td>№16, №13, №23</td></tr>
+</table>
+<div class="fragment opinion" style="margin-top: 0.4em;">
+    Папка с шаблонами на пробнике - главный инструмент
+</div>
+                </section>
+
+                <!-- правило пробника: пустое поле = 0, штрафа нет; не уверен - всё равно пиши ответ -->
+                <section>
+                    <h2>Правило пробника</h2>
+<div class="compare" style="font-size: 0.8em;">
+    <div class="compare-block fragment">
+        <h4>пустое поле</h4>
+        <p style="font-size: 0.6em;"><mark class="yellow">0 баллов</mark> всегда</p>
+    </div>
+    <div class="compare-block fragment">
+        <h4>неверный ответ</h4>
+        <p style="font-size: 0.6em;">тоже 0, <mark class="green">штрафа нет</mark></p>
+    </div>
+</div>
+<div class="fragment opinion" style="margin-top: 0.6em;">
+    Не уверен - всё равно пиши ответ. В варианте 1 пустыми остались 19 номеров
+</div>
+                </section>
+
+            </section>
+
+            <!-- ИТОГ -->
+            <section>
+
+                <!-- итог: перевод знаков (→ это <=), перебор 0/1 вложенными циклами, «при любом x» = флаг, наибольшее - до конца -->
+                <section>
+                    <div class="lesson-time">55</div>
+                    <h2>Что запомнить</h2>
+                    <ul>
+                        <li class="fragment">→ в Python - это <code>&lt;=</code>, ≡ - это <code>==</code></li>
+                        <li class="fragment">№2: 4 цикла по 0/1, печатаем строки как во фрагменте</li>
+                        <li class="fragment">№15: «при любом x» - ни одного x, где ложно</li>
+                        <li class="fragment">наибольшее - перебор до конца, наименьшее - первое</li>
+                    </ul>
+                </section>
+
+                <!-- ДЗ лёгкое (завтра занятие): одна задача №2 и одна №15 из банка ФИПИ, по 5 минут -->
+                <section>
+                    <h2>Домашнее задание</h2>
+                    <div class="timeline" style="font-size: 0.6em;">
+                        <div class="timeline-item fragment">
+                            <div class="timeline-marker">1</div>
+                            <div class="timeline-content">№2: <a href="https://ege.fipi.ru/bank/questions.php?search=1&amp;proj=B9ACA5BBB2E19E434CD6BEC25284C67F&amp;qid=E29A84" target="_blank" rel="noopener">E29A84</a>, файл <code>hw_1_truth.py</code></div>
+                        </div>
+                        <div class="timeline-item fragment">
+                            <div class="timeline-marker">2</div>
+                            <div class="timeline-content">№15: <a href="https://ege.fipi.ru/bank/questions.php?search=1&amp;proj=B9ACA5BBB2E19E434CD6BEC25284C67F&amp;qid=89E22A" target="_blank" rel="noopener">89E22A</a>, файл <code>hw_2_div.py</code></div>
+                        </div>
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 0.8em;">
+                        Завтра занятие - каждая задача по 5 минут. Ответ проверяй кнопкой на сайте ФИПИ
+                    </div>
+                </section>
+
+            </section>
+
+        </div>
+    </div>
+
+    <script src="/utils/lib/js/head.min.js"></script>
+    <script src="/utils/js/reveal.js"></script>
+    <script>
+        Reveal.initialize({
+            controls: true,
+            progress: true,
+            history: true,
+            center: true,
+            transition: 'fade',
+            transitionSpeed: 'fast',
+            dependencies: [
+                { src: '/utils/lib/js/classList.js', condition: function () { return !document.body.classList; } },
+                { src: '/utils/plugin/markdown/marked.js', condition: function () { return !!document.querySelector('[data-markdown]'); } },
+                { src: '/utils/plugin/markdown/markdown.js', condition: function () { return !!document.querySelector('[data-markdown]'); } },
+                { src: '/utils/plugin/highlight/highlight.js', async: true, callback: function () { hljs.initHighlightingOnLoad(); } },
+                { src: '/utils/plugin/zoom-js/zoom.js', async: true },
+                { src: '/utils/plugin/notes/notes.js', async: true }
+            ]
+        });
+        Reveal.configure({ slideNumber: 'c/t' });
+    </script>
+    <script>
+        // таймер на слайде: клик - старт/пауза, "сброс" - обнулить
+        document.querySelectorAll('.timer').forEach(function (el) {
+            var limit = +el.dataset.limit || 180;
+            var fill = el.querySelector('.timer-fill');
+            var timeEl = el.querySelector('.timer-time');
+            var hint = el.querySelector('.timer-hint');
+            var spent = 0, startedAt = null, tick = null;
+
+            function fmt(sec) {
+                sec = Math.floor(sec);
+                return Math.floor(sec / 60) + ':' + String(sec % 60).padStart(2, '0');
+            }
+            function elapsed() {
+                return spent + (startedAt ? (Date.now() - startedAt) / 1000 : 0);
+            }
+            function draw() {
+                var t = elapsed();
+                fill.style.width = Math.min(t / limit, 1) * 100 + '%';
+                el.classList.toggle('warn', t >= limit * 0.8 && t < limit);
+                el.classList.toggle('over', t >= limit);
+                timeEl.textContent = t >= limit
+                    ? fmt(limit) + ' + ' + fmt(t - limit)
+                    : fmt(t) + ' / ' + fmt(limit);
+            }
+            function toggle() {
+                if (startedAt) {
+                    spent = elapsed(); startedAt = null;
+                    clearInterval(tick);
+                    hint.textContent = 'пауза - клик, чтобы продолжить';
+                } else {
+                    startedAt = Date.now();
+                    tick = setInterval(draw, 200);
+                    hint.textContent = 'идёт - клик для паузы';
+                }
+                draw();
+            }
+            el.addEventListener('click', function (e) {
+                e.stopPropagation();
+                if (e.target.closest('.timer-reset')) {
+                    clearInterval(tick); spent = 0; startedAt = null;
+                    hint.textContent = 'клик - старт';
+                } else {
+                    toggle();
+                }
+                draw();
+            });
+            draw();
+        });
+    </script>
+</body>
+
+</html>
