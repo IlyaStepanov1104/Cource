@@ -1,0 +1,1072 @@
+<!doctype html>
+<html lang="ru">
+
+<head>
+    <meta charset="utf-8">
+    <title>ЕГЭ, занятие 6 - №16, №13, №23: рекурсия и графы</title>
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+
+    <link rel="stylesheet" href="/utils/css/reveal.css">
+    <link rel="stylesheet" href="/utils/lib/css/animate.css">
+    <link rel="stylesheet" href="/utils/css/theme/night.css" id="theme">
+    <link rel="stylesheet" href="/utils/lib/css/zenburn.css">
+    <link rel="stylesheet" href="/utils/css/custom-base.css">
+    <link rel="stylesheet" href="css-custom/custom.css">
+
+    <script>
+        var link = document.createElement('link');
+        link.rel = 'stylesheet'; link.type = 'text/css';
+        link.href = window.location.search.match(/print-pdf/gi)
+            ? '/utils/css/print/pdf.css'
+            : '/utils/css/print/paper.css';
+        document.getElementsByTagName('head')[0].appendChild(link);
+    </script>
+</head>
+
+<body>
+    <div class="reveal">
+        <div class="slides">
+
+            <!-- титульный слайд: №16, №13, №23 - рекурсия и графы; подпись «до пробника 3 дня» -->
+            <section style="font-size: 70px; height: 100%; width: 100%">
+                <div class="lesson-time">0</div>
+                <div class="fragment">
+                    <h1 class="animated" style="font-size: 1.5em;">Рекурсия и графы</h1>
+                    <p style="text-align: center; font-size: 0.45em; opacity: 0.6;">задания 16, 13 и 23</p>
+                    <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">ЕГЭ, занятие 6 - до пробника 3 дня</p>
+                </div>
+            </section>
+
+            <!-- ЧАСТЬ 1: №16 - рекурсивная функция -->
+            <section>
+
+                <!-- где мы: вчера №2 и №15, сегодня последние три программных номера, завтра прогоны на время -->
+                <section>
+                    <div class="lesson-time">0</div>
+                    <h2>До пробника</h2>
+<div class="timeline" style="font-size: 0.6em;">
+    <div class="timeline-item fragment">
+        <div class="timeline-marker">вс</div>
+        <div class="timeline-content" style="opacity: 0.6;">№2 и №15 - логика циклами</div>
+    </div>
+    <div class="timeline-item fragment">
+        <div class="timeline-marker">пн</div>
+        <div class="timeline-content"><strong>сегодня</strong>: №16, №13, №23 - рекурсия и графы</div>
+    </div>
+    <div class="timeline-item fragment">
+        <div class="timeline-marker">вт</div>
+        <div class="timeline-content">наш список номеров, порядок, прогоны на время</div>
+    </div>
+</div>
+<div class="fragment opinion" style="margin-top: 0.6em;">
+    Сегодня последние три программных номера. Всё на том, что ты уже знаешь: рекурсия и пути в графе
+</div>
+                </section>
+
+                <!-- условие демо-2027 №16 по фрагментам: F(n) задана двумя-тремя случаями, найти значение выражения -->
+                <section>
+                    <h2>№16 из демо-2027</h2>
+<div style="position: relative; font-size: 0.55em; text-align: left; border-left: 4px solid #8ab; padding: 0.3em 5em 0.3em 0.8em; background: rgba(136, 170, 187, 0.08);"><span style="position: absolute; top: 0.3em; right: 0.6em; font-size: 0.7em; opacity: 0.5;">демо-2027</span><p class="fragment">Алгоритм вычисления значения функции F(n), где n - натуральное число, задан следующими соотношениями:</p>
+<p class="fragment" style="text-align: center; font-size: 1.15em;">F(n) = 1 при n = 1;<br>F(n) = n × F(n - 1), если n &gt; 1.</p>
+<p class="fragment">Чему равно значение выражения <mark>(F(3038) + 5 × F(3037)) / F(3036)</mark>?</p></div>
+<div class="fragment opinion" style="margin-top: 0.5em;">
+    Руками: это факториал, сокращаем. Но мы пишем программу - она не ошибается в арифметике
+</div>
+                </section>
+
+                <!-- перевод условия в Python: каждая строка определения = ветка if, база - первая -->
+                <section>
+                    <h2>Условие -> Python</h2>
+<table style="font-size: 0.6em; width: 90%;">
+    <tr><td><strong>в условии</strong></td><td><strong>в функции</strong></td></tr>
+    <tr class="fragment"><td>F(n) = 1 при n = 1</td><td><code>if n == 1: return 1</code></td></tr>
+    <tr class="fragment"><td>F(n) = n × F(n - 1), если n &gt; 1</td><td><code>return n * F(n - 1)</code></td></tr>
+    <tr class="fragment"><td>(F(3038) + 5 × F(3037)) / F(3036)</td><td>выражение - уже <strong>вне</strong> функции</td></tr>
+</table>
+<div class="fragment opinion" style="margin-top: 0.5em;">
+    Каждая строка условия - одна ветка <code>if</code>. База (без вызова F) - первой
+</div>
+                </section>
+
+                <!-- картинка: дерево вызовов F для маленького n, видно, сколько раз считается одно и то же -->
+                <section>
+                    <h2>Как идут вызовы</h2>
+<svg width="672" height="370" viewBox="0 0 560 308">
+<defs>
+<marker id="c16n" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#667" /></marker>
+<marker id="c16h" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#f7a" /></marker>
+<marker id="c16y" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#fd6" /></marker>
+<marker id="c16g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#7d7" /></marker>
+<marker id="c16r" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#e55" /></marker>
+</defs>
+<g class="fragment" data-fragment-index="1">
+<rect x="18" y="14" width="64" height="32" rx="6" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="50" y="36" fill="#dde" font-size="16" text-anchor="middle">F(5)</text>
+<rect x="18" y="72" width="64" height="32" rx="6" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="50" y="94" fill="#dde" font-size="16" text-anchor="middle">F(4)</text>
+<line x1="50" y1="46" x2="50" y2="71" stroke="#667" stroke-width="2" marker-end="url(#c16n)" />
+<rect x="18" y="130" width="64" height="32" rx="6" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="50" y="152" fill="#dde" font-size="16" text-anchor="middle">F(3)</text>
+<line x1="50" y1="104" x2="50" y2="129" stroke="#667" stroke-width="2" marker-end="url(#c16n)" />
+<rect x="18" y="188" width="64" height="32" rx="6" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="50" y="210" fill="#dde" font-size="16" text-anchor="middle">F(2)</text>
+<line x1="50" y1="162" x2="50" y2="187" stroke="#667" stroke-width="2" marker-end="url(#c16n)" />
+<rect x="18" y="246" width="64" height="32" rx="6" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="50" y="268" fill="#dde" font-size="16" text-anchor="middle">F(1)</text>
+<line x1="50" y1="220" x2="50" y2="245" stroke="#667" stroke-width="2" marker-end="url(#c16n)" />
+<text x="4" y="300" fill="#99a" font-size="14" text-anchor="start">5 вызовов подряд</text>
+</g>
+<g class="fragment" data-fragment-index="2">
+<line x1="380" y1="46" x2="290" y2="83" stroke="#667" stroke-width="2" marker-end="url(#c16n)" />
+<line x1="380" y1="46" x2="480" y2="83" stroke="#667" stroke-width="2" marker-end="url(#c16n)" />
+<line x1="290" y1="116" x2="230" y2="153" stroke="#667" stroke-width="2" marker-end="url(#c16n)" />
+<line x1="290" y1="116" x2="350" y2="153" stroke="#667" stroke-width="2" marker-end="url(#c16n)" />
+<line x1="480" y1="116" x2="440" y2="153" stroke="#667" stroke-width="2" marker-end="url(#c16n)" />
+<line x1="480" y1="116" x2="520" y2="153" stroke="#667" stroke-width="2" marker-end="url(#c16n)" />
+<line x1="230" y1="186" x2="190" y2="223" stroke="#667" stroke-width="2" marker-end="url(#c16n)" />
+<line x1="230" y1="186" x2="270" y2="223" stroke="#667" stroke-width="2" marker-end="url(#c16n)" />
+<rect x="348" y="14" width="64" height="32" rx="6" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="380" y="36" fill="#dde" font-size="16" text-anchor="middle">F(5)</text>
+<rect x="258" y="84" width="64" height="32" rx="6" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="290" y="106" fill="#dde" font-size="16" text-anchor="middle">F(4)</text>
+<rect x="448" y="84" width="64" height="32" rx="6" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="480" y="106" fill="#dde" font-size="16" text-anchor="middle">F(3)</text>
+<rect x="198" y="154" width="64" height="32" rx="6" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="230" y="176" fill="#dde" font-size="16" text-anchor="middle">F(3)</text>
+<rect x="318" y="154" width="64" height="32" rx="6" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="350" y="176" fill="#dde" font-size="16" text-anchor="middle">F(2)</text>
+<rect x="408" y="154" width="64" height="32" rx="6" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="440" y="176" fill="#dde" font-size="16" text-anchor="middle">F(2)</text>
+<rect x="488" y="154" width="64" height="32" rx="6" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="520" y="176" fill="#dde" font-size="16" text-anchor="middle">F(1)</text>
+<rect x="158" y="224" width="64" height="32" rx="6" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="190" y="246" fill="#dde" font-size="16" text-anchor="middle">F(2)</text>
+<rect x="238" y="224" width="64" height="32" rx="6" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="270" y="246" fill="#dde" font-size="16" text-anchor="middle">F(1)</text>
+<text x="380" y="300" fill="#99a" font-size="14" text-anchor="middle">каждый вызов - два новых</text>
+</g>
+<g class="fragment" data-fragment-index="3">
+<rect x="448" y="84" width="64" height="32" rx="6" fill="#1c2030" stroke="#fd6" stroke-width="3" />
+<text x="480" y="106" fill="#dde" font-size="16" text-anchor="middle">F(3)</text>
+<rect x="198" y="154" width="64" height="32" rx="6" fill="#1c2030" stroke="#fd6" stroke-width="3" />
+<text x="230" y="176" fill="#dde" font-size="16" text-anchor="middle">F(3)</text>
+<rect x="318" y="154" width="64" height="32" rx="6" fill="#1c2030" stroke="#f7a" stroke-width="3" />
+<text x="350" y="176" fill="#dde" font-size="16" text-anchor="middle">F(2)</text>
+<rect x="408" y="154" width="64" height="32" rx="6" fill="#1c2030" stroke="#f7a" stroke-width="3" />
+<text x="440" y="176" fill="#dde" font-size="16" text-anchor="middle">F(2)</text>
+<rect x="158" y="224" width="64" height="32" rx="6" fill="#1c2030" stroke="#f7a" stroke-width="3" />
+<text x="190" y="246" fill="#dde" font-size="16" text-anchor="middle">F(2)</text>
+</g>
+</svg>
+<p class="fragment" data-fragment-index="1" style="font-size: 0.45em; margin: 0;">слева - наш №16: F(n) зовёт только F(n - 1). Для F(3038) - <mark>3038 вызовов друг в друге</mark></p>
+<p class="fragment" data-fragment-index="3" style="font-size: 0.45em; margin: 0;">справа - если F(n) зовёт F(n - 1) и F(n - 2): F(3) считается <mark class="yellow">2 раза</mark>, F(2) - <mark>3 раза</mark></p>
+                </section>
+
+                <!-- пишем вместе 1_demo_f.py: прямой перевод, запускаем на маленьком n -->
+                <section>
+                    <h2>Пишем вместе</h2>
+<ul style="font-size: 0.6em; text-align: left;">
+    <li class="fragment">файл <code>1_demo_f.py</code>: функция <code>F(n)</code> - перевод строка в строку</li>
+    <li class="fragment">сначала маленькое n: <code>F(5)</code> = 120 - перевод верный</li>
+    <li class="fragment">делим через <code>//</code>: числа огромные, ответ - целое</li>
+    <li class="fragment">печатаем сразу выражение, а не F(3038): в нём ~9000 цифр, Python откажется его печатать</li>
+</ul>
+<p class="fragment" style="font-size: 0.6em;">запускаем на 3038 и получаем <mark>RecursionError</mark></p>
+                </section>
+
+                <!-- ловушка 1: большое n -> RecursionError, sys.setrecursionlimit; когда не спасает - считаем снизу вверх циклом -->
+                <section>
+                    <h2>Ловушка 1: глубина</h2>
+<p class="fragment" style="font-size: 0.55em;">Python разрешает примерно 1000 вызовов друг в друге. Нам надо 3038</p>
+<div class="code-block fragment">
+    <pre class="python size-m"><code>import sys
+sys.setrecursionlimit(10000)</code></pre>
+</div>
+<p class="fragment" style="font-size: 0.55em;">две строки в начале файла, и ответ демо: <strong>9241591</strong></p>
+<div class="fragment opinion" style="margin-top: 0.4em;">
+    Программа падает молча даже с лимитом (n в сотнях тысяч)? Считаем снизу вверх: F(1), F(2), F(3) ... циклом в словарь
+</div>
+                </section>
+
+                <!-- ловушка 2: долго считается -> memo-словарь, как в ДП на графах (без @cache) -->
+                <section>
+                    <h2>Ловушка 2: долго</h2>
+<div class="compare" style="font-size: 0.75em;">
+    <div class="compare-block fragment">
+        <h4>F(n - 1) + F(n - 2)</h4>
+        <p style="font-size: 0.6em;">каждый вызов рождает два: для n = 40 это <mark>сотни миллионов</mark> вызовов</p>
+        <p style="font-size: 0.5em; opacity: 0.7;">досрок ЕГЭ-2022 - как раз такая функция</p>
+    </div>
+    <div class="compare-block fragment">
+        <h4>memo-словарь</h4>
+        <p style="font-size: 0.6em;">посчитал F(k) - записал в <code>memo[k]</code>; второй раз берём из словаря</p>
+        <p style="font-size: 0.5em; opacity: 0.7;">как в ДП на графах, занятие 35</p>
+    </div>
+</div>
+<div class="fragment opinion" style="margin-top: 0.5em;">
+    Программа думает дольше 10 секунд - значит, нужен memo, а не терпение
+</div>
+                </section>
+
+                <!-- практика с таймером 7 минут: задача №16 с Решу ЕГЭ (прототип реального ЕГЭ с источником, не пользовательская) -> 2_f.py -->
+                <section>
+                    <h2>Практика: №16</h2>
+<div style="position: relative; font-size: 0.5em; text-align: left; border-left: 4px solid #8ab; padding: 0.3em 7em 0.3em 0.8em; background: rgba(136, 170, 187, 0.08); margin-bottom: 0.3em;"><span style="position: absolute; top: 0.3em; right: 0.6em; font-size: 0.75em; opacity: 0.5;">демо-2023</span><p>F(n) = 1 при n = 1; F(n) = n × F(n - 1), если n &gt; 1.</p>
+<p>Чему равно значение выражения <mark>F(2023) / F(2020)</mark>?</p></div>
+<ul style="font-size: 0.5em; text-align: left;">
+    <li class="fragment">файл <code>2_f.py</code>, задача на <a href="https://inf-ege.sdamgia.ru/problem?id=47220" target="_blank" rel="noopener">Решу ЕГЭ 47220</a></li>
+</ul>
+<div class="timer fragment" data-limit="420">
+    <div class="timer-bar"><div class="timer-fill"></div></div>
+    <div class="timer-row">
+        <span class="timer-time">0:00</span>
+        <span class="timer-hint">клик - старт</span>
+        <button class="timer-reset" type="button">сброс</button>
+    </div>
+</div>
+<p class="fragment" style="font-size: 0.5em; margin-top: 0.4em;">ответ: <strong>8266912626</strong> (= 2023 · 2022 · 2021)</p>
+                </section>
+
+            </section>
+
+            <!-- ЧАСТЬ 2: №13 - количество программ исполнителя -->
+            <section>
+
+                <!-- условие демо-2027 №13 по фрагментам: команды, из A в B, «проходит через X», «не проходит через Y» -->
+                <section>
+                    <div class="lesson-time">28</div>
+                    <h2>№13 из демо-2027</h2>
+<div style="position: relative; font-size: 0.48em; text-align: left; border-left: 4px solid #8ab; padding: 0.3em 5em 0.3em 0.8em; background: rgba(136, 170, 187, 0.08);"><span style="position: absolute; top: 0.3em; right: 0.6em; font-size: 0.75em; opacity: 0.5;">демо-2027</span><p class="fragment">Исполнитель преобразует число на экране. Команды: <mark>A. Прибавь 1</mark>, <mark>B. Поменяй местами</mark>.</p>
+<p class="fragment">Команда B применяется, только если цифра десятков <strong>меньше</strong> цифры единиц, и меняет местами две младшие цифры.</p>
+<p class="fragment">Сколько существует программ, для которых при исходном числе <mark>100</mark> результатом является число <mark>141</mark>?</p>
+<p class="fragment">Траектория - последовательность результатов всех команд. Для программы ABA при числе 13 траектория: 14, 41, 42.</p></div>
+<div class="fragment opinion" style="margin-top: 0.4em;">
+    В других вариантах добавляют: «траектория <strong>содержит</strong> X» и «<strong>не содержит</strong> Y»
+</div>
+                </section>
+
+                <!-- картинка: числа как вершины графа, команды как рёбра - это задача на число путей (связь с ДП на графах) -->
+                <section>
+                    <h2>Числа - это вершины</h2>
+<p style="font-size: 0.45em; margin: 0;">маленький пример: из 2 в 8 командами +1 и x2</p>
+<svg width="700" height="235" viewBox="0 0 560 188">
+<defs>
+<marker id="p1n" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#667" /></marker>
+<marker id="p1h" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#f7a" /></marker>
+<marker id="p1y" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#fd6" /></marker>
+<marker id="p1g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#7d7" /></marker>
+<marker id="p1r" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#e55" /></marker>
+</defs>
+<g class="fragment" data-fragment-index="1">
+<circle cx="40" cy="150" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="40" y="156" fill="#dde" font-size="17" text-anchor="middle">2</text>
+<circle cx="120" cy="150" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="120" y="156" fill="#dde" font-size="17" text-anchor="middle">3</text>
+<circle cx="200" cy="150" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="200" y="156" fill="#dde" font-size="17" text-anchor="middle">4</text>
+<circle cx="280" cy="150" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="280" y="156" fill="#dde" font-size="17" text-anchor="middle">5</text>
+<circle cx="360" cy="150" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="360" y="156" fill="#dde" font-size="17" text-anchor="middle">6</text>
+<circle cx="440" cy="150" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="440" y="156" fill="#dde" font-size="17" text-anchor="middle">7</text>
+<circle cx="520" cy="150" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="520" y="156" fill="#dde" font-size="17" text-anchor="middle">8</text>
+<line x1="60.0" y1="150.0" x2="99.0" y2="150.0" stroke="#667" stroke-width="2" marker-end="url(#p1n)" />
+<text x="80.0" y="142.0" fill="#99a" font-size="15" text-anchor="middle">+1</text>
+<line x1="140.0" y1="150.0" x2="179.0" y2="150.0" stroke="#667" stroke-width="2" marker-end="url(#p1n)" />
+<text x="160.0" y="142.0" fill="#99a" font-size="15" text-anchor="middle">+1</text>
+<line x1="220.0" y1="150.0" x2="259.0" y2="150.0" stroke="#667" stroke-width="2" marker-end="url(#p1n)" />
+<text x="240.0" y="142.0" fill="#99a" font-size="15" text-anchor="middle">+1</text>
+<line x1="300.0" y1="150.0" x2="339.0" y2="150.0" stroke="#667" stroke-width="2" marker-end="url(#p1n)" />
+<text x="320.0" y="142.0" fill="#99a" font-size="15" text-anchor="middle">+1</text>
+<line x1="380.0" y1="150.0" x2="419.0" y2="150.0" stroke="#667" stroke-width="2" marker-end="url(#p1n)" />
+<text x="400.0" y="142.0" fill="#99a" font-size="15" text-anchor="middle">+1</text>
+<line x1="460.0" y1="150.0" x2="499.0" y2="150.0" stroke="#667" stroke-width="2" marker-end="url(#p1n)" />
+<text x="480.0" y="142.0" fill="#99a" font-size="15" text-anchor="middle">+1</text>
+</g>
+<g class="fragment" data-fragment-index="2">
+<path d="M46,131 Q120.0,105 194,129" fill="none" stroke="#667" stroke-width="2" marker-end="url(#p1n)" />
+<text x="120.0" y="103.5" fill="#99a" font-size="14" text-anchor="middle">x2</text>
+<path d="M126,131 Q240.0,70 354,129" fill="none" stroke="#667" stroke-width="2" marker-end="url(#p1n)" />
+<text x="240.0" y="86.0" fill="#99a" font-size="14" text-anchor="middle">x2</text>
+<path d="M206,131 Q360.0,35 514,129" fill="none" stroke="#667" stroke-width="2" marker-end="url(#p1n)" />
+<text x="360.0" y="68.5" fill="#99a" font-size="14" text-anchor="middle">x2</text>
+</g>
+<g class="fragment" data-fragment-index="3">
+<path d="M46,131 Q120.0,105 194,129" fill="none" stroke="#f7a" stroke-width="4" marker-end="url(#p1h)" />
+<path d="M206,131 Q360.0,35 514,129" fill="none" stroke="#f7a" stroke-width="4" marker-end="url(#p1h)" />
+<circle cx="40" cy="150" r="20" fill="#1c2030" stroke="#f7a" stroke-width="3" />
+<text x="40" y="156" fill="#dde" font-size="17" text-anchor="middle">2</text>
+<circle cx="200" cy="150" r="20" fill="#1c2030" stroke="#f7a" stroke-width="3" />
+<text x="200" y="156" fill="#dde" font-size="17" text-anchor="middle">4</text>
+<circle cx="520" cy="150" r="20" fill="#1c2030" stroke="#f7a" stroke-width="3" />
+<text x="520" y="156" fill="#dde" font-size="17" text-anchor="middle">8</text>
+</g>
+</svg>
+<p class="fragment" data-fragment-index="3" style="font-size: 0.5em;">программа «x2, x2» - это путь 2 -&gt; 4 -&gt; 8</p>
+<div class="fragment opinion" data-fragment-index="4" style="margin-top: 0.3em;">
+    Сколько программ = сколько путей из 2 в 8. Это занятие 35
+</div>
+                </section>
+
+                <!-- идея словами: count(a, b) = сумма count по всем командам из a; база a == b -> 1, a > b -> 0 -->
+                <section>
+                    <h2>Идея: count(a, b)</h2>
+<div class="timeline" style="font-size: 0.58em;">
+    <div class="timeline-item fragment">
+        <div class="timeline-marker">1</div>
+        <div class="timeline-content"><code>a == b</code> - пришли, это <strong>1</strong> программа</div>
+    </div>
+    <div class="timeline-item fragment">
+        <div class="timeline-marker">2</div>
+        <div class="timeline-content"><code>a &gt; b</code> - перескочили, числа только растут: <strong>0</strong></div>
+    </div>
+    <div class="timeline-item fragment">
+        <div class="timeline-marker">3</div>
+        <div class="timeline-content">иначе - сумма <code>count</code> по каждой команде, которую можно применить к a</div>
+    </div>
+</div>
+<div class="fragment opinion" style="margin-top: 0.5em;">
+    Все команды увеличивают число - циклов нет, рекурсия всегда закончится
+</div>
+                </section>
+
+                <!-- трассировка на маленьком примере: таблица count для чисел от B вниз до A -->
+                <section>
+                    <h2>Считаем от конца</h2>
+<svg width="700" height="285" viewBox="0 0 560 228">
+<defs>
+<marker id="p2n" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#667" /></marker>
+<marker id="p2h" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#f7a" /></marker>
+<marker id="p2y" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#fd6" /></marker>
+<marker id="p2g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#7d7" /></marker>
+<marker id="p2r" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#e55" /></marker>
+</defs>
+<line x1="60.0" y1="150.0" x2="99.0" y2="150.0" stroke="#667" stroke-width="2" marker-end="url(#p2n)" />
+<text x="80.0" y="142.0" fill="#99a" font-size="15" text-anchor="middle">+1</text>
+<line x1="140.0" y1="150.0" x2="179.0" y2="150.0" stroke="#667" stroke-width="2" marker-end="url(#p2n)" />
+<text x="160.0" y="142.0" fill="#99a" font-size="15" text-anchor="middle">+1</text>
+<line x1="220.0" y1="150.0" x2="259.0" y2="150.0" stroke="#667" stroke-width="2" marker-end="url(#p2n)" />
+<text x="240.0" y="142.0" fill="#99a" font-size="15" text-anchor="middle">+1</text>
+<line x1="300.0" y1="150.0" x2="339.0" y2="150.0" stroke="#667" stroke-width="2" marker-end="url(#p2n)" />
+<text x="320.0" y="142.0" fill="#99a" font-size="15" text-anchor="middle">+1</text>
+<line x1="380.0" y1="150.0" x2="419.0" y2="150.0" stroke="#667" stroke-width="2" marker-end="url(#p2n)" />
+<text x="400.0" y="142.0" fill="#99a" font-size="15" text-anchor="middle">+1</text>
+<line x1="460.0" y1="150.0" x2="499.0" y2="150.0" stroke="#667" stroke-width="2" marker-end="url(#p2n)" />
+<text x="480.0" y="142.0" fill="#99a" font-size="15" text-anchor="middle">+1</text>
+<path d="M46,131 Q120.0,105 194,129" fill="none" stroke="#667" stroke-width="2" marker-end="url(#p2n)" />
+<text x="120.0" y="103.5" fill="#99a" font-size="14" text-anchor="middle">x2</text>
+<path d="M126,131 Q240.0,70 354,129" fill="none" stroke="#667" stroke-width="2" marker-end="url(#p2n)" />
+<text x="240.0" y="86.0" fill="#99a" font-size="14" text-anchor="middle">x2</text>
+<path d="M206,131 Q360.0,35 514,129" fill="none" stroke="#667" stroke-width="2" marker-end="url(#p2n)" />
+<text x="360.0" y="68.5" fill="#99a" font-size="14" text-anchor="middle">x2</text>
+<circle cx="40" cy="150" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="40" y="156" fill="#dde" font-size="17" text-anchor="middle">2</text>
+<circle cx="120" cy="150" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="120" y="156" fill="#dde" font-size="17" text-anchor="middle">3</text>
+<circle cx="200" cy="150" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="200" y="156" fill="#dde" font-size="17" text-anchor="middle">4</text>
+<circle cx="280" cy="150" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="280" y="156" fill="#dde" font-size="17" text-anchor="middle">5</text>
+<circle cx="360" cy="150" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="360" y="156" fill="#dde" font-size="17" text-anchor="middle">6</text>
+<circle cx="440" cy="150" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="440" y="156" fill="#dde" font-size="17" text-anchor="middle">7</text>
+<circle cx="520" cy="150" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="520" y="156" fill="#dde" font-size="17" text-anchor="middle">8</text>
+<g class="fragment" data-fragment-index="1">
+<text x="520" y="198" fill="#fd6" font-size="22" font-weight="bold" text-anchor="middle">1</text>
+<text x="520" y="218" fill="#99a" font-size="13" text-anchor="middle">a == b</text>
+</g>
+<g class="fragment" data-fragment-index="2">
+<text x="440" y="198" fill="#fd6" font-size="22" font-weight="bold" text-anchor="middle">1</text>
+<text x="440" y="218" fill="#99a" font-size="13" text-anchor="middle">1 + 0</text>
+</g>
+<g class="fragment" data-fragment-index="3">
+<text x="360" y="198" fill="#fd6" font-size="22" font-weight="bold" text-anchor="middle">1</text>
+<text x="360" y="218" fill="#99a" font-size="13" text-anchor="middle">1 + 0</text>
+</g>
+<g class="fragment" data-fragment-index="4">
+<text x="280" y="198" fill="#fd6" font-size="22" font-weight="bold" text-anchor="middle">1</text>
+<text x="280" y="218" fill="#99a" font-size="13" text-anchor="middle">1 + 0</text>
+</g>
+<g class="fragment" data-fragment-index="5">
+<text x="200" y="198" fill="#fd6" font-size="22" font-weight="bold" text-anchor="middle">2</text>
+<text x="200" y="218" fill="#99a" font-size="13" text-anchor="middle">1 + 1</text>
+</g>
+<g class="fragment" data-fragment-index="6">
+<text x="120" y="198" fill="#fd6" font-size="22" font-weight="bold" text-anchor="middle">3</text>
+<text x="120" y="218" fill="#99a" font-size="13" text-anchor="middle">2 + 1</text>
+</g>
+<g class="fragment" data-fragment-index="7">
+<text x="40" y="198" fill="#f7a" font-size="22" font-weight="bold" text-anchor="middle">5</text>
+<text x="40" y="218" fill="#99a" font-size="13" text-anchor="middle">3 + 2</text>
+</g>
+</svg>
+<p class="fragment" data-fragment-index="8" style="font-size: 0.5em; margin: 0;">count(4) = count(5) + count(8), под числом - сумма по командам +1 и x2</p>
+<div class="fragment opinion" data-fragment-index="9" style="margin-top: 0.3em;">
+    Из 2 в 8 - <strong>5</strong> программ. Рекурсия сделает то же самое, только от 2
+</div>
+                </section>
+
+                <!-- пишем вместе 3_demo_programs.py: count(a, b) -->
+                <section>
+                    <h2>Пишем вместе</h2>
+<ul style="font-size: 0.58em; text-align: left;">
+    <li class="fragment">файл <code>3_demo_programs.py</code>, функция <code>count(a, b)</code></li>
+    <li class="fragment">команда A - всегда: <code>count(a + 1, b)</code></li>
+    <li class="fragment">команда B - только если десятки меньше единиц: <code>a // 10 % 10</code> и <code>a % 10</code></li>
+    <li class="fragment">новое число: сотни те же, единицы и десятки поменялись местами: 113 -&gt; 131</li>
+    <li class="fragment">проверка: <code>count(13, 14)</code> = 1, потом ответ</li>
+</ul>
+<p class="fragment" style="font-size: 0.6em;">ответ демо: <strong>16</strong></p>
+                </section>
+
+                <!-- «через X» = count(A, X) * count(X, B), картинка: все пути проходят через одну вершину -->
+                <section>
+                    <h2>«Содержит 4»</h2>
+<svg width="700" height="270" viewBox="0 0 560 216">
+<defs>
+<marker id="p3n" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#667" /></marker>
+<marker id="p3h" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#f7a" /></marker>
+<marker id="p3y" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#fd6" /></marker>
+<marker id="p3g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#7d7" /></marker>
+<marker id="p3r" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#e55" /></marker>
+</defs>
+<line x1="60.0" y1="150.0" x2="99.0" y2="150.0" stroke="#667" stroke-width="2" marker-end="url(#p3n)" />
+<text x="80.0" y="142.0" fill="#99a" font-size="15" text-anchor="middle">+1</text>
+<line x1="140.0" y1="150.0" x2="179.0" y2="150.0" stroke="#667" stroke-width="2" marker-end="url(#p3n)" />
+<text x="160.0" y="142.0" fill="#99a" font-size="15" text-anchor="middle">+1</text>
+<line x1="220.0" y1="150.0" x2="259.0" y2="150.0" stroke="#667" stroke-width="2" marker-end="url(#p3n)" />
+<text x="240.0" y="142.0" fill="#99a" font-size="15" text-anchor="middle">+1</text>
+<line x1="300.0" y1="150.0" x2="339.0" y2="150.0" stroke="#667" stroke-width="2" marker-end="url(#p3n)" />
+<text x="320.0" y="142.0" fill="#99a" font-size="15" text-anchor="middle">+1</text>
+<line x1="380.0" y1="150.0" x2="419.0" y2="150.0" stroke="#667" stroke-width="2" marker-end="url(#p3n)" />
+<text x="400.0" y="142.0" fill="#99a" font-size="15" text-anchor="middle">+1</text>
+<line x1="460.0" y1="150.0" x2="499.0" y2="150.0" stroke="#667" stroke-width="2" marker-end="url(#p3n)" />
+<text x="480.0" y="142.0" fill="#99a" font-size="15" text-anchor="middle">+1</text>
+<path d="M46,131 Q120.0,105 194,129" fill="none" stroke="#667" stroke-width="2" marker-end="url(#p3n)" />
+<text x="120.0" y="103.5" fill="#99a" font-size="14" text-anchor="middle">x2</text>
+<path d="M126,131 Q240.0,70 354,129" fill="none" stroke="#667" stroke-width="2" marker-end="url(#p3n)" />
+<text x="240.0" y="86.0" fill="#99a" font-size="14" text-anchor="middle">x2</text>
+<path d="M206,131 Q360.0,35 514,129" fill="none" stroke="#667" stroke-width="2" marker-end="url(#p3n)" />
+<text x="360.0" y="68.5" fill="#99a" font-size="14" text-anchor="middle">x2</text>
+<circle cx="40" cy="150" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="40" y="156" fill="#dde" font-size="17" text-anchor="middle">2</text>
+<circle cx="120" cy="150" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="120" y="156" fill="#dde" font-size="17" text-anchor="middle">3</text>
+<circle cx="200" cy="150" r="20" fill="#1c2030" stroke="#f7a" stroke-width="4" />
+<text x="200" y="156" fill="#dde" font-size="17" text-anchor="middle">4</text>
+<circle cx="280" cy="150" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="280" y="156" fill="#dde" font-size="17" text-anchor="middle">5</text>
+<circle cx="360" cy="150" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="360" y="156" fill="#dde" font-size="17" text-anchor="middle">6</text>
+<circle cx="440" cy="150" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="440" y="156" fill="#dde" font-size="17" text-anchor="middle">7</text>
+<circle cx="520" cy="150" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="520" y="156" fill="#dde" font-size="17" text-anchor="middle">8</text>
+<g class="fragment" data-fragment-index="1">
+<line x1="60.0" y1="150.0" x2="99.0" y2="150.0" stroke="#fd6" stroke-width="4" marker-end="url(#p3y)" />
+<line x1="140.0" y1="150.0" x2="179.0" y2="150.0" stroke="#fd6" stroke-width="4" marker-end="url(#p3y)" />
+<path d="M46,131 Q120.0,105 194,129" fill="none" stroke="#fd6" stroke-width="4" marker-end="url(#p3y)" />
+<circle cx="40" cy="150" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="40" y="156" fill="#dde" font-size="17" text-anchor="middle">2</text>
+<circle cx="120" cy="150" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="120" y="156" fill="#dde" font-size="17" text-anchor="middle">3</text>
+<circle cx="200" cy="150" r="20" fill="#1c2030" stroke="#f7a" stroke-width="4" />
+<text x="200" y="156" fill="#dde" font-size="17" text-anchor="middle">4</text>
+<text x="120" y="200" fill="#fd6" font-size="17" text-anchor="middle">из 2 в 4: 2 пути</text>
+</g>
+<g class="fragment" data-fragment-index="2">
+<line x1="220.0" y1="150.0" x2="259.0" y2="150.0" stroke="#7d7" stroke-width="4" marker-end="url(#p3g)" />
+<line x1="300.0" y1="150.0" x2="339.0" y2="150.0" stroke="#7d7" stroke-width="4" marker-end="url(#p3g)" />
+<line x1="380.0" y1="150.0" x2="419.0" y2="150.0" stroke="#7d7" stroke-width="4" marker-end="url(#p3g)" />
+<line x1="460.0" y1="150.0" x2="499.0" y2="150.0" stroke="#7d7" stroke-width="4" marker-end="url(#p3g)" />
+<path d="M206,131 Q360.0,35 514,129" fill="none" stroke="#7d7" stroke-width="4" marker-end="url(#p3g)" />
+<circle cx="280" cy="150" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="280" y="156" fill="#dde" font-size="17" text-anchor="middle">5</text>
+<circle cx="360" cy="150" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="360" y="156" fill="#dde" font-size="17" text-anchor="middle">6</text>
+<circle cx="440" cy="150" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="440" y="156" fill="#dde" font-size="17" text-anchor="middle">7</text>
+<circle cx="520" cy="150" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="520" y="156" fill="#dde" font-size="17" text-anchor="middle">8</text>
+<circle cx="200" cy="150" r="20" fill="#1c2030" stroke="#f7a" stroke-width="4" />
+<text x="200" y="156" fill="#dde" font-size="17" text-anchor="middle">4</text>
+<text x="360" y="200" fill="#7d7" font-size="17" text-anchor="middle">из 4 в 8: 2 пути</text>
+</g>
+<g class="fragment" data-fragment-index="3">
+<text x="280" y="50" fill="#e55" font-size="14" text-anchor="middle">3 -&gt; 6 обходит 4 - не считаем</text>
+<path d="M126,131 Q240.0,70 354,129" fill="none" stroke="#e55" stroke-width="3" marker-end="url(#p3r)" stroke-dasharray="6 5" />
+</g>
+</svg>
+<p class="fragment" data-fragment-index="4" style="font-size: 0.55em; margin: 0;">любой путь до 4 склеивается с любым путём после: <mark>2 · 2 = 4</mark></p>
+<div class="fragment opinion" data-fragment-index="5" style="margin-top: 0.3em;">
+    Через X: <code>count(a, x) * count(x, b)</code>
+</div>
+                </section>
+
+                <!-- «не через Y» = в функции число Y считаем тупиком (return 0) -->
+                <section>
+                    <h2>«Не содержит 6»</h2>
+<svg width="700" height="270" viewBox="0 0 560 216">
+<defs>
+<marker id="p4n" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#667" /></marker>
+<marker id="p4h" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#f7a" /></marker>
+<marker id="p4y" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#fd6" /></marker>
+<marker id="p4g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#7d7" /></marker>
+<marker id="p4r" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#e55" /></marker>
+</defs>
+<line x1="60.0" y1="150.0" x2="99.0" y2="150.0" stroke="#667" stroke-width="2" marker-end="url(#p4n)" />
+<text x="80.0" y="142.0" fill="#99a" font-size="15" text-anchor="middle">+1</text>
+<line x1="140.0" y1="150.0" x2="179.0" y2="150.0" stroke="#667" stroke-width="2" marker-end="url(#p4n)" />
+<text x="160.0" y="142.0" fill="#99a" font-size="15" text-anchor="middle">+1</text>
+<line x1="220.0" y1="150.0" x2="259.0" y2="150.0" stroke="#667" stroke-width="2" marker-end="url(#p4n)" />
+<text x="240.0" y="142.0" fill="#99a" font-size="15" text-anchor="middle">+1</text>
+<line x1="300.0" y1="150.0" x2="339.0" y2="150.0" stroke="#667" stroke-width="2" marker-end="url(#p4n)" />
+<text x="320.0" y="142.0" fill="#99a" font-size="15" text-anchor="middle">+1</text>
+<line x1="380.0" y1="150.0" x2="419.0" y2="150.0" stroke="#667" stroke-width="2" marker-end="url(#p4n)" />
+<text x="400.0" y="142.0" fill="#99a" font-size="15" text-anchor="middle">+1</text>
+<line x1="460.0" y1="150.0" x2="499.0" y2="150.0" stroke="#667" stroke-width="2" marker-end="url(#p4n)" />
+<text x="480.0" y="142.0" fill="#99a" font-size="15" text-anchor="middle">+1</text>
+<path d="M46,131 Q120.0,105 194,129" fill="none" stroke="#667" stroke-width="2" marker-end="url(#p4n)" />
+<text x="120.0" y="103.5" fill="#99a" font-size="14" text-anchor="middle">x2</text>
+<path d="M126,131 Q240.0,70 354,129" fill="none" stroke="#667" stroke-width="2" marker-end="url(#p4n)" />
+<text x="240.0" y="86.0" fill="#99a" font-size="14" text-anchor="middle">x2</text>
+<path d="M206,131 Q360.0,35 514,129" fill="none" stroke="#667" stroke-width="2" marker-end="url(#p4n)" />
+<text x="360.0" y="68.5" fill="#99a" font-size="14" text-anchor="middle">x2</text>
+<circle cx="40" cy="150" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="40" y="156" fill="#dde" font-size="17" text-anchor="middle">2</text>
+<circle cx="120" cy="150" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="120" y="156" fill="#dde" font-size="17" text-anchor="middle">3</text>
+<circle cx="200" cy="150" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="200" y="156" fill="#dde" font-size="17" text-anchor="middle">4</text>
+<circle cx="280" cy="150" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="280" y="156" fill="#dde" font-size="17" text-anchor="middle">5</text>
+<circle cx="360" cy="150" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="360" y="156" fill="#dde" font-size="17" text-anchor="middle">6</text>
+<circle cx="440" cy="150" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="440" y="156" fill="#dde" font-size="17" text-anchor="middle">7</text>
+<circle cx="520" cy="150" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="520" y="156" fill="#dde" font-size="17" text-anchor="middle">8</text>
+<g class="fragment" data-fragment-index="1">
+<line x1="300.0" y1="150.0" x2="339.0" y2="150.0" stroke="#e55" stroke-width="3" marker-end="url(#p4r)" stroke-dasharray="6 5" />
+<line x1="380.0" y1="150.0" x2="419.0" y2="150.0" stroke="#e55" stroke-width="3" marker-end="url(#p4r)" stroke-dasharray="6 5" />
+<path d="M126,131 Q240.0,70 354,129" fill="none" stroke="#e55" stroke-width="3" marker-end="url(#p4r)" stroke-dasharray="6 5" />
+<circle cx="360" cy="150" r="20" fill="#1c2030" stroke="#e55" stroke-width="4" />
+<text x="360" y="156" fill="#dde" font-size="17" text-anchor="middle">6</text>
+<line x1="344" y1="134" x2="376" y2="166" stroke="#e55" stroke-width="3" />
+<line x1="376" y1="134" x2="344" y2="166" stroke="#e55" stroke-width="3" />
+<text x="360" y="200" fill="#e55" font-size="16" text-anchor="middle">count(6) = 0</text>
+</g>
+<g class="fragment" data-fragment-index="2">
+<line x1="60.0" y1="150.0" x2="99.0" y2="150.0" stroke="#7d7" stroke-width="4" marker-end="url(#p4g)" />
+<line x1="140.0" y1="150.0" x2="179.0" y2="150.0" stroke="#7d7" stroke-width="4" marker-end="url(#p4g)" />
+<path d="M46,131 Q120.0,105 194,129" fill="none" stroke="#7d7" stroke-width="4" marker-end="url(#p4g)" />
+<path d="M206,131 Q360.0,35 514,129" fill="none" stroke="#7d7" stroke-width="4" marker-end="url(#p4g)" />
+<circle cx="40" cy="150" r="20" fill="#1c2030" stroke="#7d7" stroke-width="3" />
+<text x="40" y="156" fill="#dde" font-size="17" text-anchor="middle">2</text>
+<circle cx="120" cy="150" r="20" fill="#1c2030" stroke="#7d7" stroke-width="3" />
+<text x="120" y="156" fill="#dde" font-size="17" text-anchor="middle">3</text>
+<circle cx="200" cy="150" r="20" fill="#1c2030" stroke="#7d7" stroke-width="3" />
+<text x="200" y="156" fill="#dde" font-size="17" text-anchor="middle">4</text>
+<circle cx="520" cy="150" r="20" fill="#1c2030" stroke="#7d7" stroke-width="3" />
+<text x="520" y="156" fill="#dde" font-size="17" text-anchor="middle">8</text>
+</g>
+</svg>
+<p class="fragment" data-fragment-index="3" style="font-size: 0.55em; margin: 0;">остались 2 -&gt; 3 -&gt; 4 -&gt; 8 и 2 -&gt; 4 -&gt; 8: <mark>2 программы</mark></p>
+<div class="fragment opinion" data-fragment-index="4" style="margin-top: 0.3em;">
+    Не через Y: первой строкой <code>if a == y: return 0</code> - число Y стало тупиком
+</div>
+                </section>
+
+                <!-- ловушки: «содержит X» vs «не содержит Y» вместе, команды, уменьшающие число -->
+                <section>
+                    <h2>Ловушки</h2>
+<div class="compare" style="font-size: 0.75em;">
+    <div class="compare-block fragment">
+        <h4>X и Y вместе</h4>
+        <p style="font-size: 0.6em;">произведение двух count, тупик Y - в обоих: Y может стоять и до X, и после</p>
+    </div>
+    <div class="compare-block fragment">
+        <h4>условие команды</h4>
+        <p style="font-size: 0.6em;">«только если» - проверяем <strong>до</strong> вызова, как B в демо</p>
+    </div>
+    <div class="compare-block fragment">
+        <h4>число уменьшается</h4>
+        <p style="font-size: 0.6em;">«вычти 1» - перевернуть: тупик <code>a &lt; b</code> вместо <code>a &gt; b</code></p>
+    </div>
+</div>
+<div class="fragment opinion" style="margin-top: 0.5em;">
+    Проверь функцию на маленьком числе, которое можно посчитать руками
+</div>
+                </section>
+
+                <!-- практика с таймером 7 минут: задача №13 с Решу ЕГЭ (прототип реального ЕГЭ, бывш. №23) с обязательным и запрещённым числом -> 4_programs.py -->
+                <section>
+                    <h2>Практика: №13</h2>
+<div style="position: relative; font-size: 0.5em; text-align: left; border-left: 4px solid #8ab; padding: 0.3em 7em 0.3em 0.8em; background: rgba(136, 170, 187, 0.08); margin-bottom: 0.3em;"><span style="position: absolute; top: 0.3em; right: 0.6em; font-size: 0.75em; opacity: 0.5;">досрок ЕГЭ-2018</span><p>Команды: <mark>1. Прибавить 1</mark>, <mark>2. Умножить на 2</mark>.</p>
+<p>Сколько программ из числа <mark>1</mark> получают <mark>21</mark>, при этом траектория <strong>содержит</strong> 10 и <strong>не содержит</strong> 17?</p></div>
+<ul style="font-size: 0.5em; text-align: left;">
+    <li class="fragment">файл <code>4_programs.py</code>, задача на <a href="https://inf-ege.sdamgia.ru/problem?id=15638" target="_blank" rel="noopener">Решу ЕГЭ 15638</a></li>
+</ul>
+<div class="timer fragment" data-limit="420">
+    <div class="timer-bar"><div class="timer-fill"></div></div>
+    <div class="timer-row">
+        <span class="timer-time">0:00</span>
+        <span class="timer-hint">клик - старт</span>
+        <button class="timer-reset" type="button">сброс</button>
+    </div>
+</div>
+<p class="fragment" style="font-size: 0.5em; margin-top: 0.4em;">ответ: <strong>14</strong> (из 1 в 10 - 14 программ, из 10 в 21 без 17 - одна: 10 -&gt; 20 -&gt; 21)</p>
+                </section>
+
+            </section>
+
+            <!-- ЧАСТЬ 3: №23 - граф из файла (новое в 2027) -->
+            <section>
+
+                <!-- условие демо-2027 №23 по фрагментам: файл .txt с рёбрами, что спрашивают (число путей или кратчайший путь) -->
+                <section>
+                    <div class="lesson-time">55</div>
+                    <h2>№23 из демо-2027</h2>
+<div style="position: relative; font-size: 0.48em; text-align: left; border-left: 4px solid #8ab; padding: 0.3em 5em 0.3em 0.8em; background: rgba(136, 170, 187, 0.08);"><span style="position: absolute; top: 0.3em; right: 0.6em; font-size: 0.75em; opacity: 0.5;">демо-2027</span><p class="fragment">В текстовом файле содержится описание <mark>ациклического ориентированного взвешенного</mark> графа.</p>
+<p class="fragment">В каждой строке - два натуральных числа L, M и вещественное W: вес ребра из вершины L в вершину M.</p>
+<p class="fragment">Найдите <mark>целую часть</mark> длины кратчайшего пути из вершины <mark>1</mark> в вершину <mark>100</mark>.</p>
+<p class="fragment">Вершины могут быть пронумерованы не подряд, L, M ≤ 1000. Числа разделены любым количеством пробелов и табуляций.</p></div>
+<div class="fragment opinion" style="margin-top: 0.4em;">
+    Новый номер 2027 года. У Полякова варианты: «через вершину», «не через», «сколько путей»
+</div>
+                </section>
+
+                <!-- формат файла: что значит одна строка, картинка - первые строки файла и соответствующий кусок графа -->
+                <section>
+                    <h2>Одна строка - одно ребро</h2>
+<svg width="740" height="263" viewBox="0 0 650 231">
+<defs>
+<marker id="f1n" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#667" /></marker>
+<marker id="f1h" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#f7a" /></marker>
+<marker id="f1y" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#fd6" /></marker>
+<marker id="f1g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#7d7" /></marker>
+<marker id="f1r" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#e55" /></marker>
+</defs>
+<g class="fragment" data-fragment-index="1">
+<text x="20" y="60" fill="#fd6" font-size="20" font-family="monospace" xml:space="preserve">1   7    5.5</text>
+<line x1="377.9" y1="101.1" x2="471.2" y2="54.4" stroke="#667" stroke-width="2" marker-end="url(#f1n)" />
+<text x="411.0" y="69.5" fill="#8f8" font-size="15" text-anchor="middle">5.5</text>
+<circle cx="360" cy="110" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="360" y="116" fill="#dde" font-size="15" text-anchor="middle">1</text>
+<circle cx="490" cy="45" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="490" y="51" fill="#dde" font-size="15" text-anchor="middle">7</text>
+</g>
+<g class="fragment" data-fragment-index="2">
+<text x="20" y="110" fill="#fd6" font-size="20" font-family="monospace" xml:space="preserve">7   100  2.0</text>
+<line x1="507.6" y1="54.5" x2="591.5" y2="100.0" stroke="#667" stroke-width="2" marker-end="url(#f1n)" />
+<text x="564.0" y="69.5" fill="#8f8" font-size="15" text-anchor="middle">2.0</text>
+<circle cx="490" cy="45" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="490" y="51" fill="#dde" font-size="15" text-anchor="middle">7</text>
+<circle cx="610" cy="110" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="610" y="116" fill="#dde" font-size="15" text-anchor="middle">100</text>
+</g>
+<g class="fragment" data-fragment-index="3">
+<text x="20" y="160" fill="#fd6" font-size="20" font-family="monospace" xml:space="preserve">1   4    2.5</text>
+<line x1="377.6" y1="119.5" x2="471.5" y2="170.0" stroke="#667" stroke-width="2" marker-end="url(#f1n)" />
+<text x="411.0" y="161.0" fill="#8f8" font-size="15" text-anchor="middle">2.5</text>
+<circle cx="360" cy="110" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="360" y="116" fill="#dde" font-size="15" text-anchor="middle">1</text>
+<circle cx="490" cy="180" r="20" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="490" y="186" fill="#dde" font-size="15" text-anchor="middle">4</text>
+</g>
+<g class="fragment" data-fragment-index="4">
+<text x="20" y="215" fill="#99a" font-size="15">откуда  куда  вес</text>
+</g>
+</svg>
+<div class="fragment opinion" style="margin-top: 0.3em;">
+    В файле демо 200 строк - 200 рёбер. Нарисовать нельзя, читаем программой
+</div>
+                </section>
+
+                <!-- чтение файла в список смежности: open, split, int - только синтаксис чтения -->
+                <section>
+                    <h2>Читаем файл</h2>
+<div class="code-block fragment">
+    <pre class="python size-m"><code>graph = {}
+for line in open('demo_23.txt'):
+    a, b, w = line.split()
+    a, b, w = int(a), int(b), float(w)
+    if a not in graph:
+        graph[a] = []
+    graph[a].append((b, w))</code></pre>
+</div>
+<ul style="font-size: 0.5em; text-align: left;">
+    <li class="fragment"><code>split()</code> без аргумента режет по любым пробелам и табам</li>
+    <li class="fragment">словарь, а не список: номера до 1000 и не подряд</li>
+    <li class="fragment">из вершины-тупика рёбер нет: <code>graph.get(v, [])</code></li>
+</ul>
+                </section>
+
+                <!-- рисунок графа из маленького примера условия: вершины и рёбра, отмечены начало и конец -->
+                <section>
+                    <h2>Пример из условия</h2>
+<svg width="760" height="337" viewBox="0 0 660 293">
+<defs>
+<marker id="g1n" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#667" /></marker>
+<marker id="g1h" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#f7a" /></marker>
+<marker id="g1y" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#fd6" /></marker>
+<marker id="g1g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#7d7" /></marker>
+<marker id="g1r" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#e55" /></marker>
+</defs>
+<g class="fragment" data-fragment-index="1">
+<circle cx="50" cy="60" r="22" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="50" y="66" fill="#dde" font-size="16" text-anchor="middle">6</text>
+<circle cx="170" cy="150" r="22" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="170" y="156" fill="#dde" font-size="16" text-anchor="middle">1</text>
+<circle cx="330" cy="60" r="22" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="330" y="66" fill="#dde" font-size="16" text-anchor="middle">7</text>
+<circle cx="330" cy="240" r="22" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="330" y="246" fill="#dde" font-size="16" text-anchor="middle">4</text>
+<circle cx="490" cy="150" r="22" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="490" y="156" fill="#dde" font-size="16" text-anchor="middle">100</text>
+<circle cx="610" cy="150" r="22" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="610" y="156" fill="#dde" font-size="16" text-anchor="middle">12</text>
+</g>
+<g class="fragment" data-fragment-index="2">
+<line x1="512.0" y1="150.0" x2="587.0" y2="150.0" stroke="#667" stroke-width="2" marker-end="url(#g1n)" />
+<text x="550.0" y="140.0" fill="#8f8" font-size="15" text-anchor="middle">1.0</text>
+<line x1="72.0" y1="60.0" x2="307.0" y2="60.0" stroke="#667" stroke-width="2" marker-end="url(#g1n)" />
+<text x="190.0" y="50.0" fill="#8f8" font-size="15" text-anchor="middle">7.0</text>
+<line x1="67.6" y1="73.2" x2="151.6" y2="136.2" stroke="#667" stroke-width="2" marker-end="url(#g1n)" />
+<text x="96.0" y="109.0" fill="#8f8" font-size="15" text-anchor="middle">1.0</text>
+<line x1="189.2" y1="139.2" x2="310.0" y2="71.3" stroke="#667" stroke-width="2" marker-end="url(#g1n)" />
+<text x="238.0" y="97.0" fill="#8f8" font-size="15" text-anchor="middle">5.5</text>
+<line x1="349.2" y1="70.8" x2="470.0" y2="138.7" stroke="#667" stroke-width="2" marker-end="url(#g1n)" />
+<text x="424.0" y="97.0" fill="#8f8" font-size="15" text-anchor="middle">2.0</text>
+<line x1="349.2" y1="229.2" x2="470.0" y2="161.3" stroke="#667" stroke-width="2" marker-end="url(#g1n)" />
+<text x="424.0" y="209.0" fill="#8f8" font-size="15" text-anchor="middle">8.0</text>
+<line x1="192.0" y1="150.0" x2="467.0" y2="150.0" stroke="#667" stroke-width="2" marker-end="url(#g1n)" />
+<text x="330.0" y="140.0" fill="#8f8" font-size="15" text-anchor="middle">12.0</text>
+<line x1="189.2" y1="160.8" x2="310.0" y2="228.7" stroke="#667" stroke-width="2" marker-end="url(#g1n)" />
+<text x="236.0" y="209.0" fill="#8f8" font-size="15" text-anchor="middle">2.5</text>
+</g>
+<g class="fragment" data-fragment-index="3">
+<circle cx="170" cy="150" r="22" fill="#1c2030" stroke="#7d7" stroke-width="4" />
+<text x="170" y="156" fill="#dde" font-size="16" text-anchor="middle">1</text>
+<circle cx="490" cy="150" r="22" fill="#1c2030" stroke="#f7a" stroke-width="4" />
+<text x="490" y="156" fill="#dde" font-size="16" text-anchor="middle">100</text>
+<text x="170" y="194" fill="#7d7" font-size="15" text-anchor="middle">старт</text>
+<text x="490" y="194" fill="#f7a" font-size="15" text-anchor="middle">финиш</text>
+</g>
+<g class="fragment" data-fragment-index="4">
+<circle cx="50" cy="60" r="27" fill="none" stroke="#99a" stroke-width="2" stroke-dasharray="4 4" />
+<circle cx="610" cy="150" r="27" fill="none" stroke="#99a" stroke-width="2" stroke-dasharray="4 4" />
+<text x="50" y="26" fill="#99a" font-size="14" text-anchor="middle">в 6 не попасть</text>
+<text x="610" y="116" fill="#99a" font-size="14" text-anchor="middle">уже за финишем</text>
+</g>
+</svg>
+<p class="fragment" data-fragment-index="5" style="font-size: 0.5em; margin: 0;">8 строк файла - 8 стрелок. Вершины 6 и 12 есть, но на путях из 1 в 100 их нет</p>
+                </section>
+
+                <!-- число путей в DAG: та же функция, что в №13, только соседи берутся из графа; memo-словарь -->
+                <section>
+                    <h2>Сколько путей из 1 в 100</h2>
+<svg width="640" height="284" viewBox="0 0 660 293">
+<defs>
+<marker id="g2n" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#667" /></marker>
+<marker id="g2h" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#f7a" /></marker>
+<marker id="g2y" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#fd6" /></marker>
+<marker id="g2g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#7d7" /></marker>
+<marker id="g2r" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#e55" /></marker>
+</defs>
+<line x1="512.0" y1="150.0" x2="587.0" y2="150.0" stroke="#667" stroke-width="2" marker-end="url(#g2n)" />
+<text x="550.0" y="140.0" fill="#8f8" font-size="15" text-anchor="middle">1.0</text>
+<line x1="72.0" y1="60.0" x2="307.0" y2="60.0" stroke="#667" stroke-width="2" marker-end="url(#g2n)" />
+<text x="190.0" y="50.0" fill="#8f8" font-size="15" text-anchor="middle">7.0</text>
+<line x1="67.6" y1="73.2" x2="151.6" y2="136.2" stroke="#667" stroke-width="2" marker-end="url(#g2n)" />
+<text x="96.0" y="109.0" fill="#8f8" font-size="15" text-anchor="middle">1.0</text>
+<line x1="189.2" y1="139.2" x2="310.0" y2="71.3" stroke="#667" stroke-width="2" marker-end="url(#g2n)" />
+<text x="238.0" y="97.0" fill="#8f8" font-size="15" text-anchor="middle">5.5</text>
+<line x1="349.2" y1="70.8" x2="470.0" y2="138.7" stroke="#667" stroke-width="2" marker-end="url(#g2n)" />
+<text x="424.0" y="97.0" fill="#8f8" font-size="15" text-anchor="middle">2.0</text>
+<line x1="349.2" y1="229.2" x2="470.0" y2="161.3" stroke="#667" stroke-width="2" marker-end="url(#g2n)" />
+<text x="424.0" y="209.0" fill="#8f8" font-size="15" text-anchor="middle">8.0</text>
+<line x1="192.0" y1="150.0" x2="467.0" y2="150.0" stroke="#667" stroke-width="2" marker-end="url(#g2n)" />
+<text x="330.0" y="140.0" fill="#8f8" font-size="15" text-anchor="middle">12.0</text>
+<line x1="189.2" y1="160.8" x2="310.0" y2="228.7" stroke="#667" stroke-width="2" marker-end="url(#g2n)" />
+<text x="236.0" y="209.0" fill="#8f8" font-size="15" text-anchor="middle">2.5</text>
+<circle cx="50" cy="60" r="22" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="50" y="66" fill="#dde" font-size="16" text-anchor="middle">6</text>
+<circle cx="170" cy="150" r="22" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="170" y="156" fill="#dde" font-size="16" text-anchor="middle">1</text>
+<circle cx="330" cy="60" r="22" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="330" y="66" fill="#dde" font-size="16" text-anchor="middle">7</text>
+<circle cx="330" cy="240" r="22" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="330" y="246" fill="#dde" font-size="16" text-anchor="middle">4</text>
+<circle cx="490" cy="150" r="22" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="490" y="156" fill="#dde" font-size="16" text-anchor="middle">100</text>
+<circle cx="610" cy="150" r="22" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="610" y="156" fill="#dde" font-size="16" text-anchor="middle">12</text>
+<g class="fragment" data-fragment-index="1">
+<line x1="192.0" y1="150.0" x2="467.0" y2="150.0" stroke="#fd6" stroke-width="5" marker-end="url(#g2y)" />
+</g>
+<g class="fragment" data-fragment-index="2">
+<line x1="189.2" y1="160.8" x2="310.0" y2="228.7" stroke="#7d7" stroke-width="5" marker-end="url(#g2g)" />
+<line x1="349.2" y1="229.2" x2="470.0" y2="161.3" stroke="#7d7" stroke-width="5" marker-end="url(#g2g)" />
+</g>
+<g class="fragment" data-fragment-index="3">
+<line x1="189.2" y1="139.2" x2="310.0" y2="71.3" stroke="#f7a" stroke-width="5" marker-end="url(#g2h)" />
+<line x1="349.2" y1="70.8" x2="470.0" y2="138.7" stroke="#f7a" stroke-width="5" marker-end="url(#g2h)" />
+</g>
+</svg>
+<ul style="font-size: 0.5em; text-align: left;">
+    <li class="fragment" data-fragment-index="4">та же <code>count</code>, что в №13: вместо команд - соседи из <code>graph</code></li>
+    <li class="fragment" data-fragment-index="5">в примере 3 пути, в файле демо - <mark>2 033 652 335</mark>: без memo не дождёмся</li>
+</ul>
+                </section>
+
+                <!-- кратчайший путь: BFS, как на занятии 28; если веса - Дейкстра или Беллман-Форд, без новых слов -->
+                <section>
+                    <h2>Кратчайший путь</h2>
+<div class="compare" style="font-size: 0.75em;">
+    <div class="compare-block fragment">
+        <h4><code>count(v)</code></h4>
+        <p style="font-size: 0.6em;">в финише: 1</p>
+        <p style="font-size: 0.6em;"><mark>сумма</mark> по соседям</p>
+    </div>
+    <div class="compare-block fragment">
+        <h4><code>best(v)</code></h4>
+        <p style="font-size: 0.6em;">в финише: 0, тупик: <code>float('inf')</code></p>
+        <p style="font-size: 0.6em;"><mark>min</mark> по соседям от <code>w + best(to)</code></p>
+    </div>
+</div>
+<p class="fragment" style="font-size: 0.5em;">граф без циклов - работает memo-рекурсия. Можно и знакомым: без весов - BFS (занятие 28), веса - Дейкстра или Беллман-Форд</p>
+<div class="fragment opinion" style="margin-top: 0.3em;">
+    Одна функция на всё: сумма - число путей, min - кратчайший, max - самый длинный
+</div>
+                </section>
+
+                <!-- проверка на примере из условия: граф -> подсветка путей -> ответ совпал -->
+                <section>
+                    <h2>Проверка на примере</h2>
+<div style="display: flex; align-items: center; justify-content: center; gap: 1em;">
+<svg width="560" height="249" viewBox="0 0 660 293">
+<defs>
+<marker id="g3n" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#667" /></marker>
+<marker id="g3h" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#f7a" /></marker>
+<marker id="g3y" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#fd6" /></marker>
+<marker id="g3g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#7d7" /></marker>
+<marker id="g3r" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#e55" /></marker>
+</defs>
+<line x1="512.0" y1="150.0" x2="587.0" y2="150.0" stroke="#667" stroke-width="2" marker-end="url(#g3n)" />
+<text x="550.0" y="140.0" fill="#8f8" font-size="15" text-anchor="middle">1.0</text>
+<line x1="72.0" y1="60.0" x2="307.0" y2="60.0" stroke="#667" stroke-width="2" marker-end="url(#g3n)" />
+<text x="190.0" y="50.0" fill="#8f8" font-size="15" text-anchor="middle">7.0</text>
+<line x1="67.6" y1="73.2" x2="151.6" y2="136.2" stroke="#667" stroke-width="2" marker-end="url(#g3n)" />
+<text x="96.0" y="109.0" fill="#8f8" font-size="15" text-anchor="middle">1.0</text>
+<line x1="189.2" y1="139.2" x2="310.0" y2="71.3" stroke="#667" stroke-width="2" marker-end="url(#g3n)" />
+<text x="238.0" y="97.0" fill="#8f8" font-size="15" text-anchor="middle">5.5</text>
+<line x1="349.2" y1="70.8" x2="470.0" y2="138.7" stroke="#667" stroke-width="2" marker-end="url(#g3n)" />
+<text x="424.0" y="97.0" fill="#8f8" font-size="15" text-anchor="middle">2.0</text>
+<line x1="349.2" y1="229.2" x2="470.0" y2="161.3" stroke="#667" stroke-width="2" marker-end="url(#g3n)" />
+<text x="424.0" y="209.0" fill="#8f8" font-size="15" text-anchor="middle">8.0</text>
+<line x1="192.0" y1="150.0" x2="467.0" y2="150.0" stroke="#667" stroke-width="2" marker-end="url(#g3n)" />
+<text x="330.0" y="140.0" fill="#8f8" font-size="15" text-anchor="middle">12.0</text>
+<line x1="189.2" y1="160.8" x2="310.0" y2="228.7" stroke="#667" stroke-width="2" marker-end="url(#g3n)" />
+<text x="236.0" y="209.0" fill="#8f8" font-size="15" text-anchor="middle">2.5</text>
+<circle cx="50" cy="60" r="22" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="50" y="66" fill="#dde" font-size="16" text-anchor="middle">6</text>
+<circle cx="170" cy="150" r="22" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="170" y="156" fill="#dde" font-size="16" text-anchor="middle">1</text>
+<circle cx="330" cy="60" r="22" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="330" y="66" fill="#dde" font-size="16" text-anchor="middle">7</text>
+<circle cx="330" cy="240" r="22" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="330" y="246" fill="#dde" font-size="16" text-anchor="middle">4</text>
+<circle cx="490" cy="150" r="22" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="490" y="156" fill="#dde" font-size="16" text-anchor="middle">100</text>
+<circle cx="610" cy="150" r="22" fill="#1c2030" stroke="#8ab" stroke-width="2" />
+<text x="610" y="156" fill="#dde" font-size="16" text-anchor="middle">12</text>
+<g class="fragment" data-fragment-index="4">
+<line x1="189.2" y1="139.2" x2="310.0" y2="71.3" stroke="#f7a" stroke-width="5" marker-end="url(#g3h)" />
+<line x1="349.2" y1="70.8" x2="470.0" y2="138.7" stroke="#f7a" stroke-width="5" marker-end="url(#g3h)" />
+<circle cx="170" cy="150" r="22" fill="#1c2030" stroke="#f7a" stroke-width="4" />
+<text x="170" y="156" fill="#dde" font-size="16" text-anchor="middle">1</text>
+<circle cx="330" cy="60" r="22" fill="#1c2030" stroke="#f7a" stroke-width="4" />
+<text x="330" y="66" fill="#dde" font-size="16" text-anchor="middle">7</text>
+<circle cx="490" cy="150" r="22" fill="#1c2030" stroke="#f7a" stroke-width="4" />
+<text x="490" y="156" fill="#dde" font-size="16" text-anchor="middle">100</text>
+</g>
+</svg>
+<table style="font-size: 0.5em;">
+    <tr class="fragment" data-fragment-index="1"><td>1 -&gt; 100</td><td>12.0</td></tr>
+    <tr class="fragment" data-fragment-index="2"><td>1 -&gt; 4 -&gt; 100</td><td>2.5 + 8.0 = 10.5</td></tr>
+    <tr class="fragment" data-fragment-index="3"><td>1 -&gt; 7 -&gt; 100</td><td>5.5 + 2.0 = <mark>7.5</mark></td></tr>
+</table>
+</div>
+<div class="fragment opinion" data-fragment-index="5" style="margin-top: 0.3em;">
+    Целая часть 7.5 - <strong>7</strong>, как в условии. <code>int()</code>, а не <code>round()</code>
+</div>
+                </section>
+
+                <!-- пишем вместе 5_demo_graph.py на файле демо -->
+                <section>
+                    <h2>Пишем вместе</h2>
+<ul style="font-size: 0.58em; text-align: left;">
+    <li class="fragment">файл <code>5_demo_graph.py</code>, рядом <code>demo_23.txt</code></li>
+    <li class="fragment"><code>read_graph</code> - чтение со слайда</li>
+    <li class="fragment">сначала пример из условия: 3 пути, кратчайший 7.5</li>
+    <li class="fragment">потом файл демо: путей 2 033 652 335</li>
+</ul>
+<p class="fragment" style="font-size: 0.6em;">ответ демо: <strong>10971</strong></p>
+                </section>
+
+                <!-- практика с таймером 8 минут: второй файл того же типа (Поляков или Решу ЕГЭ, формат как в демо-2027) -> 6_graph.py -->
+                <section>
+                    <h2>Практика: №23</h2>
+<div style="position: relative; font-size: 0.5em; text-align: left; border-left: 4px solid #8ab; padding: 0.3em 7em 0.3em 0.8em; background: rgba(136, 170, 187, 0.08); margin-bottom: 0.3em;"><span style="position: absolute; top: 0.3em; right: 0.6em; font-size: 0.75em; opacity: 0.5;">Поляков, №33</span><p>В файле <code>23-33.txt</code> - ациклический ориентированный взвешенный граф в формате демо.</p>
+<p>Найдите <mark>целую часть</mark> длины кратчайшего пути из вершины <mark>1</mark> в вершину <mark>100</mark>.</p></div>
+<ul style="font-size: 0.5em; text-align: left;">
+    <li class="fragment">файл <code>6_graph.py</code>: функции из <code>5_demo_graph.py</code>, меняется имя файла</li>
+</ul>
+<div class="timer fragment" data-limit="480">
+    <div class="timer-bar"><div class="timer-fill"></div></div>
+    <div class="timer-row">
+        <span class="timer-time">0:00</span>
+        <span class="timer-hint">клик - старт</span>
+        <button class="timer-reset" type="button">сброс</button>
+    </div>
+</div>
+<p class="fragment" style="font-size: 0.5em; margin-top: 0.4em;">ответ: <strong>51</strong>. Путей в этом файле 2<sup>50</sup> - без memo программа не закончится</p>
+                </section>
+
+            </section>
+
+            <!-- ИТОГ -->
+            <section>
+
+                <!-- итог: №16 - прямой перевод + setrecursionlimit/memo; №13 и №23 - это одна задача о числе путей; через X = произведение, без Y = тупик -->
+                <section>
+                    <div class="lesson-time">82</div>
+                    <h2>Что запомнить</h2>
+                    <ul>
+                        <li class="fragment">№16: перевод строка в строку + <code>setrecursionlimit</code>, делим через <code>//</code></li>
+                        <li class="fragment">№13 и №23 - одна задача: пути в графе без циклов, рекурсия + memo</li>
+                        <li class="fragment">через X - произведение, без Y - тупик <code>return 0</code></li>
+                        <li class="fragment">сумма - число путей, min - кратчайший; ответ - <code>int()</code></li>
+                    </ul>
+                </section>
+
+                <!-- копилка шаблонов к пробнику: №2, 5, 13, 15, 16, 19-21, 23 - завтра фиксируем порядок решения -->
+                <section>
+                    <h2>Шаблоны к пробнику</h2>
+<table style="font-size: 0.5em; width: 90%;">
+    <tr><td><strong>номер</strong></td><td><strong>шаблон</strong></td></tr>
+    <tr class="fragment"><td>№2, №15</td><td>циклы по 0/1, <code>ok(a)</code> + перебор A</td></tr>
+    <tr class="fragment"><td>№5</td><td><code>build_r</code> + перебор N</td></tr>
+    <tr class="fragment"><td>№16</td><td><code>F(n)</code> + <code>setrecursionlimit</code></td></tr>
+    <tr class="fragment"><td>№13</td><td><code>count(a, b)</code>, произведение и тупик</td></tr>
+    <tr class="fragment"><td>№19-21</td><td><code>can_win</code> / <code>must_lose</code></td></tr>
+    <tr class="fragment"><td>№23</td><td><code>read_graph</code> + <code>best(v)</code> с memo</td></tr>
+</table>
+<div class="fragment opinion" style="margin-top: 0.4em;">
+    Завтра: в каком порядке решать на пробнике и прогоны на время
+</div>
+                </section>
+
+                <!-- ДЗ лёгкое (завтра занятие): по одной задаче №13 и №16 с Решу ЕГЭ (только прототипы реального ЕГЭ; банк ФИПИ закрыт до 27.10), по 5 минут -->
+                <section>
+                    <h2>Домашнее задание</h2>
+                    <div class="timeline" style="font-size: 0.6em;">
+                        <div class="timeline-item fragment">
+                            <div class="timeline-marker">1</div>
+                            <div class="timeline-content">№13: <a href="https://inf-ege.sdamgia.ru/problem?id=13749" target="_blank" rel="noopener">Решу ЕГЭ 13749</a> (демо-2018), файл <code>hw_1_programs.py</code></div>
+                        </div>
+                        <div class="timeline-item fragment">
+                            <div class="timeline-marker">2</div>
+                            <div class="timeline-content">№16: <a href="https://inf-ege.sdamgia.ru/problem?id=59721" target="_blank" rel="noopener">Решу ЕГЭ 59721</a> (ЕГЭ-2023, основная волна), файл <code>hw_2_f.py</code></div>
+                        </div>
+                    </div>
+                    <div class="fragment opinion" style="margin-top: 0.8em;">
+                        Завтра занятие - каждая задача по 5 минут. Ответ проверяй на Решу ЕГЭ под задачей
+                    </div>
+                </section>
+
+            </section>
+
+        </div>
+    </div>
+
+    <script src="/utils/lib/js/head.min.js"></script>
+    <script src="/utils/js/reveal.js"></script>
+    <script>
+        Reveal.initialize({
+            controls: true,
+            progress: true,
+            history: true,
+            center: true,
+            transition: 'fade',
+            transitionSpeed: 'fast',
+            dependencies: [
+                { src: '/utils/lib/js/classList.js', condition: function () { return !document.body.classList; } },
+                { src: '/utils/plugin/markdown/marked.js', condition: function () { return !!document.querySelector('[data-markdown]'); } },
+                { src: '/utils/plugin/markdown/markdown.js', condition: function () { return !!document.querySelector('[data-markdown]'); } },
+                { src: '/utils/plugin/highlight/highlight.js', async: true, callback: function () { hljs.initHighlightingOnLoad(); } },
+                { src: '/utils/plugin/zoom-js/zoom.js', async: true },
+                { src: '/utils/plugin/notes/notes.js', async: true }
+            ]
+        });
+        Reveal.configure({ slideNumber: 'c/t' });
+    </script>
+    <script>
+        // таймер на слайде: клик - старт/пауза, "сброс" - обнулить
+        document.querySelectorAll('.timer').forEach(function (el) {
+            var limit = +el.dataset.limit || 180;
+            var fill = el.querySelector('.timer-fill');
+            var timeEl = el.querySelector('.timer-time');
+            var hint = el.querySelector('.timer-hint');
+            var spent = 0, startedAt = null, tick = null;
+
+            function fmt(sec) {
+                sec = Math.floor(sec);
+                return Math.floor(sec / 60) + ':' + String(sec % 60).padStart(2, '0');
+            }
+            function elapsed() {
+                return spent + (startedAt ? (Date.now() - startedAt) / 1000 : 0);
+            }
+            function draw() {
+                var t = elapsed();
+                fill.style.width = Math.min(t / limit, 1) * 100 + '%';
+                el.classList.toggle('warn', t >= limit * 0.8 && t < limit);
+                el.classList.toggle('over', t >= limit);
+                timeEl.textContent = t >= limit
+                    ? fmt(limit) + ' + ' + fmt(t - limit)
+                    : fmt(t) + ' / ' + fmt(limit);
+            }
+            function toggle() {
+                if (startedAt) {
+                    spent = elapsed(); startedAt = null;
+                    clearInterval(tick);
+                    hint.textContent = 'пауза - клик, чтобы продолжить';
+                } else {
+                    startedAt = Date.now();
+                    tick = setInterval(draw, 200);
+                    hint.textContent = 'идёт - клик для паузы';
+                }
+                draw();
+            }
+            el.addEventListener('click', function (e) {
+                e.stopPropagation();
+                if (e.target.closest('.timer-reset')) {
+                    clearInterval(tick); spent = 0; startedAt = null;
+                    hint.textContent = 'клик - старт';
+                } else {
+                    toggle();
+                }
+                draw();
+            });
+            draw();
+        });
+    </script>
+</body>
+
+</html>

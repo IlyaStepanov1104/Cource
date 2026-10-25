@@ -167,10 +167,21 @@
     {
       "number": 6,
       "title": "Перед пробником: №16, №13, №23 - рекурсия и графы",
-      "date": "2026-10-26T18:00:00",
+      "date": "2026-10-26T11:00:00",
       "duration": 90,
-      "presentations": [],
-      "homeworks": []
+      "presentations": [{ "title": "Презентация", "link": "/lessons-ege/06-recursion-graphs/", "order": 1 }],
+      "homeworks": [
+        {
+          "title": "Решу ЕГЭ 13749",
+          "description": "№13 (демо-2018): из 2 в 12 командами +1, +2, x3, траектория содержит 8 и 10. Произведение трёх count. 5 минут",
+          "link": "https://inf-ege.sdamgia.ru/problem?id=13749"
+        },
+        {
+          "title": "Решу ЕГЭ 59721",
+          "description": "№16 (ЕГЭ-2023, основная волна): F(2024) - F(2022). Не забудь setrecursionlimit. 5 минут",
+          "link": "https://inf-ege.sdamgia.ru/problem?id=59721"
+        }
+      ]
     },
     {
       "number": 7,
