@@ -1,0 +1,13 @@
+/* ЕГЭ, занятие 7 - решаем вариант вместе */
+
+/* таймер на слайдах практики (как на ЕГЭ-занятиях 2-3) */
+.reveal .timer { width: 70%; margin: 0.4em auto 0; cursor: pointer; user-select: none; }
+.reveal .timer-bar { height: 0.5em; border-radius: 0.25em; background: rgba(255, 255, 255, 0.12); overflow: hidden; }
+.reveal .timer-fill { height: 100%; width: 0; background: #7d7; }
+.reveal .timer.warn .timer-fill { background: #fd6; }
+.reveal .timer.over .timer-fill { background: #e55; }
+.reveal .timer-row { display: flex; align-items: baseline; gap: 0.8em; margin-top: 0.2em; }
+.reveal .timer-time { font-size: 1.1em; font-variant-numeric: tabular-nums; }
+.reveal .timer.over .timer-time { color: #f77; }
+.reveal .timer-hint { flex: 1; font-size: 0.5em; opacity: 0.6; }
+.reveal .timer-reset { font: inherit; font-size: 0.45em; padding: 0.1em 0.6em; border-radius: 0.3em; border: 1px solid rgba(255, 255, 255, 0.3); background: none; color: inherit; cursor: pointer; }

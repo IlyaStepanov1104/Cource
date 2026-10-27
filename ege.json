@@ -186,11 +186,22 @@
     },
     {
       "number": 7,
-      "title": "Подготовка к пробнику: наш список номеров, порядок решения, прогоны на время",
+      "title": "Вариант",
       "date": "2026-10-27T19:00:00",
       "duration": 60,
-      "presentations": [],
-      "homeworks": []
+      "presentations": [
+        {
+          "title": "Презентация",
+          "link": "/lessons-ege/07-mock-variant/",
+          "order": 1
+        }
+      ],
+      "homeworks": [
+        {
+          "title": "Подготовка к пробнику",
+          "description": "Самостоятельно подготовиться к пробнику 29.10"
+        }
+      ]
     },
     {
       "number": 8,

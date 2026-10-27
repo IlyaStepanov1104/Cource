@@ -1,0 +1,2784 @@
+<!doctype html>
+<html lang="ru">
+
+<head>
+    <meta charset="utf-8">
+    <title>ЕГЭ, занятие 7 - решаем вариант вместе</title>
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+
+    <link rel="stylesheet" href="/utils/css/reveal.css">
+    <link rel="stylesheet" href="/utils/lib/css/animate.css">
+    <link rel="stylesheet" href="/utils/css/theme/night.css" id="theme">
+    <link rel="stylesheet" href="/utils/lib/css/zenburn.css">
+    <link rel="stylesheet" href="/utils/css/custom-base.css">
+    <link rel="stylesheet" href="css-custom/custom.css">
+
+    <script>
+        var link = document.createElement('link');
+        link.rel = 'stylesheet'; link.type = 'text/css';
+        link.href = window.location.search.match(/print-pdf/gi)
+            ? '/utils/css/print/pdf.css'
+            : '/utils/css/print/paper.css';
+        document.getElementsByTagName('head')[0].appendChild(link);
+    </script>
+</head>
+
+<body>
+    <div class="reveal">
+        <div class="slides">
+
+            <!-- титульный слайд: «Решаем вариант вместе», ЕГЭ, занятие 7 - до пробника 2 дня; ссылка на вариант -->
+            <section style="font-size: 70px; height: 100%; width: 100%">
+                <div class="lesson-time">0</div>
+                <div class="fragment">
+                    <h1 class="animated" style="font-size: 1.5em;">Решаем вариант вместе</h1>
+                    <p style="text-align: center; font-size: 0.45em; opacity: 0.6;">все 27 заданий, <a href="https://inf-ege.sdamgia.ru/test?id=20874131" target="_blank" rel="noopener">вариант 20874131</a></p>
+                    <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">ЕГЭ, занятие 7 - до пробника 2 дня</p>
+                </div>
+            </section>
+
+            <!-- №1: Граф и таблица [он] -->
+            <section>
+
+                <!-- условие №1 + таймер 1:20 -->
+                <section>
+                    <div class="lesson-time">1</div>
+                    <h2>№1. Граф и таблица</h2>
+<div class="fragment" style="max-height: 470px; overflow-y: auto; background: #fff; border-radius: 6px; padding: 4px;"><img src="img/cond1.png" alt="Условие №1" style="display: block; width: 100%; margin: 0; border: none; box-shadow: none; max-height: none; max-width: 100%;"></div>
+<p class="fragment" style="font-size: 0.45em; margin: 0.3em 0 0;"><a href="https://inf-ege.sdamgia.ru/problem?id=59733" target="_blank" rel="noopener">Решу ЕГЭ 59733</a> (ЕГЭ 19.06.2023) - 1:20 на весь номер</p>
+<div class="timer fragment" data-limit="80">
+    <div class="timer-bar"><div class="timer-fill"></div></div>
+    <div class="timer-row">
+        <span class="timer-time">0:00</span>
+        <span class="timer-hint">клик - старт</span>
+        <button class="timer-reset" type="button">сброс</button>
+    </div>
+</div>
+                </section>
+
+                <!-- №1: ответ -->
+                <section>
+                    <h2>Ответ №1</h2>
+<p class="fragment" style="font-size: 1.6em; margin: 0.3em 0;"><mark class="green">36</mark></p>
+                </section>
+
+                <!-- №1: краткое решение -->
+                <section>
+                    <h2>Решение</h2>
+<table style="font-size: 0.55em; width: 85%;">
+    <tr><td><strong>шаг</strong></td><td><strong>на графе</strong></td><td><strong>в таблице</strong></td></tr>
+    <tr class="fragment"><td>степень 2 - одна</td><td>A</td><td>П2</td></tr>
+    <tr class="fragment"><td>соседи A</td><td>G, B</td><td>П5, П7</td></tr>
+    <tr class="fragment"><td>третий сосед G и B (не A, не C)</td><td>F, D</td><td>П3, П6</td></tr>
+</table>
+                </section>
+
+            </section>
+
+            <!-- №2: Таблица истинности [он] -->
+            <section>
+
+                <!-- условие №2 + таймер 1:20 -->
+                <section>
+                    <div class="lesson-time">2</div>
+                    <h2>№2. Таблица истинности</h2>
+<div class="fragment" style="max-height: 470px; overflow-y: auto; background: #fff; border-radius: 6px; padding: 4px;"><img src="img/cond2.png" alt="Условие №2" style="display: block; width: 100%; margin: 0; border: none; box-shadow: none; max-height: none; max-width: 100%;"></div>
+<p class="fragment" style="font-size: 0.45em; margin: 0.3em 0 0;"><a href="https://inf-ege.sdamgia.ru/problem?id=59680" target="_blank" rel="noopener">Решу ЕГЭ 59680</a> (ЕГЭ 19.06.2023) - 1:20 на весь номер</p>
+<div class="timer fragment" data-limit="80">
+    <div class="timer-bar"><div class="timer-fill"></div></div>
+    <div class="timer-row">
+        <span class="timer-time">0:00</span>
+        <span class="timer-hint">клик - старт</span>
+        <button class="timer-reset" type="button">сброс</button>
+    </div>
+</div>
+                </section>
+
+                <!-- №2: ответ -->
+                <section>
+                    <h2>Ответ №2</h2>
+<p class="fragment" style="font-size: 1.6em; margin: 0.3em 0;"><mark class="green">yxwz</mark></p>
+                </section>
+
+                <!-- №2: решение кодом -->
+                <section>
+                    <h2>Решение</h2>
+<div class="code-block fragment">
+    <pre class="python" style="font-size: 0.42em; max-height: 580px;"><code>def f(x: int, y: int, z: int, w: int) -&gt; bool:
+    return (x and not y) or (x == z) or w
+
+
+# Все строки таблицы, где F = 0, в порядке x y z w.
+def false_rows() -&gt; list[tuple[int, int, int, int]]:
+    res = []
+    for x in range(2):
+        for y in range(2):
+            for z in range(2):
+                for w in range(2):
+                    if not f(x, y, z, w):
+                        res.append((x, y, z, w))
+    return res
+
+
+print(false_rows())
+# дальше сопоставляем столбцы руками: yxwz</code></pre>
+</div>
+                </section>
+
+            </section>
+
+            <!-- №4: Условие Фано [он] -->
+            <section>
+
+                <!-- условие №4 + таймер 1:20 -->
+                <section>
+                    <div class="lesson-time">4</div>
+                    <h2>№4. Условие Фано</h2>
+<div class="fragment" style="max-height: 470px; overflow-y: auto; background: #fff; border-radius: 6px; padding: 4px;"><img src="img/cond4.png" alt="Условие №4" style="display: block; width: 100%; margin: 0; border: none; box-shadow: none; max-height: none; max-width: 100%;"></div>
+<p class="fragment" style="font-size: 0.45em; margin: 0.3em 0 0;"><a href="https://inf-ege.sdamgia.ru/problem?id=59682" target="_blank" rel="noopener">Решу ЕГЭ 59682</a> (ЕГЭ 19.06.2023) - 1:20 на весь номер</p>
+<div class="timer fragment" data-limit="80">
+    <div class="timer-bar"><div class="timer-fill"></div></div>
+    <div class="timer-row">
+        <span class="timer-time">0:00</span>
+        <span class="timer-hint">клик - старт</span>
+        <button class="timer-reset" type="button">сброс</button>
+    </div>
+</div>
+                </section>
+
+                <!-- №4: ответ -->
+                <section>
+                    <h2>Ответ №4</h2>
+<p class="fragment" style="font-size: 1.6em; margin: 0.3em 0;"><mark class="green">8</mark></p>
+                </section>
+
+                <!-- №4: краткое решение - дерево кода -->
+                <section>
+                    <h2>Решение</h2>
+<svg class="fragment" width="620" height="280" viewBox="0 0 620 280" style="">
+<line x1="300" y1="20" x2="150" y2="75" stroke="#667" stroke-width="2"/>
+<text x="217.0" y="47.5" font-size="11" fill="#999" text-anchor="middle" font-weight="normal" font-family="sans-serif">0</text><line x1="300" y1="20" x2="450" y2="75" stroke="#667" stroke-width="2"/>
+<text x="383.0" y="47.5" font-size="11" fill="#999" text-anchor="middle" font-weight="normal" font-family="sans-serif">1</text><line x1="150" y1="75" x2="90" y2="130" stroke="#667" stroke-width="2"/>
+<text x="112.0" y="102.5" font-size="11" fill="#999" text-anchor="middle" font-weight="normal" font-family="sans-serif">0</text><line x1="150" y1="75" x2="210" y2="130" stroke="#667" stroke-width="2"/>
+<text x="188.0" y="102.5" font-size="11" fill="#999" text-anchor="middle" font-weight="normal" font-family="sans-serif">1</text><line x1="450" y1="75" x2="380" y2="130" stroke="#667" stroke-width="2"/>
+<text x="407.0" y="102.5" font-size="11" fill="#999" text-anchor="middle" font-weight="normal" font-family="sans-serif">0</text><line x1="450" y1="75" x2="520" y2="130" stroke="#667" stroke-width="2"/>
+<text x="493.0" y="102.5" font-size="11" fill="#999" text-anchor="middle" font-weight="normal" font-family="sans-serif">1</text><line x1="380" y1="130" x2="330" y2="185" stroke="#667" stroke-width="2"/>
+<text x="347.0" y="157.5" font-size="11" fill="#999" text-anchor="middle" font-weight="normal" font-family="sans-serif">0</text><line x1="380" y1="130" x2="430" y2="185" stroke="#7d7" stroke-width="2"/>
+<text x="413.0" y="157.5" font-size="11" fill="#999" text-anchor="middle" font-weight="normal" font-family="sans-serif">1</text><line x1="520" y1="130" x2="480" y2="185" stroke="#667" stroke-width="2"/>
+<text x="492.0" y="157.5" font-size="11" fill="#999" text-anchor="middle" font-weight="normal" font-family="sans-serif">0</text><line x1="520" y1="130" x2="560" y2="185" stroke="#667" stroke-width="2"/>
+<text x="548.0" y="157.5" font-size="11" fill="#999" text-anchor="middle" font-weight="normal" font-family="sans-serif">1</text><line x1="330" y1="185" x2="300" y2="240" stroke="#667" stroke-width="2"/>
+<text x="307.0" y="212.5" font-size="11" fill="#999" text-anchor="middle" font-weight="normal" font-family="sans-serif">0</text><line x1="330" y1="185" x2="360" y2="240" stroke="#667" stroke-width="2"/>
+<text x="353.0" y="212.5" font-size="11" fill="#999" text-anchor="middle" font-weight="normal" font-family="sans-serif">1</text><line x1="430" y1="185" x2="410" y2="240" stroke="#7d7" stroke-width="2"/>
+<text x="412.0" y="212.5" font-size="11" fill="#999" text-anchor="middle" font-weight="normal" font-family="sans-serif">0</text><line x1="430" y1="185" x2="470" y2="240" stroke="#7d7" stroke-width="2"/>
+<text x="458.0" y="212.5" font-size="11" fill="#999" text-anchor="middle" font-weight="normal" font-family="sans-serif">1</text><circle cx="300" cy="20" r="11" fill="#1c2030" stroke="#8ab" stroke-width="2"/>
+<circle cx="150" cy="75" r="11" fill="#1c2030" stroke="#8ab" stroke-width="2"/>
+<circle cx="450" cy="75" r="11" fill="#1c2030" stroke="#8ab" stroke-width="2"/>
+<circle cx="90" cy="130" r="11" fill="#1c2030" stroke="#667" stroke-width="2"/>
+<text x="90" y="160" font-size="14" fill="#bbb" text-anchor="middle" font-weight="bold" font-family="sans-serif">В</text><circle cx="210" cy="130" r="11" fill="#1c2030" stroke="#667" stroke-width="2"/>
+<text x="210" y="160" font-size="14" fill="#bbb" text-anchor="middle" font-weight="bold" font-family="sans-serif">Ж</text><circle cx="380" cy="130" r="11" fill="#1c2030" stroke="#8ab" stroke-width="2"/>
+<circle cx="520" cy="130" r="11" fill="#1c2030" stroke="#8ab" stroke-width="2"/>
+<circle cx="330" cy="185" r="11" fill="#1c2030" stroke="#8ab" stroke-width="2"/>
+<circle cx="430" cy="185" r="11" fill="#1c2030" stroke="#7d7" stroke-width="2"/>
+<circle cx="480" cy="185" r="11" fill="#1c2030" stroke="#667" stroke-width="2"/>
+<text x="480" y="215" font-size="14" fill="#bbb" text-anchor="middle" font-weight="bold" font-family="sans-serif">З</text><circle cx="560" cy="185" r="11" fill="#1c2030" stroke="#667" stroke-width="2"/>
+<text x="560" y="215" font-size="14" fill="#bbb" text-anchor="middle" font-weight="bold" font-family="sans-serif">Д</text><circle cx="300" cy="240" r="11" fill="#1c2030" stroke="#667" stroke-width="2"/>
+<text x="300" y="270" font-size="14" fill="#bbb" text-anchor="middle" font-weight="bold" font-family="sans-serif">Г</text><circle cx="360" cy="240" r="11" fill="#1c2030" stroke="#667" stroke-width="2"/>
+<text x="360" y="270" font-size="14" fill="#bbb" text-anchor="middle" font-weight="bold" font-family="sans-serif">Е</text><circle cx="410" cy="240" r="11" fill="#1c2030" stroke="#7d7" stroke-width="2"/>
+<text x="410" y="270" font-size="14" fill="#7d7" text-anchor="middle" font-weight="bold" font-family="sans-serif">А</text><circle cx="470" cy="240" r="11" fill="#1c2030" stroke="#7d7" stroke-width="2"/>
+<text x="470" y="270" font-size="14" fill="#7d7" text-anchor="middle" font-weight="bold" font-family="sans-serif">Б</text>
+</svg>
+<div class="fragment opinion" style="margin-top: 0.3em;">
+    Свободна только ветка 101 - делим её: А = 1010, Б = 1011, 4 + 4
+</div>
+                </section>
+
+            </section>
+
+            <!-- №5: Двоичная запись [он] -->
+            <section>
+
+                <!-- условие №5 + таймер 1:20 -->
+                <section>
+                    <div class="lesson-time">5</div>
+                    <h2>№5. Двоичная запись</h2>
+<div class="fragment" style="max-height: 470px; overflow-y: auto; background: #fff; border-radius: 6px; padding: 4px;"><img src="img/cond5.png" alt="Условие №5" style="display: block; width: 100%; margin: 0; border: none; box-shadow: none; max-height: none; max-width: 100%;"></div>
+<p class="fragment" style="font-size: 0.45em; margin: 0.3em 0 0;"><a href="https://inf-ege.sdamgia.ru/problem?id=69909" target="_blank" rel="noopener">Решу ЕГЭ 69909</a> (ЕГЭ 08.06.2024) - 1:20 на весь номер</p>
+<div class="timer fragment" data-limit="80">
+    <div class="timer-bar"><div class="timer-fill"></div></div>
+    <div class="timer-row">
+        <span class="timer-time">0:00</span>
+        <span class="timer-hint">клик - старт</span>
+        <button class="timer-reset" type="button">сброс</button>
+    </div>
+</div>
+                </section>
+
+                <!-- №5: ответ -->
+                <section>
+                    <h2>Ответ №5</h2>
+<p class="fragment" style="font-size: 1.6em; margin: 0.3em 0;"><mark class="green">108</mark></p>
+                </section>
+
+                <!-- №5: решение кодом -->
+                <section>
+                    <h2>Решение</h2>
+<div class="code-block fragment">
+    <pre class="python" style="font-size: 0.42em; max-height: 580px;"><code>def build_r(n: int) -&gt; int:
+    s = bin(n)[2:]
+    if n % 2 == 0:
+        s = '10' + s
+    else:
+        s = '1' + s + '00'
+    return int(s, 2)
+
+
+# Наибольшее R при N не больше 12.
+def answer() -&gt; int:
+    best = 0
+    for n in range(1, 12 + 1):
+        best = max(best, build_r(n))
+    return best
+
+
+print(answer())</code></pre>
+</div>
+                </section>
+
+            </section>
+
+            <!-- №6: Черепаха [я, подробно] -->
+            <section>
+
+                <!-- условие №6 + таймер 1:30 -->
+                <section>
+                    <div class="lesson-time">6</div>
+                    <h2>№6. Черепаха</h2>
+<div class="fragment" style="max-height: 470px; overflow-y: auto; background: #fff; border-radius: 6px; padding: 4px;"><img src="img/cond6.png" alt="Условие №6" style="display: block; width: 100%; margin: 0; border: none; box-shadow: none; max-height: none; max-width: 100%;"></div>
+<p class="fragment" style="font-size: 0.45em; margin: 0.3em 0 0;"><a href="https://inf-ege.sdamgia.ru/problem?id=58242" target="_blank" rel="noopener">Решу ЕГЭ 58242</a> (для подготовки) - 1:30 на весь номер</p>
+<div class="timer fragment" data-limit="90">
+    <div class="timer-bar"><div class="timer-fill"></div></div>
+    <div class="timer-row">
+        <span class="timer-time">0:00</span>
+        <span class="timer-hint">клик - старт</span>
+        <button class="timer-reset" type="button">сброс</button>
+    </div>
+</div>
+                </section>
+
+                <!-- №6: картинка, которую рисует Черепаха -->
+                <section>
+                    <h2>Что рисует Черепаха</h2>
+<svg class="fragment" width="440" height="400" viewBox="0 0 430 400" style="">
+<circle cx="10" cy="401" r="1.6" fill="#556"/>
+<circle cx="10" cy="384" r="1.6" fill="#556"/>
+<circle cx="10" cy="367" r="1.6" fill="#556"/>
+<circle cx="10" cy="350" r="1.6" fill="#556"/>
+<circle cx="10" cy="333" r="1.6" fill="#556"/>
+<circle cx="10" cy="316" r="1.6" fill="#556"/>
+<circle cx="10" cy="299" r="1.6" fill="#556"/>
+<circle cx="10" cy="282" r="1.6" fill="#556"/>
+<circle cx="10" cy="265" r="1.6" fill="#556"/>
+<circle cx="10" cy="248" r="1.6" fill="#556"/>
+<circle cx="10" cy="231" r="1.6" fill="#556"/>
+<circle cx="10" cy="214" r="1.6" fill="#556"/>
+<circle cx="10" cy="197" r="1.6" fill="#556"/>
+<circle cx="10" cy="180" r="1.6" fill="#556"/>
+<circle cx="10" cy="163" r="1.6" fill="#556"/>
+<circle cx="10" cy="146" r="1.6" fill="#556"/>
+<circle cx="10" cy="129" r="1.6" fill="#556"/>
+<circle cx="10" cy="112" r="1.6" fill="#556"/>
+<circle cx="10" cy="95" r="1.6" fill="#556"/>
+<circle cx="10" cy="78" r="1.6" fill="#556"/>
+<circle cx="10" cy="61" r="1.6" fill="#556"/>
+<circle cx="10" cy="44" r="1.6" fill="#556"/>
+<circle cx="10" cy="27" r="1.6" fill="#556"/>
+<circle cx="27" cy="401" r="1.6" fill="#556"/>
+<circle cx="27" cy="384" r="1.6" fill="#556"/>
+<circle cx="27" cy="367" r="1.6" fill="#556"/>
+<circle cx="27" cy="350" r="1.6" fill="#556"/>
+<circle cx="27" cy="333" r="1.6" fill="#556"/>
+<circle cx="27" cy="316" r="1.6" fill="#556"/>
+<circle cx="27" cy="299" r="1.6" fill="#556"/>
+<circle cx="27" cy="282" r="1.6" fill="#556"/>
+<circle cx="27" cy="265" r="1.6" fill="#556"/>
+<circle cx="27" cy="248" r="1.6" fill="#556"/>
+<circle cx="27" cy="231" r="1.6" fill="#556"/>
+<circle cx="27" cy="214" r="1.6" fill="#556"/>
+<circle cx="27" cy="197" r="1.6" fill="#556"/>
+<circle cx="27" cy="180" r="1.6" fill="#556"/>
+<circle cx="27" cy="163" r="1.6" fill="#556"/>
+<circle cx="27" cy="146" r="1.6" fill="#556"/>
+<circle cx="27" cy="129" r="1.6" fill="#556"/>
+<circle cx="27" cy="112" r="1.6" fill="#556"/>
+<circle cx="27" cy="95" r="1.6" fill="#556"/>
+<circle cx="27" cy="78" r="1.6" fill="#556"/>
+<circle cx="27" cy="61" r="1.6" fill="#556"/>
+<circle cx="27" cy="44" r="1.6" fill="#556"/>
+<circle cx="27" cy="27" r="1.6" fill="#556"/>
+<circle cx="44" cy="401" r="1.6" fill="#556"/>
+<circle cx="44" cy="384" r="1.6" fill="#556"/>
+<circle cx="44" cy="367" r="1.6" fill="#556"/>
+<circle cx="44" cy="350" r="1.6" fill="#556"/>
+<circle cx="44" cy="333" r="1.6" fill="#556"/>
+<circle cx="44" cy="316" r="1.6" fill="#556"/>
+<circle cx="44" cy="299" r="1.6" fill="#556"/>
+<circle cx="44" cy="282" r="1.6" fill="#556"/>
+<circle cx="44" cy="265" r="1.6" fill="#556"/>
+<circle cx="44" cy="248" r="1.6" fill="#556"/>
+<circle cx="44" cy="231" r="1.6" fill="#556"/>
+<circle cx="44" cy="214" r="1.6" fill="#556"/>
+<circle cx="44" cy="197" r="1.6" fill="#556"/>
+<circle cx="44" cy="180" r="1.6" fill="#556"/>
+<circle cx="44" cy="163" r="1.6" fill="#556"/>
+<circle cx="44" cy="146" r="1.6" fill="#556"/>
+<circle cx="44" cy="129" r="1.6" fill="#556"/>
+<circle cx="44" cy="112" r="1.6" fill="#556"/>
+<circle cx="44" cy="95" r="1.6" fill="#556"/>
+<circle cx="44" cy="78" r="1.6" fill="#556"/>
+<circle cx="44" cy="61" r="1.6" fill="#556"/>
+<circle cx="44" cy="44" r="1.6" fill="#556"/>
+<circle cx="44" cy="27" r="1.6" fill="#556"/>
+<circle cx="61" cy="401" r="1.6" fill="#556"/>
+<circle cx="61" cy="384" r="1.6" fill="#556"/>
+<circle cx="61" cy="367" r="1.6" fill="#556"/>
+<circle cx="61" cy="350" r="1.6" fill="#556"/>
+<circle cx="61" cy="333" r="1.6" fill="#556"/>
+<circle cx="61" cy="316" r="1.6" fill="#556"/>
+<circle cx="61" cy="299" r="1.6" fill="#556"/>
+<circle cx="61" cy="282" r="1.6" fill="#556"/>
+<circle cx="61" cy="265" r="1.6" fill="#556"/>
+<circle cx="61" cy="248" r="1.6" fill="#556"/>
+<circle cx="61" cy="231" r="1.6" fill="#556"/>
+<circle cx="61" cy="214" r="1.6" fill="#556"/>
+<circle cx="61" cy="197" r="1.6" fill="#556"/>
+<circle cx="61" cy="180" r="1.6" fill="#556"/>
+<circle cx="61" cy="163" r="1.6" fill="#556"/>
+<circle cx="61" cy="146" r="1.6" fill="#556"/>
+<circle cx="61" cy="129" r="1.6" fill="#556"/>
+<circle cx="61" cy="112" r="1.6" fill="#556"/>
+<circle cx="61" cy="95" r="1.6" fill="#556"/>
+<circle cx="61" cy="78" r="1.6" fill="#556"/>
+<circle cx="61" cy="61" r="1.6" fill="#556"/>
+<circle cx="61" cy="44" r="1.6" fill="#556"/>
+<circle cx="61" cy="27" r="1.6" fill="#556"/>
+<circle cx="78" cy="401" r="1.6" fill="#556"/>
+<circle cx="78" cy="384" r="1.6" fill="#556"/>
+<circle cx="78" cy="367" r="1.6" fill="#556"/>
+<circle cx="78" cy="350" r="1.6" fill="#556"/>
+<circle cx="78" cy="333" r="1.6" fill="#556"/>
+<circle cx="78" cy="316" r="1.6" fill="#556"/>
+<circle cx="78" cy="299" r="1.6" fill="#556"/>
+<circle cx="78" cy="282" r="1.6" fill="#556"/>
+<circle cx="78" cy="265" r="1.6" fill="#556"/>
+<circle cx="78" cy="248" r="1.6" fill="#556"/>
+<circle cx="78" cy="231" r="1.6" fill="#556"/>
+<circle cx="78" cy="214" r="1.6" fill="#556"/>
+<circle cx="78" cy="197" r="1.6" fill="#556"/>
+<circle cx="78" cy="180" r="1.6" fill="#556"/>
+<circle cx="78" cy="163" r="1.6" fill="#556"/>
+<circle cx="78" cy="146" r="1.6" fill="#556"/>
+<circle cx="78" cy="129" r="1.6" fill="#556"/>
+<circle cx="78" cy="112" r="1.6" fill="#556"/>
+<circle cx="78" cy="95" r="1.6" fill="#556"/>
+<circle cx="78" cy="78" r="1.6" fill="#556"/>
+<circle cx="78" cy="61" r="1.6" fill="#556"/>
+<circle cx="78" cy="44" r="1.6" fill="#556"/>
+<circle cx="78" cy="27" r="1.6" fill="#556"/>
+<circle cx="95" cy="401" r="1.6" fill="#556"/>
+<circle cx="95" cy="384" r="1.6" fill="#556"/>
+<circle cx="95" cy="367" r="1.6" fill="#556"/>
+<circle cx="95" cy="350" r="1.6" fill="#556"/>
+<circle cx="95" cy="333" r="1.6" fill="#556"/>
+<circle cx="95" cy="316" r="1.6" fill="#556"/>
+<circle cx="95" cy="299" r="1.6" fill="#556"/>
+<circle cx="95" cy="282" r="1.6" fill="#556"/>
+<circle cx="95" cy="265" r="1.6" fill="#556"/>
+<circle cx="95" cy="248" r="1.6" fill="#556"/>
+<circle cx="95" cy="231" r="1.6" fill="#556"/>
+<circle cx="95" cy="214" r="1.6" fill="#556"/>
+<circle cx="95" cy="197" r="1.6" fill="#556"/>
+<circle cx="95" cy="180" r="1.6" fill="#556"/>
+<circle cx="95" cy="163" r="1.6" fill="#556"/>
+<circle cx="95" cy="146" r="1.6" fill="#556"/>
+<circle cx="95" cy="129" r="1.6" fill="#556"/>
+<circle cx="95" cy="112" r="1.6" fill="#556"/>
+<circle cx="95" cy="95" r="1.6" fill="#556"/>
+<circle cx="95" cy="78" r="1.6" fill="#556"/>
+<circle cx="95" cy="61" r="1.6" fill="#556"/>
+<circle cx="95" cy="44" r="1.6" fill="#556"/>
+<circle cx="95" cy="27" r="1.6" fill="#556"/>
+<circle cx="112" cy="401" r="1.6" fill="#556"/>
+<circle cx="112" cy="384" r="1.6" fill="#556"/>
+<circle cx="112" cy="367" r="1.6" fill="#556"/>
+<circle cx="112" cy="350" r="1.6" fill="#556"/>
+<circle cx="112" cy="333" r="1.6" fill="#556"/>
+<circle cx="112" cy="316" r="1.6" fill="#556"/>
+<circle cx="112" cy="299" r="1.6" fill="#556"/>
+<circle cx="112" cy="282" r="1.6" fill="#556"/>
+<circle cx="112" cy="265" r="1.6" fill="#556"/>
+<circle cx="112" cy="248" r="1.6" fill="#556"/>
+<circle cx="112" cy="231" r="1.6" fill="#556"/>
+<circle cx="112" cy="214" r="1.6" fill="#556"/>
+<circle cx="112" cy="197" r="1.6" fill="#556"/>
+<circle cx="112" cy="180" r="1.6" fill="#556"/>
+<circle cx="112" cy="163" r="1.6" fill="#556"/>
+<circle cx="112" cy="146" r="1.6" fill="#556"/>
+<circle cx="112" cy="129" r="1.6" fill="#556"/>
+<circle cx="112" cy="112" r="1.6" fill="#556"/>
+<circle cx="112" cy="95" r="1.6" fill="#556"/>
+<circle cx="112" cy="78" r="1.6" fill="#556"/>
+<circle cx="112" cy="61" r="1.6" fill="#556"/>
+<circle cx="112" cy="44" r="1.6" fill="#556"/>
+<circle cx="112" cy="27" r="1.6" fill="#556"/>
+<circle cx="129" cy="401" r="1.6" fill="#556"/>
+<circle cx="129" cy="384" r="1.6" fill="#556"/>
+<circle cx="129" cy="367" r="1.6" fill="#556"/>
+<circle cx="129" cy="350" r="1.6" fill="#556"/>
+<circle cx="129" cy="333" r="1.6" fill="#556"/>
+<circle cx="129" cy="316" r="1.6" fill="#556"/>
+<circle cx="129" cy="299" r="1.6" fill="#556"/>
+<circle cx="129" cy="282" r="1.6" fill="#556"/>
+<circle cx="129" cy="265" r="1.6" fill="#556"/>
+<circle cx="129" cy="248" r="1.6" fill="#556"/>
+<circle cx="129" cy="231" r="1.6" fill="#556"/>
+<circle cx="129" cy="214" r="1.6" fill="#556"/>
+<circle cx="129" cy="197" r="1.6" fill="#556"/>
+<circle cx="129" cy="180" r="1.6" fill="#556"/>
+<circle cx="129" cy="163" r="1.6" fill="#556"/>
+<circle cx="129" cy="146" r="1.6" fill="#556"/>
+<circle cx="129" cy="129" r="1.6" fill="#556"/>
+<circle cx="129" cy="112" r="1.6" fill="#556"/>
+<circle cx="129" cy="95" r="1.6" fill="#556"/>
+<circle cx="129" cy="78" r="1.6" fill="#556"/>
+<circle cx="129" cy="61" r="1.6" fill="#556"/>
+<circle cx="129" cy="44" r="1.6" fill="#556"/>
+<circle cx="129" cy="27" r="1.6" fill="#556"/>
+<circle cx="146" cy="401" r="1.6" fill="#556"/>
+<circle cx="146" cy="384" r="1.6" fill="#556"/>
+<circle cx="146" cy="367" r="1.6" fill="#556"/>
+<circle cx="146" cy="350" r="1.6" fill="#556"/>
+<circle cx="146" cy="333" r="1.6" fill="#556"/>
+<circle cx="146" cy="316" r="1.6" fill="#556"/>
+<circle cx="146" cy="299" r="1.6" fill="#556"/>
+<circle cx="146" cy="282" r="1.6" fill="#556"/>
+<circle cx="146" cy="265" r="1.6" fill="#556"/>
+<circle cx="146" cy="248" r="1.6" fill="#556"/>
+<circle cx="146" cy="231" r="1.6" fill="#556"/>
+<circle cx="146" cy="214" r="1.6" fill="#556"/>
+<circle cx="146" cy="197" r="1.6" fill="#556"/>
+<circle cx="146" cy="180" r="1.6" fill="#556"/>
+<circle cx="146" cy="163" r="1.6" fill="#556"/>
+<circle cx="146" cy="146" r="1.6" fill="#556"/>
+<circle cx="146" cy="129" r="1.6" fill="#556"/>
+<circle cx="146" cy="112" r="1.6" fill="#556"/>
+<circle cx="146" cy="95" r="1.6" fill="#556"/>
+<circle cx="146" cy="78" r="1.6" fill="#556"/>
+<circle cx="146" cy="61" r="1.6" fill="#556"/>
+<circle cx="146" cy="44" r="1.6" fill="#556"/>
+<circle cx="146" cy="27" r="1.6" fill="#556"/>
+<circle cx="163" cy="401" r="1.6" fill="#556"/>
+<circle cx="163" cy="384" r="1.6" fill="#556"/>
+<circle cx="163" cy="367" r="1.6" fill="#556"/>
+<circle cx="163" cy="350" r="1.6" fill="#556"/>
+<circle cx="163" cy="333" r="1.6" fill="#556"/>
+<circle cx="163" cy="316" r="1.6" fill="#556"/>
+<circle cx="163" cy="299" r="1.6" fill="#556"/>
+<circle cx="163" cy="282" r="1.6" fill="#556"/>
+<circle cx="163" cy="265" r="1.6" fill="#556"/>
+<circle cx="163" cy="248" r="1.6" fill="#556"/>
+<circle cx="163" cy="231" r="1.6" fill="#556"/>
+<circle cx="163" cy="214" r="1.6" fill="#556"/>
+<circle cx="163" cy="197" r="1.6" fill="#556"/>
+<circle cx="163" cy="180" r="1.6" fill="#556"/>
+<circle cx="163" cy="163" r="1.6" fill="#556"/>
+<circle cx="163" cy="146" r="1.6" fill="#556"/>
+<circle cx="163" cy="129" r="1.6" fill="#556"/>
+<circle cx="163" cy="112" r="1.6" fill="#556"/>
+<circle cx="163" cy="95" r="1.6" fill="#556"/>
+<circle cx="163" cy="78" r="1.6" fill="#556"/>
+<circle cx="163" cy="61" r="1.6" fill="#556"/>
+<circle cx="163" cy="44" r="1.6" fill="#556"/>
+<circle cx="163" cy="27" r="1.6" fill="#556"/>
+<circle cx="180" cy="401" r="1.6" fill="#556"/>
+<circle cx="180" cy="384" r="1.6" fill="#556"/>
+<circle cx="180" cy="367" r="1.6" fill="#556"/>
+<circle cx="180" cy="350" r="1.6" fill="#556"/>
+<circle cx="180" cy="333" r="1.6" fill="#556"/>
+<circle cx="180" cy="316" r="1.6" fill="#556"/>
+<circle cx="180" cy="299" r="1.6" fill="#556"/>
+<circle cx="180" cy="282" r="1.6" fill="#556"/>
+<circle cx="180" cy="265" r="1.6" fill="#556"/>
+<circle cx="180" cy="248" r="1.6" fill="#556"/>
+<circle cx="180" cy="231" r="1.6" fill="#556"/>
+<circle cx="180" cy="214" r="1.6" fill="#556"/>
+<circle cx="180" cy="197" r="1.6" fill="#556"/>
+<circle cx="180" cy="180" r="1.6" fill="#556"/>
+<circle cx="180" cy="163" r="1.6" fill="#556"/>
+<circle cx="180" cy="146" r="1.6" fill="#556"/>
+<circle cx="180" cy="129" r="1.6" fill="#556"/>
+<circle cx="180" cy="112" r="1.6" fill="#556"/>
+<circle cx="180" cy="95" r="1.6" fill="#556"/>
+<circle cx="180" cy="78" r="1.6" fill="#556"/>
+<circle cx="180" cy="61" r="1.6" fill="#556"/>
+<circle cx="180" cy="44" r="1.6" fill="#556"/>
+<circle cx="180" cy="27" r="1.6" fill="#556"/>
+<circle cx="197" cy="401" r="1.6" fill="#556"/>
+<circle cx="197" cy="384" r="1.6" fill="#556"/>
+<circle cx="197" cy="367" r="1.6" fill="#556"/>
+<circle cx="197" cy="350" r="1.6" fill="#556"/>
+<circle cx="197" cy="333" r="1.6" fill="#556"/>
+<circle cx="197" cy="316" r="1.6" fill="#556"/>
+<circle cx="197" cy="299" r="1.6" fill="#556"/>
+<circle cx="197" cy="282" r="1.6" fill="#556"/>
+<circle cx="197" cy="265" r="1.6" fill="#556"/>
+<circle cx="197" cy="248" r="1.6" fill="#556"/>
+<circle cx="197" cy="231" r="1.6" fill="#556"/>
+<circle cx="197" cy="214" r="1.6" fill="#556"/>
+<circle cx="197" cy="197" r="1.6" fill="#556"/>
+<circle cx="197" cy="180" r="1.6" fill="#556"/>
+<circle cx="197" cy="163" r="1.6" fill="#556"/>
+<circle cx="197" cy="146" r="1.6" fill="#556"/>
+<circle cx="197" cy="129" r="1.6" fill="#556"/>
+<circle cx="197" cy="112" r="1.6" fill="#556"/>
+<circle cx="197" cy="95" r="1.6" fill="#556"/>
+<circle cx="197" cy="78" r="1.6" fill="#556"/>
+<circle cx="197" cy="61" r="1.6" fill="#556"/>
+<circle cx="197" cy="44" r="1.6" fill="#556"/>
+<circle cx="197" cy="27" r="1.6" fill="#556"/>
+<circle cx="214" cy="401" r="1.6" fill="#556"/>
+<circle cx="214" cy="384" r="1.6" fill="#556"/>
+<circle cx="214" cy="367" r="1.6" fill="#556"/>
+<circle cx="214" cy="350" r="1.6" fill="#556"/>
+<circle cx="214" cy="333" r="1.6" fill="#556"/>
+<circle cx="214" cy="316" r="1.6" fill="#556"/>
+<circle cx="214" cy="299" r="1.6" fill="#556"/>
+<circle cx="214" cy="282" r="1.6" fill="#556"/>
+<circle cx="214" cy="265" r="1.6" fill="#556"/>
+<circle cx="214" cy="248" r="1.6" fill="#556"/>
+<circle cx="214" cy="231" r="1.6" fill="#556"/>
+<circle cx="214" cy="214" r="1.6" fill="#556"/>
+<circle cx="214" cy="197" r="1.6" fill="#556"/>
+<circle cx="214" cy="180" r="1.6" fill="#556"/>
+<circle cx="214" cy="163" r="1.6" fill="#556"/>
+<circle cx="214" cy="146" r="1.6" fill="#556"/>
+<circle cx="214" cy="129" r="1.6" fill="#556"/>
+<circle cx="214" cy="112" r="1.6" fill="#556"/>
+<circle cx="214" cy="95" r="1.6" fill="#556"/>
+<circle cx="214" cy="78" r="1.6" fill="#556"/>
+<circle cx="214" cy="61" r="1.6" fill="#556"/>
+<circle cx="214" cy="44" r="1.6" fill="#556"/>
+<circle cx="214" cy="27" r="1.6" fill="#556"/>
+<circle cx="231" cy="401" r="1.6" fill="#556"/>
+<circle cx="231" cy="384" r="1.6" fill="#556"/>
+<circle cx="231" cy="367" r="1.6" fill="#556"/>
+<circle cx="231" cy="350" r="1.6" fill="#556"/>
+<circle cx="231" cy="333" r="1.6" fill="#556"/>
+<circle cx="231" cy="316" r="1.6" fill="#556"/>
+<circle cx="231" cy="299" r="1.6" fill="#556"/>
+<circle cx="231" cy="282" r="1.6" fill="#556"/>
+<circle cx="231" cy="265" r="1.6" fill="#556"/>
+<circle cx="231" cy="248" r="1.6" fill="#556"/>
+<circle cx="231" cy="231" r="1.6" fill="#556"/>
+<circle cx="231" cy="214" r="1.6" fill="#556"/>
+<circle cx="231" cy="197" r="1.6" fill="#556"/>
+<circle cx="231" cy="180" r="1.6" fill="#556"/>
+<circle cx="231" cy="163" r="1.6" fill="#556"/>
+<circle cx="231" cy="146" r="1.6" fill="#556"/>
+<circle cx="231" cy="129" r="1.6" fill="#556"/>
+<circle cx="231" cy="112" r="1.6" fill="#556"/>
+<circle cx="231" cy="95" r="1.6" fill="#556"/>
+<circle cx="231" cy="78" r="1.6" fill="#556"/>
+<circle cx="231" cy="61" r="1.6" fill="#556"/>
+<circle cx="231" cy="44" r="1.6" fill="#556"/>
+<circle cx="231" cy="27" r="1.6" fill="#556"/>
+<circle cx="248" cy="401" r="1.6" fill="#556"/>
+<circle cx="248" cy="384" r="1.6" fill="#556"/>
+<circle cx="248" cy="367" r="1.6" fill="#556"/>
+<circle cx="248" cy="350" r="1.6" fill="#556"/>
+<circle cx="248" cy="333" r="1.6" fill="#556"/>
+<circle cx="248" cy="316" r="1.6" fill="#556"/>
+<circle cx="248" cy="299" r="1.6" fill="#556"/>
+<circle cx="248" cy="282" r="1.6" fill="#556"/>
+<circle cx="248" cy="265" r="1.6" fill="#556"/>
+<circle cx="248" cy="248" r="1.6" fill="#556"/>
+<circle cx="248" cy="231" r="1.6" fill="#556"/>
+<circle cx="248" cy="214" r="1.6" fill="#556"/>
+<circle cx="248" cy="197" r="1.6" fill="#556"/>
+<circle cx="248" cy="180" r="1.6" fill="#556"/>
+<circle cx="248" cy="163" r="1.6" fill="#556"/>
+<circle cx="248" cy="146" r="1.6" fill="#556"/>
+<circle cx="248" cy="129" r="1.6" fill="#556"/>
+<circle cx="248" cy="112" r="1.6" fill="#556"/>
+<circle cx="248" cy="95" r="1.6" fill="#556"/>
+<circle cx="248" cy="78" r="1.6" fill="#556"/>
+<circle cx="248" cy="61" r="1.6" fill="#556"/>
+<circle cx="248" cy="44" r="1.6" fill="#556"/>
+<circle cx="248" cy="27" r="1.6" fill="#556"/>
+<circle cx="265" cy="401" r="1.6" fill="#556"/>
+<circle cx="265" cy="384" r="1.6" fill="#556"/>
+<circle cx="265" cy="367" r="1.6" fill="#556"/>
+<circle cx="265" cy="350" r="1.6" fill="#556"/>
+<circle cx="265" cy="333" r="1.6" fill="#556"/>
+<circle cx="265" cy="316" r="1.6" fill="#556"/>
+<circle cx="265" cy="299" r="1.6" fill="#556"/>
+<circle cx="265" cy="282" r="1.6" fill="#556"/>
+<circle cx="265" cy="265" r="1.6" fill="#556"/>
+<circle cx="265" cy="248" r="1.6" fill="#556"/>
+<circle cx="265" cy="231" r="1.6" fill="#556"/>
+<circle cx="265" cy="214" r="1.6" fill="#556"/>
+<circle cx="265" cy="197" r="1.6" fill="#556"/>
+<circle cx="265" cy="180" r="1.6" fill="#556"/>
+<circle cx="265" cy="163" r="1.6" fill="#556"/>
+<circle cx="265" cy="146" r="1.6" fill="#556"/>
+<circle cx="265" cy="129" r="1.6" fill="#556"/>
+<circle cx="265" cy="112" r="1.6" fill="#556"/>
+<circle cx="265" cy="95" r="1.6" fill="#556"/>
+<circle cx="265" cy="78" r="1.6" fill="#556"/>
+<circle cx="265" cy="61" r="1.6" fill="#556"/>
+<circle cx="265" cy="44" r="1.6" fill="#556"/>
+<circle cx="265" cy="27" r="1.6" fill="#556"/>
+<circle cx="282" cy="401" r="1.6" fill="#556"/>
+<circle cx="282" cy="384" r="1.6" fill="#556"/>
+<circle cx="282" cy="367" r="1.6" fill="#556"/>
+<circle cx="282" cy="350" r="1.6" fill="#556"/>
+<circle cx="282" cy="333" r="1.6" fill="#556"/>
+<circle cx="282" cy="316" r="1.6" fill="#556"/>
+<circle cx="282" cy="299" r="1.6" fill="#556"/>
+<circle cx="282" cy="282" r="1.6" fill="#556"/>
+<circle cx="282" cy="265" r="1.6" fill="#556"/>
+<circle cx="282" cy="248" r="1.6" fill="#556"/>
+<circle cx="282" cy="231" r="1.6" fill="#556"/>
+<circle cx="282" cy="214" r="1.6" fill="#556"/>
+<circle cx="282" cy="197" r="1.6" fill="#556"/>
+<circle cx="282" cy="180" r="1.6" fill="#556"/>
+<circle cx="282" cy="163" r="1.6" fill="#556"/>
+<circle cx="282" cy="146" r="1.6" fill="#556"/>
+<circle cx="282" cy="129" r="1.6" fill="#556"/>
+<circle cx="282" cy="112" r="1.6" fill="#556"/>
+<circle cx="282" cy="95" r="1.6" fill="#556"/>
+<circle cx="282" cy="78" r="1.6" fill="#556"/>
+<circle cx="282" cy="61" r="1.6" fill="#556"/>
+<circle cx="282" cy="44" r="1.6" fill="#556"/>
+<circle cx="282" cy="27" r="1.6" fill="#556"/>
+<circle cx="299" cy="401" r="1.6" fill="#556"/>
+<circle cx="299" cy="384" r="1.6" fill="#556"/>
+<circle cx="299" cy="367" r="1.6" fill="#556"/>
+<circle cx="299" cy="350" r="1.6" fill="#556"/>
+<circle cx="299" cy="333" r="1.6" fill="#556"/>
+<circle cx="299" cy="316" r="1.6" fill="#556"/>
+<circle cx="299" cy="299" r="1.6" fill="#556"/>
+<circle cx="299" cy="282" r="1.6" fill="#556"/>
+<circle cx="299" cy="265" r="1.6" fill="#556"/>
+<circle cx="299" cy="248" r="1.6" fill="#556"/>
+<circle cx="299" cy="231" r="1.6" fill="#556"/>
+<circle cx="299" cy="214" r="1.6" fill="#556"/>
+<circle cx="299" cy="197" r="1.6" fill="#556"/>
+<circle cx="299" cy="180" r="1.6" fill="#556"/>
+<circle cx="299" cy="163" r="1.6" fill="#556"/>
+<circle cx="299" cy="146" r="1.6" fill="#556"/>
+<circle cx="299" cy="129" r="1.6" fill="#556"/>
+<circle cx="299" cy="112" r="1.6" fill="#556"/>
+<circle cx="299" cy="95" r="1.6" fill="#556"/>
+<circle cx="299" cy="78" r="1.6" fill="#556"/>
+<circle cx="299" cy="61" r="1.6" fill="#556"/>
+<circle cx="299" cy="44" r="1.6" fill="#556"/>
+<circle cx="299" cy="27" r="1.6" fill="#556"/>
+<circle cx="316" cy="401" r="1.6" fill="#556"/>
+<circle cx="316" cy="384" r="1.6" fill="#556"/>
+<circle cx="316" cy="367" r="1.6" fill="#556"/>
+<circle cx="316" cy="350" r="1.6" fill="#556"/>
+<circle cx="316" cy="333" r="1.6" fill="#556"/>
+<circle cx="316" cy="316" r="1.6" fill="#556"/>
+<circle cx="316" cy="299" r="1.6" fill="#556"/>
+<circle cx="316" cy="282" r="1.6" fill="#556"/>
+<circle cx="316" cy="265" r="1.6" fill="#556"/>
+<circle cx="316" cy="248" r="1.6" fill="#556"/>
+<circle cx="316" cy="231" r="1.6" fill="#556"/>
+<circle cx="316" cy="214" r="1.6" fill="#556"/>
+<circle cx="316" cy="197" r="1.6" fill="#556"/>
+<circle cx="316" cy="180" r="1.6" fill="#556"/>
+<circle cx="316" cy="163" r="1.6" fill="#556"/>
+<circle cx="316" cy="146" r="1.6" fill="#556"/>
+<circle cx="316" cy="129" r="1.6" fill="#556"/>
+<circle cx="316" cy="112" r="1.6" fill="#556"/>
+<circle cx="316" cy="95" r="1.6" fill="#556"/>
+<circle cx="316" cy="78" r="1.6" fill="#556"/>
+<circle cx="316" cy="61" r="1.6" fill="#556"/>
+<circle cx="316" cy="44" r="1.6" fill="#556"/>
+<circle cx="316" cy="27" r="1.6" fill="#556"/>
+<circle cx="333" cy="401" r="1.6" fill="#556"/>
+<circle cx="333" cy="384" r="1.6" fill="#556"/>
+<circle cx="333" cy="367" r="1.6" fill="#556"/>
+<circle cx="333" cy="350" r="1.6" fill="#556"/>
+<circle cx="333" cy="333" r="1.6" fill="#556"/>
+<circle cx="333" cy="316" r="1.6" fill="#556"/>
+<circle cx="333" cy="299" r="1.6" fill="#556"/>
+<circle cx="333" cy="282" r="1.6" fill="#556"/>
+<circle cx="333" cy="265" r="1.6" fill="#556"/>
+<circle cx="333" cy="248" r="1.6" fill="#556"/>
+<circle cx="333" cy="231" r="1.6" fill="#556"/>
+<circle cx="333" cy="214" r="1.6" fill="#556"/>
+<circle cx="333" cy="197" r="1.6" fill="#556"/>
+<circle cx="333" cy="180" r="1.6" fill="#556"/>
+<circle cx="333" cy="163" r="1.6" fill="#556"/>
+<circle cx="333" cy="146" r="1.6" fill="#556"/>
+<circle cx="333" cy="129" r="1.6" fill="#556"/>
+<circle cx="333" cy="112" r="1.6" fill="#556"/>
+<circle cx="333" cy="95" r="1.6" fill="#556"/>
+<circle cx="333" cy="78" r="1.6" fill="#556"/>
+<circle cx="333" cy="61" r="1.6" fill="#556"/>
+<circle cx="333" cy="44" r="1.6" fill="#556"/>
+<circle cx="333" cy="27" r="1.6" fill="#556"/>
+<circle cx="350" cy="401" r="1.6" fill="#556"/>
+<circle cx="350" cy="384" r="1.6" fill="#556"/>
+<circle cx="350" cy="367" r="1.6" fill="#556"/>
+<circle cx="350" cy="350" r="1.6" fill="#556"/>
+<circle cx="350" cy="333" r="1.6" fill="#556"/>
+<circle cx="350" cy="316" r="1.6" fill="#556"/>
+<circle cx="350" cy="299" r="1.6" fill="#556"/>
+<circle cx="350" cy="282" r="1.6" fill="#556"/>
+<circle cx="350" cy="265" r="1.6" fill="#556"/>
+<circle cx="350" cy="248" r="1.6" fill="#556"/>
+<circle cx="350" cy="231" r="1.6" fill="#556"/>
+<circle cx="350" cy="214" r="1.6" fill="#556"/>
+<circle cx="350" cy="197" r="1.6" fill="#556"/>
+<circle cx="350" cy="180" r="1.6" fill="#556"/>
+<circle cx="350" cy="163" r="1.6" fill="#556"/>
+<circle cx="350" cy="146" r="1.6" fill="#556"/>
+<circle cx="350" cy="129" r="1.6" fill="#556"/>
+<circle cx="350" cy="112" r="1.6" fill="#556"/>
+<circle cx="350" cy="95" r="1.6" fill="#556"/>
+<circle cx="350" cy="78" r="1.6" fill="#556"/>
+<circle cx="350" cy="61" r="1.6" fill="#556"/>
+<circle cx="350" cy="44" r="1.6" fill="#556"/>
+<circle cx="350" cy="27" r="1.6" fill="#556"/>
+<circle cx="367" cy="401" r="1.6" fill="#556"/>
+<circle cx="367" cy="384" r="1.6" fill="#556"/>
+<circle cx="367" cy="367" r="1.6" fill="#556"/>
+<circle cx="367" cy="350" r="1.6" fill="#556"/>
+<circle cx="367" cy="333" r="1.6" fill="#556"/>
+<circle cx="367" cy="316" r="1.6" fill="#556"/>
+<circle cx="367" cy="299" r="1.6" fill="#556"/>
+<circle cx="367" cy="282" r="1.6" fill="#556"/>
+<circle cx="367" cy="265" r="1.6" fill="#556"/>
+<circle cx="367" cy="248" r="1.6" fill="#556"/>
+<circle cx="367" cy="231" r="1.6" fill="#556"/>
+<circle cx="367" cy="214" r="1.6" fill="#556"/>
+<circle cx="367" cy="197" r="1.6" fill="#556"/>
+<circle cx="367" cy="180" r="1.6" fill="#556"/>
+<circle cx="367" cy="163" r="1.6" fill="#556"/>
+<circle cx="367" cy="146" r="1.6" fill="#556"/>
+<circle cx="367" cy="129" r="1.6" fill="#556"/>
+<circle cx="367" cy="112" r="1.6" fill="#556"/>
+<circle cx="367" cy="95" r="1.6" fill="#556"/>
+<circle cx="367" cy="78" r="1.6" fill="#556"/>
+<circle cx="367" cy="61" r="1.6" fill="#556"/>
+<circle cx="367" cy="44" r="1.6" fill="#556"/>
+<circle cx="367" cy="27" r="1.6" fill="#556"/>
+<circle cx="384" cy="401" r="1.6" fill="#556"/>
+<circle cx="384" cy="384" r="1.6" fill="#556"/>
+<circle cx="384" cy="367" r="1.6" fill="#556"/>
+<circle cx="384" cy="350" r="1.6" fill="#556"/>
+<circle cx="384" cy="333" r="1.6" fill="#556"/>
+<circle cx="384" cy="316" r="1.6" fill="#556"/>
+<circle cx="384" cy="299" r="1.6" fill="#556"/>
+<circle cx="384" cy="282" r="1.6" fill="#556"/>
+<circle cx="384" cy="265" r="1.6" fill="#556"/>
+<circle cx="384" cy="248" r="1.6" fill="#556"/>
+<circle cx="384" cy="231" r="1.6" fill="#556"/>
+<circle cx="384" cy="214" r="1.6" fill="#556"/>
+<circle cx="384" cy="197" r="1.6" fill="#556"/>
+<circle cx="384" cy="180" r="1.6" fill="#556"/>
+<circle cx="384" cy="163" r="1.6" fill="#556"/>
+<circle cx="384" cy="146" r="1.6" fill="#556"/>
+<circle cx="384" cy="129" r="1.6" fill="#556"/>
+<circle cx="384" cy="112" r="1.6" fill="#556"/>
+<circle cx="384" cy="95" r="1.6" fill="#556"/>
+<circle cx="384" cy="78" r="1.6" fill="#556"/>
+<circle cx="384" cy="61" r="1.6" fill="#556"/>
+<circle cx="384" cy="44" r="1.6" fill="#556"/>
+<circle cx="384" cy="27" r="1.6" fill="#556"/>
+<circle cx="401" cy="401" r="1.6" fill="#556"/>
+<circle cx="401" cy="384" r="1.6" fill="#556"/>
+<circle cx="401" cy="367" r="1.6" fill="#556"/>
+<circle cx="401" cy="350" r="1.6" fill="#556"/>
+<circle cx="401" cy="333" r="1.6" fill="#556"/>
+<circle cx="401" cy="316" r="1.6" fill="#556"/>
+<circle cx="401" cy="299" r="1.6" fill="#556"/>
+<circle cx="401" cy="282" r="1.6" fill="#556"/>
+<circle cx="401" cy="265" r="1.6" fill="#556"/>
+<circle cx="401" cy="248" r="1.6" fill="#556"/>
+<circle cx="401" cy="231" r="1.6" fill="#556"/>
+<circle cx="401" cy="214" r="1.6" fill="#556"/>
+<circle cx="401" cy="197" r="1.6" fill="#556"/>
+<circle cx="401" cy="180" r="1.6" fill="#556"/>
+<circle cx="401" cy="163" r="1.6" fill="#556"/>
+<circle cx="401" cy="146" r="1.6" fill="#556"/>
+<circle cx="401" cy="129" r="1.6" fill="#556"/>
+<circle cx="401" cy="112" r="1.6" fill="#556"/>
+<circle cx="401" cy="95" r="1.6" fill="#556"/>
+<circle cx="401" cy="78" r="1.6" fill="#556"/>
+<circle cx="401" cy="61" r="1.6" fill="#556"/>
+<circle cx="401" cy="44" r="1.6" fill="#556"/>
+<circle cx="401" cy="27" r="1.6" fill="#556"/>
+<polyline points="248.0,163.0 400.1,163.0 268.4,239.0 268.4,391.1 192.3,259.4 40.3,259.4 172.0,183.4 172.0,31.3 248.0,163.0" fill="rgba(255,119,170,0.12)" stroke="#f7a" stroke-width="2.5"/>
+<circle cx="248" cy="163" r="4" fill="#fd6"/>
+
+</svg>
+<div class="fragment opinion" style="margin-top: 0.2em;">
+    Сторона 4√5 ≈ 8.94, углы 30 и 60 градусов - вершины не в целых точках
+</div>
+                </section>
+
+                <!-- №6: быстро не решить - руками точно не нарисовать; простая фигура - рисуем и считаем клетки -->
+                <section>
+                    <h2>Сейчас быстро не решить</h2>
+<ul style="font-size: 0.55em; text-align: left;">
+    <li class="fragment">руками такую фигуру не нарисовать, а тем более точно по координатам</li>
+    <li class="fragment">точки у самых сторон: на глаз не понять, внутри они или на линии</li>
+    <li class="fragment">на пробнике такой номер пропускаем</li>
+</ul>
+<div class="fragment" style="display: flex; gap: 1em; align-items: center; justify-content: center; margin-top: 0.4em;"><svg width="240" height="240" viewBox="0 0 240 240" style="">
+<rect x="20" y="20" width="200" height="200" fill="rgba(255,119,170,0.12)" stroke="#f7a" stroke-width="2.5"/>
+<circle cx="20" cy="20" r="3" fill="#667"/>
+<circle cx="20" cy="60" r="3" fill="#667"/>
+<circle cx="20" cy="100" r="3" fill="#667"/>
+<circle cx="20" cy="140" r="3" fill="#667"/>
+<circle cx="20" cy="180" r="3" fill="#667"/>
+<circle cx="20" cy="220" r="3" fill="#667"/>
+<circle cx="60" cy="20" r="3" fill="#667"/>
+<circle cx="60" cy="60" r="5" fill="#7d7"/>
+<circle cx="60" cy="100" r="5" fill="#7d7"/>
+<circle cx="60" cy="140" r="5" fill="#7d7"/>
+<circle cx="60" cy="180" r="5" fill="#7d7"/>
+<circle cx="60" cy="220" r="3" fill="#667"/>
+<circle cx="100" cy="20" r="3" fill="#667"/>
+<circle cx="100" cy="60" r="5" fill="#7d7"/>
+<circle cx="100" cy="100" r="5" fill="#7d7"/>
+<circle cx="100" cy="140" r="5" fill="#7d7"/>
+<circle cx="100" cy="180" r="5" fill="#7d7"/>
+<circle cx="100" cy="220" r="3" fill="#667"/>
+<circle cx="140" cy="20" r="3" fill="#667"/>
+<circle cx="140" cy="60" r="5" fill="#7d7"/>
+<circle cx="140" cy="100" r="5" fill="#7d7"/>
+<circle cx="140" cy="140" r="5" fill="#7d7"/>
+<circle cx="140" cy="180" r="5" fill="#7d7"/>
+<circle cx="140" cy="220" r="3" fill="#667"/>
+<circle cx="180" cy="20" r="3" fill="#667"/>
+<circle cx="180" cy="60" r="5" fill="#7d7"/>
+<circle cx="180" cy="100" r="5" fill="#7d7"/>
+<circle cx="180" cy="140" r="5" fill="#7d7"/>
+<circle cx="180" cy="180" r="5" fill="#7d7"/>
+<circle cx="180" cy="220" r="3" fill="#667"/>
+<circle cx="220" cy="20" r="3" fill="#667"/>
+<circle cx="220" cy="60" r="3" fill="#667"/>
+<circle cx="220" cy="100" r="3" fill="#667"/>
+<circle cx="220" cy="140" r="3" fill="#667"/>
+<circle cx="220" cy="180" r="3" fill="#667"/>
+<circle cx="220" cy="220" r="3" fill="#667"/>
+
+</svg><p style="font-size: 0.5em; text-align: left; max-width: 45%;">Фигура проще, стороны идут по клеткам: Повтори 4 [Вперёд 5 Направо 90]. Рисуешь в тетради и считаешь точки внутри: 4 · 4 = <mark class="green">16</mark></p></div>
+                </section>
+
+                <!-- №6: ответ -->
+                <section>
+                    <h2>Ответ №6</h2>
+<p class="fragment" style="font-size: 1.6em; margin: 0.3em 0;"><mark class="green">99</mark></p>
+                </section>
+
+            </section>
+
+            <!-- №7: Звук и передача [он] -->
+            <section>
+
+                <!-- условие №7 + таймер 1:20 -->
+                <section>
+                    <div class="lesson-time">8</div>
+                    <h2>№7. Звук и передача</h2>
+<div class="fragment" style="max-height: 470px; overflow-y: auto; background: #fff; border-radius: 6px; padding: 4px;"><img src="img/cond7.png" alt="Условие №7" style="display: block; width: 100%; margin: 0; border: none; box-shadow: none; max-height: none; max-width: 100%;"></div>
+<p class="fragment" style="font-size: 0.45em; margin: 0.3em 0 0;"><a href="https://inf-ege.sdamgia.ru/problem?id=70075" target="_blank" rel="noopener">Решу ЕГЭ 70075</a> (ЕГЭ 08.06.2024) - 1:20 на весь номер</p>
+<div class="timer fragment" data-limit="80">
+    <div class="timer-bar"><div class="timer-fill"></div></div>
+    <div class="timer-row">
+        <span class="timer-time">0:00</span>
+        <span class="timer-hint">клик - старт</span>
+        <button class="timer-reset" type="button">сброс</button>
+    </div>
+</div>
+                </section>
+
+                <!-- №7: ответ -->
+                <section>
+                    <h2>Ответ №7</h2>
+<p class="fragment" style="font-size: 1.6em; margin: 0.3em 0;"><mark class="green">26</mark></p>
+                </section>
+
+                <!-- №7: краткое решение -->
+                <section>
+                    <h2>Решение</h2>
+<table style="font-size: 0.55em; width: 85%;">
+    <tr><td><strong>что</strong></td><td><strong>бит</strong></td></tr>
+    <tr class="fragment"><td>звук: 2 канала · 48 000 · 34 · 2540 с</td><td>8 290 560 000</td></tr>
+    <tr class="fragment"><td>заголовки: 13 · 110 · 1024 · 8</td><td>11 714 560</td></tr>
+    <tr class="fragment"><td>всё / 314 572 800</td><td>26.39...</td></tr>
+</table><div class="fragment opinion" style="margin-top: 0.5em;">
+    42 мин 20 с = 2540 с; Кбайт = 1024 · 8 бит; стерео - умножить на 2
+</div>
+                </section>
+
+            </section>
+
+            <!-- №8: Коды из букв [он] -->
+            <section>
+
+                <!-- условие №8 + таймер 1:20 -->
+                <section>
+                    <div class="lesson-time">9</div>
+                    <h2>№8. Коды из букв</h2>
+<div class="fragment" style="max-height: 470px; overflow-y: auto; background: #fff; border-radius: 6px; padding: 4px;"><img src="img/cond8.png" alt="Условие №8" style="display: block; width: 100%; margin: 0; border: none; box-shadow: none; max-height: none; max-width: 100%;"></div>
+<p class="fragment" style="font-size: 0.45em; margin: 0.3em 0 0;"><a href="https://inf-ege.sdamgia.ru/problem?id=35982" target="_blank" rel="noopener">Решу ЕГЭ 35982</a> (для подготовки) - 1:20 на весь номер</p>
+<div class="timer fragment" data-limit="80">
+    <div class="timer-bar"><div class="timer-fill"></div></div>
+    <div class="timer-row">
+        <span class="timer-time">0:00</span>
+        <span class="timer-hint">клик - старт</span>
+        <button class="timer-reset" type="button">сброс</button>
+    </div>
+</div>
+                </section>
+
+                <!-- №8: ответ -->
+                <section>
+                    <h2>Ответ №8</h2>
+<p class="fragment" style="font-size: 1.6em; margin: 0.3em 0;"><mark class="green">6075</mark></p>
+                </section>
+
+                <!-- №8: решение кодом -->
+                <section>
+                    <h2>Решение</h2>
+<div style="display: flex; gap: 0.6em; align-items: flex-start;"><div class="code-block fragment" style="flex: 0 0 44%; min-width: 0;">
+    <pre class="python" style="font-size: 0.34em; max-height: 580px;"><code>LETTERS = 'НАСТЯ'
+
+
+# Код подходит: каждая гласная - не больше одного раза.
+def ok(word: str) -&gt; bool:
+    return word.count('А') &lt;= 1 and word.count('Я') &lt;= 1
+
+
+# Сколько подходящих кодов длины length начинается с word.
+def count(word: str, length: int) -&gt; int:
+    if len(word) == length:
+        if ok(word):
+            return 1
+        return 0
+    res = 0
+    for letter in LETTERS:
+        res += count(word + letter, length)
+    return res
+
+
+print(count('', 6))</code></pre>
+</div><div class="fragment" style="flex: 1;"><svg width="470" height="360" viewBox="0 0 470 360" style="">
+<rect x="214.0" y="10" width="42" height="28" rx="6" fill="#1c2030" stroke="#f7a" stroke-width="2"/><text x="235.0" y="29" font-size="14" fill="#eee" text-anchor="middle" font-weight="normal" font-family="sans-serif">''</text><text x="235.0" y="54" font-size="12" fill="#7d7" text-anchor="middle" font-weight="normal" font-family="sans-serif">6075 = 1593 · 3 + 648 · 2</text>
+<g class="fragment"><line x1="235.0" y1="62" x2="55.0" y2="106" stroke="#889" stroke-width="2"/>
+<rect x="38.0" y="106" width="34" height="28" rx="6" fill="#1c2030" stroke="#8ab" stroke-width="2"/><text x="55.0" y="125" font-size="14" fill="#eee" text-anchor="middle" font-weight="normal" font-family="sans-serif">Н</text><text x="55.0" y="150" font-size="12" fill="#7d7" text-anchor="middle" font-weight="normal" font-family="sans-serif">1593</text><line x1="235.0" y1="62" x2="145.0" y2="106" stroke="#889" stroke-width="2"/>
+<rect x="128.0" y="106" width="34" height="28" rx="6" fill="#1c2030" stroke="#f7a" stroke-width="2"/><text x="145.0" y="125" font-size="14" fill="#eee" text-anchor="middle" font-weight="normal" font-family="sans-serif">А</text><text x="145.0" y="150" font-size="12" fill="#7d7" text-anchor="middle" font-weight="normal" font-family="sans-serif">648</text><line x1="235.0" y1="62" x2="235.0" y2="106" stroke="#889" stroke-width="2"/>
+<rect x="218.0" y="106" width="34" height="28" rx="6" fill="#1c2030" stroke="#8ab" stroke-width="2"/><text x="235.0" y="125" font-size="14" fill="#eee" text-anchor="middle" font-weight="normal" font-family="sans-serif">С</text><text x="235.0" y="150" font-size="12" fill="#7d7" text-anchor="middle" font-weight="normal" font-family="sans-serif">1593</text><line x1="235.0" y1="62" x2="325.0" y2="106" stroke="#889" stroke-width="2"/>
+<rect x="308.0" y="106" width="34" height="28" rx="6" fill="#1c2030" stroke="#8ab" stroke-width="2"/><text x="325.0" y="125" font-size="14" fill="#eee" text-anchor="middle" font-weight="normal" font-family="sans-serif">Т</text><text x="325.0" y="150" font-size="12" fill="#7d7" text-anchor="middle" font-weight="normal" font-family="sans-serif">1593</text><line x1="235.0" y1="62" x2="415.0" y2="106" stroke="#889" stroke-width="2"/>
+<rect x="398.0" y="106" width="34" height="28" rx="6" fill="#1c2030" stroke="#f7a" stroke-width="2"/><text x="415.0" y="125" font-size="14" fill="#eee" text-anchor="middle" font-weight="normal" font-family="sans-serif">Я</text><text x="415.0" y="150" font-size="12" fill="#7d7" text-anchor="middle" font-weight="normal" font-family="sans-serif">648</text></g>
+<g class="fragment"><line x1="145.0" y1="156" x2="55.0" y2="206" stroke="#889" stroke-width="2"/>
+<rect x="34.0" y="206" width="42" height="28" rx="6" fill="#1c2030" stroke="#8ab" stroke-width="2"/><text x="55.0" y="225" font-size="14" fill="#eee" text-anchor="middle" font-weight="normal" font-family="sans-serif">АН</text><text x="55.0" y="250" font-size="12" fill="#7d7" text-anchor="middle" font-weight="normal" font-family="sans-serif">189</text><line x1="145.0" y1="156" x2="145.0" y2="206" stroke="#889" stroke-width="2"/>
+<rect x="124.0" y="206" width="42" height="28" rx="6" fill="#1c2030" stroke="#e55" stroke-width="2"/><text x="145.0" y="225" font-size="14" fill="#eee" text-anchor="middle" font-weight="normal" font-family="sans-serif">АА</text><text x="145.0" y="250" font-size="12" fill="#e55" text-anchor="middle" font-weight="normal" font-family="sans-serif">0</text><line x1="145.0" y1="156" x2="235.0" y2="206" stroke="#889" stroke-width="2"/>
+<rect x="214.0" y="206" width="42" height="28" rx="6" fill="#1c2030" stroke="#8ab" stroke-width="2"/><text x="235.0" y="225" font-size="14" fill="#eee" text-anchor="middle" font-weight="normal" font-family="sans-serif">АС</text><text x="235.0" y="250" font-size="12" fill="#7d7" text-anchor="middle" font-weight="normal" font-family="sans-serif">189</text><line x1="145.0" y1="156" x2="325.0" y2="206" stroke="#889" stroke-width="2"/>
+<rect x="304.0" y="206" width="42" height="28" rx="6" fill="#1c2030" stroke="#8ab" stroke-width="2"/><text x="325.0" y="225" font-size="14" fill="#eee" text-anchor="middle" font-weight="normal" font-family="sans-serif">АТ</text><text x="325.0" y="250" font-size="12" fill="#7d7" text-anchor="middle" font-weight="normal" font-family="sans-serif">189</text><line x1="145.0" y1="156" x2="415.0" y2="206" stroke="#889" stroke-width="2"/>
+<rect x="394.0" y="206" width="42" height="28" rx="6" fill="#1c2030" stroke="#f7a" stroke-width="2"/><text x="415.0" y="225" font-size="14" fill="#eee" text-anchor="middle" font-weight="normal" font-family="sans-serif">АЯ</text><text x="415.0" y="250" font-size="12" fill="#7d7" text-anchor="middle" font-weight="normal" font-family="sans-serif">81</text></g>
+<g class="fragment"><line x1="55.0" y1="256" x2="75.0" y2="306" stroke="#889" stroke-dasharray="5,4" stroke-width="2"/>
+<rect x="28.0" y="306" width="94" height="28" rx="6" fill="#1c2030" stroke="#7d7" stroke-width="2"/><text x="75.0" y="325" font-size="14" fill="#eee" text-anchor="middle" font-weight="normal" font-family="sans-serif">АНССТЯ</text><text x="75.0" y="350" font-size="12" fill="#7d7" text-anchor="middle" font-weight="normal" font-family="sans-serif">1 - ok</text><line x1="55.0" y1="256" x2="185.0" y2="306" stroke="#889" stroke-dasharray="5,4" stroke-width="2"/>
+<rect x="138.0" y="306" width="94" height="28" rx="6" fill="#1c2030" stroke="#e55" stroke-width="2"/><text x="185.0" y="325" font-size="14" fill="#eee" text-anchor="middle" font-weight="normal" font-family="sans-serif">АНАСТН</text><text x="185.0" y="350" font-size="12" fill="#e55" text-anchor="middle" font-weight="normal" font-family="sans-serif">0 - две А</text><text x="395.0" y="326" font-size="13" fill="#aab" text-anchor="middle" font-weight="normal" font-family="sans-serif">длина 6 - проверяем ok</text></g>
+
+</svg></div></div>
+                </section>
+
+            </section>
+
+            <!-- №9: Электронная таблица [я, подробно] -->
+            <section>
+
+                <!-- условие №9 + таймер 3:00 -->
+                <section>
+                    <div class="lesson-time">10</div>
+                    <h2>№9. Электронная таблица</h2>
+<div class="fragment" style="max-height: 470px; overflow-y: auto; background: #fff; border-radius: 6px; padding: 4px;"><img src="img/cond9.png" alt="Условие №9" style="display: block; width: 100%; margin: 0; border: none; box-shadow: none; max-height: none; max-width: 100%;"></div>
+<p class="fragment" style="font-size: 0.45em; margin: 0.3em 0 0;"><a href="https://inf-ege.sdamgia.ru/problem?id=59833" target="_blank" rel="noopener">Решу ЕГЭ 59833</a> (ЕГЭ 20.06.2023) - 3:00 на весь номер</p>
+<div class="timer fragment" data-limit="180">
+    <div class="timer-bar"><div class="timer-fill"></div></div>
+    <div class="timer-row">
+        <span class="timer-time">0:00</span>
+        <span class="timer-hint">клик - старт</span>
+        <button class="timer-reset" type="button">сброс</button>
+    </div>
+</div>
+                </section>
+
+                <!-- №9: что значит «ровно два равных» - картинка строки -->
+                <section>
+                    <h2>Только два равных</h2>
+<svg class="fragment" width="300" height="120" viewBox="0 0 300 120" style="">
+<rect x="10" y="10" width="40" height="40" rx="5" fill="#1c2030" stroke="#f7a" stroke-width="2.5"/>
+<text x="30.0" y="36.0" font-size="16" fill="#ddd" text-anchor="middle" font-weight="normal" font-family="sans-serif">5</text><rect x="54" y="10" width="40" height="40" rx="5" fill="#1c2030" stroke="#8ab" stroke-width="2.5"/>
+<text x="74.0" y="36.0" font-size="16" fill="#ddd" text-anchor="middle" font-weight="normal" font-family="sans-serif">30</text><rect x="98" y="10" width="40" height="40" rx="5" fill="#1c2030" stroke="#f7a" stroke-width="2.5"/>
+<text x="118.0" y="36.0" font-size="16" fill="#ddd" text-anchor="middle" font-weight="normal" font-family="sans-serif">5</text><rect x="142" y="10" width="40" height="40" rx="5" fill="#1c2030" stroke="#8ab" stroke-width="2.5"/>
+<text x="162.0" y="36.0" font-size="16" fill="#ddd" text-anchor="middle" font-weight="normal" font-family="sans-serif">10</text><rect x="186" y="10" width="40" height="40" rx="5" fill="#1c2030" stroke="#8ab" stroke-width="2.5"/>
+<text x="206.0" y="36.0" font-size="16" fill="#ddd" text-anchor="middle" font-weight="normal" font-family="sans-serif">40</text><rect x="230" y="10" width="40" height="40" rx="5" fill="#1c2030" stroke="#8ab" stroke-width="2.5"/>
+<text x="250.0" y="36.0" font-size="16" fill="#ddd" text-anchor="middle" font-weight="normal" font-family="sans-serif">20</text><rect x="10" y="70" width="40" height="40" rx="5" fill="#1c2030" stroke="#fd6" stroke-width="2.5"/>
+<text x="30.0" y="96.0" font-size="16" fill="#ddd" text-anchor="middle" font-weight="normal" font-family="sans-serif">7</text><rect x="54" y="70" width="40" height="40" rx="5" fill="#1c2030" stroke="#fd6" stroke-width="2.5"/>
+<text x="74.0" y="96.0" font-size="16" fill="#ddd" text-anchor="middle" font-weight="normal" font-family="sans-serif">7</text><rect x="98" y="70" width="40" height="40" rx="5" fill="#1c2030" stroke="#fd6" stroke-width="2.5"/>
+<text x="118.0" y="96.0" font-size="16" fill="#ddd" text-anchor="middle" font-weight="normal" font-family="sans-serif">3</text><rect x="142" y="70" width="40" height="40" rx="5" fill="#1c2030" stroke="#fd6" stroke-width="2.5"/>
+<text x="162.0" y="96.0" font-size="16" fill="#ddd" text-anchor="middle" font-weight="normal" font-family="sans-serif">3</text><rect x="186" y="70" width="40" height="40" rx="5" fill="#1c2030" stroke="#8ab" stroke-width="2.5"/>
+<text x="206.0" y="96.0" font-size="16" fill="#ddd" text-anchor="middle" font-weight="normal" font-family="sans-serif">9</text><rect x="230" y="70" width="40" height="40" rx="5" fill="#1c2030" stroke="#8ab" stroke-width="2.5"/>
+<text x="250.0" y="96.0" font-size="16" fill="#ddd" text-anchor="middle" font-weight="normal" font-family="sans-serif">1</text><text x="285" y="36" font-size="15" fill="#7d7" text-anchor="end" font-weight="normal" font-family="sans-serif">да</text><text x="285" y="96" font-size="15" fill="#e55" text-anchor="end" font-weight="normal" font-family="sans-serif">нет</text>
+</svg>
+<ul style="font-size: 0.5em; text-align: left;">
+    <li class="fragment">сверху: одна пара 5 и 5, остальные 30, 10, 40, 20 - разные</li>
+    <li class="fragment">снизу: две пары - не подходит</li>
+</ul>
+                </section>
+
+                <!-- №9: файл в Python -->
+                <section>
+                    <h2>Файл в Python</h2>
+<ul style="font-size: 0.55em; text-align: left;">
+    <li class="fragment">на экзамене .ods -> «Сохранить как» текст с разделителем табуляция</li>
+    <li class="fragment">строка файла -> <code>line.split()</code> -> список int, как в №23</li>
+</ul>
+                </section>
+
+                <!-- №9: ok(row) - подсчёт явными циклами -->
+                <section>
+                    <h2>ok(row)</h2>
+<ul style="font-size: 0.55em; text-align: left;">
+    <li class="fragment">для каждого x считаем, сколько раз он в строке: <code>row.count(x)</code></li>
+    <li class="fragment">встретился 2 раза -> в список <code>pair</code>, 1 раз -> в <code>others</code></li>
+    <li class="fragment">подходит, если <code>len(pair) == 2</code> и <code>len(others) == 4</code></li>
+    <li class="fragment">для 7 7 3 3 9 1: pair = [7, 7, 3, 3] - длина 4, строка не подходит</li>
+</ul>
+                </section>
+
+                <!-- №9: средние и ловушка -->
+                <section>
+                    <h2>Средние</h2>
+<ul style="font-size: 0.55em; text-align: left;">
+    <li class="fragment">среднее пары = само число: (5 + 5) / 2 = 5</li>
+    <li class="fragment">среднее остальных = сумма четырёх / 4: (30 + 10 + 40 + 20) / 4 = 25</li>
+    <li class="fragment">5 &lt; 25 -> строка считается</li>
+</ul><div class="fragment opinion" style="margin-top: 0.5em;">
+    Ловушка: «остальных» - это 4 числа, а не все 6
+</div>
+                </section>
+
+                <!-- №9: ответ -->
+                <section>
+                    <h2>Ответ №9</h2>
+<p class="fragment" style="font-size: 1.6em; margin: 0.3em 0;"><mark class="green">1483</mark></p>
+                </section>
+
+            </section>
+
+            <!-- №10: Адрес сети [я, подробно] -->
+            <section>
+
+                <!-- условие №10 + таймер 2:30 -->
+                <section>
+                    <div class="lesson-time">14</div>
+                    <h2>№10. Адрес сети</h2>
+<div class="fragment" style="max-height: 470px; overflow-y: auto; background: #fff; border-radius: 6px; padding: 4px;"><img src="img/cond10.png" alt="Условие №10" style="display: block; width: 100%; margin: 0; border: none; box-shadow: none; max-height: none; max-width: 100%;"></div>
+<p class="fragment" style="font-size: 0.45em; margin: 0.3em 0 0;"><a href="https://inf-ege.sdamgia.ru/problem?id=8660" target="_blank" rel="noopener">Решу ЕГЭ 8660</a> (для подготовки) - 2:30 на весь номер</p>
+<div class="timer fragment" data-limit="150">
+    <div class="timer-bar"><div class="timer-fill"></div></div>
+    <div class="timer-row">
+        <span class="timer-time">0:00</span>
+        <span class="timer-hint">клик - старт</span>
+        <button class="timer-reset" type="button">сброс</button>
+    </div>
+</div>
+                </section>
+
+                <!-- №10: адрес сети = IP and маска, по каждому числу отдельно -->
+                <section>
+                    <h2>Четыре числа</h2>
+<table style="font-size: 0.6em; width: 70%;">
+    <tr><td><strong></strong></td><td><strong>1</strong></td><td><strong>2</strong></td><td><strong>3</strong></td><td><strong>4</strong></td></tr>
+    <tr class="fragment"><td>IP</td><td>199</td><td>145</td><td>130</td><td>81</td></tr>
+    <tr class="fragment"><td>маска</td><td>255</td><td>255</td><td>128</td><td>0</td></tr>
+    <tr class="fragment"><td>сеть</td><td>?</td><td>?</td><td>?</td><td>?</td></tr>
+</table><div class="fragment opinion" style="margin-top: 0.5em;">
+    Каждое число - 8 бит. and делаем по каждому из четырёх отдельно
+</div>
+                </section>
+
+                <!-- №10: считаем в питоне - & по каждому из четырёх чисел -->
+                <section>
+                    <h2>В питоне</h2>
+<div class="code-block fragment">
+    <pre class="python" style="font-size: 0.5em;"><code>ip = [199, 145, 130, 81]
+mask = [255, 255, 128, 0]
+for i in range(4):
+    print(ip[i] &amp; mask[i])</code></pre>
+</div>
+<p class="fragment" style="font-size: 0.55em;">выведет: 199, 145, <mark>128</mark>, 0</p><div class="fragment opinion" style="margin-top: 0.3em;">
+    <code>&amp;</code> - тот же, что в №15: бит сети = 1, только если 1 и в IP, и в маске
+</div>
+                </section>
+
+                <!-- №10: буквы -->
+                <section>
+                    <h2>Ответ буквами</h2>
+<table style="font-size: 0.8em; width: 50%;">
+    <tr><td><strong>199</strong></td><td><strong>145</strong></td><td><strong>128</strong></td><td><strong>0</strong></td></tr>
+    <tr class="fragment"><td>G</td><td>F</td><td>D</td><td>A</td></tr>
+</table>
+                </section>
+
+                <!-- №10: ответ -->
+                <section>
+                    <h2>Ответ №10</h2>
+<p class="fragment" style="font-size: 1.6em; margin: 0.3em 0;"><mark class="green">GFDA</mark></p>
+                </section>
+
+            </section>
+
+            <!-- №11: Количество информации [я, подробно] -->
+            <section>
+
+                <!-- условие №11 + таймер 2:30 -->
+                <section>
+                    <div class="lesson-time">16</div>
+                    <h2>№11. Количество информации</h2>
+<div class="fragment" style="max-height: 470px; overflow-y: auto; background: #fff; border-radius: 6px; padding: 4px;"><img src="img/cond11.png" alt="Условие №11" style="display: block; width: 100%; margin: 0; border: none; box-shadow: none; max-height: none; max-width: 100%;"></div>
+<p class="fragment" style="font-size: 0.45em; margin: 0.3em 0 0;"><a href="https://inf-ege.sdamgia.ru/problem?id=13409" target="_blank" rel="noopener">Решу ЕГЭ 13409</a> (для подготовки) - 2:30 на весь номер</p>
+<div class="timer fragment" data-limit="150">
+    <div class="timer-bar"><div class="timer-fill"></div></div>
+    <div class="timer-row">
+        <span class="timer-time">0:00</span>
+        <span class="timer-hint">клик - старт</span>
+        <button class="timer-reset" type="button">сброс</button>
+    </div>
+</div>
+                </section>
+
+                <!-- №11: бит на символ, цикл while -->
+                <section>
+                    <h2>Бит на символ</h2>
+<table style="font-size: 0.6em; width: 60%;">
+    <tr><td><strong>i бит</strong></td><td><strong>2<sup>i</sup> вариантов</strong></td><td><strong>хватит на 8?</strong></td></tr>
+    <tr class="fragment"><td>1</td><td>2</td><td>нет</td></tr>
+    <tr class="fragment"><td>2</td><td>4</td><td>нет</td></tr>
+    <tr class="fragment"><td>3</td><td>8</td><td><mark class="green">да</mark></td></tr>
+</table><div class="fragment opinion" style="margin-top: 0.5em;">
+    Ищем наименьшее i, при котором 2<sup>i</sup> >= N: цикл <code>while 2 ** i &lt; n: i += 1</code>
+</div>
+                </section>
+
+                <!-- №11: пароль в байтах, округление вверх -->
+                <section>
+                    <h2>Пароль в байтах</h2>
+<ul style="font-size: 0.55em; text-align: left;">
+    <li class="fragment">15 символов · 3 бита = 45 бит</li>
+    <li class="fragment">45 бит - это 5 байт и ещё 5 бит -> нужно <strong>6</strong> байт (48 бит)</li>
+    <li class="fragment">округляем вверх именно пароль одного пользователя</li>
+</ul>
+                </section>
+
+                <!-- №11: на одного пользователя -->
+                <section>
+                    <h2>На одного</h2>
+<ul style="font-size: 0.55em; text-align: left;">
+    <li class="fragment">320 / 20 = 16 байт на пользователя</li>
+    <li class="fragment">16 - 6 (пароль) = 10 байт доп. сведений</li>
+</ul>
+                </section>
+
+                <!-- №11: ответ -->
+                <section>
+                    <h2>Ответ №11</h2>
+<p class="fragment" style="font-size: 1.6em; margin: 0.3em 0;"><mark class="green">10</mark></p>
+                </section>
+
+            </section>
+
+            <!-- №13: Количество программ [он] -->
+            <section>
+
+                <!-- условие №13 + таймер 1:20 -->
+                <section>
+                    <div class="lesson-time">18</div>
+                    <h2>№13. Количество программ</h2>
+<div class="fragment" style="max-height: 470px; overflow-y: auto; background: #fff; border-radius: 6px; padding: 4px;"><img src="img/cond13.png" alt="Условие №13" style="display: block; width: 100%; margin: 0; border: none; box-shadow: none; max-height: none; max-width: 100%;"></div>
+<p class="fragment" style="font-size: 0.45em; margin: 0.3em 0 0;"><a href="https://inf-ege.sdamgia.ru/problem?id=45257" target="_blank" rel="noopener">Решу ЕГЭ 45257</a> (ЕГЭ 04.04.2022) - 1:20 на весь номер</p>
+<div class="timer fragment" data-limit="80">
+    <div class="timer-bar"><div class="timer-fill"></div></div>
+    <div class="timer-row">
+        <span class="timer-time">0:00</span>
+        <span class="timer-hint">клик - старт</span>
+        <button class="timer-reset" type="button">сброс</button>
+    </div>
+</div>
+                </section>
+
+                <!-- №13: ответ -->
+                <section>
+                    <h2>Ответ №13</h2>
+<p class="fragment" style="font-size: 1.6em; margin: 0.3em 0;"><mark class="green">96</mark></p>
+                </section>
+
+                <!-- №13: решение кодом -->
+                <section>
+                    <h2>Решение</h2>
+<div class="code-block fragment">
+    <pre class="python" style="font-size: 0.42em; max-height: 580px;"><code>def count(a: int, b: int) -&gt; int:
+    if a == b:
+        return 1
+    if a &gt; b:
+        return 0
+    return count(a + 2, b) + count(a * 2, b)
+
+
+# Программы из 1 в 52 через 18.
+def answer() -&gt; int:
+    return count(1, 18) * count(18, 52)
+
+
+print(answer())</code></pre>
+</div>
+                </section>
+
+            </section>
+
+            <!-- №14: Системы счисления [он] -->
+            <section>
+
+                <!-- условие №14 + таймер 1:20 -->
+                <section>
+                    <div class="lesson-time">20</div>
+                    <h2>№14. Системы счисления</h2>
+<div class="fragment" style="max-height: 470px; overflow-y: auto; background: #fff; border-radius: 6px; padding: 4px;"><img src="img/cond14.png" alt="Условие №14" style="display: block; width: 100%; margin: 0; border: none; box-shadow: none; max-height: none; max-width: 100%;"></div>
+<p class="fragment" style="font-size: 0.45em; margin: 0.3em 0 0;"><a href="https://inf-ege.sdamgia.ru/problem?id=48402" target="_blank" rel="noopener">Решу ЕГЭ 48402</a> (для подготовки) - 1:20 на весь номер</p>
+<div class="timer fragment" data-limit="80">
+    <div class="timer-bar"><div class="timer-fill"></div></div>
+    <div class="timer-row">
+        <span class="timer-time">0:00</span>
+        <span class="timer-hint">клик - старт</span>
+        <button class="timer-reset" type="button">сброс</button>
+    </div>
+</div>
+                </section>
+
+                <!-- №14: ответ -->
+                <section>
+                    <h2>Ответ №14</h2>
+<p class="fragment" style="font-size: 1.6em; margin: 0.3em 0;"><mark class="green">250</mark></p>
+                </section>
+
+                <!-- №14: решение кодом -->
+                <section>
+                    <h2>Решение</h2>
+<div class="code-block fragment">
+    <pre class="python" style="font-size: 0.42em; max-height: 580px;"><code>def value(x: int) -&gt; int:
+    return int('3' + str(x) + 'DA', 14) + int('5' + str(x) + 'A6', 12)
+
+
+# Частное для наименьшего подходящего x.
+def answer() -&gt; int:
+    for x in range(10):
+        if value(x) % 81 == 0:
+            return value(x) // 81
+
+
+print(answer())</code></pre>
+</div>
+                </section>
+
+            </section>
+
+            <!-- №15: Поразрядная конъюнкция [он] -->
+            <section>
+
+                <!-- условие №15 + таймер 1:20 -->
+                <section>
+                    <div class="lesson-time">21</div>
+                    <h2>№15. Поразрядная конъюнкция</h2>
+<div class="fragment" style="max-height: 470px; overflow-y: auto; background: #fff; border-radius: 6px; padding: 4px;"><img src="img/cond15.png" alt="Условие №15" style="display: block; width: 100%; margin: 0; border: none; box-shadow: none; max-height: none; max-width: 100%;"></div>
+<p class="fragment" style="font-size: 0.45em; margin: 0.3em 0 0;"><a href="https://inf-ege.sdamgia.ru/problem?id=34513" target="_blank" rel="noopener">Решу ЕГЭ 34513</a> (для подготовки) - 1:20 на весь номер</p>
+<div class="timer fragment" data-limit="80">
+    <div class="timer-bar"><div class="timer-fill"></div></div>
+    <div class="timer-row">
+        <span class="timer-time">0:00</span>
+        <span class="timer-hint">клик - старт</span>
+        <button class="timer-reset" type="button">сброс</button>
+    </div>
+</div>
+                </section>
+
+                <!-- №15: ответ -->
+                <section>
+                    <h2>Ответ №15</h2>
+<p class="fragment" style="font-size: 1.6em; margin: 0.3em 0;"><mark class="green">12</mark></p>
+                </section>
+
+                <!-- №15: решение кодом -->
+                <section>
+                    <h2>Решение</h2>
+<div class="code-block fragment">
+    <pre class="python" style="font-size: 0.42em; max-height: 580px;"><code>def ok(a: int) -&gt; bool:
+    for x in range(1024):
+        if not ((x &amp; 33 == 0) &lt;= ((x &amp; 45 != 0) &lt;= (x &amp; a != 0))):
+            return False
+    return True
+
+
+# Наименьшее подходящее A.
+def answer() -&gt; int:
+    for a in range(1024):
+        if ok(a):
+            return a
+
+
+print(answer())</code></pre>
+</div>
+                </section>
+
+            </section>
+
+            <!-- №16: Рекурсивные функции [он] -->
+            <section>
+
+                <!-- условие №16 + таймер 1:20 -->
+                <section>
+                    <div class="lesson-time">22</div>
+                    <h2>№16. Рекурсивные функции</h2>
+<div class="fragment" style="max-height: 470px; overflow-y: auto; background: #fff; border-radius: 6px; padding: 4px;"><img src="img/cond16.png" alt="Условие №16" style="display: block; width: 100%; margin: 0; border: none; box-shadow: none; max-height: none; max-width: 100%;"></div>
+<p class="fragment" style="font-size: 0.45em; margin: 0.3em 0 0;"><a href="https://inf-ege.sdamgia.ru/problem?id=81800" target="_blank" rel="noopener">Решу ЕГЭ 81800</a> (для подготовки) - 1:20 на весь номер</p>
+<div class="timer fragment" data-limit="80">
+    <div class="timer-bar"><div class="timer-fill"></div></div>
+    <div class="timer-row">
+        <span class="timer-time">0:00</span>
+        <span class="timer-hint">клик - старт</span>
+        <button class="timer-reset" type="button">сброс</button>
+    </div>
+</div>
+                </section>
+
+                <!-- №16: ответ -->
+                <section>
+                    <h2>Ответ №16</h2>
+<p class="fragment" style="font-size: 1.6em; margin: 0.3em 0;"><mark class="green">15588</mark></p>
+                </section>
+
+                <!-- №16: решение кодом -->
+                <section>
+                    <h2>Решение</h2>
+<div class="code-block fragment">
+    <pre class="python" style="font-size: 0.42em; max-height: 580px;"><code>import sys
+sys.setrecursionlimit(20000)
+
+
+def G(n: int) -&gt; int:
+    if n &lt; 10:
+        return 2 * n
+    return G(n - 2) + 1
+
+
+def F(n: int) -&gt; int:
+    return 2 * (G(n - 3) + 8)
+
+
+print(F(15548))</code></pre>
+</div>
+                </section>
+
+            </section>
+
+            <!-- №17: Пары в файле [я, подробно] -->
+            <section>
+
+                <!-- условие №17 + таймер 3:00 -->
+                <section>
+                    <div class="lesson-time">24</div>
+                    <h2>№17. Пары в файле</h2>
+<div class="fragment" style="max-height: 470px; overflow-y: auto; background: #fff; border-radius: 6px; padding: 4px;"><img src="img/cond17.png" alt="Условие №17" style="display: block; width: 100%; margin: 0; border: none; box-shadow: none; max-height: none; max-width: 100%;"></div>
+<p class="fragment" style="font-size: 0.45em; margin: 0.3em 0 0;"><a href="https://inf-ege.sdamgia.ru/problem?id=51986" target="_blank" rel="noopener">Решу ЕГЭ 51986</a> (для подготовки) - 3:00 на весь номер</p>
+<div class="timer fragment" data-limit="180">
+    <div class="timer-bar"><div class="timer-fill"></div></div>
+    <div class="timer-row">
+        <span class="timer-time">0:00</span>
+        <span class="timer-hint">клик - старт</span>
+        <button class="timer-reset" type="button">сброс</button>
+    </div>
+</div>
+                </section>
+
+                <!-- №17: что такое пара - картинка ряда со скобкой -->
+                <section>
+                    <h2>Пара - два соседа</h2>
+<svg class="fragment" width="600" height="80" viewBox="0 0 600 80" style="">
+<rect x="10" y="10" width="70" height="36" rx="5" fill="#1c2030" stroke="#8ab" stroke-width="2.5"/>
+<text x="45.0" y="34.0" font-size="14" fill="#ddd" text-anchor="middle" font-weight="normal" font-family="sans-serif">5196</text><rect x="84" y="10" width="70" height="36" rx="5" fill="#1c2030" stroke="#8ab" stroke-width="2.5"/>
+<text x="119.0" y="34.0" font-size="14" fill="#ddd" text-anchor="middle" font-weight="normal" font-family="sans-serif">-2074</text><rect x="158" y="10" width="70" height="36" rx="5" fill="#1c2030" stroke="#8ab" stroke-width="2.5"/>
+<text x="193.0" y="34.0" font-size="14" fill="#ddd" text-anchor="middle" font-weight="normal" font-family="sans-serif">-1943</text><rect x="232" y="10" width="70" height="36" rx="5" fill="#1c2030" stroke="#8ab" stroke-width="2.5"/>
+<text x="267.0" y="34.0" font-size="14" fill="#ddd" text-anchor="middle" font-weight="normal" font-family="sans-serif">3612</text><rect x="306" y="10" width="70" height="36" rx="5" fill="#1c2030" stroke="#8ab" stroke-width="2.5"/>
+<text x="341.0" y="34.0" font-size="14" fill="#ddd" text-anchor="middle" font-weight="normal" font-family="sans-serif">4303</text><rect x="380" y="10" width="70" height="36" rx="5" fill="#1c2030" stroke="#8ab" stroke-width="2.5"/>
+<text x="415.0" y="34.0" font-size="14" fill="#ddd" text-anchor="middle" font-weight="normal" font-family="sans-serif">-9995</text><rect x="454" y="10" width="70" height="36" rx="5" fill="#1c2030" stroke="#8ab" stroke-width="2.5"/>
+<text x="489.0" y="34.0" font-size="14" fill="#ddd" text-anchor="middle" font-weight="normal" font-family="sans-serif">2257</text><rect x="528" y="10" width="70" height="36" rx="5" fill="#1c2030" stroke="#8ab" stroke-width="2.5"/>
+<text x="563.0" y="34.0" font-size="14" fill="#ddd" text-anchor="middle" font-weight="normal" font-family="sans-serif">9386</text><g class="fragment"><path d="M20,56 L20,64 L144,64 L144,56" fill="none" stroke="#fd6" stroke-width="2.5"/></g>
+<g class="fragment"><path d="M316,56 L316,64 L440,64 L440,56" fill="none" stroke="#7d7" stroke-width="2.5"/></g>
+
+</svg>
+<ul style="font-size: 0.5em; text-align: left;">
+    <li class="fragment">пары: (1-й, 2-й), (2-й, 3-й), ... - последняя пара начинается с предпоследнего</li>
+    <li class="fragment">в паре (4303, -9995) меньший -9995 оканчивается на 5</li>
+</ul>
+                </section>
+
+                <!-- №17: файл в список -->
+                <section>
+                    <h2>Файл в список</h2>
+<ul style="font-size: 0.55em; text-align: left;">
+    <li class="fragment">одно число в строке -> <code>int(line)</code>, складываем в список, как в №23</li>
+    <li class="fragment">цикл по парам: <code>for i in range(len(nums) - 1)</code>, пара - <code>nums[i]</code> и <code>nums[i + 1]</code></li>
+</ul>
+                </section>
+
+                <!-- №17: два прохода -->
+                <section>
+                    <h2>Два прохода</h2>
+<ul style="font-size: 0.55em; text-align: left;">
+    <li class="fragment">проход 1: наименьшее число на 5 во всём файле. Здесь это <mark>-9995</mark>, квадрат 99 900 025</li>
+    <li class="fragment">проход 2: по парам - меньший на 5 и сумма квадратов &lt; 99 900 025</li>
+    <li class="fragment">подошла пара -> счётчик + 1, лучшая сумма = max</li>
+</ul>
+                </section>
+
+                <!-- №17: ловушка с отрицательными -->
+                <section>
+                    <h2>Ловушка: минус</h2>
+<table style="font-size: 0.6em; width: 55%;">
+    <tr><td><strong>x</strong></td><td><strong>x % 10</strong></td><td><strong>abs(x) % 10</strong></td></tr>
+    <tr class="fragment"><td>-15</td><td>5</td><td>5</td></tr>
+    <tr class="fragment"><td>-13</td><td><mark class="yellow">7</mark></td><td>3</td></tr>
+</table><div class="fragment opinion" style="margin-top: 0.5em;">
+    Последняя цифра отрицательного числа - только через <code>abs(x) % 10</code>
+</div>
+                </section>
+
+                <!-- №17: ответ -->
+                <section>
+                    <h2>Ответ №17</h2>
+<p class="fragment" style="font-size: 1.6em; margin: 0.3em 0;"><mark class="green">403 99805561</mark></p>
+                </section>
+
+            </section>
+
+            <!-- №18: Робот со стенами [он] -->
+            <section>
+
+                <!-- условие №18 + таймер 3:00 -->
+                <section>
+                    <div class="lesson-time">27</div>
+                    <h2>№18. Робот со стенами</h2>
+<div class="fragment" style="max-height: 470px; overflow-y: auto; background: #fff; border-radius: 6px; padding: 4px;"><img src="img/cond18.png" alt="Условие №18" style="display: block; width: 100%; margin: 0; border: none; box-shadow: none; max-height: none; max-width: 100%;"></div>
+<p class="fragment" style="font-size: 0.45em; margin: 0.3em 0 0;"><a href="https://inf-ege.sdamgia.ru/problem?id=68519" target="_blank" rel="noopener">Решу ЕГЭ 68519</a> (ЕГЭ 09.04.2024) - 3:00 на весь номер</p>
+<div class="timer fragment" data-limit="180">
+    <div class="timer-bar"><div class="timer-fill"></div></div>
+    <div class="timer-row">
+        <span class="timer-time">0:00</span>
+        <span class="timer-hint">клик - старт</span>
+        <button class="timer-reset" type="button">сброс</button>
+    </div>
+</div>
+                </section>
+
+                <!-- №18: ответ -->
+                <section>
+                    <h2>Ответ №18</h2>
+<p class="fragment" style="font-size: 1.6em; margin: 0.3em 0;"><mark class="green">2255 820</mark></p>
+                </section>
+
+                <!-- №18: краткое решение формулами в Excel + конечные клетки -->
+                <section>
+                    <h2>Решение</h2>
+<div style="display: flex; gap: 1em; align-items: center;"><ul style="font-size: 0.48em; text-align: left;">
+    <li class="fragment">рядом с полем (с V1) - таблица сумм: V1 = A1</li>
+    <li class="fragment">первая строка: W1 = V1 + B1, первый столбец: V2 = V1 + A2</li>
+    <li class="fragment">остальные: W2 = МАКС(W1; V2) + B2 - протянуть на всё поле</li>
+    <li class="fragment">под стеной сверху - только слева, справа от стены слева - только сверху</li>
+    <li class="fragment">минимум - то же с МИН</li>
+    <li class="fragment">ответ - max и min по конечным клеткам (стена справа и снизу), их 5</li>
+</ul><svg class="fragment" width="300" height="300" viewBox="0 0 320 320" style="">
+<rect x="10" y="10" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="25" y="10" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="40" y="10" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="55" y="10" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="70" y="10" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="85" y="10" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="100" y="10" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="115" y="10" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="130" y="10" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="145" y="10" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="160" y="10" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="175" y="10" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="190" y="10" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="205" y="10" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="220" y="10" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="235" y="10" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="250" y="10" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="265" y="10" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="280" y="10" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="295" y="10" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="10" y="25" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="25" y="25" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="40" y="25" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="55" y="25" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="70" y="25" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="85" y="25" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="100" y="25" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="115" y="25" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="130" y="25" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="145" y="25" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="160" y="25" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="175" y="25" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="190" y="25" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="205" y="25" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="220" y="25" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="235" y="25" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="250" y="25" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="265" y="25" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="280" y="25" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="295" y="25" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="10" y="40" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="25" y="40" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="40" y="40" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="55" y="40" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="70" y="40" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="85" y="40" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="100" y="40" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="115" y="40" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="130" y="40" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="145" y="40" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="160" y="40" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="175" y="40" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="190" y="40" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="205" y="40" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="220" y="40" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="235" y="40" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="250" y="40" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="265" y="40" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="280" y="40" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="295" y="40" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="10" y="55" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="25" y="55" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="40" y="55" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="55" y="55" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="70" y="55" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="85" y="55" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="100" y="55" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="115" y="55" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="130" y="55" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="145" y="55" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="160" y="55" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="175" y="55" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="190" y="55" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="205" y="55" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="220" y="55" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="235" y="55" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="250" y="55" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="265" y="55" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="280" y="55" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="295" y="55" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="10" y="70" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="25" y="70" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="40" y="70" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="55" y="70" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="70" y="70" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="85" y="70" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="100" y="70" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="115" y="70" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="130" y="70" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="145" y="70" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="160" y="70" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="175" y="70" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="190" y="70" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="205" y="70" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="220" y="70" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="235" y="70" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="250" y="70" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="265" y="70" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="280" y="70" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="295" y="70" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="10" y="85" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="25" y="85" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="40" y="85" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="55" y="85" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="70" y="85" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="85" y="85" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="100" y="85" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="115" y="85" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="130" y="85" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="145" y="85" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="160" y="85" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="175" y="85" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="190" y="85" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="205" y="85" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="220" y="85" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="235" y="85" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="250" y="85" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="265" y="85" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="280" y="85" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="295" y="85" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="10" y="100" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="25" y="100" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="40" y="100" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="55" y="100" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="70" y="100" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="85" y="100" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="100" y="100" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="115" y="100" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="130" y="100" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="145" y="100" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="160" y="100" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="175" y="100" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="190" y="100" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="205" y="100" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="220" y="100" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="235" y="100" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="250" y="100" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="265" y="100" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="280" y="100" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="295" y="100" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="10" y="115" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="25" y="115" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="40" y="115" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="55" y="115" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="70" y="115" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="85" y="115" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="100" y="115" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="115" y="115" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="130" y="115" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="145" y="115" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="160" y="115" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="175" y="115" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="190" y="115" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="205" y="115" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="220" y="115" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="235" y="115" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="250" y="115" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="265" y="115" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="280" y="115" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="295" y="115" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="10" y="130" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="25" y="130" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="40" y="130" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="55" y="130" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="70" y="130" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="85" y="130" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="100" y="130" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="115" y="130" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="130" y="130" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="145" y="130" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="160" y="130" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="175" y="130" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="190" y="130" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="205" y="130" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="220" y="130" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="235" y="130" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="250" y="130" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="265" y="130" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="280" y="130" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="295" y="130" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="10" y="145" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="25" y="145" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="40" y="145" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="55" y="145" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="70" y="145" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="85" y="145" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="100" y="145" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="115" y="145" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="130" y="145" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="145" y="145" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="160" y="145" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="175" y="145" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="190" y="145" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="205" y="145" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="220" y="145" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="235" y="145" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="250" y="145" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="265" y="145" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="280" y="145" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="295" y="145" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="10" y="160" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="25" y="160" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="40" y="160" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="55" y="160" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="70" y="160" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="85" y="160" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="100" y="160" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="115" y="160" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="130" y="160" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="145" y="160" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="160" y="160" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="175" y="160" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="190" y="160" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="205" y="160" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="220" y="160" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="235" y="160" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="250" y="160" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="265" y="160" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="280" y="160" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="295" y="160" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="10" y="175" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="25" y="175" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="40" y="175" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="55" y="175" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="70" y="175" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="85" y="175" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="100" y="175" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="115" y="175" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="130" y="175" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="145" y="175" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="160" y="175" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="175" y="175" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="190" y="175" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="205" y="175" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="220" y="175" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="235" y="175" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="250" y="175" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="265" y="175" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="280" y="175" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="295" y="175" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="10" y="190" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="25" y="190" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="40" y="190" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="55" y="190" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="70" y="190" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="85" y="190" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="100" y="190" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="115" y="190" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="130" y="190" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="145" y="190" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="160" y="190" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="175" y="190" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="190" y="190" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="205" y="190" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="220" y="190" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="235" y="190" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="250" y="190" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="265" y="190" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="280" y="190" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="295" y="190" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="10" y="205" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="25" y="205" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="40" y="205" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="55" y="205" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="70" y="205" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="85" y="205" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="100" y="205" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="115" y="205" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="130" y="205" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="145" y="205" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="160" y="205" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="175" y="205" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="190" y="205" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="205" y="205" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="220" y="205" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="235" y="205" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="250" y="205" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="265" y="205" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="280" y="205" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="295" y="205" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="10" y="220" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="25" y="220" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="40" y="220" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="55" y="220" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="70" y="220" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="85" y="220" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="100" y="220" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="115" y="220" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="130" y="220" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="145" y="220" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="160" y="220" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="175" y="220" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="190" y="220" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="205" y="220" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="220" y="220" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="235" y="220" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="250" y="220" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="265" y="220" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="280" y="220" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="295" y="220" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="10" y="235" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="25" y="235" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="40" y="235" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="55" y="235" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="70" y="235" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="85" y="235" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="100" y="235" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="115" y="235" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="130" y="235" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="145" y="235" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="160" y="235" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="175" y="235" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="190" y="235" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="205" y="235" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="220" y="235" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="235" y="235" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="250" y="235" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="265" y="235" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="280" y="235" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="295" y="235" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="10" y="250" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="25" y="250" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="40" y="250" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="55" y="250" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="70" y="250" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="85" y="250" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="100" y="250" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="115" y="250" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="130" y="250" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="145" y="250" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="160" y="250" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="175" y="250" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="190" y="250" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="205" y="250" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="220" y="250" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="235" y="250" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="250" y="250" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="265" y="250" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="280" y="250" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="295" y="250" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="10" y="265" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="25" y="265" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="40" y="265" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="55" y="265" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="70" y="265" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="85" y="265" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="100" y="265" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="115" y="265" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="130" y="265" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="145" y="265" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="160" y="265" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="175" y="265" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="190" y="265" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="205" y="265" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="220" y="265" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="235" y="265" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="250" y="265" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="265" y="265" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="280" y="265" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="295" y="265" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="10" y="280" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="25" y="280" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="40" y="280" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="55" y="280" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="70" y="280" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="85" y="280" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="100" y="280" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="115" y="280" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="130" y="280" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="145" y="280" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="160" y="280" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="175" y="280" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="190" y="280" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="205" y="280" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="220" y="280" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="235" y="280" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="250" y="280" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="265" y="280" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="280" y="280" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="295" y="280" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="10" y="295" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="25" y="295" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="40" y="295" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="55" y="295" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="70" y="295" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="85" y="295" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="100" y="295" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="115" y="295" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="130" y="295" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="145" y="295" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="160" y="295" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="175" y="295" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="190" y="295" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="205" y="295" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="220" y="295" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="235" y="295" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="250" y="295" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="265" y="295" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="280" y="295" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="295" y="295" width="15" height="15" fill="#1c2030" stroke="#334" stroke-width="0.6"/>
+<rect x="10" y="10" width="300" height="300" fill="none" stroke="#ddd" stroke-width="3"/>
+<line x1="295" y1="100" x2="295" y2="115" stroke="#ddd" stroke-width="3"/>
+<line x1="265" y1="190" x2="265" y2="205" stroke="#ddd" stroke-width="3"/>
+<line x1="115" y1="70" x2="115" y2="85" stroke="#ddd" stroke-width="3"/>
+<line x1="265" y1="220" x2="265" y2="235" stroke="#ddd" stroke-width="3"/>
+<line x1="115" y1="265" x2="115" y2="280" stroke="#ddd" stroke-width="3"/>
+<line x1="115" y1="160" x2="115" y2="175" stroke="#ddd" stroke-width="3"/>
+<line x1="295" y1="70" x2="295" y2="85" stroke="#ddd" stroke-width="3"/>
+<line x1="115" y1="130" x2="115" y2="145" stroke="#ddd" stroke-width="3"/>
+<line x1="295" y1="130" x2="295" y2="145" stroke="#ddd" stroke-width="3"/>
+<line x1="190" y1="145" x2="190" y2="160" stroke="#ddd" stroke-width="3"/>
+<line x1="190" y1="40" x2="190" y2="55" stroke="#ddd" stroke-width="3"/>
+<line x1="265" y1="250" x2="265" y2="265" stroke="#ddd" stroke-width="3"/>
+<line x1="190" y1="100" x2="190" y2="115" stroke="#ddd" stroke-width="3"/>
+<line x1="70" y1="190" x2="70" y2="205" stroke="#ddd" stroke-width="3"/>
+<line x1="115" y1="220" x2="115" y2="235" stroke="#ddd" stroke-width="3"/>
+<line x1="115" y1="190" x2="115" y2="205" stroke="#ddd" stroke-width="3"/>
+<line x1="70" y1="220" x2="70" y2="235" stroke="#ddd" stroke-width="3"/>
+<line x1="115" y1="85" x2="115" y2="100" stroke="#ddd" stroke-width="3"/>
+<line x1="115" y1="55" x2="115" y2="70" stroke="#ddd" stroke-width="3"/>
+<line x1="190" y1="70" x2="190" y2="85" stroke="#ddd" stroke-width="3"/>
+<line x1="190" y1="130" x2="190" y2="145" stroke="#ddd" stroke-width="3"/>
+<line x1="295" y1="85" x2="295" y2="100" stroke="#ddd" stroke-width="3"/>
+<line x1="190" y1="160" x2="190" y2="175" stroke="#ddd" stroke-width="3"/>
+<line x1="265" y1="175" x2="265" y2="190" stroke="#ddd" stroke-width="3"/>
+<line x1="190" y1="25" x2="190" y2="40" stroke="#ddd" stroke-width="3"/>
+<line x1="265" y1="205" x2="265" y2="220" stroke="#ddd" stroke-width="3"/>
+<line x1="115" y1="250" x2="115" y2="265" stroke="#ddd" stroke-width="3"/>
+<line x1="265" y1="235" x2="265" y2="250" stroke="#ddd" stroke-width="3"/>
+<line x1="115" y1="115" x2="115" y2="130" stroke="#ddd" stroke-width="3"/>
+<line x1="115" y1="280" x2="115" y2="295" stroke="#ddd" stroke-width="3"/>
+<line x1="295" y1="115" x2="295" y2="130" stroke="#ddd" stroke-width="3"/>
+<line x1="190" y1="55" x2="190" y2="70" stroke="#ddd" stroke-width="3"/>
+<line x1="190" y1="85" x2="190" y2="100" stroke="#ddd" stroke-width="3"/>
+<line x1="265" y1="265" x2="265" y2="280" stroke="#ddd" stroke-width="3"/>
+<line x1="115" y1="145" x2="115" y2="160" stroke="#ddd" stroke-width="3"/>
+<line x1="70" y1="175" x2="70" y2="190" stroke="#ddd" stroke-width="3"/>
+<line x1="115" y1="175" x2="115" y2="190" stroke="#ddd" stroke-width="3"/>
+<line x1="70" y1="205" x2="70" y2="220" stroke="#ddd" stroke-width="3"/>
+<line x1="265" y1="160" x2="265" y2="175" stroke="#ddd" stroke-width="3"/>
+<line x1="115" y1="235" x2="115" y2="250" stroke="#ddd" stroke-width="3"/>
+<line x1="295" y1="145" x2="295" y2="160" stroke="#ddd" stroke-width="3"/>
+<line x1="115" y1="205" x2="115" y2="220" stroke="#ddd" stroke-width="3"/>
+<line x1="70" y1="235" x2="70" y2="250" stroke="#ddd" stroke-width="3"/>
+<line x1="115" y1="100" x2="115" y2="115" stroke="#ddd" stroke-width="3"/>
+<line x1="190" y1="115" x2="190" y2="130" stroke="#ddd" stroke-width="3"/>
+<line x1="70" y1="295" x2="85" y2="295" stroke="#ddd" stroke-width="3"/>
+<line x1="175" y1="175" x2="190" y2="175" stroke="#ddd" stroke-width="3"/>
+<line x1="220" y1="280" x2="235" y2="280" stroke="#ddd" stroke-width="3"/>
+<line x1="265" y1="70" x2="280" y2="70" stroke="#ddd" stroke-width="3"/>
+<line x1="250" y1="280" x2="265" y2="280" stroke="#ddd" stroke-width="3"/>
+<line x1="25" y1="250" x2="40" y2="250" stroke="#ddd" stroke-width="3"/>
+<line x1="205" y1="280" x2="220" y2="280" stroke="#ddd" stroke-width="3"/>
+<line x1="250" y1="70" x2="265" y2="70" stroke="#ddd" stroke-width="3"/>
+<line x1="160" y1="175" x2="175" y2="175" stroke="#ddd" stroke-width="3"/>
+<line x1="190" y1="280" x2="205" y2="280" stroke="#ddd" stroke-width="3"/>
+<line x1="100" y1="295" x2="115" y2="295" stroke="#ddd" stroke-width="3"/>
+<line x1="55" y1="250" x2="70" y2="250" stroke="#ddd" stroke-width="3"/>
+<line x1="235" y1="280" x2="250" y2="280" stroke="#ddd" stroke-width="3"/>
+<line x1="145" y1="175" x2="160" y2="175" stroke="#ddd" stroke-width="3"/>
+<line x1="280" y1="70" x2="295" y2="70" stroke="#ddd" stroke-width="3"/>
+<line x1="85" y1="295" x2="100" y2="295" stroke="#ddd" stroke-width="3"/>
+<line x1="235" y1="70" x2="250" y2="70" stroke="#ddd" stroke-width="3"/>
+<line x1="40" y1="250" x2="55" y2="250" stroke="#ddd" stroke-width="3"/>
+<g class="fragment"><rect x="177" y="162" width="11" height="11" fill="#f7a"/>
+<rect x="57" y="237" width="11" height="11" fill="#f7a"/>
+<rect x="252" y="267" width="11" height="11" fill="#f7a"/>
+<rect x="102" y="282" width="11" height="11" fill="#f7a"/>
+<rect x="297" y="297" width="11" height="11" fill="#f7a"/>
+</g>
+
+</svg></div>
+                </section>
+
+            </section>
+
+            <!-- №19: Игра, ход Вани [он] -->
+            <section>
+
+                <!-- условие №19 + таймер 1:20 -->
+                <section>
+                    <div class="lesson-time">30</div>
+                    <h2>№19. Игра, ход Вани</h2>
+<div class="fragment" style="max-height: 470px; overflow-y: auto; background: #fff; border-radius: 6px; padding: 4px;"><img src="img/cond19.png" alt="Условие №19" style="display: block; width: 100%; margin: 0; border: none; box-shadow: none; max-height: none; max-width: 100%;"></div>
+<p class="fragment" style="font-size: 0.45em; margin: 0.3em 0 0;"><a href="https://inf-ege.sdamgia.ru/problem?id=35993" target="_blank" rel="noopener">Решу ЕГЭ 35993</a> (для подготовки) - 1:20 на весь номер</p>
+<div class="timer fragment" data-limit="80">
+    <div class="timer-bar"><div class="timer-fill"></div></div>
+    <div class="timer-row">
+        <span class="timer-time">0:00</span>
+        <span class="timer-hint">клик - старт</span>
+        <button class="timer-reset" type="button">сброс</button>
+    </div>
+</div>
+                </section>
+
+                <!-- №19: ответ -->
+                <section>
+                    <h2>Ответ №19</h2>
+<p class="fragment" style="font-size: 1.6em; margin: 0.3em 0;"><mark class="green">9</mark></p>
+                </section>
+
+                <!-- №19: решение кодом -->
+                <section>
+                    <h2>Решение</h2>
+<div class="fragment" style="display: flex; gap: 0.5em; align-items: flex-start;"><div class="code-block" style="flex: 1 1 0; min-width: 0;"><pre class="python" style="font-size: 0.36em; max-height: 580px; width: 100%;"><code>FIRST = 6
+FINISH = 79
+
+
+def moves(pos: tuple[int, int]) -&gt; list[tuple[int, int]]:
+    a, b = pos
+    return [(a + 1, b), (a, b + 1), (a * 3, b), (a, b * 3)]
+
+
+# Игра кончилась: в двух кучах вместе не менее FINISH камней.
+def is_finish(pos: tuple[int, int]) -&gt; bool:
+    a, b = pos
+    return a + b &gt;= FINISH
+
+
+# ходящий выиграет не больше чем за k ходов
+def can_win(pos: tuple[int, int], k: int) -&gt; bool:
+    for t in moves(pos):
+        if is_finish(t) or (k &gt; 1 and must_lose(t, k - 1)):
+            return True
+    return False
+
+
+# ходящий проиграет: соперник выиграет за k ходов
+def must_lose(pos: tuple[int, int], k: int) -&gt; bool:
+    for t in moves(pos):
+        if is_finish(t) or not can_win(t, k):
+            return False
+    return True</code></pre></div><div class="code-block" style="flex: 1 1 0; min-width: 0;"><pre class="python" style="font-size: 0.36em; max-height: 580px; width: 100%;"><code># №19
+def q19() -&gt; int:
+    for s in range(1, 72 + 1):
+        pos = (FIRST, s)
+        if can_win(pos, 1):
+            continue
+        for t in moves(pos):
+            if can_win(t, 1):
+                return s
+
+
+print(q19())</code></pre></div></div>
+                </section>
+
+            </section>
+
+            <!-- №20: Игра, два хода Пети [он] -->
+            <section>
+
+                <!-- условие №20 + таймер 1:20 -->
+                <section>
+                    <div class="lesson-time">31</div>
+                    <h2>№20. Игра, два хода Пети</h2>
+<div class="fragment" style="max-height: 470px; overflow-y: auto; background: #fff; border-radius: 6px; padding: 4px;"><img src="img/cond20.png" alt="Условие №20" style="display: block; width: 100%; margin: 0; border: none; box-shadow: none; max-height: none; max-width: 100%;"></div>
+<p class="fragment" style="font-size: 0.45em; margin: 0.3em 0 0;"><a href="https://inf-ege.sdamgia.ru/problem?id=35994" target="_blank" rel="noopener">Решу ЕГЭ 35994</a> (для подготовки) - 1:20 на весь номер</p>
+<div class="timer fragment" data-limit="80">
+    <div class="timer-bar"><div class="timer-fill"></div></div>
+    <div class="timer-row">
+        <span class="timer-time">0:00</span>
+        <span class="timer-hint">клик - старт</span>
+        <button class="timer-reset" type="button">сброс</button>
+    </div>
+</div>
+                </section>
+
+                <!-- №20: ответ -->
+                <section>
+                    <h2>Ответ №20</h2>
+<p class="fragment" style="font-size: 1.6em; margin: 0.3em 0;"><mark class="green">82023</mark></p>
+                </section>
+
+                <!-- №20: решение кодом -->
+                <section>
+                    <h2>Решение</h2>
+<div class="fragment" style="display: flex; gap: 0.5em; align-items: flex-start;"><div class="code-block" style="flex: 1 1 0; min-width: 0;"><pre class="python" style="font-size: 0.36em; max-height: 580px; width: 100%;"><code>FIRST = 6
+FINISH = 79
+
+
+def moves(pos: tuple[int, int]) -&gt; list[tuple[int, int]]:
+    a, b = pos
+    return [(a + 1, b), (a, b + 1), (a * 3, b), (a, b * 3)]
+
+
+# Игра кончилась: в двух кучах вместе не менее FINISH камней.
+def is_finish(pos: tuple[int, int]) -&gt; bool:
+    a, b = pos
+    return a + b &gt;= FINISH
+
+
+# ходящий выиграет не больше чем за k ходов
+def can_win(pos: tuple[int, int], k: int) -&gt; bool:
+    for t in moves(pos):
+        if is_finish(t) or (k &gt; 1 and must_lose(t, k - 1)):
+            return True
+    return False
+
+
+# ходящий проиграет: соперник выиграет за k ходов
+def must_lose(pos: tuple[int, int], k: int) -&gt; bool:
+    for t in moves(pos):
+        if is_finish(t) or not can_win(t, k):
+            return False
+    return True</code></pre></div><div class="code-block" style="flex: 1 1 0; min-width: 0;"><pre class="python" style="font-size: 0.36em; max-height: 580px; width: 100%;"><code># №20
+def q20() -&gt; list[int]:
+    res = []
+    for s in range(1, 72 + 1):
+        pos = (FIRST, s)
+        if not can_win(pos, 1) and can_win(pos, 2):
+            res.append(s)
+    return res
+
+
+print(q20())</code></pre></div></div>
+                </section>
+
+            </section>
+
+            <!-- №21: Игра, выигрыш Вани [он] -->
+            <section>
+
+                <!-- условие №21 + таймер 1:20 -->
+                <section>
+                    <div class="lesson-time">32</div>
+                    <h2>№21. Игра, выигрыш Вани</h2>
+<div class="fragment" style="max-height: 470px; overflow-y: auto; background: #fff; border-radius: 6px; padding: 4px;"><img src="img/cond21.png" alt="Условие №21" style="display: block; width: 100%; margin: 0; border: none; box-shadow: none; max-height: none; max-width: 100%;"></div>
+<p class="fragment" style="font-size: 0.45em; margin: 0.3em 0 0;"><a href="https://inf-ege.sdamgia.ru/problem?id=35995" target="_blank" rel="noopener">Решу ЕГЭ 35995</a> (для подготовки) - 1:20 на весь номер</p>
+<div class="timer fragment" data-limit="80">
+    <div class="timer-bar"><div class="timer-fill"></div></div>
+    <div class="timer-row">
+        <span class="timer-time">0:00</span>
+        <span class="timer-hint">клик - старт</span>
+        <button class="timer-reset" type="button">сброс</button>
+    </div>
+</div>
+                </section>
+
+                <!-- №21: ответ -->
+                <section>
+                    <h2>Ответ №21</h2>
+<p class="fragment" style="font-size: 1.6em; margin: 0.3em 0;"><mark class="green">24</mark></p>
+                </section>
+
+                <!-- №21: решение кодом -->
+                <section>
+                    <h2>Решение</h2>
+<div class="fragment" style="display: flex; gap: 0.5em; align-items: flex-start;"><div class="code-block" style="flex: 1 1 0; min-width: 0;"><pre class="python" style="font-size: 0.36em; max-height: 580px; width: 100%;"><code>FIRST = 6
+FINISH = 79
+
+
+def moves(pos: tuple[int, int]) -&gt; list[tuple[int, int]]:
+    a, b = pos
+    return [(a + 1, b), (a, b + 1), (a * 3, b), (a, b * 3)]
+
+
+# Игра кончилась: в двух кучах вместе не менее FINISH камней.
+def is_finish(pos: tuple[int, int]) -&gt; bool:
+    a, b = pos
+    return a + b &gt;= FINISH
+
+
+# ходящий выиграет не больше чем за k ходов
+def can_win(pos: tuple[int, int], k: int) -&gt; bool:
+    for t in moves(pos):
+        if is_finish(t) or (k &gt; 1 and must_lose(t, k - 1)):
+            return True
+    return False
+
+
+# ходящий проиграет: соперник выиграет за k ходов
+def must_lose(pos: tuple[int, int], k: int) -&gt; bool:
+    for t in moves(pos):
+        if is_finish(t) or not can_win(t, k):
+            return False
+    return True</code></pre></div><div class="code-block" style="flex: 1 1 0; min-width: 0;"><pre class="python" style="font-size: 0.36em; max-height: 580px; width: 100%;"><code># №21
+def q21() -&gt; int:
+    best = None
+    for s in range(1, 72 + 1):
+        if must_lose((FIRST, s), 2):
+            best = s
+    return best
+
+
+print(q21())</code></pre></div></div>
+                </section>
+
+            </section>
+
+            <!-- №22: Параллельные процессы [я, подробно] -->
+            <section>
+
+                <!-- условие №22 + таймер 3:00 -->
+                <section>
+                    <div class="lesson-time">34</div>
+                    <h2>№22. Параллельные процессы</h2>
+<div class="fragment" style="max-height: 470px; overflow-y: auto; background: #fff; border-radius: 6px; padding: 4px;"><img src="img/cond22.png" alt="Условие №22" style="display: block; width: 100%; margin: 0; border: none; box-shadow: none; max-height: none; max-width: 100%;"></div>
+<p class="fragment" style="font-size: 0.45em; margin: 0.3em 0 0;"><a href="https://inf-ege.sdamgia.ru/problem?id=87414" target="_blank" rel="noopener">Решу ЕГЭ 87414</a> (для подготовки) - 3:00 на весь номер</p>
+<div class="timer fragment" data-limit="180">
+    <div class="timer-bar"><div class="timer-fill"></div></div>
+    <div class="timer-row">
+        <span class="timer-time">0:00</span>
+        <span class="timer-hint">клик - старт</span>
+        <button class="timer-reset" type="button">сброс</button>
+    </div>
+</div>
+                </section>
+
+                <!-- №22: таблица и картинка полосок на примере -->
+                <section>
+                    <h2>Полоски по времени</h2>
+<table style="font-size: 0.45em; width: 45%;">
+    <tr><td><strong>ID</strong></td><td><strong>время</strong></td><td><strong>зависит от</strong></td></tr>
+    <tr><td>1</td><td>3</td><td>0</td></tr>
+    <tr><td>2</td><td>4</td><td>1</td></tr>
+    <tr><td>3</td><td>2</td><td>2; 4</td></tr>
+    <tr><td>4</td><td>5</td><td>0</td></tr>
+    <tr><td>5</td><td>8</td><td>1; 4</td></tr>
+</table>
+<svg width="520" height="215" viewBox="0 0 520 215" style="">
+<line x1="60" y1="10" x2="60" y2="190" stroke="#333" stroke-width="1"/>
+<text x="60" y="205" font-size="11" fill="#999" text-anchor="middle" font-weight="normal" font-family="sans-serif">0</text><line x1="90" y1="10" x2="90" y2="190" stroke="#333" stroke-width="1"/>
+<text x="90" y="205" font-size="11" fill="#999" text-anchor="middle" font-weight="normal" font-family="sans-serif">1</text><line x1="120" y1="10" x2="120" y2="190" stroke="#333" stroke-width="1"/>
+<text x="120" y="205" font-size="11" fill="#999" text-anchor="middle" font-weight="normal" font-family="sans-serif">2</text><line x1="150" y1="10" x2="150" y2="190" stroke="#333" stroke-width="1"/>
+<text x="150" y="205" font-size="11" fill="#999" text-anchor="middle" font-weight="normal" font-family="sans-serif">3</text><line x1="180" y1="10" x2="180" y2="190" stroke="#333" stroke-width="1"/>
+<text x="180" y="205" font-size="11" fill="#999" text-anchor="middle" font-weight="normal" font-family="sans-serif">4</text><line x1="210" y1="10" x2="210" y2="190" stroke="#333" stroke-width="1"/>
+<text x="210" y="205" font-size="11" fill="#999" text-anchor="middle" font-weight="normal" font-family="sans-serif">5</text><line x1="240" y1="10" x2="240" y2="190" stroke="#333" stroke-width="1"/>
+<text x="240" y="205" font-size="11" fill="#999" text-anchor="middle" font-weight="normal" font-family="sans-serif">6</text><line x1="270" y1="10" x2="270" y2="190" stroke="#333" stroke-width="1"/>
+<text x="270" y="205" font-size="11" fill="#999" text-anchor="middle" font-weight="normal" font-family="sans-serif">7</text><line x1="300" y1="10" x2="300" y2="190" stroke="#333" stroke-width="1"/>
+<text x="300" y="205" font-size="11" fill="#999" text-anchor="middle" font-weight="normal" font-family="sans-serif">8</text><line x1="330" y1="10" x2="330" y2="190" stroke="#333" stroke-width="1"/>
+<text x="330" y="205" font-size="11" fill="#999" text-anchor="middle" font-weight="normal" font-family="sans-serif">9</text><line x1="360" y1="10" x2="360" y2="190" stroke="#333" stroke-width="1"/>
+<text x="360" y="205" font-size="11" fill="#999" text-anchor="middle" font-weight="normal" font-family="sans-serif">10</text><line x1="390" y1="10" x2="390" y2="190" stroke="#333" stroke-width="1"/>
+<text x="390" y="205" font-size="11" fill="#999" text-anchor="middle" font-weight="normal" font-family="sans-serif">11</text><line x1="420" y1="10" x2="420" y2="190" stroke="#333" stroke-width="1"/>
+<text x="420" y="205" font-size="11" fill="#999" text-anchor="middle" font-weight="normal" font-family="sans-serif">12</text><line x1="450" y1="10" x2="450" y2="190" stroke="#333" stroke-width="1"/>
+<text x="450" y="205" font-size="11" fill="#999" text-anchor="middle" font-weight="normal" font-family="sans-serif">13</text><line x1="480" y1="10" x2="480" y2="190" stroke="#333" stroke-width="1"/>
+<text x="480" y="205" font-size="11" fill="#999" text-anchor="middle" font-weight="normal" font-family="sans-serif">14</text><rect x="120" y="10" width="210" height="180" fill="rgba(253,221,102,0.10)" stroke="#fd6" stroke-dasharray="5,4"/>
+<g class="fragment"><rect x="60" y="18" width="90" height="24" rx="4" fill="#1c2030" stroke="#8ab" stroke-width="2.5"/>
+<text x="40" y="35" font-size="13" fill="#ccc" text-anchor="middle" font-weight="normal" font-family="sans-serif">П1</text><text x="105.0" y="35" font-size="12" fill="#8ab" text-anchor="middle" font-weight="normal" font-family="sans-serif">0-3</text></g>
+<g class="fragment"><rect x="60" y="52" width="150" height="24" rx="4" fill="#1c2030" stroke="#8ab" stroke-width="2.5"/>
+<text x="40" y="69" font-size="13" fill="#ccc" text-anchor="middle" font-weight="normal" font-family="sans-serif">П4</text><text x="135.0" y="69" font-size="12" fill="#8ab" text-anchor="middle" font-weight="normal" font-family="sans-serif">0-5</text></g>
+<g class="fragment"><rect x="150" y="86" width="120" height="24" rx="4" fill="#1c2030" stroke="#7d7" stroke-width="2.5"/>
+<text x="40" y="103" font-size="13" fill="#ccc" text-anchor="middle" font-weight="normal" font-family="sans-serif">П2</text><text x="210.0" y="103" font-size="12" fill="#7d7" text-anchor="middle" font-weight="normal" font-family="sans-serif">3-7</text></g>
+<g class="fragment"><rect x="270" y="120" width="60" height="24" rx="4" fill="#1c2030" stroke="#7d7" stroke-width="2.5"/>
+<text x="40" y="137" font-size="13" fill="#ccc" text-anchor="middle" font-weight="normal" font-family="sans-serif">П3</text><text x="300.0" y="137" font-size="12" fill="#7d7" text-anchor="middle" font-weight="normal" font-family="sans-serif">7-9</text></g>
+<g class="fragment"><rect x="210" y="154" width="240" height="24" rx="4" fill="#1c2030" stroke="#8ab" stroke-width="2.5"/>
+<text x="40" y="171" font-size="13" fill="#ccc" text-anchor="middle" font-weight="normal" font-family="sans-serif">П5</text><text x="330.0" y="171" font-size="12" fill="#8ab" text-anchor="middle" font-weight="normal" font-family="sans-serif">5-13</text></g>
+
+</svg>
+<p class="fragment" style="font-size: 0.45em;">в [2; 9] целиком - процессы 2 и 3, ответ примера 2</p>
+                </section>
+
+                <!-- №22: руками - столбцы start и end, сверху вниз -->
+                <section>
+                    <h2>Руками: start и end</h2>
+<ul style="font-size: 0.55em; text-align: left;">
+    <li class="fragment">процессов всего 25, и каждый зависит только от процессов с меньшими номерами</li>
+    <li class="fragment">дописываем два столбца и заполняем строки сверху вниз</li>
+    <li class="fragment">start = наибольший end среди тех, от кого зависит (0 - значит start = 0)</li>
+    <li class="fragment">end = start + время</li>
+</ul><div class="fragment opinion" style="margin-top: 0.5em;">
+    Программа не нужна: хватит листа бумаги или таблицы
+</div>
+                </section>
+
+                <!-- №22: заполненная таблица, подходящие отмечены -->
+                <section>
+                    <h2>Заполняем</h2>
+<div class="fragment" style="text-align: center;"><table style="font-size: 0.36em; width: 46%; display: inline-table; margin: 0 1%;"><tr><td><strong>ID</strong></td><td><strong>время</strong></td><td><strong>от кого</strong></td><td><strong>start</strong></td><td><strong>end</strong></td></tr><tr><td>1</td><td>5</td><td>0</td><td>0</td><td>5</td></tr><tr><td>2</td><td>8</td><td>0</td><td>0</td><td>8</td></tr><tr><td>3</td><td>12</td><td>0</td><td>0</td><td>12</td></tr><tr><td>4</td><td>3</td><td>0</td><td>0</td><td>3</td></tr><tr><td>5</td><td>15</td><td>0</td><td>0</td><td>15</td></tr><tr><td>6</td><td>7</td><td>0</td><td>0</td><td>7</td></tr><tr style="color: #7fdc7f;"><td>7</td><td>6</td><td>1</td><td>5</td><td>11</td></tr><tr style="color: #7fdc7f;"><td>8</td><td>10</td><td>1; 4</td><td>5</td><td>15</td></tr><tr style="color: #7fdc7f;"><td>9</td><td>4</td><td>2</td><td>8</td><td>12</td></tr><tr style="color: #7fdc7f;"><td>10</td><td>9</td><td>2; 3</td><td>12</td><td>21</td></tr><tr style="color: #7fdc7f;"><td>11</td><td>5</td><td>3</td><td>12</td><td>17</td></tr><tr style="color: #7fdc7f;"><td>12</td><td>11</td><td>4; 6</td><td>7</td><td>18</td></tr><tr style="color: #7fdc7f;"><td>13</td><td>7</td><td>5</td><td>15</td><td>22</td></tr></table><table style="font-size: 0.36em; width: 46%; display: inline-table; margin: 0 1%;"><tr><td><strong>ID</strong></td><td><strong>время</strong></td><td><strong>от кого</strong></td><td><strong>start</strong></td><td><strong>end</strong></td></tr><tr style="color: #7fdc7f;"><td>14</td><td>13</td><td>1; 2; 3</td><td>12</td><td>25</td></tr><tr style="color: #7fdc7f;"><td>15</td><td>6</td><td>7; 9</td><td>12</td><td>18</td></tr><tr><td>16</td><td>14</td><td>8</td><td>15</td><td>29</td></tr><tr><td>17</td><td>8</td><td>10; 11</td><td>21</td><td>29</td></tr><tr style="color: #7fdc7f;"><td>18</td><td>5</td><td>12</td><td>18</td><td>23</td></tr><tr><td>19</td><td>12</td><td>13; 14</td><td>25</td><td>37</td></tr><tr><td>20</td><td>9</td><td>9; 11</td><td>17</td><td>26</td></tr><tr><td>21</td><td>6</td><td>12; 13</td><td>22</td><td>28</td></tr><tr><td>22</td><td>10</td><td>7; 10; 12</td><td>21</td><td>31</td></tr><tr><td>23</td><td>7</td><td>15; 16</td><td>29</td><td>36</td></tr><tr><td>24</td><td>11</td><td>15; 17</td><td>29</td><td>40</td></tr><tr><td>25</td><td>8</td><td>18; 19</td><td>37</td><td>45</td></tr></table></div>
+<p class="fragment" style="font-size: 0.45em;">подходят: <mark class="green">5 &lt;= start</mark> и <mark class="green">end &lt;= 25</mark> - процессы 7-15 и 18</p>
+                </section>
+
+                <!-- №22: ответ -->
+                <section>
+                    <h2>Ответ №22</h2>
+<p class="fragment" style="font-size: 1.6em; margin: 0.3em 0;"><mark class="green">10</mark></p>
+                </section>
+
+            </section>
+
+            <!-- №23: Граф из файла [он] -->
+            <section>
+
+                <!-- условие №23 + таймер 1:20 -->
+                <section>
+                    <div class="lesson-time">37</div>
+                    <h2>№23. Граф из файла</h2>
+<div class="fragment" style="max-height: 470px; overflow-y: auto; background: #fff; border-radius: 6px; padding: 4px;"><img src="img/cond23.png" alt="Условие №23" style="display: block; width: 100%; margin: 0; border: none; box-shadow: none; max-height: none; max-width: 100%;"></div>
+<p class="fragment" style="font-size: 0.45em; margin: 0.3em 0 0;"><a href="https://inf-ege.sdamgia.ru/problem?id=92565" target="_blank" rel="noopener">Решу ЕГЭ 92565</a> (для подготовки) - 1:20 на весь номер</p>
+<div class="timer fragment" data-limit="80">
+    <div class="timer-bar"><div class="timer-fill"></div></div>
+    <div class="timer-row">
+        <span class="timer-time">0:00</span>
+        <span class="timer-hint">клик - старт</span>
+        <button class="timer-reset" type="button">сброс</button>
+    </div>
+</div>
+                </section>
+
+                <!-- №23: ответ -->
+                <section>
+                    <h2>Ответ №23</h2>
+<p class="fragment" style="font-size: 1.6em; margin: 0.3em 0;"><mark class="green">10971</mark></p>
+                </section>
+
+                <!-- №23: решение кодом -->
+                <section>
+                    <h2>Решение</h2>
+<div class="code-block fragment">
+    <pre class="python" style="font-size: 0.36em; max-height: 580px;"><code>def read_graph(path: str) -&gt; dict[int, list[tuple[int, float]]]:
+    graph = {}
+    for line in open(path):
+        a, b, w = line.split()
+        a, b, w = int(a), int(b), float(w)
+        if a not in graph:
+            graph[a] = []
+        if b not in graph:
+            graph[b] = []
+        graph[a].append((b, w))
+    return graph
+
+
+# Длина кратчайшего пути из start в finish.
+def shortest(graph: dict[int, list[tuple[int, float]]], start: int, finish: int) -&gt; float:
+    memo = {}
+
+    def best(v):
+        if v == finish:
+            return 0
+        if v in memo:
+            return memo[v]
+        res = float('inf')
+        for to, w in graph[v]:
+            res = min(res, w + best(to))
+        memo[v] = res
+        return res
+
+    return best(start)
+
+
+print(int(shortest(read_graph('23.txt'), 1, 100)))</code></pre>
+</div>
+                </section>
+
+            </section>
+
+            <!-- №24: Строка из файла [я, подробно] -->
+            <section>
+
+                <!-- условие №24 + таймер 2:00 -->
+                <section>
+                    <div class="lesson-time">38</div>
+                    <h2>№24. Строка из файла</h2>
+<div class="fragment" style="max-height: 470px; overflow-y: auto; background: #fff; border-radius: 6px; padding: 4px;"><img src="img/cond24.png" alt="Условие №24" style="display: block; width: 100%; margin: 0; border: none; box-shadow: none; max-height: none; max-width: 100%;"></div>
+<p class="fragment" style="font-size: 0.45em; margin: 0.3em 0 0;"><a href="https://inf-ege.sdamgia.ru/problem?id=58328" target="_blank" rel="noopener">Решу ЕГЭ 58328</a> (для подготовки) - 2:00 на весь номер</p>
+<div class="timer fragment" data-limit="120">
+    <div class="timer-bar"><div class="timer-fill"></div></div>
+    <div class="timer-row">
+        <span class="timer-time">0:00</span>
+        <span class="timer-hint">клик - старт</span>
+        <button class="timer-reset" type="button">сброс</button>
+    </div>
+</div>
+                </section>
+
+                <!-- №24: картинка строки с участками -->
+                <section>
+                    <h2>Участки</h2>
+<svg class="fragment" width="560" height="120" viewBox="0 0 560 120" style="">
+<rect x="10" y="30" width="27" height="36" rx="4" fill="#1c2030" stroke="#8ab" stroke-width="2"/>
+<text x="23.5" y="54" font-size="16" fill="#ddd" text-anchor="middle" font-weight="normal" font-family="sans-serif">2</text><rect x="40" y="30" width="27" height="36" rx="4" fill="#1c2030" stroke="#8ab" stroke-width="2"/>
+<text x="53.5" y="54" font-size="16" fill="#ddd" text-anchor="middle" font-weight="normal" font-family="sans-serif">6</text><rect x="70" y="30" width="27" height="36" rx="4" fill="#1c2030" stroke="#8ab" stroke-width="2"/>
+<text x="83.5" y="54" font-size="16" fill="#ddd" text-anchor="middle" font-weight="normal" font-family="sans-serif">9</text><rect x="100" y="30" width="27" height="36" rx="4" fill="#1c2030" stroke="#8ab" stroke-width="2"/>
+<text x="113.5" y="54" font-size="16" fill="#ddd" text-anchor="middle" font-weight="normal" font-family="sans-serif">8</text><rect x="130" y="30" width="27" height="36" rx="4" fill="#1c2030" stroke="#8ab" stroke-width="2"/>
+<text x="143.5" y="54" font-size="16" fill="#ddd" text-anchor="middle" font-weight="normal" font-family="sans-serif">5</text><rect x="160" y="30" width="27" height="36" rx="4" fill="#1c2030" stroke="#8ab" stroke-width="2"/>
+<text x="173.5" y="54" font-size="16" fill="#ddd" text-anchor="middle" font-weight="normal" font-family="sans-serif">5</text><rect x="190" y="30" width="27" height="36" rx="4" fill="#1c2030" stroke="#8ab" stroke-width="2"/>
+<text x="203.5" y="54" font-size="16" fill="#ddd" text-anchor="middle" font-weight="normal" font-family="sans-serif">7</text><rect x="220" y="30" width="27" height="36" rx="4" fill="#1c2030" stroke="#8ab" stroke-width="2"/>
+<text x="233.5" y="54" font-size="16" fill="#ddd" text-anchor="middle" font-weight="normal" font-family="sans-serif">2</text><rect x="250" y="30" width="27" height="36" rx="4" fill="#1c2030" stroke="#8ab" stroke-width="2"/>
+<text x="263.5" y="54" font-size="16" fill="#ddd" text-anchor="middle" font-weight="normal" font-family="sans-serif">0</text><rect x="280" y="30" width="27" height="36" rx="4" fill="#1c2030" stroke="#8ab" stroke-width="2"/>
+<text x="293.5" y="54" font-size="16" fill="#ddd" text-anchor="middle" font-weight="normal" font-family="sans-serif">5</text><rect x="310" y="30" width="27" height="36" rx="4" fill="#1c2030" stroke="#8ab" stroke-width="2"/>
+<text x="323.5" y="54" font-size="16" fill="#ddd" text-anchor="middle" font-weight="normal" font-family="sans-serif">3</text><rect x="340" y="30" width="27" height="36" rx="4" fill="#1c2030" stroke="#8ab" stroke-width="2"/>
+<text x="353.5" y="54" font-size="16" fill="#ddd" text-anchor="middle" font-weight="normal" font-family="sans-serif">9</text><rect x="370" y="30" width="27" height="36" rx="4" fill="#1c2030" stroke="#8ab" stroke-width="2"/>
+<text x="383.5" y="54" font-size="16" fill="#ddd" text-anchor="middle" font-weight="normal" font-family="sans-serif">3</text><rect x="400" y="30" width="27" height="36" rx="4" fill="#1c2030" stroke="#8ab" stroke-width="2"/>
+<text x="413.5" y="54" font-size="16" fill="#ddd" text-anchor="middle" font-weight="normal" font-family="sans-serif">8</text><rect x="430" y="30" width="27" height="36" rx="4" fill="#1c2030" stroke="#8ab" stroke-width="2"/>
+<text x="443.5" y="54" font-size="16" fill="#ddd" text-anchor="middle" font-weight="normal" font-family="sans-serif">7</text><rect x="460" y="30" width="27" height="36" rx="4" fill="#1c2030" stroke="#8ab" stroke-width="2"/>
+<text x="473.5" y="54" font-size="16" fill="#ddd" text-anchor="middle" font-weight="normal" font-family="sans-serif">9</text><rect x="490" y="30" width="27" height="36" rx="4" fill="#1c2030" stroke="#8ab" stroke-width="2"/>
+<text x="503.5" y="54" font-size="16" fill="#ddd" text-anchor="middle" font-weight="normal" font-family="sans-serif">1</text><rect x="520" y="30" width="27" height="36" rx="4" fill="#1c2030" stroke="#8ab" stroke-width="2"/>
+<text x="533.5" y="54" font-size="16" fill="#ddd" text-anchor="middle" font-weight="normal" font-family="sans-serif">3</text><g class="fragment"><path d="M13,80 L13,88 L154,88 L154,80" fill="none" stroke="#fd6" stroke-width="2.5"/><text x="85.0" y="108" font-size="14" fill="#fd6" text-anchor="middle" font-weight="normal" font-family="sans-serif">5</text></g>
+<g class="fragment"><path d="M163,80 L163,88 L544,88 L544,80" fill="none" stroke="#7d7" stroke-width="2.5"/><text x="355.0" y="108" font-size="14" fill="#7d7" text-anchor="middle" font-weight="normal" font-family="sans-serif">13</text></g>
+
+</svg>
+<div class="fragment opinion" style="margin-top: 0.2em;">
+    Две одинаковые соседние цифры рвут участок: 55, 33
+</div>
+                </section>
+
+                <!-- №24: один проход -->
+                <section>
+                    <h2>Один проход</h2>
+<ul style="font-size: 0.55em; text-align: left;">
+    <li class="fragment">cur - длина текущего участка, best - лучшая</li>
+    <li class="fragment">цифра не равна предыдущей -> cur + 1, иначе cur = 1</li>
+    <li class="fragment">после каждой цифры best = max(best, cur)</li>
+</ul>
+                </section>
+
+                <!-- №24: ловушки -->
+                <section>
+                    <h2>Ловушки №24</h2>
+<ul style="font-size: 0.55em; text-align: left;">
+    <li class="fragment">начинаем с cur = 1 и best = 1: одна цифра - уже участок</li>
+    <li class="fragment">строку читаем с <code>.strip()</code>: перевод строки в конце не цифра</li>
+</ul>
+                </section>
+
+                <!-- №24: ответ -->
+                <section>
+                    <h2>Ответ №24</h2>
+<p class="fragment" style="font-size: 1.6em; margin: 0.3em 0;"><mark class="green">90</mark></p>
+                </section>
+
+            </section>
+
+            <!-- №25: Перебор чисел [я, подробно] -->
+            <section>
+
+                <!-- условие №25 + таймер 3:00 -->
+                <section>
+                    <div class="lesson-time">40</div>
+                    <h2>№25. Перебор чисел</h2>
+<div class="fragment" style="max-height: 470px; overflow-y: auto; background: #fff; border-radius: 6px; padding: 4px;"><img src="img/cond25.png" alt="Условие №25" style="display: block; width: 100%; margin: 0; border: none; box-shadow: none; max-height: none; max-width: 100%;"></div>
+<p class="fragment" style="font-size: 0.45em; margin: 0.3em 0 0;"><a href="https://inf-ege.sdamgia.ru/problem?id=92275" target="_blank" rel="noopener">Решу ЕГЭ 92275</a> (ЕГЭ 18.06.2026) - 3:00 на весь номер</p>
+<div class="timer fragment" data-limit="180">
+    <div class="timer-bar"><div class="timer-fill"></div></div>
+    <div class="timer-row">
+        <span class="timer-time">0:00</span>
+        <span class="timer-hint">клик - старт</span>
+        <button class="timer-reset" type="button">сброс</button>
+    </div>
+</div>
+                </section>
+
+                <!-- №25: цикл до пяти найденных -->
+                <section>
+                    <h2>Перебор</h2>
+<ul style="font-size: 0.55em; text-align: left;">
+    <li class="fragment">n от 2 018 974 441, цикл <code>while</code>, пока не найдено пять</li>
+    <li class="fragment">для каждого n: подходит - записываем пару (n, множитель)</li>
+</ul>
+                </section>
+
+                <!-- №25: наименьший делитель до корня, второй множитель простой -->
+                <section>
+                    <h2>Два простых</h2>
+<ul style="font-size: 0.55em; text-align: left;">
+    <li class="fragment">наименьший делитель d: перебор от 2, пока <code>d * d &lt;= n</code></li>
+    <li class="fragment">наименьший делитель всегда простой; второй множитель q = n // d тоже должен быть простым</li>
+    <li class="fragment">q простое - та же функция: его наименьший делитель - он сам</li>
+    <li class="fragment">n = d · q, оба простые -> ровно два множителя</li>
+</ul>
+                </section>
+
+                <!-- №25: «43» ровно один раз -->
+                <section>
+                    <h2>«43» ровно раз</h2>
+<ul style="font-size: 0.55em; text-align: left;">
+    <li class="fragment"><code>str(d).count('43') == 1</code> и то же для q</li>
+    <li class="fragment">43 подходит, 4343 - нет (два раза), 2143 - да</li>
+</ul>
+                </section>
+
+                <!-- №25: скорость и границы -->
+                <section>
+                    <h2>Ловушки №25</h2>
+<ul style="font-size: 0.55em; text-align: left;">
+    <li class="fragment">считается около 25 секунд - это нормально, ждём</li>
+    <li class="fragment">начинаем со следующего числа: «большие 2 018 974 440»</li>
+    <li class="fragment">как в №25 первого варианта: проверь, что нашлось все пять</li>
+</ul>
+                </section>
+
+                <!-- №25: ответ -->
+                <section>
+                    <h2>Ответ №25</h2>
+<table style="font-size: 0.55em; width: 50%;">
+    <tr><td><strong>число</strong></td><td><strong>множитель</strong></td></tr>
+    <tr class="fragment"><td>2018977769</td><td>27143</td></tr>
+    <tr class="fragment"><td>2018980091</td><td>9437</td></tr>
+    <tr class="fragment"><td>2018983349</td><td>643</td></tr>
+    <tr class="fragment"><td>2018997619</td><td>43</td></tr>
+    <tr class="fragment"><td>2019003907</td><td>4643</td></tr>
+</table>
+<p class="fragment" style="font-size: 0.4em; opacity: 0.6;">на Решу ЕГЭ в ответе опечатка в первом числе</p>
+                </section>
+
+            </section>
+
+            <!-- №26: Заявки на ремонт [я, подробно] -->
+            <section>
+
+                <!-- условие №26 + таймер 1:00 -->
+                <section>
+                    <div class="lesson-time">43</div>
+                    <h2>№26. Заявки на ремонт</h2>
+<div class="fragment" style="max-height: 470px; overflow-y: auto; background: #fff; border-radius: 6px; padding: 4px;"><img src="img/cond26.png" alt="Условие №26" style="display: block; width: 100%; margin: 0; border: none; box-shadow: none; max-height: none; max-width: 100%;"></div>
+<p class="fragment" style="font-size: 0.45em; margin: 0.3em 0 0;"><a href="https://inf-ege.sdamgia.ru/problem?id=83156" target="_blank" rel="noopener">Решу ЕГЭ 83156</a> (для подготовки) - 1:00 на весь номер</p>
+<div class="timer fragment" data-limit="60">
+    <div class="timer-bar"><div class="timer-fill"></div></div>
+    <div class="timer-row">
+        <span class="timer-time">0:00</span>
+        <span class="timer-hint">клик - старт</span>
+        <button class="timer-reset" type="button">сброс</button>
+    </div>
+</div>
+                </section>
+
+                <!-- №26: пока слишком сложно - полный код решения -->
+                <section>
+                    <h2>Пока слишком сложно</h2>
+<p class="fragment" style="font-size: 0.55em;">Пока слишком сложно - разбирать не будем. Вот полный код решения, чтобы был виден объём работы:</p>
+<div class="code-block fragment">
+    <pre class="python" style="font-size: 0.34em; max-height: 470px; overflow-y: auto;"><code>def read_requests(path: str) -&gt; list[tuple[int, int, int]]:
+    lines = open(path).readlines()
+    res = []
+    for line in lines[1:]:
+        req, house, entrance = line.split()
+        res.append((int(req), int(house), int(entrance)))
+    return res
+
+
+def answer(requests: list[tuple[int, int, int]]) -&gt; tuple[int, int]:
+    # houses[дом][подъезд] = наибольший номер заявки в этом подъезде
+    houses = {}
+    for req, house, entrance in requests:
+        if house not in houses:
+            houses[house] = {}
+        houses[house][entrance] = max(houses[house].get(entrance, 0), req)
+
+    best_len, best_req, best_house, best_first = 0, 0, 0, 0
+    for house in houses:
+        entrances = sorted(houses[house])
+        first = entrances[0]
+        for i in range(len(entrances)):
+            if i &gt; 0 and entrances[i] != entrances[i - 1] + 1:
+                first = entrances[i]
+            length = entrances[i] - first + 1
+            req = houses[house][first]
+            if length &gt; best_len or (length == best_len and req &gt; best_req):
+                best_len, best_req, best_house, best_first = length, req, house, first
+    return best_house, best_first
+
+
+print(answer(read_requests('26.txt')))</code></pre>
+</div>
+                </section>
+
+                <!-- №26: ответ -->
+                <section>
+                    <h2>Ответ №26</h2>
+<p class="fragment" style="font-size: 1.6em; margin: 0.3em 0;"><mark class="green">171 701</mark></p>
+                </section>
+
+            </section>
+
+            <!-- №27: Кластеризация [я, подробно] -->
+            <section>
+
+                <!-- условие №27 + таймер 1:00 -->
+                <section>
+                    <div class="lesson-time">44</div>
+                    <h2>№27. Кластеризация</h2>
+<div class="fragment" style="max-height: 470px; overflow-y: auto; background: #fff; border-radius: 6px; padding: 4px;"><img src="img/cond27.png" alt="Условие №27" style="display: block; width: 100%; margin: 0; border: none; box-shadow: none; max-height: none; max-width: 100%;"></div>
+<p class="fragment" style="font-size: 0.45em; margin: 0.3em 0 0;"><a href="https://inf-ege.sdamgia.ru/problem?id=87418" target="_blank" rel="noopener">Решу ЕГЭ 87418</a> (для подготовки) - 1:00 на весь номер</p>
+<div class="timer fragment" data-limit="60">
+    <div class="timer-bar"><div class="timer-fill"></div></div>
+    <div class="timer-row">
+        <span class="timer-time">0:00</span>
+        <span class="timer-hint">клик - старт</span>
+        <button class="timer-reset" type="button">сброс</button>
+    </div>
+</div>
+                </section>
+
+                <!-- №27: пока слишком сложно - полный код решения -->
+                <section>
+                    <h2>Пока слишком сложно</h2>
+<p class="fragment" style="font-size: 0.55em;">Пока слишком сложно - разбирать не будем. Вот полный код решения, чтобы был виден объём работы:</p>
+<div class="code-block fragment">
+    <pre class="python" style="font-size: 0.34em; max-height: 470px; overflow-y: auto;"><code>def read_points(path: str) -&gt; list[tuple[float, float]]:
+    pts = []
+    for line in open(path):
+        x, y = line.replace(',', '.').split()
+        pts.append((float(x), float(y)))
+    return pts
+
+
+def dist(p: tuple[float, float], q: tuple[float, float]) -&gt; float:
+    return ((p[0] - q[0]) ** 2 + (p[1] - q[1]) ** 2) ** 0.5
+
+
+# Кластеры видно на картинке: делим точки условиями на координаты, помехи не попадают никуда.
+def clusters_a(pts: list[tuple[float, float]]) -&gt; list[list[tuple[float, float]]]:
+    left, right = [], []
+    for x, y in pts:
+        if x &lt; 0:
+            left.append((x, y))
+        else:
+            right.append((x, y))
+    return [left, right]
+
+
+def clusters_b(pts: list[tuple[float, float]]) -&gt; list[list[tuple[float, float]]]:
+    down, up_left, up_right = [], [], []
+    for x, y in pts:
+        if x &lt; 0 and -18 &lt; y &lt; 0:
+            down.append((x, y))
+        elif x &lt; 0 and y &gt; 0:
+            up_left.append((x, y))
+        elif 0 &lt; x &lt; 9 and y &gt; 1:
+            up_right.append((x, y))
+    return [down, up_left, up_right]
+
+
+# Межкластерный диаметр: (расстояние, точка из первого, точка из второго).
+def diameter(c1: list[tuple[float, float]], c2: list[tuple[float, float]]) -&gt; tuple[float, tuple, tuple]:
+    best = (0, None, None)
+    for p in c1:
+        for q in c2:
+            d = dist(p, q)
+            if d &gt; best[0]:
+                best = (d, p, q)
+    return best
+
+
+def answer_a(pts: list[tuple[float, float]]) -&gt; tuple[int, int]:
+    c = clusters_a(pts)
+    d, p, q = diameter(c[0], c[1])
+    return int(abs(p[0] - q[0]) * 1000), int(abs((p[1] + q[1]) * 1000))
+
+
+def answer_b(pts: list[tuple[float, float]]) -&gt; tuple[int, int]:
+    c = clusters_b(pts)
+    q1 = 0
+    q2 = 0
+    for i in range(3):
+        for j in range(i + 1, 3):
+            d, p, q = diameter(c[i], c[j])
+            q1 += d
+            q2 = max(q2, dist(p, (1, 1)), dist(q, (1, 1)))
+    return int(q1 * 100), int(q2 * 100)
+
+
+print(answer_a(read_points('27_A.txt')))
+print(answer_b(read_points('27_B.txt')))</code></pre>
+</div>
+                </section>
+
+                <!-- №27: ответ -->
+                <section>
+                    <h2>Ответ №27</h2>
+<p class="fragment" style="font-size: 1.6em; margin: 0.3em 0;"><mark class="green">21549 1946</mark></p>
+<p class="fragment" style="font-size: 0.5em; opacity: 0.8;">вторая строка: 7140 2018</p>
+                </section>
+
+            </section>
+
+            <!-- ИТОГ -->
+            <section>
+
+                <!-- итог: наши номера, порядок на пробнике, пустое поле = 0 -->
+                <section>
+                    <div class="lesson-time">45</div>
+                    <h2>Что запомнить</h2>
+<ul style="font-size: 0.55em; text-align: left;">
+    <li class="fragment">наши номера: 1, 2, 4, 5, 7, 8, 13-16, 18-21, 23 - решаешь сам, это 16 баллов</li>
+    <li class="fragment">добрать проще всего: 9, 10, 11, 17, 22, 24 - знакомые циклы, файлы и рекурсия</li>
+    <li class="fragment">порядок на пробнике: сначала наши, потом сегодняшние, 25-27 в самом конце</li>
+    <li class="fragment">пустое поле - 0 баллов, штрафа за ошибку нет: пиши хоть что-то</li>
+</ul>
+                </section>
+
+                <!-- ДЗ: самостоятельно подготовиться к пробнику, без конкретных заданий -->
+                <section>
+                    <h2>Домашнее задание</h2>
+<ul style="font-size: 0.7em; text-align: left;">
+    <li class="fragment">самостоятельно подготовиться к пробнику 29.10</li>
+</ul>
+                </section>
+
+            </section>
+
+        </div>
+    </div>
+
+    <script src="/utils/lib/js/head.min.js"></script>
+    <script src="/utils/js/reveal.js"></script>
+    <script>
+        Reveal.initialize({
+            controls: true,
+            progress: true,
+            history: true,
+            center: true,
+            transition: 'fade',
+            transitionSpeed: 'fast',
+            dependencies: [
+                { src: '/utils/lib/js/classList.js', condition: function () { return !document.body.classList; } },
+                { src: '/utils/plugin/markdown/marked.js', condition: function () { return !!document.querySelector('[data-markdown]'); } },
+                { src: '/utils/plugin/markdown/markdown.js', condition: function () { return !!document.querySelector('[data-markdown]'); } },
+                { src: '/utils/plugin/highlight/highlight.js', async: true, callback: function () { hljs.initHighlightingOnLoad(); } },
+                { src: '/utils/plugin/zoom-js/zoom.js', async: true },
+                { src: '/utils/plugin/notes/notes.js', async: true }
+            ]
+        });
+        Reveal.configure({ slideNumber: 'c/t' });
+    </script>
+    <script>
+        // таймер на слайде: клик - старт/пауза, "сброс" - обнулить
+        document.querySelectorAll('.timer').forEach(function (el) {
+            var limit = +el.dataset.limit || 180;
+            var fill = el.querySelector('.timer-fill');
+            var timeEl = el.querySelector('.timer-time');
+            var hint = el.querySelector('.timer-hint');
+            var spent = 0, startedAt = null, tick = null;
+
+            function fmt(sec) {
+                sec = Math.floor(sec);
+                return Math.floor(sec / 60) + ':' + String(sec % 60).padStart(2, '0');
+            }
+            function elapsed() {
+                return spent + (startedAt ? (Date.now() - startedAt) / 1000 : 0);
+            }
+            function draw() {
+                var t = elapsed();
+                fill.style.width = Math.min(t / limit, 1) * 100 + '%';
+                el.classList.toggle('warn', t >= limit * 0.8 && t < limit);
+                el.classList.toggle('over', t >= limit);
+                timeEl.textContent = t >= limit
+                    ? fmt(limit) + ' + ' + fmt(t - limit)
+                    : fmt(t) + ' / ' + fmt(limit);
+            }
+            function toggle() {
+                if (startedAt) {
+                    spent = elapsed(); startedAt = null;
+                    clearInterval(tick);
+                    hint.textContent = 'пауза - клик, чтобы продолжить';
+                } else {
+                    startedAt = Date.now();
+                    tick = setInterval(draw, 200);
+                    hint.textContent = 'идёт - клик для паузы';
+                }
+                draw();
+            }
+            el.addEventListener('click', function (e) {
+                e.stopPropagation();
+                if (e.target.closest('.timer-reset')) {
+                    clearInterval(tick); spent = 0; startedAt = null;
+                    hint.textContent = 'клик - старт';
+                } else {
+                    toggle();
+                }
+                draw();
+            });
+            draw();
+        });
+    </script>
+</body>
+
+</html>
