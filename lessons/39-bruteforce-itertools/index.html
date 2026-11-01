@@ -1,0 +1,418 @@
+<!doctype html>
+<html lang="ru">
+
+<head>
+    <meta charset="utf-8">
+    <title>Занятие 39 - Перебор вариантов и itertools</title>
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+
+    <link rel="stylesheet" href="/utils/css/reveal.css">
+    <link rel="stylesheet" href="/utils/lib/css/animate.css">
+    <link rel="stylesheet" href="/utils/css/theme/night.css" id="theme">
+    <link rel="stylesheet" href="/utils/lib/css/zenburn.css">
+    <link rel="stylesheet" href="/utils/css/custom-base.css">
+    <link rel="stylesheet" href="css-custom/custom.css">
+
+    <script>
+        var link = document.createElement('link');
+        link.rel = 'stylesheet'; link.type = 'text/css';
+        link.href = window.location.search.match(/print-pdf/gi)
+            ? '/utils/css/print/pdf.css'
+            : '/utils/css/print/paper.css';
+        document.getElementsByTagName('head')[0].appendChild(link);
+    </script>
+</head>
+
+<body>
+    <div class="reveal">
+        <div class="slides">
+
+            <section style="font-size: 70px; height: 100%; width: 100%">
+                <div class="lesson-time">0</div>
+                <div class="fragment">
+                    <h1 class="animated" style="font-size: 1.8em;">Перебор</h1>
+                    <p style="text-align: center; font-size: 0.45em; opacity: 0.6;">циклы, itertools и дерево вариантов
+                    </p>
+                    <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">Занятие 39</p>
+                </div>
+                <aside class="notes">Обозначить маршрут: циклы, генераторы вариантов, ограничения полного перебора.
+                </aside>
+            </section>
+            <section>
+                <section>
+                    <div class="lesson-time">0</div>
+                    <h2>Вспомним биты</h2>
+                    <p class="fragment" style="font-size: 0.75em; text-align: center;">Три лампочки. Каждая либо горит,
+                        либо нет. Сколько состояний?</p>
+                    <div class="code-block fragment">
+                        <pre class="python size-m" style="font-size: 0.65em;"><code>for n in range(8):
+    print(format(n, "03b"))</code></pre>
+                    </div>
+                    <p class="fragment" style="font-size: 0.75em; text-align: center;">
+                        <code>000 001 010 011 100 101 110 111</code></p>
+                    <div class="fragment opinion" style="font-size: 0.75em; margin-top: 0.6em;">У каждой два состояния:
+                        <mark>2 × 2 × 2 = 8</mark></div>
+                    <aside class="notes">Дать минуту без кода. 2 × 2 × 2 = 8. Файл 1_binary_codes.py. format нужен
+                        только как мост от прошлого урока.</aside>
+                </section>
+                <section>
+                    <h2>А если цифр три?</h2>
+                    <p class="fragment" style="font-size: 0.75em; text-align: center;">Код из трёх цифр. На каждом
+                        месте: <code>0</code>, <code>1</code> или <code>2</code>.</p>
+                    <div class="code-block fragment">
+                        <pre class="python size-m" style="font-size: 0.65em;"><code>for a in "012":
+    for b in "012":
+        for c in "012":
+            print(a + b + c)</code></pre>
+                    </div>
+                    <div class="fragment opinion" style="font-size: 0.75em; margin-top: 0.6em;">Что выведется сначала?
+                        <code>000</code>, <code>001</code>, <code>002</code>, ...</div>
+                    <aside class="notes">Файл 2_ternary_codes.py. Ответ: 000, 001, 002, 010. Преподаватель в лайвкодинге
+                        заменяет печать на возврат списка.</aside>
+                </section>
+                <section>
+                    <h2>Сколько вариантов?</h2>
+                    <table style="font-size: .85em; margin: 0.6em auto;">
+                        <tr>
+                            <td><strong>первое место</strong></td>
+                            <td><strong>второе</strong></td>
+                            <td><strong>третье</strong></td>
+                        </tr>
+                        <tr class="fragment">
+                            <td>0, 1, 2</td>
+                            <td>0, 1, 2</td>
+                            <td>0, 1, 2</td>
+                        </tr>
+                    </table>
+                    <p class="fragment" style="font-size: 0.75em; text-align: center;"><mark>3 × 3 × 3 = 27</mark></p>
+                    <ul style="font-size: 0.85em; text-align: left;">
+                        <li class="fragment">каждый код получается ровно из одного набора <code>a, b, c</code></li>
+                        <li class="fragment">символы алфавита разные - один и тот же код дважды не появится</li>
+                    </ul>
+                    <aside class="notes">Спросить, почему 3 + 3 + 3 неверно. Уточнить предположение: символы в алфавите
+                        различны.</aside>
+                </section>
+                <section>
+                    <h2>Оставим нужные</h2>
+                    <p class="fragment" style="font-size: 0.75em; text-align: center;">Теперь нужны только коды с
+                        <mark>суммой цифр 3</mark>.</p>
+                    <div class="code-block fragment">
+                        <pre class="python size-m" style="font-size: 0.65em;"><code>for a in "012":
+    for b in "012":
+        for c in "012":
+            if int(a) + int(b) + int(c) == 3:
+                print(a + b + c)</code></pre>
+                    </div>
+                    <p class="fragment" style="font-size: 0.75em; text-align: center;">
+                        <code>012 021 102 111 120 201 210</code></p>
+                    <div class="fragment opinion" style="font-size: 0.75em; margin-top: 0.6em;">Циклы строят варианты.
+                        <code>if</code> решает, какие оставить.</div>
+                    <aside class="notes">Файл 3_digit_sum.py. Ручная проверка: шесть перестановок 012 плюс 111. Не
+                        складывать строки как числа.</aside>
+                </section>
+            </section>
+            <section>
+                <section>
+                    <div class="lesson-time">15</div>
+                    <h2>А если длина меняется?</h2>
+                    <p class="fragment" style="font-size: 0.75em; text-align: center;">Три цифры - три цикла. Пять цифр
+                        - пять циклов?</p>
+                    <div class="code-block fragment">
+                        <pre class="python size-m" style="font-size: 0.65em;"><code>def make_codes(alphabet: str, length: int):
+    # length узнаем только при вызове
+    pass</code></pre>
+                    </div>
+                    <div class="fragment opinion" style="font-size: 0.75em; margin-top: 0.6em;">Хочется сказать:
+                        <mark>повтори выбор length раз</mark></div>
+                    <aside class="notes">Обсудить проблему без требования написать рекурсию. Это контракт файла
+                        4_product_codes.py.</aside>
+                </section>
+                <section>
+                    <h2><code>itertools</code></h2>
+                    <ul style="font-size: 0.85em; text-align: left;">
+                        <li class="fragment">модуль стандартной библиотеки Python - <mark>устанавливать ничего не
+                                нужно</mark></li>
+                        <li class="fragment">готовые инструменты для перебора: коды, перестановки, сочетания</li>
+                        <li class="fragment">выдают результаты <mark>по одному</mark> - их удобно обходить циклом
+                            <code>for</code></li>
+                    </ul>
+                    <div class="fragment opinion" style="font-size: 0.75em; margin-top: 0.6em;">Начнём с
+                        <code>product</code>: он повторяет выбор для каждой позиции.</div>
+                    <aside class="notes">Кратко представить модуль: он уже есть в Python, pip не нужен. Его инструменты
+                        возвращают итераторы, которые удобно обходить через for. Не углубляться в устройство итераторов;
+                        дальше сразу пример product.</aside>
+                </section>
+                <section>
+                    <h2><code>product</code></h2>
+                    <div class="code-block fragment">
+                        <pre class="python size-m" style="font-size: 0.65em;"><code>from itertools import product
+
+for chars in product("01", repeat=3):
+    word = "".join(chars)
+    print(word)</code></pre>
+                    </div>
+                    <p class="fragment" style="font-size: 0.75em; text-align: center;"><code>("0", "0", "1")</code> →
+                        <code>"001"</code></p>
+                    <ul style="font-size: 0.85em; text-align: left;">
+                        <li class="fragment"><code>repeat=3</code> - три места, на каждом выбираем из <code>"01"</code>
+                        </li>
+                        <li class="fragment">вместо 3 можно написать <code>length</code></li>
+                    </ul>
+                    <aside class="notes">Файл 4_product_codes.py. product возвращает кортежи; join собирает строку.
+                        Импорт из стандартной библиотеки, pip не нужен.</aside>
+                </section>
+                <section>
+                    <h2>Считать или хранить?</h2>
+                    <div class="code-block fragment">
+                        <pre class="python size-m" style="font-size: 0.65em;"><code>from itertools import product
+
+count = 0
+for chars in product("012", repeat=5):
+    if chars[0] != "0":
+        count += 1
+print(count)  # 162</code></pre>
+                    </div>
+                    <ul style="font-size: 0.85em; text-align: left;">
+                        <li class="fragment"><code>product</code> выдаёт варианты <mark>по одному</mark></li>
+                        <li class="fragment">если нужен только ответ «сколько», список всех кодов не нужен</li>
+                    </ul>
+                    <aside class="notes">Файл 5_count_codes.py. Ответ: 2 × 3^4 = 162. product хранит входные наборы, но
+                        не все выходные кортежи.</aside>
+                </section>
+                <section>
+                    <h2>Две единицы, не рядом</h2>
+                    <p class="fragment" style="font-size: 0.75em; text-align: center;">Код из четырёх битов: <mark>ровно
+                            две единицы</mark>, но <code>11</code> быть не должно.</p>
+                    <div class="code-block fragment">
+                        <pre class="python size-m" style="font-size: 0.65em;"><code>from itertools import product
+
+for chars in product("01", repeat=4):
+    word = "".join(chars)
+    if word.count("1") == 2 and "11" not in word:
+        print(word)</code></pre>
+                    </div>
+                    <p class="fragment" style="font-size: 0.75em; text-align: center;"><code>0101 1001 1010</code></p>
+                    <div class="fragment opinion" style="font-size: 0.75em; margin-top: 0.6em;">Нужны оба условия -
+                        соединяем через <code>and</code>.</div>
+                    <aside class="notes">Файл 6_nonadjacent_ones.py. Преподаватель формулирует оба условия и пишет
+                        решение в лайвкодинге.</aside>
+                </section>
+            </section>
+            <section>
+                <!-- ЧАСТЬ 3: порядок и повторения -->
+                <section style="font-size: 70px; height: 100%; width: 100%">
+                    <div class="lesson-time">30</div>
+                    <div class="fragment">
+                        <h1 style="font-size: 1.3em;">Порядок и повторения</h1>
+                        <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">одни элементы - разные правила
+                            выбора</p>
+                    </div>
+                </section>
+                <section>
+                    <h2>Три задачи</h2>
+                    <p style="font-size: 0.75em; text-align: center;">Есть три разных элемента: <code>A</code>,
+                        <code>B</code>, <code>C</code>. Каждый раз выбираем два.</p>
+                    <ul style="font-size: 0.85em; text-align: left;">
+                        <li class="fragment"><mark>код</mark>: составить строку из двух букв; буквы можно повторять</li>
+                        <li class="fragment"><mark>призовые места</mark>: назначить первое и второе место двум из трёх
+                            участников</li>
+                        <li class="fragment"><mark>команда</mark>: выбрать двух участников без распределения ролей</li>
+                    </ul>
+                    <div class="fragment opinion" style="font-size: 0.75em; margin-top: 0.6em;">Где можно взять
+                        <code>AA</code>? Где <code>AB</code> и <code>BA</code> означают одно и то же?</div>
+                    <aside class="notes">Преподаватель объясняет три условия на одних обозначениях. В коде A, B, C -
+                        буквы, в двух остальных задачах - разные участники. В призовых местах один участник не может
+                        занять оба места. В команде порядок перечисления участников не важен. Затем сравнить результаты
+                        на следующем слайде.</aside>
+                </section>
+                <section>
+                    <h2>Код, места или команда?</h2>
+                    <table style="font-size: .65em; margin: 0.6em auto;">
+                        <tr>
+                            <td><strong>выбираем двоих из A, B, C</strong></td>
+                            <td><strong>что считается разным?</strong></td>
+                            <td><strong>всего</strong></td>
+                        </tr>
+                        <tr class="fragment">
+                            <td>код</td>
+                            <td>AA можно; AB и BA разные</td>
+                            <td>9</td>
+                        </tr>
+                        <tr class="fragment">
+                            <td>призовые места</td>
+                            <td>AA нельзя; AB и BA разные</td>
+                            <td>6</td>
+                        </tr>
+                        <tr class="fragment">
+                            <td>команда</td>
+                            <td>AA нельзя; AB и BA - одно</td>
+                            <td>3</td>
+                        </tr>
+                    </table>
+                    <div class="fragment opinion" style="font-size: 0.75em; margin-top: 0.6em;">Два вопроса: <mark>важен
+                            порядок?</mark> <mark>можно брать повторно?</mark></div>
+                    <aside class="notes">Не вводить формулы факториалов. Все три примера можно перечислить руками.
+                        Исходные элементы различны.</aside>
+                </section>
+                <section>
+                    <h2><code>permutations</code></h2>
+                    <p class="fragment" style="font-size: 0.75em; text-align: center;">
+                        <code>permutations(items, k)</code> перебирает все расстановки из <code>k</code> элементов:
+                        <mark>порядок важен</mark>, одну позицию входа дважды не берём.</p>
+                    <div class="code-block fragment">
+                        <pre class="python size-m" style="font-size: 0.65em;"><code>from itertools import permutations
+
+for pair in permutations("ABC", 2):
+    print("".join(pair))</code></pre>
+                    </div>
+                    <p class="fragment" style="font-size: 0.75em; text-align: center;"><code>AB AC BA BC CA CB</code>
+                    </p>
+                    <ul style="font-size: 0.85em; text-align: left;">
+                        <li class="fragment"><code>AB</code> и <code>BA</code> - разные расстановки</li>
+                        <li class="fragment">одну позицию входа дважды не берём; одинаковые буквы во входе могут дать
+                            дубли</li>
+                    </ul>
+                    <aside class="notes">Файл 8_arrangements.py. Пример с повторяющимися буквами объяснить устно: запрет
+                        относится к позиции, а не к значению.</aside>
+                </section>
+                <section>
+                    <h2><code>combinations</code></h2>
+                    <p class="fragment" style="font-size: 0.75em; text-align: center;">
+                        <code>combinations(items, k)</code> перебирает все сочетания из <code>k</code> элементов:
+                        <mark>порядок не важен</mark>, одну позицию входа дважды не берём.</p>
+                    <div class="code-block fragment">
+                        <pre class="python size-m" style="font-size: 0.65em;"><code>from itertools import combinations
+
+for team in combinations("ABC", 2):
+    print("".join(team))</code></pre>
+                    </div>
+                    <p class="fragment" style="font-size: 0.75em; text-align: center;"><code>AB AC BC</code></p>
+                    <ul style="font-size: 0.85em; text-align: left;">
+                        <li class="fragment"><code>AB</code> и <code>BA</code> - <mark>одна команда</mark>, второй раз
+                            не выдаём</li>
+                        <li class="fragment">буквы идут в порядке входа; сам вход не сортируется</li>
+                    </ul>
+                    <aside class="notes">Файл 9_teams.py. Один участник не может занять два места. Снова оговорить: вход
+                        без повторяющихся значений.</aside>
+                </section>
+                <section>
+                    <h2>Что выбрать?</h2>
+                    <table style="font-size: .75em; margin: 0.6em auto;">
+                        <tr>
+                            <td><strong>задача</strong></td>
+                            <td><strong>порядок</strong></td>
+                            <td><strong>повторения</strong></td>
+                            <td><strong>инструмент</strong></td>
+                        </tr>
+                        <tr class="fragment">
+                            <td>PIN-код</td>
+                            <td>важен</td>
+                            <td>можно</td>
+                            <td><code>product</code></td>
+                        </tr>
+                        <tr class="fragment">
+                            <td>призовые места</td>
+                            <td>важен</td>
+                            <td>нельзя</td>
+                            <td><code>permutations</code></td>
+                        </tr>
+                        <tr class="fragment">
+                            <td>команда</td>
+                            <td>не важен</td>
+                            <td>нельзя</td>
+                            <td><code>combinations</code></td>
+                        </tr>
+                    </table>
+                    <div class="fragment opinion" style="font-size: 0.75em; margin-top: 0.6em;">Сначала правила задачи,
+                        потом название функции.</div>
+                    <aside class="notes">Ответы: product, permutations, combinations. Это классификация сегодняшних трёх
+                        случаев, не всех возможных задач.</aside>
+                </section>
+                <section>
+                    <h2>Пары с суммой 6</h2>
+                    <p class="fragment" style="font-size: 0.75em; text-align: center;">Есть числа
+                        <code>[1, 2, 3, 4, 5]</code>. Найдём пары с суммой <code>6</code>.</p>
+                    <ul style="font-size: 0.85em; text-align: left;">
+                        <li class="fragment"><code>(1, 5)</code> и <code>(2, 4)</code> подходят</li>
+                        <li class="fragment"><code>(5, 1)</code> второй раз не нужен</li>
+                        <li class="fragment"><code>(3, 3)</code> нельзя - тройка в списке одна</li>
+                    </ul>
+                    <p class="fragment" style="font-size: 0.55em; opacity: 0.75; margin-top: 0.6em;">
+                        <code>practice/39-bruteforce-itertools/10_pair_sum.py</code></p>
+                    <aside class="notes">Лайвкодинг преподавателя: combinations(numbers, 2), затем a + b == target. Не
+                        уходить в оптимизацию через множество: цель урока — выбрать способ перебора.</aside>
+                </section>
+            </section>
+            <section>
+                <div class="lesson-time">55</div>
+                <h2>Что запомнить</h2>
+                <ul style="font-size: 0.85em; text-align: left;">
+                    <li class="fragment">сначала перебираем варианты, потом отбираем через <code>if</code></li>
+                    <li class="fragment"><code>product</code>, <code>permutations</code>, <code>combinations</code> -
+                        разные правила выбора</li>
+                    <li class="fragment">выбор инструмента зависит от порядка и возможности повторений</li>
+                </ul>
+                <aside class="notes">Последние пять минут: преподаватель подводит итоги лайвкодинга, объясняет ДЗ и
+                    отвечает на вопросы.</aside>
+            </section>
+            <section>
+                <h2>ДЗ: покупки в пределах бюджета</h2>
+                <p class="fragment" style="font-size: 0.75em; text-align: center;">Есть товары с ценами. Найди все
+                    наборы из <mark>двух разных товаров</mark>, которые укладываются в бюджет.</p>
+                <ul style="font-size: 0.85em; text-align: left;">
+                    <li class="fragment">верни список пар названий; сумма цен может быть равна бюджету</li>
+                </ul>
+                <div class="compare" style="margin-top: 0.6em; font-size: 0.75em;">
+                    <div class="compare-block fragment" style="min-width: 0;">
+                        <h3>Входные данные</h3>
+                        <div class="code-block">
+                            <pre class="python size-m" style="font-size: 0.7em;"><code>items = [
+    ("рюкзак", 1000),
+    ("термос", 700),
+    ("фонарик", 500),
+]
+budget = 1500</code></pre>
+                        </div>
+                    </div>
+                    <div class="compare-block fragment" style="min-width: 0;">
+                        <h3>Выходные данные</h3>
+                        <div class="code-block">
+                            <pre class="python size-m" style="font-size: 0.7em;"><code>[
+    ("рюкзак", "фонарик"),
+    ("термос", "фонарик"),
+]</code></pre>
+                        </div>
+                    </div>
+                </div>
+                <aside class="notes">Заготовка: practice/39-bruteforce-itertools/hw_shopping.py. Имена товаров
+                    уникальны, цены положительные, бюджет неотрицательный. Проверить отсутствие обратных дублей, сумму
+                    ровно по бюджету и случай без подходящих пар. Решение разобрать на следующем уроке.</aside>
+            </section>
+        </div>
+    </div>
+
+    <script src="/utils/lib/js/head.min.js"></script>
+    <script src="/utils/js/reveal.js"></script>
+    <script>
+        Reveal.initialize({
+            controls: true,
+            progress: true,
+            history: true,
+            center: true,
+            transition: 'fade',
+            transitionSpeed: 'fast',
+            dependencies: [
+                { src: '/utils/lib/js/classList.js', condition: function () { return !document.body.classList; } },
+                { src: '/utils/plugin/markdown/marked.js', condition: function () { return !!document.querySelector('[data-markdown]'); } },
+                { src: '/utils/plugin/markdown/markdown.js', condition: function () { return !!document.querySelector('[data-markdown]'); } },
+                { src: '/utils/plugin/highlight/highlight.js', async: true, callback: function () { hljs.initHighlightingOnLoad(); } },
+                { src: '/utils/plugin/zoom-js/zoom.js', async: true },
+                { src: '/utils/plugin/notes/notes.js', async: true }
+            ]
+        });
+        Reveal.configure({ slideNumber: 'c/t' });
+    </script>
+</body>
+
+</html>
