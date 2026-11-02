@@ -1,0 +1,358 @@
+<!doctype html>
+<html lang="ru">
+
+<head>
+    <meta charset="utf-8">
+    <title>Занятие 40 — Префиксные суммы</title>
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+
+    <link rel="stylesheet" href="/utils/css/reveal.css">
+    <link rel="stylesheet" href="/utils/lib/css/animate.css">
+    <link rel="stylesheet" href="/utils/css/theme/night.css" id="theme">
+    <link rel="stylesheet" href="/utils/lib/css/zenburn.css">
+    <link rel="stylesheet" href="/utils/css/custom-base.css">
+    <link rel="stylesheet" href="css-custom/custom.css">
+
+    <script>
+        var link = document.createElement('link');
+        link.rel = 'stylesheet'; link.type = 'text/css';
+        link.href = window.location.search.match(/print-pdf/gi)
+            ? '/utils/css/print/pdf.css'
+            : '/utils/css/print/paper.css';
+        document.getElementsByTagName('head')[0].appendChild(link);
+    </script>
+</head>
+
+<body>
+
+<div class="reveal">
+
+<div class="slides">
+<section style="font-size: 70px; height: 100%; width: 100%">
+
+<div class="lesson-time">0</div>
+
+<div class="fragment">
+<h1 class="animated" style="font-size: 1.5em;">Префиксные<br>суммы</h1>
+
+<p style="text-align: center; font-size: 0.4em; opacity: 0.5;">Занятие 40 · быстрые запросы на отрезках</p>
+</div>
+</section>
+<section>
+<section style="font-size: 70px; height: 100%; width: 100%">
+
+<div class="lesson-time">0</div>
+
+<div class="fragment">
+<h1 class="animated" style="font-size: 1.3em;">Разбор ДЗ</h1>
+
+<p style="text-align: center; font-size: 0.4em; opacity: 0.5;">покупки в пределах бюджета</p>
+</div>
+</section>
+<section>
+<h2>Какие пары подходят?</h2>
+
+<p class="fragment" style="font-size: 0.75em; text-align: center;">Выбрать два разных товара, уложиться в бюджет.<br>Пары названий вернуть без обратных дублей.</p>
+<div class="code-block fragment"><pre class="python size-m" style="font-size: 0.65em;"><code>for (a, price_a), (b, price_b) in combinations(items, 2):
+    if price_a + price_b &lt;= budget:
+        result.append((a, b))</code></pre></div>
+<div class="fragment opinion" style="font-size: 0.75em; margin-top: 0.6em;">Ровно бюджет — подходит. Равные цены — ещё не одинаковые товары.</div>
+
+<aside class="notes">Файл 0_shopping.py. Ученик сначала показывает своё решение. combinations импортирован из itertools, result создан до цикла и возвращается после. Проверить бюджет 500 и 499 для цен 200 и 300; пустой список; один товар; два разных товара по 200. На разбор 5 минут.</aside>
+</section>
+</section>
+<section>
+<section style="font-size: 70px; height: 100%; width: 100%">
+
+<div class="lesson-time">5</div>
+
+<div class="fragment">
+<h1 class="animated" style="font-size: 1.3em;">Много запросов</h1>
+
+<p style="text-align: center; font-size: 0.4em; opacity: 0.5;">почему мы снова считаем одно и то же?</p>
+</div>
+</section>
+<section>
+<h2>Продажи по дням</h2>
+
+<p class="fragment" style="font-size: 0.75em; text-align: center;">Магазин записал выручку за пять дней:</p>
+<table style="font-size: 0.8em; margin: 0.6em auto;"><thead>
+<tr><th>Индекс дня</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th></tr></thead><tbody>
+<tr class="fragment"><td>Выручка</td><td>3</td><td>1</td><td>4</td><td>2</td><td>5</td></tr></tbody></table>
+<p class="fragment" style="font-size: 0.75em; text-align: center;">Нужна выручка за разные периоды: дни 1–3, дни 0–2, дни 2–4.</p>
+<div class="fragment opinion" style="font-size: 0.75em; margin-top: 0.6em;">Массив один. Вопросов к нему много.</div>
+
+<aside class="notes">Индексы с нуля. Пока периоды называем с включённым последним днём. Устно спросить выручку за дни 1–3: 1+4+2=7. Следующий слайд фиксирует удобную единую запись границ.</aside>
+</section>
+<section>
+<h2>Договоримся о границах</h2>
+
+<p class="fragment" style="font-size: 0.75em; text-align: center;"><code>[l, r)</code>: включаем l, <mark>не включаем r</mark>. Как в <code>range(l, r)</code>.</p>
+<p class="fragment" style="font-size: 0.75em; text-align: center;">Массив: [3, <mark>1, 4, 2</mark>, 5].<br>Отрезок [1, 4): индексы 1, 2, 3. Сумма: 7.</p>
+<ul style="font-size: 0.85em; text-align: left;">
+<li class="fragment">Длина участка: <code>r - l</code>.</li>
+<li class="fragment">Весь массив: <code>[0, len(a))</code>.</li>
+<li class="fragment">Пустой участок: <code>[l, l)</code>, сумма 0.</li></ul>
+
+<aside class="notes">Не переходить между включённой и исключённой правой границей в задачах урока. Уточнить: день 4 не входит в [1,4). Если последний нужный индекс 3, правая граница равна 4.</aside>
+</section>
+<section>
+<h2>Простой способ</h2>
+
+<p class="fragment" style="font-size: 0.75em; text-align: center;">Для каждого запроса заново проходим нужный участок и складываем его элементы.</p>
+<p class="fragment" style="font-size: 0.75em; text-align: center;">Один запрос: до n сложений. q запросов: <mark>O(n · q)</mark> в худшем случае.</p>
+<div class="fragment opinion" style="font-size: 0.75em; margin-top: 0.6em;">При n = 100 000 и q = 100 000 — до 10¹⁰ обработанных элементов.</div>
+
+<aside class="notes">Устно описать прямое суммирование, отдельной задачи нет. Спросить, решит ли проблему sum(a[l:r]). Нет: элементы всё равно просматриваются, а срез ещё создаёт список.</aside>
+</section>
+<section>
+<h2>Что можно посчитать заранее?</h2>
+
+<p class="fragment" style="font-size: 0.75em; text-align: center;">Соседние запросы складывают одни и те же элементы снова и снова.</p>
+<p class="fragment" style="font-size: 0.75em; text-align: center;">А если один раз узнать суммы <mark>от начала массива</mark> до каждой границы?</p>
+<div class="fragment opinion" style="font-size: 0.75em; margin-top: 0.6em;">Сначала подготовка. Затем каждый ответ — из уже известных сумм.</div>
+
+<aside class="notes">Переход к идее следующей подгруппы. Не выдавать формулу заранее: попросить предположить, как из двух сумм убрать лишнее начало.</aside>
+</section>
+</section>
+<section>
+<section style="font-size: 70px; height: 100%; width: 100%">
+
+<div class="lesson-time">10</div>
+
+<div class="fragment">
+<h1 class="animated" style="font-size: 1.3em;">Суммы от начала</h1>
+
+<p style="text-align: center; font-size: 0.4em; opacity: 0.5;">сохраняем результат каждого шага</p>
+</div>
+</section>
+<section>
+<h2>Что такое префикс?</h2>
+<div style="text-align: center; margin-top: 0.5em;">
+    <svg width="940" height="290" viewBox="0 0 940 290" role="img" aria-label="Один длинный массив: префикс от начала, суффикс до конца, подотрезок внутри">
+        <defs>
+            <pattern id="prefix-array-cells" width="12" height="64" patternUnits="userSpaceOnUse">
+                <path d="M 0 0 V 64" fill="none" stroke="#444b55" stroke-width="1" />
+            </pattern>
+        </defs>
+        <text x="50" y="97" fill="#99a" font-size="17">начало</text>
+        <text x="890" y="97" fill="#99a" font-size="17" text-anchor="end">конец</text>
+        <rect x="50" y="114" width="840" height="64" fill="#1c2030" stroke="#88919e" stroke-width="2" />
+        <rect x="50" y="114" width="840" height="64" fill="url(#prefix-array-cells)" />
+
+        <g class="fragment" data-fragment-index="0">
+            <rect x="50" y="114" width="276" height="64" fill="#64aeef" fill-opacity="0.28" />
+            <path d="M 50 102 V 64 H 326 V 102" fill="none" stroke="#64aeef" stroke-width="4" />
+            <text x="188" y="47" text-anchor="middle" fill="#64aeef" font-size="25">Префикс</text>
+        </g>
+        <g class="fragment" data-fragment-index="1">
+            <rect x="662" y="114" width="228" height="64" fill="#86c99b" fill-opacity="0.28" />
+            <path d="M 662 102 V 64 H 890 V 102" fill="none" stroke="#86c99b" stroke-width="4" />
+            <text x="776" y="47" text-anchor="middle" fill="#86c99b" font-size="25">Суффикс</text>
+        </g>
+        <g class="fragment" data-fragment-index="2">
+            <rect x="386" y="114" width="204" height="64" fill="#e3bc55" fill-opacity="0.28" />
+            <path d="M 386 190 V 228 H 590 V 190" fill="none" stroke="#e3bc55" stroke-width="4" />
+            <text x="488" y="264" text-anchor="middle" fill="#e3bc55" font-size="25">Подотрезок</text>
+        </g>
+    </svg>
+</div>
+<div style="text-align: left; font-size: 0.7em; line-height: 1.5; margin: 0.4em 0.5em 0;">
+    <p class="fragment" data-fragment-index="0" style="margin: 0.5em 0;"><strong style="color: #64aeef;">Префикс</strong> — часть массива от его начала до выбранной границы.</p>
+    <p class="fragment" data-fragment-index="1" style="margin: 0.5em 0;"><strong style="color: #86c99b;">Суффикс</strong> — часть массива от выбранной границы до его конца.</p>
+    <p class="fragment" data-fragment-index="2" style="margin: 0.5em 0;"><strong style="color: #e3bc55;">Подотрезок</strong> — непрерывная часть массива между двумя выбранными границами.</p>
+</div>
+<aside class="notes">Сначала виден только длинный массив. Первый клик показывает синий префикс слева и определение внизу; второй — зелёный суффикс справа и определение; третий — жёлтый подотрезок и определение. Во всех трёх случаях элементы идут подряд, без пропусков. Префикс и суффикс — частные случаи подотрезка; внутренний участок выбран лишь для наглядности. Подотрезок может касаться любой границы или совпадать со всем массивом. Далее различить префикс как часть массива и prefix[k] как сумму первых k элементов.</aside>
+</section>
+<section>
+<h2>Два массива — разные индексы</h2>
+
+<table style="font-size: 0.8em; margin: 0.6em auto;"><thead>
+<tr><th>Индекс</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th></tr></thead><tbody>
+<tr class="fragment"><td>a</td><td>3</td><td>1</td><td>4</td><td>2</td><td>5</td><td>—</td></tr>
+<tr class="fragment"><td>prefix</td><td>0</td><td>3</td><td>4</td><td>8</td><td>10</td><td>15</td></tr></tbody></table>
+<p class="fragment" style="font-size: 0.75em; text-align: center;"><code>prefix[3] = 8</code>: сумма элементов <code>a[0], a[1], a[2]</code>.</p>
+<div class="fragment opinion" style="font-size: 0.75em; margin-top: 0.6em;">n элементов → n + 1 префиксная сумма.</div>
+
+<aside class="notes">Обратить внимание на сдвиг: a[i] прибавляется в prefix[i+1]. Для пустого массива prefix=[0]. До кода попросить вычислить prefix[4].</aside>
+</section>
+<section>
+<h2>Добавляем один элемент</h2>
+
+<p class="fragment" style="font-size: 0.75em; text-align: center;">Новая префиксная сумма = предыдущая сумма + следующий элемент.</p>
+<p class="fragment" style="font-size: 0.75em; text-align: center;"><code>prefix[i + 1] = prefix[i] + a[i]</code></p>
+<div class="fragment opinion" style="font-size: 0.75em; margin-top: 0.6em;">Один проход: O(n) времени и O(n) дополнительной памяти.</div>
+
+<aside class="notes">Ученик объясняет формулу накопления: к сумме первых i элементов добавляется элемент с индексом i. Реализацию преподаватель пишет в редакторе на следующем шаге.</aside>
+</section>
+<section>
+<h2>Пишем код: накопить суммы</h2>
+
+<p class="fragment" style="font-size: 0.75em; text-align: center;">Соберём <code>build_prefix(a)</code>: функция возвращает префиксные суммы с начальным нулём.</p>
+<table style="font-size: 0.8em; margin: 0.6em auto;"><tr><th>Массив</th><th>Префиксные суммы</th></tr><tr class="fragment"><td>[3, 1, 4, 2, 5]</td><td>[0, 3, 4, 8, 10, 15]</td></tr><tr class="fragment"><td>Пустой массив</td><td>[0]</td></tr></table>
+<div class="fragment opinion" style="font-size: 0.75em; margin-top: 0.6em;">В массиве могут быть нули и отрицательные числа.</div>
+
+<aside class="notes">Короткая демонстрация преподавателя, около 2 минут. Файл 1_build_prefix.py. Написать функцию с нуля: начальный ноль, цикл, добавление суммы, возврат. Перед запуском спросить ученика, что получится для [2,-3,4] и пустого списка. Ответы: [0,2,-1,3] и [0]. Показать, что исходный список не изменился; prefix не обязан возрастать.</aside>
+</section>
+</section>
+<section>
+<section style="font-size: 70px; height: 100%; width: 100%">
+
+<div class="lesson-time">20</div>
+
+<div class="fragment">
+<h1 class="animated" style="font-size: 1.3em;">Сумма отрезка</h1>
+
+<p style="text-align: center; font-size: 0.4em; opacity: 0.5;">убираем лишнее начало</p>
+</div>
+</section>
+<section>
+<h2>Две суммы вместо цикла</h2>
+
+<p class="fragment" style="font-size: 0.75em; text-align: center;">Нужна сумма <code>a[1:4]</code> для <code>[3, 1, 4, 2, 5]</code>.</p>
+<table style="font-size: 0.8em; margin: 0.6em auto;"><thead>
+<tr><th>Сумма</th><th>Что входит</th><th>Значение</th></tr></thead><tbody>
+<tr class="fragment"><td>prefix[4]</td><td>3 + <mark>1 + 4 + 2</mark></td><td>10</td></tr>
+<tr class="fragment"><td>prefix[1]</td><td>3</td><td>3</td></tr>
+<tr class="fragment"><td>Разность</td><td><mark>1 + 4 + 2</mark></td><td>7</td></tr></tbody></table>
+<div class="fragment opinion" style="font-size: 0.75em; margin-top: 0.6em;">Большой префикс содержит нужный участок и лишнее начало. Вычитаем начало.</div>
+
+<aside class="notes">Не заучивать формулу. Попросить показать, какое слагаемое сокращается. Затем спросить, какие префиксы нужны для [2,5): prefix[5] и prefix[2].</aside>
+</section>
+<section>
+<h2>Формула запроса</h2>
+
+<p class="fragment" style="font-size: 0.75em; text-align: center;"><code style="font-size: 1.25em;">sum(l, r) = prefix[r] - prefix[l]</code></p>
+<p class="fragment" style="font-size: 0.75em; text-align: center;">Например, для [1, 4): <mark>10 − 3 = 7</mark>.</p>
+<div class="fragment opinion" style="font-size: 0.75em; margin-top: 0.6em;">После подготовки один запрос занимает <mark>O(1)</mark>.</div>
+
+<aside class="notes">Формула для [l,r). Предусловие 0&lt;=l&lt;=r&lt;=n. Минус работает и для отрицательных значений: убираем одни и те же слагаемые, а не сравниваем размеры чисел.</aside>
+</section>
+<section>
+<h2>Границы без особых случаев</h2>
+
+<table style="font-size: 0.8em; margin: 0.6em auto;"><thead>
+<tr><th>Запрос</th><th>Расчёт</th><th>Ответ</th></tr></thead><tbody>
+<tr class="fragment"><td>[0, 5)</td><td>15 − 0</td><td>15</td></tr>
+<tr class="fragment"><td>[2, 3)</td><td>8 − 4</td><td>4</td></tr>
+<tr class="fragment"><td>[2, 2)</td><td>4 − 4</td><td>0</td></tr>
+<tr class="fragment"><td>[4, 5)</td><td>15 − 10</td><td>5</td></tr></tbody></table>
+<div class="fragment opinion" style="font-size: 0.75em; margin-top: 0.6em;">Начальный ноль позволяет использовать одну формулу везде.</div>
+
+<aside class="notes">Просить ученика назвать ответ до открытия строки таблицы. Это четыре последовательных фрагмента плюс вывод: таблица короткая, последний вывод можно произнести вместе с последней строкой.</aside>
+</section>
+<section>
+<h2>Пишем код: выручка за периоды</h2>
+
+<p class="fragment" style="font-size: 0.75em; text-align: center;">Напишем <code>sales_totals(a, queries)</code>.<br>Для каждого <code>(l, r)</code> получим сумму на <code>[l, r)</code>.</p>
+<table style="font-size: 0.8em; margin: 0.6em auto;"><tr><th>Массив</th><th>Запросы</th><th>Ответы</th></tr><tr class="fragment"><td>[3, 1, 4, 2, 5]</td><td>[1, 4), [0, 5), [2, 2)</td><td>7, 15, 0</td></tr></table>
+<div class="fragment opinion" style="font-size: 0.75em; margin-top: 0.6em;">Подготовь prefix <mark>один раз</mark> для всех запросов.</div>
+
+<aside class="notes">Короткая демонстрация преподавателя, около 2 минут. Файл 2_sales_totals.py. Использовать написанное построение prefix, затем добавить цикл запросов. Спросить ученика, где должна находиться подготовка и какие индексы нужно вычесть. Показать один запрос, затем весь список; проверить пустой отрезок. Prefix строится один раз до обработки запросов.</aside>
+</section>
+<section>
+<h2>Что выиграли?</h2>
+
+<table style="font-size: 0.8em; margin: 0.6em auto;"><thead>
+<tr><th>Подход</th><th>Подготовка</th><th>q запросов</th><th>Всего</th></tr></thead><tbody>
+<tr class="fragment"><td>Суммировать каждый раз</td><td>—</td><td>O(n · q)</td><td>O(n · q)</td></tr>
+<tr class="fragment"><td>Префиксные суммы</td><td>O(n)</td><td>O(q)</td><td><mark>O(n + q)</mark></td></tr></tbody></table>
+<ul style="font-size: 0.85em; text-align: left;">
+<li class="fragment">Храним ещё O(n) чисел.</li>
+<li class="fragment">Подходит, когда массив между запросами <mark>не меняется</mark>.</li></ul>
+
+<aside class="notes">Возвращаемся к 100 тысячам элементов и запросов: один проход подготовки и одна разность на запрос. Не обещать точное время в секундах. При изменении a[i] нужно обновить последующие префиксы, до O(n) работы.</aside>
+</section>
+</section>
+<section>
+<section style="font-size: 70px; height: 100%; width: 100%"><div class="lesson-time">30</div><div class="fragment"><h1 style="font-size: 1.3em;">Ищем отрезок</h1><p style="text-align: center; font-size: 0.4em; opacity: 0.5;">от известных границ — к заданной сумме</p></div></section>
+<section>
+<h2>Есть ли сумма target?</h2>
+<p class="fragment" style="font-size: 0.75em; text-align: center;">Дан массив целых чисел. Есть ли в нём <mark>непустой подотрезок</mark> с суммой target?</p><p class="fragment" style="font-size: 0.75em; text-align: center;">Массив: [3, −1, 4, −2]. Искомая сумма: 3.<br>Ответ: <mark>да</mark> — подходят [3] и [−1, 4].</p><div class="fragment opinion" style="font-size: 0.75em; margin-top: 0.6em;">Нужен линейный проход. Отрицательные числа разрешены.</div>
+<aside class="notes">Лайвкодинг преподавателя, 3_has_target_sum.py. Контракт: bool, пустой массив даёт False. Отрицательные числа не позволяют просто двигать границы по правилу «сумма велика — уменьшим окно». Спрашивать ученика о формуле суммы отрезка.</aside>
+</section>
+<section>
+<h2>Какой префикс нам нужен?</h2>
+<p class="fragment" style="font-size: 0.75em; text-align: center;"><code>prefix[r] - prefix[l] = target</code></p><p class="fragment" style="font-size: 0.75em; text-align: center;">Значит, ищем ранее встречавшуюся сумму:<br><mark>prefix[l] = prefix[r] - target</mark>.</p><div class="fragment opinion" style="font-size: 0.75em; margin-top: 0.6em;">Идём слева направо. Множество хранит суммы только <mark>предыдущих</mark> префиксов.</div>
+<aside class="notes">Фиксируем правую границу r и ищем подходящую левую. Множество из темы хеш-таблиц. Не перебирать все l для каждого r. Начать с seen={0}, чтобы находить отрезки от начала массива.</aside>
+</section>
+<section>
+<h2>Найдём совпадение</h2>
+<p class="fragment" style="font-size: 0.75em; text-align: center;">Массив: [2, −1, 3]. Искомая сумма: 2.</p><table style="font-size: 0.8em; margin: 0.6em auto;"><tr><th>Текущая сумма</th><th>Ищем среди прошлых</th><th>Нашли?</th></tr><tr class="fragment"><td>2</td><td>2 − 2 = 0</td><td>Да: пустой префикс</td></tr></table><p class="fragment" style="font-size: 0.75em; text-align: center;">Получили непустой отрезок <mark>[0, 1)</mark>.</p><p class="fragment" style="font-size: 0.75em; text-align: center;">Если нужной суммы нет — запоминаем текущую и продолжаем.</p><div class="fragment opinion" style="font-size: 0.75em; margin-top: 0.6em;">Сначала проверяем, <mark>потом добавляем</mark>. Иначе target = 0 даст пустой отрезок.</div>
+<aside class="notes">Проверить устно [5],target=0: False. Если добавить 5 до проверки, получим ложное True. Дополнительная трассировка [2,-1,3],target=3: после сумм 2 и 1 приходит 4; 4-3=1 уже встречалась, отрезок [2,3).</aside>
+</section>
+<section>
+<h2>Пишем код: заданная сумма</h2>
+<table style="font-size: 0.8em; margin: 0.6em auto;"><tr><th>Массив</th><th>Искомая сумма</th><th>Ответ</th></tr><tr class="fragment"><td>[2, −1, 3]</td><td>3</td><td>Да</td></tr><tr class="fragment"><td>[5]</td><td>0</td><td>Нет</td></tr><tr class="fragment"><td>[0]</td><td>0</td><td>Да</td></tr><tr class="fragment"><td>Пустой массив</td><td>0</td><td>Нет</td></tr></table><div class="fragment opinion" style="font-size: 0.75em; margin-top: 0.6em;">Ожидаемое время O(n), память O(n): поиск в set в среднем O(1).</div>
+<aside class="notes">Преподаватель пишет has_target_sum(a,target) с нуля в редакторе и запускает тесты из 3_has_target_sum.py. Ученик прогнозирует ответы для пустого массива, [0], [5] с target=0 и случая с отрицательными. Оговорить: оценка с Python set — ожидаемая при обычной работе хеширования.</aside>
+</section>
+</section>
+<section>
+<section style="font-size: 70px; height: 100%; width: 100%"><div class="lesson-time">43</div><div class="fragment"><h1 style="font-size: 1.3em;">Два массива</h1><p style="text-align: center; font-size: 0.4em; opacity: 0.5;">сводим новую задачу к знакомой</p></div></section>
+<section>
+<h2>Суммы должны совпасть</h2>
+<p class="fragment" style="font-size: 0.75em; text-align: center;">Даны два массива одинаковой длины. Найдём непустой <code>[l, r)</code>, на котором их суммы равны.</p><p class="fragment" style="font-size: 0.75em; text-align: center;">Первый массив: [<mark>2, 5, 1</mark>, 4].<br>Второй массив: [<mark>1, 3, 4</mark>, 8].</p><p class="fragment" style="font-size: 0.75em; text-align: center;">На [0, 3): <mark>2 + 5 + 1 = 1 + 3 + 4 = 8</mark>.</p><div class="fragment opinion" style="font-size: 0.75em; margin-top: 0.6em;">Вернём границы <code>(l, r)</code>, а если решения нет — <code>None</code>.</div>
+<aside class="notes">Лайвкодинг преподавателя: 4_equal_sums.py. В обоих массивах берём одни и те же индексы. Возвращаем любой подходящий отрезок, не обязательно самый длинный.</aside>
+</section>
+<section>
+<h2>Вычтем массивы</h2>
+<table style="font-size: 0.8em; margin: 0.6em auto;"><tr><th>Индекс</th><th>0</th><th>1</th><th>2</th><th>3</th></tr><tr class="fragment"><td>Первый массив</td><td>2</td><td>5</td><td>1</td><td>4</td></tr><tr class="fragment"><td>Второй массив</td><td>1</td><td>3</td><td>4</td><td>8</td></tr><tr class="fragment"><td>Разность</td><td>1</td><td>2</td><td>−3</td><td>−4</td></tr></table><p class="fragment" style="font-size: 0.75em; text-align: center;">Равенство сумм в a и b означает <mark>нулевую сумму</mark> на том же отрезке d.</p><div class="fragment opinion" style="font-size: 0.75em; margin-top: 0.6em;">Два одинаковых префикса d → между ними сумма 0.</div>
+<aside class="notes">Попросить ученика вычислить d[2]=-3 и сумму первых трёх разностей: 0. Массив d можно не создавать: прибавлять x-y сразу в цикле zip(a,b).</aside>
+</section>
+<section>
+<h2>Пишем код: восстановить границы</h2>
+<p class="fragment" style="font-size: 0.75em; text-align: center;">Равные префиксные суммы отмечают <mark>две границы</mark> искомого отрезка.</p><table style="font-size: 0.8em; margin: 0.6em auto;"><tr><th>Граница</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th></tr><tr class="fragment"><td>Префикс разностей</td><td><mark>0</mark></td><td>1</td><td>3</td><td><mark>0</mark></td><td>−4</td></tr></table><p class="fragment" style="font-size: 0.75em; text-align: center;">Совпадение на границах 0 и 3 → ответ <mark>[0, 3)</mark>.</p><div class="fragment opinion" style="font-size: 0.75em; margin-top: 0.6em;">Словарь хранит <mark>сумма → граница префикса</mark>. Ожидаемое время O(n), память O(n).</div>
+<aside class="notes">Преподаватель пишет equal_sum_segment(a,b). Ноль в {0:0} — пустой префикс до первого элемента. enumerate начинается с 1: r — правая исключённая граница. Проверить возвращённые границы и обе суммы, а не только совпадение с одним образцом ответа.</aside>
+</section>
+</section>
+<section>
+<section style="font-size: 70px; height: 100%; width: 100%"><div class="lesson-time">53</div><div class="fragment"><h1 style="font-size: 1.3em;">Домашняя задача</h1><p style="text-align: center; font-size: 0.4em; opacity: 0.5;">от равных сумм — к равным остаткам</p></div></section>
+<section>
+<h2>ДЗ: сумма делится на n</h2>
+<p class="fragment" style="font-size: 0.75em; text-align: center;">Дано мультимножество из n целых чисел, n ≥ 1.<br>Найди любое <mark>непустое подмножество</mark>, сумма которого делится на n.</p><p class="fragment" style="font-size: 0.75em; text-align: center;">Числа: [2, 2, 3], n = 3.<br>Можно выбрать элемент с индексом 2: его значение 3 делится на 3.</p><div class="fragment opinion" style="font-size: 0.75em; margin-top: 0.6em;">Верни список различных индексов. Каждое вхождение можно взять не больше одного раза.</div>
+<aside class="notes">ДЗ hw_divisible_subset.py. n=len(a), n&gt;=1. Допускаются отрицательные числа и повторяющиеся значения. Подмножество мультимножества выбирает вхождения, поэтому возвращаем индексы. Любой порядок индексов допустим. Решение существует всегда; полный код и доказательство разбираются на следующем занятии.</aside>
+</section>
+<section>
+<h2>Подсказка: посмотри на остатки</h2>
+<p class="fragment" style="font-size: 0.75em; text-align: center;">Упорядочим числа как в списке. Подойдёт и набор элементов одного подотрезка.</p><p class="fragment" style="font-size: 0.75em; text-align: center;">Если две префиксные суммы имеют одинаковый остаток по n, их разность делится на n.</p><div class="fragment opinion" style="font-size: 0.75em; margin-top: 0.6em;">Есть <mark>n + 1</mark> префиксных сумм, включая 0, и только <mark>n</mark> возможных остатков. Что из этого следует?</div>
+<aside class="notes">Дать направление без полного решения. Ученик дома формулирует принцип Дирихле и восстанавливает индексы между двумя границами. Подотрезок в выбранном порядке является допустимым подмножеством мультимножества. Проверить, что ученик учитывает пустой префикс, но не возвращает пустое подмножество.</aside>
+</section>
+</section>
+<section>
+<h2>Что запомнить</h2>
+
+<ul style="font-size: 0.85em; text-align: left;">
+<li class="fragment"><code>prefix[k]</code> хранит сумму первых k элементов.</li>
+<li class="fragment">Начинаем с 0: длина prefix равна n + 1.</li>
+<li class="fragment">Для <code>[l, r)</code>: <code>prefix[r] - prefix[l]</code>.</li>
+<li class="fragment">Для поиска отрезка запоминаем прошлые суммы и их границы.</li></ul>
+
+<aside class="notes">58–60 минут. Попросить вывести формулу суммы, назвать нужный прошлый префикс для target и объяснить переход к разностям двух массивов. В ДЗ исследовать остатки и восстановить непустой набор индексов.</aside>
+</section>
+</div>
+</div>
+    <script src="/utils/lib/js/head.min.js"></script>
+    <script src="/utils/js/reveal.js"></script>
+    <script>
+        Reveal.initialize({
+            controls: true,
+            progress: true,
+            history: true,
+            center: true,
+            transition: 'fade',
+            transitionSpeed: 'fast',
+            dependencies: [
+                { src: '/utils/lib/js/classList.js', condition: function () { return !document.body.classList; } },
+                { src: '/utils/plugin/markdown/marked.js', condition: function () { return !!document.querySelector('[data-markdown]'); } },
+                { src: '/utils/plugin/markdown/markdown.js', condition: function () { return !!document.querySelector('[data-markdown]'); } },
+                { src: '/utils/plugin/highlight/highlight.js', async: true, callback: function () { hljs.initHighlightingOnLoad(); } },
+                { src: '/utils/plugin/zoom-js/zoom.js', async: true },
+                { src: '/utils/plugin/notes/notes.js', async: true }
+            ]
+        });
+        Reveal.configure({ slideNumber: 'c/t' });
+    </script>
+</body>
+
+</html>
