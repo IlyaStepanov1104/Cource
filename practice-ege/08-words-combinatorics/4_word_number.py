@@ -1,8 +1,12 @@
 from itertools import product
 
-# Решу ЕГЭ 5055: все слова длины 5 из ВЕКНО по алфавиту, номера с 1. Номер первого слова на О.
 def first_number() -> int:
-    pass
+    count = 1
+    for chars in product('ВЕКНО', repeat=5):
+        if chars[0] != 'О':
+            count += 1
+        else:
+            return count
 
 
 

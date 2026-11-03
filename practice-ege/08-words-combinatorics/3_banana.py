@@ -1,10 +1,14 @@
 from itertools import permutations
 
-# Различные перестановки всех букв БАНАН; соседних А нет.
 def count_words() -> int:
-    pass
+    s = []
+    for chars in permutations('СВЕТЛАНА', 8):
+        word = ''.join(chars)
+        if 'АА' not in word:
+            s.append(word)
+    return len(set(s))
 
 
 
 
-print(count_words(), 18)
+print(count_words())
