@@ -205,15 +205,37 @@
     },
     {
       "number": 8,
-      "title": "Системы счисления",
+      "title": "Перебор слов и комбинаторика",
       "date": "2026-11-03T19:00:00",
       "duration": 60,
-      "presentations": [],
-      "homeworks": []
+      "presentations": [
+        {
+          "title": "Комбинаторика и перебор слов",
+          "link": "/lessons-ege/08-words-combinatorics/",
+          "order": 1
+        }
+      ],
+      "homeworks": [
+        {
+          "title": "№8: слова с одной буквой А",
+          "description": "Слова длины 5 из АБВГ; ровно одна А. Буквы могут повторяться. Сначала аналитически, затем на Python.",
+          "link": "/practice-ege/08-words-combinatorics/hw_1_one_a.py"
+        },
+        {
+          "title": "№8: перестановки слова ТОПОР",
+          "description": "Различные перестановки всех букв ТОПОР; соседних О нет. Сначала аналитически, затем на Python.",
+          "link": "/practice-ege/08-words-combinatorics/hw_2_topor.py"
+        },
+        {
+          "title": "№8: порядковый номер слова",
+          "description": "Все слова длины 4 из АБВГ по алфавиту, номера с 1. Номер первого слова на Г. Сначала аналитически, затем на Python.",
+          "link": "/practice-ege/08-words-combinatorics/hw_3_first_g.py"
+        }
+      ]
     },
     {
       "number": 9,
-      "title": "Перебор слов и комбинаторика",
+      "title": "Системы счисления",
       "date": "2026-11-10T19:00:00",
       "duration": 60,
       "presentations": [],

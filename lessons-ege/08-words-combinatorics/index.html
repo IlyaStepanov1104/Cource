@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="ru">
+
+<head>
+    <meta charset="utf-8">
+    <title>ЕГЭ, занятие 8 — Перебор слов и комбинаторика</title>
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+
+    <link rel="stylesheet" href="/utils/css/reveal.css">
+    <link rel="stylesheet" href="/utils/lib/css/animate.css">
+    <link rel="stylesheet" href="/utils/css/theme/night.css" id="theme">
+    <link rel="stylesheet" href="/utils/lib/css/zenburn.css">
+    <link rel="stylesheet" href="/utils/css/custom-base.css">
+    <link rel="stylesheet" href="css-custom/custom.css">
+
+    <script>
+        var link = document.createElement('link');
+        link.rel = 'stylesheet'; link.type = 'text/css';
+        link.href = window.location.search.match(/print-pdf/gi)
+            ? '/utils/css/print/pdf.css'
+            : '/utils/css/print/paper.css';
+        document.getElementsByTagName('head')[0].appendChild(link);
+    </script>
+</head>
+
+<body>
+    <div class="reveal">
+        <div class="slides">
+
+            <!-- Титульный слайд: оформление как в предыдущих занятиях ЕГЭ -->
+            <section style="font-size: 70px; height: 100%; width: 100%">
+                <div class="lesson-time">0</div>
+                <div class="fragment">
+                    <h1 class="animated" style="font-size: 1.5em;">Перебор слов</h1>
+                    <p style="text-align: center; font-size: 0.45em; opacity: 0.6;">задание 8 · комбинаторика и Python</p>
+                    <p style="text-align: center; font-size: 0.4em; opacity: 0.5;">ЕГЭ, занятие 8</p>
+                </div>
+            </section>
+
+            <!-- ЧАСТЬ 1: Теория комбинаторики -->
+            <!-- lesson-time: 0 -->
+            <section>
+                <!-- план: сначала инструменты комбинаторики; затем три прототипа, каждый в порядке условие — аналитический разбор — Python — сверка -->
+                <section><div class="lesson-time">0</div><h2>План на 60 минут</h2>
+                    <ul style="font-size: 0.65em; text-align: left;"><li class="fragment">Комбинаторика: выборы, места, порядок и повторения.</li><li class="fragment">Три прототипа: количество букв, перестановки, номер слова.</li><li class="fragment">В каждом: условие → аналитика → Python → сверка.</li></ul>
+                    </section>
+                <!-- правило произведения: последовательные выборы; число продолжений для каждого выбора, схема независимых позиций и степень m**k для слов с повторениями -->
+                <section><h2>Правило произведения</h2>
+                    <div class="compare" style="font-size: 0.6em;"><div class="compare-block fragment" style="text-align:center;padding:0.5em">1-е место<br><strong>m вариантов</strong></div><div class="compare-block fragment" style="text-align:center;padding:0.5em">2-е место<br><strong>m вариантов</strong></div><div class="compare-block fragment" style="text-align:center;padding:0.5em">…</div><div class="compare-block fragment" style="text-align:center;padding:0.5em">k-е место<br><strong>m вариантов</strong></div></div><p class="fragment" style="font-size: 0.95em; text-align: center; margin: 0.6em 0;"><mark>m · m · … · m = m<sup>k</sup></mark></p>
+                    <p class="fragment" style="font-size: 0.65em;">Для каждого выбора на предыдущих местах число продолжений одинаково. Буквы могут повторяться.</p>
+                    </section>
+                <!-- правило суммы: складываем только непересекающиеся случаи; схема разбиения по первой букве и предупреждение о двойном подсчёте -->
+                <section><h2>Правило суммы</h2>
+                    <div class="compare" style="font-size: 0.6em;"><div class="compare-block fragment" style="text-align:center;padding:0.5em">Случай A<br>начинается с А</div><div class="compare-block fragment" style="text-align:center;padding:0.5em">Случай Б<br>начинается с Б</div></div><p class="fragment" style="font-size: 0.95em; text-align: center; margin: 0.6em 0;"><mark>N = N<sub>А</sub> + N<sub>Б</sub></mark></p>
+                    <p class="fragment" style="font-size: 0.65em;">Случаи не пересекаются и вместе покрывают всё, что считаем.</p>
+                    <p class="fragment" style="font-size: 0.65em;">«Есть А» и «есть Б» могут пересекаться: слово АБ попадает в оба случая.</p>
+                    </section>
+                <!-- факториал и перестановки различных объектов: на каждом следующем месте на один вариант меньше; общая формула n! -->
+                <section><h2>Перестановки</h2>
+                    <p class="fragment" style="font-size: 0.65em;">Расставляем n разных объектов. Каждый используем ровно один раз.</p>
+                    <div class="compare" style="font-size: 0.6em;"><div class="compare-block fragment" style="text-align:center;padding:0.5em">n вариантов</div><div class="compare-block fragment" style="text-align:center;padding:0.5em">n − 1</div><div class="compare-block fragment" style="text-align:center;padding:0.5em">…</div><div class="compare-block fragment" style="text-align:center;padding:0.5em">1 вариант</div></div><p class="fragment" style="font-size: 0.95em; text-align: center; margin: 0.6em 0;"><mark>n! = n · (n − 1) · … · 1</mark></p>
+                    <p class="fragment" style="font-size: 0.65em;">0! = 1: пустой набор можно расставить одним способом.</p>
+                    </section>
+                <!-- сочетания: выбираем набор мест без учёта порядка; отличие выбора мест от расстановки букв, формула C(n,k) = n! / (k! * (n-k)!) -->
+                <section><h2>Сочетания: выбрать места</h2>
+                    <p class="fragment" style="font-size: 0.65em;">Выбираем k мест из n. Порядок выбора мест не важен.</p>
+                    <div class="compare" style="font-size: 0.6em;"><div class="compare-block fragment" style="text-align:center;padding:0.5em">Выбрали 1, затем 3</div><div class="compare-block fragment" style="text-align:center;padding:0.5em">Выбрали 3, затем 1</div></div><p class="fragment" style="font-size: 0.95em; text-align: center; margin: 0.6em 0;"><mark>C(n, k) = n! / (k! · (n − k)!)</mark></p>
+                    <p class="fragment" style="font-size: 0.65em;">Это один набор {1, 3}. Деление на k! убирает разные порядки выбора одного набора.</p>
+                    </section>
+                <!-- перестановки с одинаковыми объектами: почему n! считает лишнее; общая формула n! / (k1! * k2!), схема одинаковых букв с временными метками -->
+                <section><h2>Одинаковые буквы</h2>
+                    <div class="compare" style="font-size: 0.6em;"><div class="compare-block fragment" style="text-align:center;padding:0.5em">А₁ А₂ Б</div><div class="compare-block fragment" style="text-align:center;padding:0.5em">А₂ А₁ Б</div></div><p class="fragment" style="font-size: 0.65em;">После удаления меток оба результата — одно слово ААБ.</p>
+                    <p class="fragment" style="font-size: 0.95em; text-align: center; margin: 0.6em 0;"><mark>N = n! / (k₁! · k₂! · …)</mark></p>
+                    <p class="fragment" style="font-size: 0.65em;">k₁, k₂, … — количества одинаковых букв каждого вида. Делим на перестановки внутри каждой такой группы.</p>
+                    </section>
+                <!-- метод промежутков: сначала размещаем остальные буквы, затем разделяем одинаковые буквы; m объектов образуют m+1 промежутков, не более одной вставляемой буквы на промежуток -->
+                <section><h2>Не рядом: метод промежутков</h2>
+                    <p class="fragment" style="font-size: 0.95em; text-align: center; margin: 0.6em 0;"><mark>□ Б □ В □ Г □</mark></p>
+                    <p class="fragment" style="font-size: 0.65em;">У m уже расставленных объектов есть m + 1 промежутков, включая края.</p>
+                    <p class="fragment" style="font-size: 0.65em;">Чтобы k одинаковых букв не соседствовали, выбираем k разных промежутков.</p>
+                    <p class="fragment" style="font-size: 0.95em; text-align: center; margin: 0.6em 0;"><mark>C(m + 1, k), если k ≤ m + 1</mark></p>
+                    </section>
+                <!-- быстрая проверка понимания: где умножение, где сумма, где выбор мест и где перестановки; ученик объясняет выбор без программирования -->
+                <section><h2>Какой инструмент выбрать?</h2>
+                    <ul style="font-size: 0.65em; text-align: left;"><li class="fragment">Для каждого места разрешены одни и те же буквы?</li><li class="fragment">Нужно разделить подсчёт на случаи? Когда их можно сложить?</li><li class="fragment">Выбираем места или расставляем разные буквы?</li><li class="fragment">Есть одинаковые буквы или запрет соседства?</li></ul>
+                    </section>
+            </section>
+
+            <!-- ЧАСТЬ 2: Прототип — ограничения на буквы -->
+            <!-- lesson-time: 19 -->
+            <section>
+                <!-- условие, авторская тренировка: пятибуквенные слова из АБВГ, ровно две А; остальные буквы могут повторяться; требуется количество слов -->
+                <section><div class="lesson-time">19</div><h2>Прототип 1. Ровно две А</h2>
+                    <p class="fragment" style="font-size: 0.65em;">Составляем слова длины 5 из букв <mark>А, Б, В, Г</mark>. Буквы могут повторяться.</p>
+                    <p class="fragment" style="font-size: 0.65em;">Сколько слов содержат <mark>ровно две А</mark>?</p>
+                    <div class="compare" style="font-size: 0.6em;"><div class="compare-block fragment" style="text-align:center;padding:0.5em">АБВАГ — подходит</div><div class="compare-block fragment" style="text-align:center;padding:0.5em">АБААГ — не подходит</div></div><p class="fragment" style="font-size: 0.65em;">Авторская тренировочная задача · файл <code>1_two_a.py</code></p>
+                    </section>
+                <!-- аналитический разбор: схема выбора двух мест для А и независимого заполнения остальных; ученик собирает выражение из изученных правил, готовое решение в материалах преподавателя -->
+                <section><h2>Аналитически: места × заполнение</h2>
+                    <p class="fragment" style="font-size: 0.95em; text-align: center; margin: 0.6em 0;"><mark>□ □ □ □ □</mark></p>
+                    <ul style="font-size: 0.65em; text-align: left;"><li class="fragment">Каким правилом выбираем два места для А?</li><li class="fragment">Какие буквы разрешены на оставшихся местах?</li><li class="fragment">Сколько способов заполнить каждое оставшееся место?</li></ul>
+                    <p class="fragment" style="font-size: 0.65em;">Запиши выражение и объясни каждый множитель.</p>
+                    </section>
+                <!-- программный разбор того же условия: product и проверка количества А; короткие примеры count и join, реализацию пишем вместе вне слайдов -->
+                <section><h2>На Python: построить и проверить</h2>
+                    <p class="fragment" style="font-size: 0.65em;">Используем <code>product</code> с повторением выбора для каждой позиции.</p>
+                    <pre class="python size-m fragment" style="font-size: 0.55em;"><code>&#x27;&#x27;.join((&#x27;А&#x27;, &#x27;Б&#x27;, &#x27;В&#x27;))   # &#x27;АБВ&#x27;
+&#x27;АБВА&#x27;.count(&#x27;А&#x27;)         # 2</code></pre><ul style="font-size: 0.65em; text-align: left;"><li class="fragment">Какой алфавит и длина нужны генератору?</li><li class="fragment">Какое условие оставляет ровно две А?</li></ul>
+                    <p class="fragment" style="font-size: 0.65em;">Пишем <code>count_words</code> в <code>1_two_a.py</code>.</p>
+                    </section>
+                <!-- сверка способов и короткая самостоятельная вариация: четырёхбуквенные слова из АБВ с ровно одной А; сначала выражение, затем Python -->
+                <section><h2>Сверка → самостоятельная задача</h2>
+                    <p class="fragment" style="font-size: 0.65em;">Сравни аналитический ответ и результат программы для первой задачи.</p>
+                    <p class="fragment" style="font-size: 0.65em;">Теперь слова длины <mark>4</mark> из <mark>А, Б, В</mark>, ровно <mark>одна А</mark>.</p>
+                    <ul style="font-size: 0.65em; text-align: left;"><li class="fragment">Сначала запиши выражение и обоснуй его.</li><li class="fragment">Затем проверь на Python: <code>2_one_a.py</code>. Время — 4 минуты.</li></ul>
+                    </section>
+            </section>
+
+            <!-- ЧАСТЬ 3: Прототип — перестановки и соседство -->
+            <!-- lesson-time: 30 -->
+            <section>
+                <!-- условие, авторская тренировка: различные перестановки букв БАНАН без соседних А; используются все буквы исходного слова -->
+                <section><div class="lesson-time">30</div><h2>Прототип 2. БАНАН</h2>
+                    <p class="fragment" style="font-size: 0.65em;">Переставляем <mark>все буквы</mark> слова БАНАН.</p>
+                    <p class="fragment" style="font-size: 0.65em;">Сколько различных слов можно получить, если <mark>А не стоят рядом</mark>?</p>
+                    <div class="compare" style="font-size: 0.6em;"><div class="compare-block fragment" style="text-align:center;padding:0.5em">БАНАН — подходит</div><div class="compare-block fragment" style="text-align:center;padding:0.5em">БААНН — не подходит</div></div><p class="fragment" style="font-size: 0.65em;">Авторская тренировочная задача · <code>3_banana.py</code></p>
+                    </section>
+                <!-- аналитический разбор: расстановка согласных с учётом одинаковых Н, выбор промежутков для А; схема для совместного заполнения без готового числового решения -->
+                <section><h2>Аналитически: сначала согласные</h2>
+                    <p class="fragment" style="font-size: 0.95em; text-align: center; margin: 0.6em 0;"><mark>□ согласная □ согласная □ согласная □</mark></p>
+                    <ul style="font-size: 0.65em; text-align: left;"><li class="fragment">Сколько разных расстановок можно получить из Б, Н, Н?</li><li class="fragment">Сколько промежутков образуется у каждой расстановки?</li><li class="fragment">Как выбрать места для двух одинаковых А без соседства?</li></ul>
+                    <p class="fragment" style="font-size: 0.65em;">Составь произведение. Объясни, почему одно слово не считается дважды.</p>
+                    </section>
+                <!-- программный разбор того же условия: permutations различает позиции, set устраняет одинаковые результаты, проверка отсутствия АА; реализация вне слайдов -->
+                <section><h2>На Python: одинаковые буквы</h2>
+                    <p class="fragment" style="font-size: 0.65em;"><code>permutations</code> переставляет позиции. Одинаковые буквы могут дать одинаковые результаты.</p>
+                    <pre class="python size-m fragment" style="font-size: 0.55em;"><code>set([&#x27;ААБ&#x27;, &#x27;ААБ&#x27;, &#x27;АБА&#x27;])
+&#x27;АА&#x27; in &#x27;БААНН&#x27;  # True</code></pre><ul style="font-size: 0.65em; text-align: left;"><li class="fragment">Как убрать повторяющиеся перестановки?</li><li class="fragment">Как исключить слова с соседними А?</li></ul>
+                    <p class="fragment" style="font-size: 0.65em;">Реализуем <code>count_words</code> в <code>3_banana.py</code>.</p>
+                    </section>
+                <!-- сверка способов: где учтены одинаковые Н и А, почему слова не считаются дважды; ученик объясняет соответствие множителей и действий перебора -->
+                <section><h2>Сверяем два способа</h2>
+                    <div class="compare" style="font-size: 0.6em;"><div class="compare-block fragment" style="text-align:center;padding:0.5em">Комбинаторика<br>одна расстановка согласных<br>+ один набор промежутков</div><div class="compare-block fragment" style="text-align:center;padding:0.5em">Python<br>одно уникальное слово<br>+ проверка соседства</div></div><ul style="font-size: 0.65em; text-align: left;"><li class="fragment">Где учтены одинаковые Н? А одинаковые А?</li><li class="fragment">Может ли допустимое слово потеряться в одном из способов?</li><li class="fragment">Если ответы различаются — проверяем дубликаты и условие соседства.</li></ul>
+                    </section>
+            </section>
+
+            <!-- ЧАСТЬ 4: Прототип — порядковый номер -->
+            <!-- lesson-time: 42 -->
+            <section>
+                <!-- условие: Решу ЕГЭ 5055 — пятибуквенные слова из ВЕКНО, номер первого слова на О; источник https://inf-ege.sdamgia.ru/problem?id=5055; пересказать своими словами -->
+                <section><div class="lesson-time">42</div><h2>Прототип 3. Номер слова</h2>
+                    <p class="fragment" style="font-size: 0.65em;">Из алфавита <mark>В, Е, К, Н, О</mark> составили все слова длины 5. Повторения разрешены.</p>
+                    <p class="fragment" style="font-size: 0.65em;">Слова расположили по алфавиту и пронумеровали с 1. Найди номер <mark>первого слова на О</mark>.</p>
+                    <p class="fragment" style="font-size: 0.65em;"><a href="https://inf-ege.sdamgia.ru/problem?id=5055" target="_blank" rel="noopener">Решу ЕГЭ №5055</a> · условие пересказано</p>
+                    <p class="fragment" style="font-size: 0.65em;">Файл <code>4_word_number.py</code></p>
+                    </section>
+                <!-- аналитический разбор: разбить предшествующие слова на блоки по первой букве, размер блока найти правилом произведения; порядковый номер равен количеству предыдущих слов плюс один -->
+                <section><h2>Аналитически: считаем предыдущие блоки</h2>
+                    <div class="compare" style="font-size: 0.6em;"><div class="compare-block fragment" style="text-align:center;padding:0.5em">В□□□□</div><div class="compare-block fragment" style="text-align:center;padding:0.5em">Е□□□□</div><div class="compare-block fragment" style="text-align:center;padding:0.5em">К□□□□</div><div class="compare-block fragment" style="text-align:center;padding:0.5em">Н□□□□</div><div class="compare-block fragment" style="text-align:center;padding:0.5em">О□□□□</div></div><ul style="font-size: 0.65em; text-align: left;"><li class="fragment">Сколько целых блоков идёт перед нужным словом?</li><li class="fragment">Сколько слов в одном блоке? Почему?</li></ul>
+                    <p class="fragment" style="font-size: 0.95em; text-align: center; margin: 0.6em 0;"><mark>номер = количество предыдущих слов + 1</mark></p>
+                    </section>
+                <!-- программный разбор того же условия: алфавит в нужном порядке, product и enumerate с началом 1; номер присваивается до фильтрации, реализация вне слайдов -->
+                <section><h2>На Python: номер до проверки</h2>
+                    <p class="fragment" style="font-size: 0.65em;">Алфавит передаём в нужном порядке: <code>ВЕКНО</code>.</p>
+                    <pre class="python size-m fragment" style="font-size: 0.55em;"><code>list(enumerate([&#x27;АА&#x27;, &#x27;АБ&#x27;, &#x27;БА&#x27;], start=1))
+# [(1, &#x27;АА&#x27;), (2, &#x27;АБ&#x27;), (3, &#x27;БА&#x27;)]</code></pre><ul style="font-size: 0.65em; text-align: left;"><li class="fragment">Нумеруем все варианты из product, затем проверяем первую букву.</li><li class="fragment">Как остановиться на первом подходящем слове?</li></ul>
+                    <p class="fragment" style="font-size: 0.65em;">Пишем <code>first_number</code> в <code>4_word_number.py</code>.</p>
+                    </section>
+                <!-- сверка и короткая самостоятельная вариация: все четырёхбуквенные слова из АБВ по алфавиту; номер первого слова на Б; сначала аналитически, затем Python -->
+                <section><h2>Проверь номер двумя способами</h2>
+                    <p class="fragment" style="font-size: 0.65em;">Сначала сравни ответы для алфавита ВЕКНО.</p>
+                    <p class="fragment" style="font-size: 0.65em;">Новая задача: все слова длины <mark>4</mark> из <mark>А, Б, В</mark>, по алфавиту, номера с 1. Найди номер первого слова на <mark>Б</mark>.</p>
+                    <ul style="font-size: 0.65em; text-align: left;"><li class="fragment">Сначала блоки и выражение, затем <code>5_first_b.py</code>. 4 минуты.</li><li class="fragment">Почему номер слова — не количество подходящих слов?</li></ul>
+                    </section>
+            </section>
+
+            <!-- ЧАСТЬ 5: Закрепление и домашняя работа -->
+            <!-- lesson-time: 54 -->
+            <section>
+                <!-- выбор метода и проверка: аналитическое решение требует обоснования множителей и отсутствия двойного подсчёта; Python требует правильного генератора и точного фильтра; ответы должны совпасть -->
+                <section><div class="lesson-time">54</div><h2>Как проверять своё решение</h2>
+                    <div class="compare" style="font-size: 0.6em;"><div class="compare-block fragment" style="text-align:center;padding:0.5em"><strong>Аналитически</strong><br>Объясни каждый множитель.<br>Проверь пересечения случаев.<br>Учти одинаковые буквы.</div><div class="compare-block fragment" style="text-align:center;padding:0.5em"><strong>На Python</strong><br>Выбери генератор.<br>Проверь точность фильтра.<br>Оцени число вариантов.</div></div><p class="fragment" style="font-size: 0.65em;">Совпадение ответов — контроль. Если ответы разные, проверяем смысл условия, а не подгоняем число.</p>
+                    </section>
+                <!-- домашняя работа двумя способами: пятибуквенные слова из АБВГ с ровно одной А; различные перестановки ТОПОР без соседних О; номер первого слова на Г среди четырёхбуквенных слов из АБВГ; сначала обоснование, затем Python -->
+                <section><h2>Домашнее задание</h2>
+                    <ul style="font-size: 0.65em; text-align: left;"><li class="fragment">Слова длины 5 из АБВГ с ровно одной А. Повторения разрешены. <code>hw_1_one_a.py</code></li><li class="fragment">Различные перестановки всех букв ТОПОР без соседних О. <code>hw_2_topor.py</code></li><li class="fragment">Все слова длины 4 из АБВГ по алфавиту, номера с 1. Номер первого слова на Г. <code>hw_3_first_g.py</code></li></ul>
+                    <p class="fragment" style="font-size: 0.65em;">Для каждой: аналитическое выражение с объяснением → программа → сравнение. Задачи авторские.</p>
+                    </section>
+            </section>
+
+            <!-- ИТОГ -->
+            <!-- lesson-time: 58 -->
+            <section>
+                <!-- итог: произведение для последовательных выборов, сумма для непересекающихся случаев, сочетания для мест, перестановки с повторениями, промежутки для запрета соседства; применять к задаче сначала аналитически, потом программой -->
+                <section><div class="lesson-time">58</div><h2>Что забираем с собой</h2>
+                    <ul style="font-size: 0.65em; text-align: left;"><li class="fragment">Последовательные выборы — произведение; непересекающиеся случаи — сумма.</li><li class="fragment">Выбираем места — сочетания; расставляем — перестановки с учётом повторов.</li><li class="fragment">Запрет соседства — промежутки; порядковый номер — предыдущие блоки + 1.</li><li class="fragment">Сначала обоснуй, затем проверь перебором.</li></ul>
+                    </section>
+            </section>
+
+        </div>
+    </div>
+
+    <script src="/utils/lib/js/head.min.js"></script>
+    <script src="/utils/js/reveal.js"></script>
+    <script>
+        Reveal.initialize({
+            controls: true,
+            progress: true,
+            history: true,
+            center: true,
+            transition: 'fade',
+            transitionSpeed: 'fast',
+            dependencies: [
+                { src: '/utils/lib/js/classList.js', condition: function () { return !document.body.classList; } },
+                { src: '/utils/plugin/markdown/marked.js', condition: function () { return !!document.querySelector('[data-markdown]'); } },
+                { src: '/utils/plugin/markdown/markdown.js', condition: function () { return !!document.querySelector('[data-markdown]'); } },
+                { src: '/utils/plugin/highlight/highlight.js', async: true, callback: function () { hljs.initHighlightingOnLoad(); } },
+                { src: '/utils/plugin/zoom-js/zoom.js', async: true },
+                { src: '/utils/plugin/notes/notes.js', async: true }
+            ]
+        });
+        Reveal.configure({ slideNumber: 'c/t' });
+    </script>
+</body>
+
+</html>
