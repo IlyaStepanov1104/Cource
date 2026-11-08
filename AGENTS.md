@@ -43,6 +43,8 @@ npm run dev   # dev-сервер на http://localhost:8001
 - **`lessons/<NN-slug>/presentations/<N-slug>/index.html`** — каждая презентация самодостаточна, использует Reveal.js из `/utils/`.
 - **`utils/`** — общий Reveal.js, шрифты, стили. Пути абсолютные (`/utils/...`), поэтому обязательно нужен dev-сервер.
 
+- На видимых слайдах не указывать номер занятия и длительность (например, «Занятие 41 · 60 минут»).
+
 ## Структура презентации
 
 Шаблон — `lessons/01-intro/presentations/1-intro/index.html`.

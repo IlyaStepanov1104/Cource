@@ -807,12 +807,40 @@
     },
     {
       "number": 41,
-      "title": "Подмножества: битовая маска и рекурсия",
+      "title": "Два указателя: от пары к сложным задачам",
       "date": "2026-11-08T11:00:00",
       "duration": 60,
-      "presentations": [],
-      "homeworks": []
+      "presentations": [
+        {
+          "title": "Презентация",
+          "link": "/lessons/41-two-pointers/",
+          "order": 1
+        }
+      ],
+      "homeworks": [
+        {
+          "title": "LC 283 · Move Zeroes",
+          "description": "Обязательное ДЗ. Перенести нули в конец входного списка на месте, сохранив порядок остальных. Возвращать None. O(n) времени и O(1) памяти.",
+          "link": "https://leetcode.com/problems/move-zeroes/"
+        },
+        {
+          "title": "LC 80 · Remove Duplicates II",
+          "description": "Обязательное ДЗ. Оставить максимум две копии каждого значения в отсортированном списке. Менять на месте, вернуть k. Проверяются первые k ячеек. O(n) времени, O(1) памяти.",
+          "link": "https://leetcode.com/problems/remove-duplicates-from-sorted-array-ii/"
+        },
+        {
+          "title": "LC 11 · Container With Most Water (по желанию)",
+          "description": "По желанию. Неотрицательные высоты стенок: найти максимум (r-l)*min(height[l],height[r]) для l<r. Не сортировать. O(n) времени и O(1) памяти.",
+          "link": "https://leetcode.com/problems/container-with-most-water/"
+        },
+        {
+          "title": "LC 680 · Valid Palindrome II (по желанию)",
+          "description": "Дополнительно. Строчные латинские буквы. Можно удалить не более одного символа. Вернуть, можно ли получить палиндром. O(n) времени, O(1) дополнительной памяти, без срезов.",
+          "link": "https://leetcode.com/problems/valid-palindrome-ii/"
+        }
+      ]
     },
+
     {
       "number": 42,
       "title": "Backtracking: выбор и отмена выбора",
