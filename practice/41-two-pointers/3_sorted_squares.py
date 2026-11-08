@@ -3,7 +3,18 @@
 # Вернуть квадраты элементов отсортированного списка по неубыванию за O(n). Новый список ответа разрешён. Пустой вход — дополнительный тест к LC.
 
 def sorted_squares(nums: list[int]) -> list[int]:
-    pass
+    res = [0] * len(nums)
+    left, right = 0, len(nums) - 1
+    write = len(nums) - 1
+    while left <= right:
+        if abs(nums[left]) > abs(nums[right]):
+            res[write] = nums[left] ** 2
+            left += 1
+        else:
+            res[write] = nums[right] ** 2
+            right -= 1
+        write -= 1
+    return res
 
 
 

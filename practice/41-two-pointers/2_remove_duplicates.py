@@ -3,7 +3,12 @@
 # Изменить отсортированный список на месте: первые k элементов — разные значения в исходном порядке. Вернуть k. Хвост игнорируется. O(n) времени, O(1) памяти. Пустой вход поддерживаем дополнительно к LC.
 
 def remove_duplicates(nums: list[int]) -> int:
-    pass
+    write = 0
+    for read in range(len(nums)):
+        if write == 0 or nums[read] != nums[write - 1]:
+            nums[write] = nums[read]
+            write += 1
+    return write
 
 
 
