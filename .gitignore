@@ -2,3 +2,5 @@ node_modules/
 .DS_Store
 .claude/
 payments.json
+research_notes/
+reports/

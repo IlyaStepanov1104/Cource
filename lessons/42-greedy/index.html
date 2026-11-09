@@ -1,0 +1,1128 @@
+<!doctype html>
+<html lang="ru">
+
+<head>
+    <meta charset="utf-8">
+    <title>Жадные алгоритмы</title>
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+
+    <link rel="stylesheet" href="/utils/css/reveal.css">
+    <link rel="stylesheet" href="/utils/lib/css/animate.css">
+    <link rel="stylesheet" href="/utils/css/theme/night.css" id="theme">
+    <link rel="stylesheet" href="/utils/lib/css/zenburn.css">
+    <link rel="stylesheet" href="/utils/css/custom-base.css">
+    <link rel="stylesheet" href="css-custom/custom.css">
+
+    <script>
+        var link = document.createElement('link');
+        link.rel = 'stylesheet'; link.type = 'text/css';
+        link.href = window.location.search.match(/print-pdf/gi)
+            ? '/utils/css/print/pdf.css'
+            : '/utils/css/print/paper.css';
+        document.getElementsByTagName('head')[0].appendChild(link);
+    </script>
+</head>
+
+<body>
+    <div class="reveal">
+        <div class="slides">
+            <section>
+                <div class="lesson-time">0</div>
+                <h1>Жадные алгоритмы</h1>
+            </section>
+
+            <!-- Разбор домашней работы; lesson-time: 0 -->
+            <section>
+
+                <section>
+                    <h2>ДЗ: переносим нули</h2>
+                    <ul>
+                        <li class="fragment"><a href="https://leetcode.com/problems/move-zeroes/" target="_blank"
+                                rel="noopener">LC 283 · Move Zeroes</a> — изменить исходный список; вернуть
+                            <code>None</code>.
+                        </li>
+                        <li class="fragment"><code>[0, 4, 0, -2, 3] → [4, -2, 3, 0, 0]</code></li>
+                        <li class="fragment">Что означает граница записи? Как сохранить порядок ненулевых значений?</li>
+                        <li class="fragment">Проверим: пустой список, одни нули, ни одного нуля. Время O(n), память
+                            O(1).</li>
+                    </ul>
+                    <aside class="notes">Открыть 0_1_move_zeroes.py и решение ученика. Граница write отделяет
+                        сохранённые ненулевые элементы. Пройти список, записать ненулевые, затем заполнить хвост нулями.
+                        Возврат строго None. Не удалять элементы в цикле и не строить новый список. Основной разбор 0–6
+                        мин.</aside>
+                </section>
+
+                <section>
+                    <h2>ДЗ: не больше двух копий</h2>
+                    <ul>
+                        <li class="fragment"><a
+                                href="https://leetcode.com/problems/remove-duplicates-from-sorted-array-ii/"
+                                target="_blank" rel="noopener">LC 80 · Remove Duplicates II</a> — список уже
+                            отсортирован; вернуть длину <code>k</code>.</li>
+                        <li class="fragment"><code>[1, 1, 1, 2, 2, 3] → k = 5</code>, префикс
+                            <code>[1, 1, 2, 2, 3]</code>.
+                        </li>
+                        <li class="fragment">Что сравнить с новым элементом, чтобы не записать третью копию?</li>
+                        <li class="fragment">Первые два элемента допускаются. Хвост после k не проверяется. O(n)
+                            времени, O(1) памяти.</li>
+                    </ul>
+                    <aside class="notes">6–12 мин. Файл 0_2_remove_duplicates_ii.py. Важна ячейка write-2 в уже
+                        сформированном ответе, а не исходный индекс read-2. Условие write&lt;2 защищает границу.
+                        Обсудить инвариант префикса. Написать код вместе с учеником.</aside>
+                </section>
+
+                <section>
+                    <h2>ДЗ по желанию: контейнер</h2>
+                    <ul>
+                        <li class="fragment"><a href="https://leetcode.com/problems/container-with-most-water/"
+                                target="_blank" rel="noopener">LC 11 · Container With Most Water</a></li>
+                        <li class="fragment"><code>[1, 8, 6, 2, 5, 4, 8, 3, 7] → 49</code>. Площадь:
+                            <code>(r − l) · min(h[l], h[r])</code>.
+                        </li>
+                        <li class="fragment">Почему можно отбросить более низкую стенку? Что произойдёт с шириной?</li>
+                        <li class="fragment">Исходный порядок сохраняем. При равных высотах можно сдвинуть любую
+                            границу.</li>
+                    </ul>
+                    <aside class="notes">Резерв внутри 12–15 мин, только если ученик решал. Файл 0_3_max_area.py.
+                        Фиксируя меньшую стенку и сужая ширину, площадь не увеличить. Поэтому её можно исключить после
+                        проверки пары. Ответ 49 у индексов 1 и 8. Полное решение есть в материалах, повторный лайвкодинг
+                        не обязателен.</aside>
+                </section>
+
+                <section>
+                    <h2>ДЗ по желанию: одно удаление</h2>
+                    <ul>
+                        <li class="fragment"><a href="https://leetcode.com/problems/valid-palindrome-ii/"
+                                target="_blank" rel="noopener">LC 680 · Valid Palindrome II</a></li>
+                        <li class="fragment"><code>abca → True</code>, <code>abc → False</code>. Разрешено удалить не
+                            более одного символа.</li>
+                        <li class="fragment">При первом несовпадении проверяем два оставшихся диапазона: без левого или
+                            без правого символа.</li>
+                        <li class="fragment">В проверке диапазона удалений больше нет. Работаем индексами, без срезов.
+                        </li>
+                    </ul>
+                    <aside class="notes">Резерв, можно пропустить при нехватке времени. Файл 0_4_valid_palindrome_ii.py.
+                        Две проверки линейны, ветвление происходит только один раз: O(n) времени, O(1) памяти. У abca
+                        подходит удаление b или c; у abc не подходит ни одно.</aside>
+                </section>
+
+            </section>
+
+            <!-- Знакомимся с книгой; lesson-time: 15 -->
+            <section>
+
+                <section>
+                    <h2>Наша книга на ноябрь</h2>
+                    <ul>
+                        <li class="fragment"><strong>Адитья Бхаргава · «Грокаем алгоритмы»</strong><br>Первое русское
+                            издание, «Питер», 2017.</li>
+                        <li class="fragment">Небольшие главы, наглядные объяснения, примеры и упражнения — общий маршрут
+                            для уроков и домашнего чтения.</li>
+                        <li class="fragment"><a href="/books/grokking-algorithms.pdf" target="_blank"
+                                rel="noopener">Открыть PDF книги</a> · 290 страниц файла.</li>
+                        <li class="fragment">Код в этом издании использует Python 2. На занятиях пишем на Python 3 и
+                            проверяем смысл примеров.</li>
+                    </ul>
+                    <aside class="notes">Показать локальный PDF. Нумерация печатных страниц отличается от номера листа в
+                        просмотрщике на один в нужной главе. Книга — опора для самостоятельного чтения; код не копируем
+                        механически. Например, print в Python 3 вызывается со скобками.</aside>
+                </section>
+
+                <section>
+                    <h2>Почему начинаем с главы 8</h2>
+                    <table style="width:100%;font-size:0.72em">
+                        <thead>
+                            <tr>
+                                <th>Главы</th>
+                                <th>Знакомые темы</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="fragment">
+                                <td>1–2</td>
+                                <td>Оценка сложности, бинарный поиск, сортировка</td>
+                            </tr>
+                            <tr class="fragment">
+                                <td>3–4</td>
+                                <td>Рекурсия, разделяй и властвуй, быстрая сортировка</td>
+                            </tr>
+                            <tr class="fragment">
+                                <td>5</td>
+                                <td>Хеш-таблицы</td>
+                            </tr>
+                            <tr class="fragment">
+                                <td>6–7</td>
+                                <td>Поиск в ширину и алгоритм Дейкстры</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <aside class="notes">Эти основания уже были в курсе. Графам посвящено много времени, заново их не
+                        проходим. Первые главы остаются справочником по необходимости. Не утверждать, что сам факт
+                        проведённых уроков доказывает владение каждой темой.</aside>
+                </section>
+
+                <section>
+                    <h2>Что берём из оставшихся глав</h2>
+                    <table style="width:100%;font-size:0.72em">
+                        <thead>
+                            <tr>
+                                <th>Глава</th>
+                                <th>Зачем нам</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="fragment">
+                                <td>8 · Жадные алгоритмы</td>
+                                <td>Выбирать шаг и проверять, можно ли ему доверять</td>
+                            </tr>
+                            <tr class="fragment">
+                                <td>9 · Динамика</td>
+                                <td>Расширить знакомый подход на рюкзак и строки</td>
+                            </tr>
+                            <tr class="fragment">
+                                <td>10 · Ближайшие соседи</td>
+                                <td>Перейти от признаков и расстояний к прогнозу</td>
+                            </tr>
+                            <tr class="fragment">
+                                <td>11 · Что дальше</td>
+                                <td>Познакомиться с новыми направлениями</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <aside class="notes">Завершаем книгу к декабрю. В декабре пробуем специализации с помощью
+                        преподавателя и ИИ; в январе выбираем направление. На каждом этапе остаётся самостоятельное
+                        объяснение идеи и небольшая домашняя работа.</aside>
+                </section>
+
+            </section>
+
+            <!-- Жадный выбор и его границы; lesson-time: 22 -->
+            <section>
+                <section>
+                    <h2>Жадные алгоритмы</h2>
+                    <p class="fragment" style="font-size:0.7em;">На каждом шаге выбираем <mark>лучший вариант прямо
+                            сейчас</mark></p>
+                    <div class="compare" style="font-size:0.6em;">
+                        <div class="compare-block fragment" style="text-align:center;padding:0.5em;">Локальный
+                            выбор<br><strong>Что выгоднее сейчас?</strong></div>
+                        <div class="compare-block fragment" style="text-align:center;padding:0.5em;">Общая
+                            цель<br><strong>Что лучше в итоге?</strong></div>
+                    </div>
+                    <p class="fragment" style="font-size:0.65em;">Может ли последовательность удачных локальных решений
+                        привести к лучшему общему результату?</p>
+                </section>
+
+                <section>
+                    <h2>Задача: расписание уроков</h2>
+                    <p class="fragment" style="font-size:0.65em;">Один кабинет. Некоторые занятия пересекаются по
+                        времени</p>
+                    <table style="font-size:0.58em;margin:auto;">
+                        <thead>
+                            <tr>
+                                <th>Урок</th>
+                                <th>Начало</th>
+                                <th>Конец</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="fragment">
+                                <td>Рисование</td>
+                                <td>08:00</td>
+                                <td>10:00</td>
+                            </tr>
+                            <tr class="fragment">
+                                <td>Английский</td>
+                                <td>08:30</td>
+                                <td>10:30</td>
+                            </tr>
+                            <tr class="fragment">
+                                <td>Математика</td>
+                                <td>10:00</td>
+                                <td>11:00</td>
+                            </tr>
+                            <tr class="fragment">
+                                <td>Информатика</td>
+                                <td>10:30</td>
+                                <td>11:30</td>
+                            </tr>
+                            <tr class="fragment">
+                                <td>Музыка</td>
+                                <td>11:00</td>
+                                <td>12:00</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <p class="fragment" style="font-size:0.7em;text-align:center;"><mark>Как провести максимум
+                            уроков?</mark></p>
+                </section>
+
+                <section>
+                    <h2>Как выбирать следующий урок?</h2>
+                    <div class="compare" style="font-size:0.6em;">
+                        <div class="compare-block fragment" style="text-align:center;padding:0.5em;">Начинается
+                            раньше<br><strong>08:00</strong></div>
+                        <div class="compare-block fragment" style="text-align:center;padding:0.5em;">Длится
+                            меньше<br><strong>30–60 минут?</strong></div>
+                        <div class="compare-block fragment" style="text-align:center;padding:0.5em;">Заканчивается
+                            раньше<br><strong>10:00</strong></div>
+                    </div>
+                    <p class="fragment" style="font-size:0.65em;">Нам важно освободить кабинет <strong>как можно
+                            раньше</strong>, чтобы осталось место для других занятий</p>
+                    <p class="fragment" style="font-size:0.8em;text-align:center;"><mark>Выбираем урок с самым ранним
+                            окончанием</mark></p>
+                </section>
+
+                <section>
+                    <h2>Жадное расписание: три шага</h2>
+                    <div class="compare" style="font-size:0.6em;">
+                        <div class="compare-block fragment" style="text-align:center;padding:0.5em;">Шаг
+                            1<br><strong>Рисование</strong><br>08:00–10:00</div>
+                        <div class="compare-block fragment" style="text-align:center;padding:0.5em;">Шаг
+                            2<br><strong>Математика</strong><br>10:00–11:00</div>
+                        <div class="compare-block fragment" style="text-align:center;padding:0.5em;">Шаг
+                            3<br><strong>Музыка</strong><br>11:00–12:00</div>
+                    </div>
+                    <p class="fragment" style="font-size:0.65em;text-align:center;">Английский и информатика
+                        пересекаются с выбранными занятиями</p>
+                    <p class="fragment" style="font-size:0.85em;text-align:center;"><mark>3 урока без пересечений</mark>
+                    </p>
+                </section>
+
+                <section>
+                    <h2>Алгоритм выбора занятий</h2>
+                    <div class="compare" style="font-size:0.6em;">
+                        <div class="compare-block fragment" style="text-align:center;padding:0.5em;">
+                            1<br><strong>Отсортируй</strong><br>по времени окончания</div>
+                        <div class="compare-block fragment" style="text-align:center;padding:0.5em;">
+                            2<br><strong>Проверь</strong><br>начало ≥ конца предыдущего</div>
+                        <div class="compare-block fragment" style="text-align:center;padding:0.5em;">
+                            3<br><strong>Добавь</strong><br>если нет пересечения</div>
+                    </div>
+                    <p class="fragment" style="font-size:0.65em;">Почему выбор самого раннего окончания позволяет
+                        оставить максимум времени другим урокам?</p>
+                    <p class="fragment" style="font-size:0.55em;">Для таких независимых временных интервалов стратегия
+                        даёт <strong>максимальное число занятий</strong></p>
+                </section>
+
+                <section>
+                    <h2>Пишем алгоритм сами</h2>
+                    <p class="fragment" style="font-size:0.65em;">Файл: <code>1_schedule.py</code></p>
+                    <div class="compare" style="font-size:0.6em;">
+                        <div class="compare-block fragment" style="text-align:center;padding:0.5em;">
+                            Вход<br><strong>(предмет, начало, конец)</strong></div>
+                        <div class="compare-block fragment" style="text-align:center;padding:0.5em;">
+                            Выход<br><strong>список выбранных уроков</strong></div>
+                    </div>
+                    <ul style="font-size:0.65em;text-align:left;">
+                        <li class="fragment">Как отсортировать список по времени завершения?</li>
+                        <li class="fragment">Как хранить окончание последнего выбранного урока?</li>
+                        <li class="fragment">Какое условие позволит добавить следующий урок?</li>
+                    </ul>
+                    <p class="fragment" style="font-size:0.65em;"><mark>Проверка: рисование → математика → музыка</mark>
+                    </p>
+                </section>
+
+                <section>
+                    <h2>Почему выбор раннего окончания работает?</h2>
+
+                    <p class="fragment" style="font-size:0.65em;">
+                        Цель — провести <strong>максимальное количество занятий</strong>,
+                        которые не пересекаются по времени
+                    </p>
+
+                    <div class="compare" style="font-size:0.6em;">
+                        <div class="compare-block fragment" style="text-align:center;padding:0.5em;">
+                            Выбрали занятие, которое заканчивается позже<br>
+                            <strong>Меньше времени для следующих</strong>
+                        </div>
+                        <div class="compare-block fragment" style="text-align:center;padding:0.5em;">
+                            Выбрали занятие, которое заканчивается раньше<br>
+                            <strong>Больше времени для следующих</strong>
+                        </div>
+                    </div>
+
+                    <p class="fragment" style="font-size:0.65em;text-align:center;">
+                        Среди всех доступных занятий выбираем то,
+                        которое <strong>заканчивается раньше остальных</strong>
+                    </p>
+
+                    <p class="fragment" style="font-size:0.65em;text-align:center;">
+                        Если оптимальное расписание начинается с другого занятия,
+                        его можно заменить нашим выбором
+                    </p>
+
+                    <p class="fragment" style="font-size:0.65em;text-align:center;">
+                        Такая замена <strong>не уменьшит число занятий</strong>,
+                        потому что остальные начнутся не раньше окончания выбранного нами
+                    </p>
+
+                    <p class="fragment" style="font-size:0.85em;text-align:center;margin:0.6em 0;">
+                        <mark>Жадный выбор не ухудшает оптимальное решение</mark>
+                    </p>
+
+                    <p class="fragment" style="font-size:0.55em;text-align:center;">
+                        Повторяем рассуждение для оставшихся занятий —
+                        получаем <strong>оптимальное расписание</strong>
+                    </p>
+                </section>
+            </section>
+
+            <!-- ПОДТЕМА 2. РЮКЗАК: ЖАДНОСТЬ НЕ ВСЕГДА ОПТИМАЛЬНА -->
+            <section>
+                <section>
+                    <h2>Задача о рюкзаке</h2>
+                    <p class="fragment" style="font-size:0.65em;">Рюкзак выдерживает <mark>не более 35 фунтов</mark>.
+                        Нужно максимизировать стоимость вещей</p>
+                    <div class="compare" style="font-size:0.6em;">
+                        <div class="compare-block fragment" style="text-align:center;padding:0.5em;">
+                            Магнитофон<br><strong>$3000</strong><br>30 фунтов</div>
+                        <div class="compare-block fragment" style="text-align:center;padding:0.5em;">
+                            Ноутбук<br><strong>$2000</strong><br>20 фунтов</div>
+                        <div class="compare-block fragment" style="text-align:center;padding:0.5em;">
+                            Гитара<br><strong>$1500</strong><br>15 фунтов</div>
+                    </div>
+                    <p class="fragment" style="font-size:0.7em;text-align:center;">Что выбрать, если <strong>каждый
+                            предмет неделим</strong>?</p>
+                </section>
+
+                <section>
+                    <h2>Самый дорогой — не всегда лучший</h2>
+                    <div class="compare" style="font-size:0.6em;">
+                        <div class="compare-block fragment" style="text-align:center;padding:0.5em;">Жадный
+                            выбор<br><strong>Магнитофон</strong><br>30 / 35 фунтов<br><mark>$3000</mark></div>
+                        <div class="compare-block fragment" style="text-align:center;padding:0.5em;">Лучший
+                            набор<br><strong>Ноутбук + гитара</strong><br>20 + 15 = 35 фунтов<br><mark>$3500</mark>
+                        </div>
+                    </div>
+                    <p class="fragment" style="font-size:0.7em;text-align:center;"><strong>Локально лучший выбор ≠
+                            глобально лучший результат</strong></p>
+                    <p class="fragment" style="font-size:0.6em;">Другие жадные критерии также требуют проверки:
+                        например, стоимость на единицу веса</p>
+                </section>
+
+                <section>
+                    <h2>Когда жадность работает?</h2>
+                    <div class="compare" style="font-size:0.6em;">
+                        <div class="compare-block fragment" style="text-align:center;padding:0.5em;">
+                            Расписание<br><strong>Самое раннее окончание</strong><br>оптимально</div>
+                        <div class="compare-block fragment" style="text-align:center;padding:0.5em;">Неделимый
+                            рюкзак<br><strong>Самый дорогой предмет</strong><br>может ошибиться</div>
+                    </div>
+                    <p class="fragment" style="font-size:0.7em;text-align:center;"><mark>Простота алгоритма не
+                            доказывает его правильность</mark></p>
+                    <p class="fragment" style="font-size:0.6em;">Обсуждаем: может ли выбор прямо сейчас испортить
+                        будущие возможности?</p>
+                </section>
+
+                <section>
+                    <h2>Практика: придумай контрпример</h2>
+                    <p class="fragment" style="font-size:0.65em;">Файл: <code>2_knapsack_greedy.py</code></p>
+                    <ul style="font-size:0.65em;text-align:left;">
+                        <li class="fragment">Храни предметы как <strong>(название, вес, стоимость)</strong></li>
+                        <li class="fragment">Реализуй выбор самого дорогого подходящего предмета</li>
+                        <li class="fragment">Сравни с полным перебором для трёх предметов</li>
+                    </ul>
+                    <p class="fragment" style="font-size:0.7em;text-align:center;"><mark>Когда жадное решение
+                            проигрывает?</mark></p>
+                    <p class="fragment" style="font-size:0.55em;">Точный метод для рюкзака рассмотрим позже — в теме
+                        динамического программирования</p>
+                </section>
+                <section>
+                    <h2>Почему жадность не всегда работает?</h2>
+
+                    <p class="fragment" style="font-size:0.65em;">
+                        Рюкзак вмещает <strong>4 кг</strong>.
+                        Предметы можно брать только целиком
+                    </p>
+
+                    <div class="compare" style="font-size:0.6em;">
+                        <div class="compare-block fragment" style="text-align:center;padding:0.5em;">
+                            Предмет А<br>
+                            <strong>3 кг · 3000 ₽</strong>
+                        </div>
+                        <div class="compare-block fragment" style="text-align:center;padding:0.5em;">
+                            Предмет Б<br>
+                            <strong>2 кг · 2000 ₽</strong>
+                        </div>
+                        <div class="compare-block fragment" style="text-align:center;padding:0.5em;">
+                            Предмет В<br>
+                            <strong>2 кг · 2000 ₽</strong>
+                        </div>
+                    </div>
+
+                    <p class="fragment" style="font-size:0.65em;text-align:center;">
+                        Жадный выбор по максимальной стоимости —
+                        сначала берём <strong>предмет А</strong>
+                    </p>
+
+                    <div class="compare" style="font-size:0.6em;">
+                        <div class="compare-block fragment" style="text-align:center;padding:0.5em;">
+                            Жадное решение<br>
+                            <strong>А = 3000 ₽</strong><br>
+                            <small>Остался 1 кг — больше ничего не помещается</small>
+                        </div>
+                        <div class="compare-block fragment" style="text-align:center;padding:0.5em;">
+                            Оптимальное решение<br>
+                            <strong>Б + В = 4000 ₽</strong><br>
+                            <small>Рюкзак заполнен полностью</small>
+                        </div>
+                    </div>
+
+                    <p class="fragment" style="font-size:0.85em;text-align:center;margin:0.6em 0;">
+                        <mark>Локально лучший выбор ≠ глобально лучший результат</mark>
+                    </p>
+
+                    <p class="fragment" style="font-size:0.55em;text-align:center;">
+                        В задаче о рюкзаке выбор одного предмета может
+                        <strong>помешать более выгодной комбинации</strong>
+                    </p>
+                </section>
+            </section>
+
+            <!-- ПОДТЕМА 3. ПОКРЫТИЕ МНОЖЕСТВА И ПРИБЛИЖЁННЫЕ АЛГОРИТМЫ -->
+            <section>
+                <section>
+                    <h2>Задача о покрытии множества</h2>
+                    <p class="fragment" style="font-size:0.65em;">Радиостанции вещают в разных штатах. Одна станция
+                        может покрывать несколько штатов</p>
+                    <div class="compare" style="font-size:0.6em;">
+                        <div class="compare-block fragment" style="text-align:center;padding:0.5em;">Нужно
+                            покрыть<br><strong>все нужные штаты</strong></div>
+                        <div class="compare-block fragment" style="text-align:center;padding:0.5em;">При этом
+                            выбрать<br><strong>как можно меньше станций</strong></div>
+                    </div>
+                    <p class="fragment" style="font-size:0.75em;text-align:center;"><mark>Какие станции включить?</mark>
+                    </p>
+                </section>
+
+                <section>
+                    <h2>Почему не перебрать всё?</h2>
+                    <p class="fragment" style="font-size:0.65em;">Для каждой станции два варианта:
+                        <strong>взять</strong> или <strong>не взять</strong>
+                    </p>
+                    <div class="compare" style="font-size:0.6em;">
+                        <div class="compare-block fragment" style="text-align:center;padding:0.5em;">5
+                            станций<br><strong>2⁵ = 32 набора</strong></div>
+                        <div class="compare-block fragment" style="text-align:center;padding:0.5em;">10
+                            станций<br><strong>2¹⁰ = 1024 набора</strong></div>
+                        <div class="compare-block fragment" style="text-align:center;padding:0.5em;">30
+                            станций<br><strong>2³⁰ &gt; 1 млрд</strong></div>
+                    </div>
+                    <p class="fragment" style="font-size:0.85em;text-align:center;"><mark>Полный перебор: O(2ⁿ)
+                            наборов</mark></p>
+                    <p class="fragment" style="font-size:0.55em;">С ростом n перебор становится быстро непрактичным</p>
+                </section>
+
+                <section>
+                    <h2>Жадное покрытие</h2>
+                    <div class="compare" style="font-size:0.6em;">
+                        <div class="compare-block fragment" style="text-align:center;padding:0.5em;">1<br><strong>Найди
+                                станцию</strong><br>с максимумом ещё не покрытых штатов</div>
+                        <div class="compare-block fragment" style="text-align:center;padding:0.5em;">2<br><strong>Выбери
+                                её</strong><br>убери покрытые штаты из оставшихся</div>
+                        <div class="compare-block fragment" style="text-align:center;padding:0.5em;">
+                            3<br><strong>Повторяй</strong><br>пока не покроешь всё</div>
+                    </div>
+                    <p class="fragment" style="font-size:0.7em;text-align:center;"><mark>Лучший следующий шаг — максимум
+                            НОВЫХ штатов</mark></p>
+                    <p class="fragment" style="font-size:0.55em;">Это приближённый алгоритм: минимальное число станций
+                        не гарантируется</p>
+                </section>
+
+                <section>
+                    <h2>Множества в Python</h2>
+                    <p class="fragment" style="font-size:0.65em;">У множества <code>set</code> <strong>нет повторяющихся
+                            элементов</strong></p>
+                    <div class="compare" style="font-size:0.6em;">
+                        <div class="compare-block fragment" style="text-align:center;padding:0.5em;">Объединение
+                            <code>|</code><br><strong>{1, 2} | {2, 3}</strong><br>→ {1, 2, 3}
+                        </div>
+                        <div class="compare-block fragment" style="text-align:center;padding:0.5em;">Пересечение
+                            <code>&amp;</code><br><strong>{1, 2} &amp; {2, 3}</strong><br>→ {2}
+                        </div>
+                        <div class="compare-block fragment" style="text-align:center;padding:0.5em;">Разность
+                            <code>-</code><br><strong>{1, 2} - {2, 3}</strong><br>→ {1}
+                        </div>
+                    </div>
+                    <p class="fragment" style="font-size:0.65em;">В задаче о станциях нужны именно
+                        <strong>пересечение</strong> и <strong>разность</strong>
+                    </p>
+                </section>
+
+                <section>
+                    <h2>Данные для задачи</h2>
+                    <p class="fragment" style="font-size:0.65em;">Нужно покрыть 8 штатов: <mark>mt, wa, or, id, nv, ut,
+                            ca, az</mark></p>
+                    <table style="font-size:0.58em;margin:auto;">
+                        <thead>
+                            <tr>
+                                <th>Станция</th>
+                                <th>Покрывает штаты</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="fragment">
+                                <td>kone</td>
+                                <td>id, nv, ut</td>
+                            </tr>
+                            <tr class="fragment">
+                                <td>ktwo</td>
+                                <td>wa, id, mt</td>
+                            </tr>
+                            <tr class="fragment">
+                                <td>kthree</td>
+                                <td>or, nv, ca</td>
+                            </tr>
+                            <tr class="fragment">
+                                <td>kfour</td>
+                                <td>nv, ut</td>
+                            </tr>
+                            <tr class="fragment">
+                                <td>kfive</td>
+                                <td>ca, az</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <p class="fragment" style="font-size:0.55em;">Станции — словарь: название → множество штатов</p>
+                </section>
+
+                <section>
+                    <h2>Как понять, какая станция лучше?</h2>
+                    <p class="fragment" style="font-size:0.65em;">Считаем <strong>только ещё не покрытые</strong> штаты
+                    </p>
+                    <div class="compare" style="font-size:0.6em;">
+                        <div class="compare-block fragment" style="text-align:center;padding:0.5em;">
+                            Осталось<br><strong>{mt, wa, or, ca, az}</strong></div>
+                        <div class="compare-block fragment" style="text-align:center;padding:0.5em;">ktwo
+                            даёт<br><strong>{mt, wa}</strong><br>2 новых</div>
+                        <div class="compare-block fragment" style="text-align:center;padding:0.5em;">kfive
+                            даёт<br><strong>{ca, az}</strong><br>2 новых</div>
+                    </div>
+                    <p class="fragment" style="font-size:0.75em;text-align:center;"><mark>Новые = оставшиеся ∩ покрытие
+                            станции</mark></p>
+                    <p class="fragment" style="font-size:0.55em;">При равенстве вариантов можно выбрать любой; результат
+                        зависит от порядка выбора</p>
+                </section>
+
+                <section>
+                    <h2>Пишем покрытие множества</h2>
+                    <p class="fragment" style="font-size:0.65em;">Файл: <code>3_set_cover.py</code></p>
+                    <div class="compare" style="font-size:0.6em;">
+                        <div class="compare-block fragment" style="text-align:center;padding:0.5em;">
+                            Вход<br><strong>states_needed: set</strong><br><strong>stations: dict</strong></div>
+                        <div class="compare-block fragment" style="text-align:center;padding:0.5em;">
+                            Выход<br><strong>final_stations: set</strong></div>
+                    </div>
+                    <ul style="font-size:0.65em;text-align:left;">
+                        <li class="fragment">Как вычислить новые штаты текущей станции?</li>
+                        <li class="fragment">Как хранить лучшую станцию в одном проходе?</li>
+                        <li class="fragment">Как убрать покрытые штаты и завершить цикл?</li>
+                        <li class="fragment">Что делать, если ни одна станция не покрывает оставшиеся штаты?</li>
+                    </ul>
+                    <p class="fragment" style="font-size:0.55em;">Для данных книги достаточно 4 станций; подходящих
+                        наборов может быть несколько</p>
+                </section>
+
+                <section>
+                    <h2>Точность или скорость?</h2>
+                    <div class="compare" style="font-size:0.6em;">
+                        <div class="compare-block fragment" style="text-align:center;padding:0.5em;">Полный
+                            перебор<br><strong>Точный минимум</strong><br>экспоненциальный рост</div>
+                        <div class="compare-block fragment" style="text-align:center;padding:0.5em;">Жадный
+                            метод<br><strong>Быстрое приближение</strong><br>оптимум не гарантирован</div>
+                    </div>
+                    <p class="fragment" style="font-size:0.65em;">У хорошего приближённого алгоритма оцениваем
+                        <strong>скорость</strong> и <strong>качество ответа</strong>
+                    </p>
+                    <p class="fragment" style="font-size:0.65em;text-align:center;"><mark>Жадный подход — компромисс, а
+                            не универсальный ответ</mark></p>
+                </section>
+                <section>
+                    <h2>Почему выбираем максимум новых элементов?</h2>
+
+                    <p class="fragment" style="font-size:0.65em;">
+                        Нужно покрыть <strong>все необходимые регионы</strong>
+                        минимальным количеством радиостанций
+                    </p>
+
+                    <div class="compare" style="font-size:0.6em;">
+                        <div class="compare-block fragment" style="text-align:center;padding:0.5em;">
+                            Станция А<br>
+                            <strong>{1, 2, 3}</strong>
+                        </div>
+                        <div class="compare-block fragment" style="text-align:center;padding:0.5em;">
+                            Станция Б<br>
+                            <strong>{3, 4, 5}</strong>
+                        </div>
+                        <div class="compare-block fragment" style="text-align:center;padding:0.5em;">
+                            Станция В<br>
+                            <strong>{4, 5, 6}</strong>
+                        </div>
+                    </div>
+
+                    <p class="fragment" style="font-size:0.65em;text-align:center;">
+                        Допустим, станция А уже выбрана.
+                        Регионы <strong>1, 2, 3 покрыты</strong>
+                    </p>
+
+                    <div class="compare" style="font-size:0.6em;">
+                        <div class="compare-block fragment" style="text-align:center;padding:0.5em;">
+                            Станция Б<br>
+                            <strong>2 новых региона</strong><br>
+                            <small>4, 5</small>
+                        </div>
+                        <div class="compare-block fragment" style="text-align:center;padding:0.5em;">
+                            Станция В<br>
+                            <strong>3 новых региона</strong><br>
+                            <small>4, 5, 6</small>
+                        </div>
+                    </div>
+
+                    <p class="fragment" style="font-size:0.65em;text-align:center;">
+                        Выбираем станцию В — она покрывает
+                        <strong>больше ещё не покрытых регионов</strong>
+                    </p>
+
+                    <p class="fragment" style="font-size:0.85em;text-align:center;margin:0.6em 0;">
+                        <mark>Максимум пользы на текущем шаге</mark>
+                    </p>
+
+                    <p class="fragment" style="font-size:0.55em;text-align:center;">
+                        Такой подход быстро сокращает число непокрытых регионов,
+                        но <strong>не всегда находит минимальный набор станций</strong>
+                    </p>
+                </section>
+                
+                <section>
+                    <h2>Почему приближённого решения достаточно?</h2>
+
+                    <p class="fragment" style="font-size:0.65em;">
+                        Для поиска точного минимума можно проверить
+                        <strong>все подмножества радиостанций</strong>
+                    </p>
+
+                    <div class="compare" style="font-size:0.6em;">
+                        <div class="compare-block fragment" style="text-align:center;padding:0.5em;">
+                            Полный перебор<br>
+                            <strong>2ⁿ подмножеств</strong>
+                        </div>
+                        <div class="compare-block fragment" style="text-align:center;padding:0.5em;">
+                            Жадный подход<br>
+                            <strong>Выбор лучшей станции на каждом шаге</strong>
+                        </div>
+                    </div>
+
+                    <p class="fragment" style="font-size:0.65em;text-align:center;">
+                        При увеличении числа станций
+                        полный перебор становится <strong>очень дорогим</strong>
+                    </p>
+
+                    <div class="compare" style="font-size:0.6em;">
+                        <div class="compare-block fragment" style="text-align:center;padding:0.5em;">
+                            10 станций<br>
+                            <strong>1024 подмножества</strong>
+                        </div>
+                        <div class="compare-block fragment" style="text-align:center;padding:0.5em;">
+                            30 станций<br>
+                            <strong>Более миллиарда подмножеств</strong>
+                        </div>
+                    </div>
+
+                    <p class="fragment" style="font-size:0.65em;text-align:center;">
+                        Жадный алгоритм не перебирает все комбинации,
+                        а последовательно выбирает <strong>наиболее полезную станцию</strong>
+                    </p>
+
+                    <p class="fragment" style="font-size:0.85em;text-align:center;margin:0.6em 0;">
+                        <mark>Быстрое допустимое решение вместо дорогого точного</mark>
+                    </p>
+
+                    <p class="fragment" style="font-size:0.55em;text-align:center;">
+                        Для классического жадного покрытия множества
+                        существует <strong>логарифмическая оценка приближения</strong>
+                        к оптимальному результату
+                    </p>
+                </section>
+
+            </section>
+
+            <!-- ПОДТЕМА 4. NP-ПОЛНЫЕ ЗАДАЧИ -->
+            <section>
+                <section>
+                    <h2>Задача коммивояжёра</h2>
+                    <p class="fragment" style="font-size:0.65em;">Нужно посетить все города и найти <mark>самый короткий
+                            маршрут</mark></p>
+                    <div class="compare" style="font-size:0.6em;">
+                        <div class="compare-block fragment" style="text-align:center;padding:0.5em;">2
+                            города<br><strong>2! = 2</strong></div>
+                        <div class="compare-block fragment" style="text-align:center;padding:0.5em;">3
+                            города<br><strong>3! = 6</strong></div>
+                        <div class="compare-block fragment" style="text-align:center;padding:0.5em;">4
+                            города<br><strong>4! = 24</strong></div>
+                        <div class="compare-block fragment" style="text-align:center;padding:0.5em;">5
+                            городов<br><strong>5! = 120</strong></div>
+                    </div>
+                    <p class="fragment" style="font-size:0.55em;">В примере книги считаем <strong>порядки
+                            посещения</strong> всех городов, включая выбор начального</p>
+                </section>
+
+                <section>
+                    <h2>Факториальный рост</h2>
+                    <div class="compare" style="font-size:0.6em;">
+                        <div class="compare-block fragment" style="text-align:center;padding:0.5em;">6
+                            городов<br><strong>720</strong></div>
+                        <div class="compare-block fragment" style="text-align:center;padding:0.5em;">8
+                            городов<br><strong>40 320</strong></div>
+                        <div class="compare-block fragment" style="text-align:center;padding:0.5em;">10
+                            городов<br><strong>3 628 800</strong></div>
+                    </div>
+                    <p class="fragment" style="font-size:0.85em;text-align:center;"><mark>n! = n · (n − 1) · … ·
+                            1</mark></p>
+                    <p class="fragment" style="font-size:0.6em;">Почему полный перебор маршрутов быстро становится
+                        дорогим?</p>
+                </section>
+
+                <section>
+                    <h2>Приближение для коммивояжёра</h2>
+                    <div class="compare" style="font-size:0.6em;">
+                        <div class="compare-block fragment" style="text-align:center;padding:0.5em;">1<br><strong>Выбери
+                                стартовый город</strong></div>
+                        <div class="compare-block fragment" style="text-align:center;padding:0.5em;">2<br><strong>Иди в
+                                ближайший</strong><br>ещё не посещённый</div>
+                        <div class="compare-block fragment" style="text-align:center;padding:0.5em;">
+                            3<br><strong>Повторяй</strong><br>пока города не закончатся</div>
+                    </div>
+                    <p class="fragment" style="font-size:0.65em;text-align:center;">«Ближайший сосед» часто находит
+                        короткий маршрут, но <strong>не всегда кратчайший</strong></p>
+                </section>
+
+                <section>
+                    <h3>Почему ближайший город — не всегда лучший?</h3>
+
+                    <p class="fragment" style="font-size:0.65em;">
+                        Нужно посетить <strong>все города по одному разу</strong>
+                        и вернуться в начальный, минимизировав длину маршрута
+                    </p>
+
+                    <p class="fragment" style="font-size:0.65em;text-align:center;">
+                        Рассмотрим четыре города с такими расстояниями:
+                    </p>
+
+                    <table class="fragment" style="font-size:0.55em;margin:auto;">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th>А</th>
+                                <th>Б</th>
+                                <th>В</th>
+                                <th>Г</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <th>А</th>
+                                <td>—</td>
+                                <td>1</td>
+                                <td>2</td>
+                                <td>10</td>
+                            </tr>
+                            <tr>
+                                <th>Б</th>
+                                <td>1</td>
+                                <td>—</td>
+                                <td>2</td>
+                                <td>2</td>
+                            </tr>
+                            <tr>
+                                <th>В</th>
+                                <td>2</td>
+                                <td>2</td>
+                                <td>—</td>
+                                <td>1</td>
+                            </tr>
+                            <tr>
+                                <th>Г</th>
+                                <td>10</td>
+                                <td>2</td>
+                                <td>1</td>
+                                <td>—</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <p class="fragment" style="font-size:0.65em;text-align:center;">
+                        Начинаем из А. Жадный выбор — каждый раз идём
+                        в <strong>ближайший непосещённый город</strong>
+                    </p>
+
+                    <div class="compare" style="font-size:0.6em;">
+                        <div class="compare-block fragment" style="text-align:center;padding:0.5em;">
+                            Жадный маршрут<br>
+                            <strong>А → Б → Г → В → А</strong><br>
+                            <small>1 + 2 + 1 + 2 = 6</small>
+                        </div>
+                        <div class="compare-block fragment" style="text-align:center;padding:0.5em;">
+                            Другой маршрут<br>
+                            <strong>А → В → Г → Б → А</strong><br>
+                            <small>2 + 1 + 2 + 1 = 6</small>
+                        </div>
+                    </div>
+
+                    <p class="fragment" style="font-size:0.65em;text-align:center;">
+                        В этом примере жадный маршрут оказался оптимальным,
+                        но это <strong>не доказывает оптимальность метода</strong>
+                        для любых расстояний
+                    </p>
+
+                    <p class="fragment" style="font-size:0.85em;text-align:center;margin:0.6em 0;">
+                        <mark>Короткий следующий шаг не гарантирует кратчайший маршрут</mark>
+                    </p>
+
+                    <p class="fragment" style="font-size:0.55em;text-align:center;">
+                        Причина: выбор ближайшего города не учитывает,
+                        какие длинные переходы могут понадобиться позже
+                    </p>
+                </section>
+
+                <section>
+                    <h2>Что значит NP-полная задача?</h2>
+                    <div class="compare" style="font-size:0.6em;">
+                        <div class="compare-block fragment" style="text-align:center;padding:0.5em;">Проверить готовое
+                            решение<br><strong>часто сравнительно легко</strong></div>
+                        <div class="compare-block fragment" style="text-align:center;padding:0.5em;">Найти лучшее
+                            решение<br><strong>может быть очень трудно</strong></div>
+                    </div>
+                    <p class="fragment" style="font-size:0.65em;">Классические примеры из главы: <strong>покрытие
+                            множества</strong> и <strong>коммивояжёр</strong> (их оптимизационные версии)</p>
+                    <p class="fragment" style="font-size:0.55em;">Строго: NP-полнота относится к задачам принятия
+                        решения; соответствующие оптимизационные задачи называют NP-трудными</p>
+                    <p class="fragment" style="font-size:0.65em;text-align:center;"><mark>Быстрый точный алгоритм для
+                            общего случая неизвестен</mark></p>
+                </section>
+                <section>
+                    <h2>Почему сложные задачи решают приближённо?</h2>
+
+                    <p class="fragment" style="font-size:0.65em;">
+                        Для некоторых задач количество возможных решений
+                        <strong>растёт чрезвычайно быстро</strong>
+                    </p>
+
+                    <div class="compare" style="font-size:0.6em;">
+                        <div class="compare-block fragment" style="text-align:center;padding:0.5em;">
+                            5 городов<br>
+                            <strong>5! = 120</strong>
+                        </div>
+                        <div class="compare-block fragment" style="text-align:center;padding:0.5em;">
+                            10 городов<br>
+                            <strong>10! = 3 628 800</strong>
+                        </div>
+                        <div class="compare-block fragment" style="text-align:center;padding:0.5em;">
+                            20 городов<br>
+                            <strong>20! ≈ 2,43 · 10¹⁸</strong>
+                        </div>
+                    </div>
+
+                    <p class="fragment" style="font-size:0.65em;text-align:center;">
+                        Полный перебор гарантирует поиск лучшего решения,
+                        но может потребовать <strong>слишком много времени</strong>
+                    </p>
+
+                    <div class="compare" style="font-size:0.6em;">
+                        <div class="compare-block fragment" style="text-align:center;padding:0.5em;">
+                            Точный алгоритм<br>
+                            <strong>Ищем оптимум</strong><br>
+                            <small>Может быть вычислительно дорогим</small>
+                        </div>
+                        <div class="compare-block fragment" style="text-align:center;padding:0.5em;">
+                            Эвристика<br>
+                            <strong>Быстро ищем хорошее решение</strong><br>
+                            <small>Оптимальность не гарантируется</small>
+                        </div>
+                    </div>
+
+                    <p class="fragment" style="font-size:0.65em;text-align:center;">
+                        Жадные алгоритмы — один из способов построить
+                        <strong>быструю эвристику</strong>
+                    </p>
+
+                    <p class="fragment" style="font-size:0.85em;text-align:center;margin:0.6em 0;">
+                        <mark>Не всегда нужен идеальный ответ — иногда важнее получить хороший вовремя</mark>
+                    </p>
+
+                    <p class="fragment" style="font-size:0.5em;text-align:center;">
+                        NP-полнота не означает, что быстрый точный алгоритм
+                        доказанно невозможен
+                    </p>
+                </section>
+                <section>
+                    <h2>Как распознать трудную задачу?</h2>
+                    <ul style="font-size:0.65em;text-align:left;">
+                        <li class="fragment">Нужно выбрать <strong>лучшее подмножество</strong> из множества вариантов?
+                        </li>
+                        <li class="fragment">Нужно найти <strong>лучший порядок</strong> посещения или выполнения?</li>
+                        <li class="fragment">Полный перебор растёт как <strong>2ⁿ</strong> или <strong>n!</strong>?</li>
+                        <li class="fragment">Задача похожа на покрытие множества или коммивояжёра?</li>
+                    </ul>
+                    <p class="fragment" style="font-size:0.6em;"><mark>Это признаки для проверки, но не доказательство
+                            NP-полноты</mark></p>
+                </section>
+
+                <section>
+                    <h2>Ещё один пример: футбольная команда</h2>
+                    <p class="fragment" style="font-size:0.65em;">У игроков разные полезные навыки. Нужно покрыть
+                        <strong>все необходимые навыки</strong> небольшим составом
+                    </p>
+                    <div class="compare" style="font-size:0.6em;">
+                        <div class="compare-block fragment" style="text-align:center;padding:0.5em;">
+                            Игрок<br><strong>набор навыков</strong></div>
+                        <div class="compare-block fragment" style="text-align:center;padding:0.5em;">
+                            Команда<br><strong>объединение навыков</strong></div>
+                    </div>
+                    <p class="fragment" style="font-size:0.7em;text-align:center;"><mark>Это снова покрытие
+                            множества!</mark></p>
+                    <p class="fragment" style="font-size:0.55em;">Жадный шаг: выбрать игрока с максимальным числом ещё
+                        не покрытых навыков</p>
+                </section>
+            </section>
+
+            <!-- ПОДТЕМА 5. ПРОВЕРКА ПОНИМАНИЯ И ИТОГ -->
+            <section>
+                <section>
+                    <h2>Узнай жадный алгоритм</h2>
+                    <div class="compare" style="font-size:0.6em;">
+                        <div class="compare-block fragment" style="text-align:center;padding:0.5em;">Быстрая
+                            сортировка<br><strong>Жадный?</strong></div>
+                        <div class="compare-block fragment" style="text-align:center;padding:0.5em;">Поиск в
+                            ширину<br><strong>Жадный?</strong></div>
+                        <div class="compare-block fragment" style="text-align:center;padding:0.5em;">Алгоритм
+                            Дейкстры<br><strong>Жадный?</strong></div>
+                    </div>
+                    <p class="fragment" style="font-size:0.65em;">Для каждого: <strong>какое решение принимается на
+                            очередном шаге?</strong></p>
+                    <!-- Для преподавателя: быстрая сортировка — нет; BFS — нет; Дейкстра — да. -->
+                </section>
+
+                <section>
+                    <h2>Определи тип задачи</h2>
+                    <ul style="font-size:0.65em;text-align:left;">
+                        <li class="fragment">Почтальон ищет кратчайший маршрут через <strong>20 домов</strong></li>
+                        <li class="fragment">Найти самую большую <strong>клику</strong> в графе знакомств</li>
+                        <li class="fragment">Раскрасить соседние штаты разными цветами, используя <strong>минимум
+                                цветов</strong></li>
+                    </ul>
+                    <p class="fragment" style="font-size:0.65em;text-align:center;">Какие задачи похожи на уже известные
+                        сложные задачи?</p>
+                    <p class="fragment" style="font-size:0.5em;">По мотивам упражнений 8.6–8.8 главы 8; обсуждаем без
+                        программирования</p>
+                </section>
+
+                <section>
+                    <h2>Самостоятельная практика</h2>
+                    <p class="fragment" style="font-size:0.65em;">Реализуй два алгоритма без готовой реализации на
+                        слайдах</p>
+                    <div class="compare" style="font-size:0.6em;">
+                        <div class="compare-block fragment" style="text-align:center;padding:0.5em;">
+                            <strong>4_schedule_test.py</strong><br>Добавь пересекающиеся уроки<br>Проверь максимум
+                            занятий
+                        </div>
+                        <div class="compare-block fragment" style="text-align:center;padding:0.5em;">
+                            <strong>5_cover_test.py</strong><br>Подбери станции для штатов<br>Проверь, что покрыты все
+                        </div>
+                    </div>
+                    <p class="fragment" style="font-size:0.65em;">Дополнительно: придумай небольшой пример, где жадный
+                        выбор <strong>не даёт оптимума</strong></p>
+                </section>
+
+                <section>
+                    <h2>Что забираем с собой</h2>
+                    <div class="compare" style="font-size:0.6em;">
+                        <div class="compare-block fragment" style="text-align:center;padding:0.5em;">Жадный
+                            алгоритм<br><strong>лучший локальный шаг</strong></div>
+                        <div class="compare-block fragment" style="text-align:center;padding:0.5em;">
+                            Расписание<br><strong>жадность даёт оптимум</strong></div>
+                        <div class="compare-block fragment" style="text-align:center;padding:0.5em;">
+                            Рюкзак<br><strong>жадность может ошибиться</strong></div>
+                        <div class="compare-block fragment" style="text-align:center;padding:0.5em;">Покрытие
+                            множества<br><strong>быстрое приближение</strong></div>
+                    </div>
+                    <p class="fragment" style="font-size:0.75em;text-align:center;"><mark>Сначала докажи или проверь
+                            стратегию — потом пиши код</mark></p>
+                </section>
+            </section>
+
+
+            <!-- Домашняя работа; lesson-time: 85 -->
+            <section>
+
+                <section>
+                    <h2>ДЗ: прочитать и объяснить</h2>
+                    <ul>
+                        <li class="fragment"><a href="/books/grokking-algorithms.pdf#page=183" target="_blank"
+                                rel="noopener">Глава 8: печатные с. 182–205</a><br>В PDF это страницы
+                            <strong>183–206</strong>.
+                        </li>
+                        <li class="fragment"><a href="/books/grokking-algorithms.pdf#page=188" target="_blank"
+                                rel="noopener">Упражнения 8.1 и 8.2 — с. 187 (PDF 188)</a><br>Для каждого: правило
+                            выбора и обоснование либо числовой контрпример.</li>
+                        <li class="fragment"><a href="/books/grokking-algorithms.pdf#page=197" target="_blank"
+                                rel="noopener">Упражнение 8.3 — с. 196 (PDF 197)</a><br>Короткий ответ с объяснением,
+                            без реализации алгоритма.</li>
+                        <li class="fragment">Сдать текст или фото рассуждений. Сначала свой ответ, затем сверка с
+                            книгой.</li>
+                    </ul>
+                    <aside class="notes">Обязательны 8.1, 8.2, 8.3. Это письменные упражнения, отдельного кода не
+                        требуется. 8.4–8.5 не назначаем: повторения графов не хотим. Страницы проверены по
+                        предоставленному PDF: первое русское издание 2017, 290 листов. В следующем уроке начать с этих
+                        ответов. Полные ответы ДЗ сюда не включать.</aside>
+                </section>
+
+            </section>
+
+            <!-- Итог; lesson-time: 88 -->
+            <section>
+
+                <section>
+                    <h2>Что запомнить</h2>
+                    <ul>
+                        <li class="fragment">Жадный алгоритм фиксирует локально лучший выбор.</li>
+                        <li class="fragment">Оптимальность требует обоснования; один контрпример опровергает правило.
+                        </li>
+                        <li class="fragment">Покрытие множества показывает разницу между допустимым и лучшим ответом.
+                        </li>
+                        <li class="fragment">Следующий шаг — динамика: как учитывать альтернативы, которые жадность
+                            теряет.</li>
+                    </ul>
+                    <aside class="notes">Попросить своими словами сравнить расписание и покрытие. В следующей главе
+                        рюкзак станет переходом к динамическому программированию.</aside>
+                </section>
+
+            </section>
+
+        </div>
+    </div>
+
+    <script src="/utils/lib/js/head.min.js"></script>
+    <script src="/utils/js/reveal.js"></script>
+    <script>
+        Reveal.initialize({
+            controls: true,
+            progress: true,
+            history: true,
+            center: true,
+            transition: 'fade',
+            transitionSpeed: 'fast',
+            dependencies: [
+                { src: '/utils/lib/js/classList.js', condition: function () { return !document.body.classList; } },
+                { src: '/utils/plugin/markdown/marked.js', condition: function () { return !!document.querySelector('[data-markdown]'); } },
+                { src: '/utils/plugin/markdown/markdown.js', condition: function () { return !!document.querySelector('[data-markdown]'); } },
+                { src: '/utils/plugin/highlight/highlight.js', async: true, callback: function () { hljs.initHighlightingOnLoad(); } },
+                { src: '/utils/plugin/zoom-js/zoom.js', async: true },
+                { src: '/utils/plugin/notes/notes.js', async: true }
+            ]
+        });
+        Reveal.configure({ slideNumber: 'c/t' });
+    </script>
+</body>
+
+</html>

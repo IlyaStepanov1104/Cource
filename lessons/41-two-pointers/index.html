@@ -27,158 +27,657 @@
 <body>
     <div class="reveal">
         <div class="slides">
-<section>
-<div class="lesson-time">0</div><h2 style="font-size:1.4em;">Два указателя</h2>
-<p class="fragment" style="font-size:.8em;text-align:center;">От перебора пар — к одному проходу</p>
-<aside class="notes">Код на занятии пишет преподаватель; ученик прогнозирует движение указателей и объясняет, какие варианты можно исключить. Основной маршрут — 167, 26, 977 и разбор идеи 15; полная реализация 15 — резерв, если первые задачи идут быстро.</aside>
-</section>
-<section>
-<section>
-<div class="lesson-time">0</div><h2 style="font-size:1.4em;">Пары мы уже перебирали</h2>
-<p class="fragment" style="font-size:.8em;text-align:center;">В задаче про покупки выбирали два разных товара и проверяли их суммарную цену.</p><p class="fragment" style="font-size:.8em;text-align:center;">Теперь ищем <mark>одну пару с заданной суммой</mark>. Что изменится, если цены уже отсортированы?</p><div class="fragment opinion" style="font-size:.75em;margin-top:.7em;">Хотим исключать сразу много неподходящих пар.</div>
-<aside class="notes">0–3 минуты. Подводка от занятия 39 про combinations. Это мотивация, не повторное ДЗ. Изменён контракт: там все пары в пределах бюджета, здесь одна пара с точной суммой. Спросить про O(n²) перебор и про уже знакомый Two Sum со словарём. Здесь используем сортировку и O(1) дополнительной памяти.</aside>
-</section>
-<section>
-<h2 style="font-size:1.4em;">Задача: найти пару</h2>
-<p class="fragment" style="font-size:.8em;text-align:center;"><a href="https://leetcode.com/problems/two-sum-ii-input-array-is-sorted/" target="_blank" rel="noopener">LC 167 · Two Sum II</a></p><p class="fragment" style="font-size:.8em;text-align:center;">Дан список по неубыванию. Найти два разных элемента с суммой target. Ответ ровно один.</p><p class="fragment" style="font-size:.8em;text-align:center;"><code>[2, 7, 11, 15], target = 9</code> → <mark>[1, 2]</mark>.</p><div class="fragment opinion" style="font-size:.75em;margin-top:.7em;">В ответе LeetCode индексы <mark>с единицы</mark>. Дополнительная память O(1).</div>
-<aside class="notes">3–5 минут. Файл 1_two_sum_ii.py. Список уже отсортирован, менять его не требуется. Никаких реализаций на слайде. Объяснить контракт: возвращаем позиции, не значения; один элемент нельзя использовать дважды. 167 на LeetCode — Medium.</aside>
-</section>
-<section>
-<h2 style="font-size:1.4em;">Начнём с двух краёв</h2>
-<div class="fragment" style="display:flex;justify-content:center;gap:10px;margin:.7em 0;"><div style="min-width:64px;border:2px solid #6ecbff;border-radius:8px;padding:8px;"><div style="font-size:.4em;opacity:.6;">0</div><div>2</div><div style="font-size:.5em;color:#6ecbff;">L</div></div><div style="min-width:64px;border:2px solid #555;border-radius:8px;padding:8px;"><div style="font-size:.4em;opacity:.6;">1</div><div>7</div><div style="font-size:.5em;color:#555;">·</div></div><div style="min-width:64px;border:2px solid #555;border-radius:8px;padding:8px;"><div style="font-size:.4em;opacity:.6;">2</div><div>11</div><div style="font-size:.5em;color:#555;">·</div></div><div style="min-width:64px;border:2px solid #ffc857;border-radius:8px;padding:8px;"><div style="font-size:.4em;opacity:.6;">3</div><div>15</div><div style="font-size:.5em;color:#ffc857;">R</div></div></div><p class="fragment" style="font-size:.8em;text-align:center;">2 + 15 = 17 &gt; 9. Можно ли оставить 15 и найти ему меньшую пару?</p><div class="fragment opinion" style="font-size:.75em;margin-top:.7em;">Даже минимальный элемент слишком велик в паре с 15.<br>Значит, <mark>15 исключаем целиком</mark>.</div>
-<aside class="notes">5–7 минут. Не давать правило без причины. Спросить, что будет с суммой, если оставить R и увеличить L: сумма не уменьшится. Следовательно, ни одна пара с текущим R не подойдёт. Уменьшаем R.</aside>
-</section>
-<section>
-<h2 style="font-size:1.4em;">Это метод двух указателей</h2>
-<p class="fragment" style="font-size:.8em;text-align:center;">Храним две позиции в данных — <mark>два указателя</mark>.<br>В нашей задаче это индексы L и R по краям списка.</p>
-<p class="fragment" style="font-size:.8em;text-align:center;">Смотрим на текущую пару и двигаем указатель так, чтобы исключить заведомо неподходящие варианты.</p>
-<div class="fragment opinion" style="font-size:.75em;margin-top:.7em;">Здесь указатели идут навстречу друг другу.<br>В других задачах они могут двигаться в одну сторону.</div>
-<aside class="notes">После первого примера называем приём: метод двух указателей, two pointers. Указатель здесь — обычный индекс списка, а не специальный тип Python. Важны роли двух позиций и обоснование каждого движения. Не обещать O(n) для любой задачи с двумя индексами: оценку выведем отдельно. На следующем слайде формализуем правило движения для поиска пары.</aside>
-</section>
-<section>
-<h2 style="font-size:1.4em;">Почему можно двигать границу?</h2>
-<table style="font-size:.65em;margin:.6em auto;"><thead><tr><th>Текущая сумма s</th><th>Что исключаем</th><th>Движение</th></tr></thead><tbody><tr class="fragment"><td>s &lt; target</td><td>L: даже с самым большим мало</td><td>L вправо</td></tr><tr class="fragment"><td>s &gt; target</td><td>R: даже с самым маленьким много</td><td>R влево</td></tr><tr class="fragment"><td>s = target</td><td>Пара найдена</td><td>Вернуть позиции</td></tr></tbody></table><div class="fragment opinion" style="font-size:.75em;margin-top:.7em;">Среди оставшихся кандидатов ответ ищем только внутри <mark>[L, R]</mark>.</div>
-<aside class="notes">7–10 минут. Инвариант: если ответ ещё не найден, он среди пар в оставшемся диапазоне. При малой сумме фиксированный nums[L] ни с одним j&lt;=R не даст target; при большой — фиксированный nums[R] ни с одним i&gt;=L. Отрицательные числа не мешают: нужен порядок, не положительность. Здесь и далее границы включены, в отличие от [l,r) в префиксных суммах.</aside>
-</section>
-<section>
-<h2 style="font-size:1.4em;">Пройдём оба направления</h2>
-<p class="fragment" style="font-size:.8em;text-align:center;"><code>[1, 2, 4, 6, 10], target = 8</code></p><table style="font-size:.65em;margin:.6em auto;"><thead><tr><th>L, R</th><th>Сумма</th><th>Следующий шаг</th></tr></thead><tbody><tr class="fragment"><td>0, 4</td><td>1 + 10 = 11</td><td>R → 3</td></tr><tr class="fragment"><td>0, 3</td><td>1 + 6 = 7</td><td>L → 1</td></tr><tr class="fragment"><td>1, 3</td><td>2 + 6 = 8</td><td>Ответ [2, 4]</td></tr></tbody></table>
-<aside class="notes">10–12 минут. Ученик до каждого клика называет следующий ход и обосновывает исключение. Указатели в таблице с нуля; ответ LC с единицы. Все значения отсортированы, единственная пара для 8 — 2 и 6.</aside>
-</section>
-<section>
-<h2 style="font-size:1.4em;">Лайвкодинг: Two Sum II</h2>
-<p class="fragment" style="font-size:.8em;text-align:center;">Пишем поиск пары. До запуска называем ответы для каждого примера.</p><table style="font-size:.65em;margin:.6em auto;"><thead><tr><th>Вход</th><th>Ответ</th></tr></thead><tbody><tr class="fragment"><td>[-3, 0, 2, 4], target = 1</td><td>[1, 4]</td></tr><tr class="fragment"><td>[1, 1], target = 2</td><td>[1, 2]</td></tr><tr class="fragment"><td>[2, 3, 4], target = 6</td><td>[1, 3]</td></tr></tbody></table><div class="fragment opinion" style="font-size:.75em;margin-top:.7em;">Остановка: L &lt; R. Один индекс нельзя взять дважды.</div>
-<aside class="notes">12–17 минут. Преподаватель реализует 1_two_sum_ii.py в редакторе и запускает тесты. Для [-3,0,2,4] и target=1 единственный ответ — [1,4]. Сумма пересчитывается после каждого сдвига. Ученик объясняет крайний случай [1,1].</aside>
-</section>
-<section>
-<h2 style="font-size:1.4em;">Один цикл — не главный аргумент</h2>
-<p class="fragment" style="font-size:.8em;text-align:center;">На каждом шаге L растёт или R уменьшается. Указатели не возвращаются назад.</p><div class="fragment opinion" style="font-size:.75em;margin-top:.7em;">Не более n − 1 сдвигов: <mark>O(n)</mark> времени и <mark>O(1)</mark> памяти.</div><p class="fragment" style="font-size:.8em;text-align:center;">Без сортировки это правило неверно. Если сортируем сами — добавляется стоимость сортировки.</p>
-<aside class="notes">17–18 минут. Спросить, почему нельзя применять правило к [3,2,4], target=6: начальная сумма 7, исключим 4 и потеряем ответ 2+4. Если сортируем ради исходных индексов, надо сохранять соответствие; LC 167 уже даёт сортированный вход. Отдельной задачи на произвольный массив не вводим.</aside>
-</section>
-</section>
-<section>
-<section>
-<div class="lesson-time">18</div><h2 style="font-size:1.4em;">Указатели могут идти в одну сторону</h2>
-<p class="fragment" style="font-size:.8em;text-align:center;"><a href="https://leetcode.com/problems/remove-duplicates-from-sorted-array/" target="_blank" rel="noopener">LC 26 · Remove Duplicates</a></p><p class="fragment" style="font-size:.8em;text-align:center;">Из отсортированного списка убрать повторы <mark>на месте</mark>. Вернуть k; первые k ячеек содержат разные значения.</p><p class="fragment" style="font-size:.8em;text-align:center;"><code>[1, 1, 2, 2, 3]</code> → k = 3, начало <code>[1, 2, 3]</code>.</p><div class="fragment opinion" style="font-size:.75em;margin-top:.7em;">Хвост после k не важен. Дополнительная память O(1).</div>
-<aside class="notes">18–20 минут. Файл 2_remove_duplicates.py. Сравнить с 167: теперь не ищем пару, а строим готовую часть списка. Возвращаем число k, а не новый список. Физически удалять хвост не нужно.</aside>
-</section>
-<section>
-<h2 style="font-size:1.4em;">Читаем всё, записываем нужное</h2>
-<div class="compare"><div class="compare-block fragment"><h4>read</h4><p>Следующий элемент<br>для проверки</p></div><div class="compare-block fragment"><h4>write</h4><p>Следующая свободная<br>ячейка результата</p></div></div><div class="fragment opinion" style="font-size:.75em;margin-top:.7em;">Перед read готовая часть <mark>nums[:write]</mark> уже содержит разные значения в порядке возрастания.</div>
-<aside class="notes">20–22 минуты. Состояние nums[:write] — все уникальные значения обработанного префикса. read перебирает весь вход; если значение отличается от последнего записанного — записать и увеличить write. write&lt;=read, поэтому не затираем непрочитанные элементы. Пустой вход в локальной заготовке допускается как расширение, хотя LC задаёт минимум один элемент.</aside>
-</section>
-<section>
-<h2 style="font-size:1.4em;">Готовая часть растёт</h2>
-<table style="font-size:.65em;margin:.6em auto;"><thead><tr><th>Прочитали</th><th>Готовая часть</th><th>write</th></tr></thead><tbody><tr class="fragment"><td>1</td><td>[1]</td><td>1</td></tr><tr class="fragment"><td>ещё 1</td><td>[1]</td><td>1</td></tr><tr class="fragment"><td>2</td><td>[1, 2]</td><td>2</td></tr><tr class="fragment"><td>ещё 2, затем 3</td><td>[1, 2, 3]</td><td>3</td></tr></tbody></table><div class="fragment opinion" style="font-size:.75em;margin-top:.7em;">Повтор читаем, но не записываем. Длина исходного списка не меняется.</div>
-<aside class="notes">22–24 минуты. Трассировка [1,1,2,2,3]. На последней строке устно отдельно обсудить повтор 2 и новый 3. Ученик должен отличать значение write от индекса read. list.pop внутри прохода не нужен: сдвиги хвоста могут дать квадратичное время.</aside>
-</section>
-<section>
-<h2 style="font-size:1.4em;">Лайвкодинг: сжать повторы</h2>
-<p class="fragment" style="font-size:.8em;text-align:center;">Пишем функцию для LC 26 и проверяем <mark>оба результата</mark>: k и первые k элементов.</p><table style="font-size:.65em;margin:.6em auto;"><thead><tr><th>Вход</th><th>k и начало</th></tr></thead><tbody><tr class="fragment"><td>[5, 5, 5]</td><td>1, [5]</td></tr><tr class="fragment"><td>[-2, -2, 0, 3, 3]</td><td>3, [-2, 0, 3]</td></tr><tr class="fragment"><td>[1, 2, 3]</td><td>3, [1, 2, 3]</td></tr></tbody></table>
-<aside class="notes">24–30 минут. Код пишет преподаватель, файл 2_remove_duplicates.py. Проверить []→0 как расширение, одиночный элемент, все одинаковые. Вызов с новым списком в каждом тесте. Связать read/write с сохранением обработанного результата. Усложнения 283 и 80 будут в практике, их условия есть в конце.</aside>
-</section>
-</section>
-<section>
-<section>
-<div class="lesson-time">30</div><h2 style="font-size:1.4em;">Квадраты ломают сортировку</h2>
-<p class="fragment" style="font-size:.8em;text-align:center;"><a href="https://leetcode.com/problems/squares-of-a-sorted-array/" target="_blank" rel="noopener">LC 977 · Squares of a Sorted Array</a></p><p class="fragment" style="font-size:.8em;text-align:center;">Возвести числа отсортированного списка в квадрат. Вернуть результат по неубыванию за <mark>O(n)</mark>.</p><p class="fragment" style="font-size:.8em;text-align:center;"><code>[-4, -1, 0, 3, 10]</code> → <code>[0, 1, 9, 16, 100]</code>.</p>
-<aside class="notes">30–32 минуты. Файл 3_sorted_squares.py. Спросить, почему нельзя просто возвести в квадрат: получится [16,1,0,9,100]. Сортировка квадратов допустима как базовое решение, но даёт O(n log n), цель задачи — линейный проход. Здесь новый массив ответа разрешён.</aside>
-</section>
-<section>
-<h2 style="font-size:1.4em;">Где самый большой квадрат?</h2>
-<div class="fragment" style="display:flex;justify-content:center;gap:10px;margin:.7em 0;"><div style="min-width:64px;border:2px solid #6ecbff;border-radius:8px;padding:8px;"><div style="font-size:.4em;opacity:.6;">0</div><div>-4</div><div style="font-size:.5em;color:#6ecbff;">L</div></div><div style="min-width:64px;border:2px solid #555;border-radius:8px;padding:8px;"><div style="font-size:.4em;opacity:.6;">1</div><div>-1</div><div style="font-size:.5em;color:#555;">·</div></div><div style="min-width:64px;border:2px solid #555;border-radius:8px;padding:8px;"><div style="font-size:.4em;opacity:.6;">2</div><div>0</div><div style="font-size:.5em;color:#555;">·</div></div><div style="min-width:64px;border:2px solid #555;border-radius:8px;padding:8px;"><div style="font-size:.4em;opacity:.6;">3</div><div>3</div><div style="font-size:.5em;color:#555;">·</div></div><div style="min-width:64px;border:2px solid #ffc857;border-radius:8px;padding:8px;"><div style="font-size:.4em;opacity:.6;">4</div><div>10</div><div style="font-size:.5em;color:#ffc857;">R</div></div></div><p class="fragment" style="font-size:.8em;text-align:center;">Наибольший модуль среди оставшихся чисел — на одном из краёв.</p><div class="fragment opinion" style="font-size:.75em;margin-top:.7em;">Берём больший квадрат и ставим в <mark>последнюю свободную ячейку</mark> ответа.</div>
-<aside class="notes">32–34 минуты. Почему максимум модуля на краю? Любое внутреннее число лежит между крайними, его модуль не больше максимума крайних. Сравниваем квадраты или abs, не исходные значения. Заполнение справа налево избавляет от вставок в начало.</aside>
-</section>
-<section>
-<h2 style="font-size:1.4em;">Сначала большие, потом маленькие</h2>
-<table style="font-size:.65em;margin:.6em auto;"><thead><tr><th>Кандидаты с краёв</th><th>Куда записываем</th><th>Готовый хвост</th></tr></thead><tbody><tr class="fragment"><td>-4 и 10</td><td>индекс 4</td><td>[100]</td></tr><tr class="fragment"><td>-4 и 3</td><td>индекс 3</td><td>[16, 100]</td></tr><tr class="fragment"><td>-1 и 3</td><td>индекс 2</td><td>[9, 16, 100]</td></tr></tbody></table><div class="fragment opinion" style="font-size:.75em;margin-top:.7em;">Остались −1 и 0: итог <mark>[0, 1, 9, 16, 100]</mark>.</div>
-<aside class="notes">34–36 минуты. Трассировать L=0,R=4, затем 0,3, затем 1,3. Спросить, какой указатель двигается после каждого выбора. Три индекса: L и R по входу, write по результату. Это всё ещё метод двух указателей по данным.</aside>
-</section>
-<section>
-<h2 style="font-size:1.4em;">Лайвкодинг: линейные квадраты</h2>
-<table style="font-size:.65em;margin:.6em auto;"><thead><tr><th>Вход</th><th>Ответ</th></tr></thead><tbody><tr class="fragment"><td>[-5, -3, -1]</td><td>[1, 9, 25]</td></tr><tr class="fragment"><td>[-2, 0, 2]</td><td>[0, 4, 4]</td></tr><tr class="fragment"><td>[0]</td><td>[0]</td></tr></tbody></table><div class="fragment opinion" style="font-size:.75em;margin-top:.7em;">Пока L ≤ R: центральный элемент тоже должен попасть в ответ.</div>
-<aside class="notes">36–40 минут. Преподаватель пишет 3_sorted_squares.py. Не пропустить единственный оставшийся элемент; сравнить случай равных модулей. Время O(n), память O(n) под результат и O(1) сверх него. Если времени мало, остановиться после объяснения инварианта и одного теста; практика не превращается в самостоятельное написание кода на время.</aside>
-</section>
-</section>
-<section>
-<section>
-<div class="lesson-time">40</div><h2 style="font-size:1.4em;">Ещё один элемент</h2>
-<p class="fragment" style="font-size:.8em;text-align:center;"><a href="https://leetcode.com/problems/3sum/" target="_blank" rel="noopener">LC 15 · 3Sum</a></p><p class="fragment" style="font-size:.8em;text-align:center;">В неотсортированном списке найти все тройки разных индексов с суммой 0. Вернуть значения, без одинаковых троек.</p><p class="fragment" style="font-size:.8em;text-align:center;"><code>[-2, 0, 1, 1, 2]</code> → <code>[[-2, 0, 2], [-2, 1, 1]]</code>.</p>
-<aside class="notes">40–42 минуты. Файл 4_three_sum.py. Это развитие задачи о паре, а не три независимо движущихся указателя. Повторяющиеся значения допустимы, индексы должны различаться. Источник LC 15, Medium. Порядок троек и элементов внутри не важен.</aside>
-</section>
-<section>
-<h2 style="font-size:1.4em;">Зафиксируем одно число</h2>
-<p class="fragment" style="font-size:.8em;text-align:center;">После сортировки фиксируем nums[i]. Для оставшейся пары нужна сумма <mark>−nums[i]</mark>.</p><div class="fragment" style="display:flex;justify-content:center;gap:10px;margin:.7em 0;"><div style="min-width:64px;border:2px solid #555;border-radius:8px;padding:8px;"><div style="font-size:.4em;opacity:.6;">0</div><div>-2</div><div style="font-size:.5em;color:#555;">·</div></div><div style="min-width:64px;border:2px solid #6ecbff;border-radius:8px;padding:8px;"><div style="font-size:.4em;opacity:.6;">1</div><div>0</div><div style="font-size:.5em;color:#6ecbff;">L</div></div><div style="min-width:64px;border:2px solid #555;border-radius:8px;padding:8px;"><div style="font-size:.4em;opacity:.6;">2</div><div>1</div><div style="font-size:.5em;color:#555;">·</div></div><div style="min-width:64px;border:2px solid #555;border-radius:8px;padding:8px;"><div style="font-size:.4em;opacity:.6;">3</div><div>1</div><div style="font-size:.5em;color:#555;">·</div></div><div style="min-width:64px;border:2px solid #ffc857;border-radius:8px;padding:8px;"><div style="font-size:.4em;opacity:.6;">4</div><div>2</div><div style="font-size:.5em;color:#ffc857;">R</div></div></div><div class="fragment opinion" style="font-size:.75em;margin-top:.7em;">При nums[i] = −2 ищем пару с суммой 2.<br>Оба указателя находятся <mark>правее i</mark>.</div>
-<aside class="notes">42–44 минуты. Ученик связывает с Two Sum II. Для фиксированного -2 варианты 0+2 и 1+1. Индексы i&lt;L&lt;R гарантируют три разных вхождения. Нельзя заново искать по всему списку и брать тот же индекс. Отдельный проход для каждого i, итого O(n²) после сортировки.</aside>
-</section>
-<section>
-<h2 style="font-size:1.4em;">Найти все — сложнее, чем одну</h2>
-<p class="fragment" style="font-size:.8em;text-align:center;">После [-2, 0, 2] поиск не заканчивается: есть ещё [-2, 1, 1].</p><p class="fragment" style="font-size:.8em;text-align:center;">Одинаковое фиксированное значение обрабатываем один раз. После совпадения пропускаем повторы значений у указателей.</p><div class="fragment opinion" style="font-size:.75em;margin-top:.7em;"><code>[0, 0, 0, 0]</code> → ровно <mark>[[0, 0, 0]]</mark>.</div>
-<aside class="notes">44–46 минут. Объяснить два уровня дублей: фиксированный i и значения L/R после найденной пары. Разные индексы с одинаковыми значениями не должны давать повторные тройки. После совпадения сдвинуть оба указателя, затем пропустить повторы. Обязательно сохранить границу L&lt;R.</aside>
-</section>
-<section>
-<h2 style="font-size:1.4em;">Совместный разбор: 3Sum</h2>
-<table style="font-size:.65em;margin:.6em auto;"><thead><tr><th>Вход</th><th>Ответ</th></tr></thead><tbody><tr class="fragment"><td>[0, 1, 1]</td><td>[]</td></tr><tr class="fragment"><td>[-2, 0, 0, 2, 2]</td><td>[[-2, 0, 2]]</td></tr><tr class="fragment"><td>[0, 0, 0, 0]</td><td>[[0, 0, 0]]</td></tr></tbody></table><div class="fragment opinion" style="font-size:.75em;margin-top:.7em;">O(n) поиска пары для каждого i → <mark>O(n²)</mark> времени.</div>
-<aside class="notes">46–50 минут. Ученик прогнозирует ответы; преподаватель трассирует 4_three_sum.py. Полное написание и отладка кода — резерв: если предыдущие задачи заняли больше времени, достаточно разобрать редукцию, дубли и тесты; готовые решения доступны преподавателю отдельно. Python sorted создаёт O(n) памяти, плюс ответ; не заявлять O(1) для всей реализации.</aside>
-</section>
-</section>
-<section>
-<section>
-<div class="lesson-time">50</div><h2 style="font-size:1.4em;">Одна техника — разные причины движения</h2>
-<table style="font-size:.65em;margin:.6em auto;"><thead><tr><th>Задача</th><th>Роли указателей</th><th>Почему двигаемся</th></tr></thead><tbody><tr class="fragment"><td>167: пара</td><td>левый / правый</td><td>исключаем невозможные суммы</td></tr><tr class="fragment"><td>26: повторы</td><td>чтение / запись</td><td>наращиваем готовый префикс</td></tr><tr class="fragment"><td>977: квадраты</td><td>края + место ответа</td><td>максимум модуля на краю</td></tr><tr class="fragment"><td>15: тройки</td><td>фиксированный i + пара</td><td>сводим к знакомой сумме</td></tr></tbody></table>
-<aside class="notes">50–52 минуты. Ученик для каждой строки сначала называет роли и условие движения. Два индекса сами по себе не доказывают линейность и корректность. Следующие четыре задачи — самостоятельная практика после урока; на занятии только выбрать маршрут и проговорить условия.</aside>
-</section>
-<section>
-<h2 style="font-size:1.4em;">Практика: сохранить порядок</h2>
-<p class="fragment" style="font-size:.8em;text-align:center;"><a href="https://leetcode.com/problems/move-zeroes/" target="_blank" rel="noopener">LC 283 · Move Zeroes</a></p><p class="fragment" style="font-size:.8em;text-align:center;">Переместить нули в конец того же списка. Относительный порядок остальных чисел сохранить.</p><p class="fragment" style="font-size:.8em;text-align:center;"><code>[0, 4, 0, -2, 3]</code> → <code>[4, -2, 3, 0, 0]</code>.</p><div class="fragment opinion" style="font-size:.75em;margin-top:.7em;">Самостоятельно: O(n) времени, O(1) памяти. Новый список не создавать.</div>
-<aside class="notes">52–53 минуты. Обязательное ДЗ, hw_1_move_zeroes.py. LeetCode изменяет вход и ничего не возвращает (None). Это развитие read/write, но саму реализацию не показывать. Спросить, почему сортировка не подходит: разрушает порядок ненулевых.</aside>
-</section>
-<section>
-<h2 style="font-size:1.4em;">Практика: оставить по два</h2>
-<p class="fragment" style="font-size:.8em;text-align:center;"><a href="https://leetcode.com/problems/remove-duplicates-from-sorted-array-ii/" target="_blank" rel="noopener">LC 80 · Remove Duplicates II</a></p><p class="fragment" style="font-size:.8em;text-align:center;">В отсортированном списке оставить не больше двух копий каждого значения. Изменить на месте, вернуть k.</p><p class="fragment" style="font-size:.8em;text-align:center;"><code>[1, 1, 1, 2, 2, 3]</code> → k = 5, начало <code>[1, 1, 2, 2, 3]</code>.</p><div class="fragment opinion" style="font-size:.75em;margin-top:.7em;">Усложнение LC 26: O(n) времени и O(1) памяти.</div>
-<aside class="notes">53–54 минуты. Обязательное ДЗ после 283: hw_2_remove_duplicates_ii.py. Проверять k и начало, хвост не важен. На слайде не выдавать условие сравнения с nums[write-2], это ученик выводит дома. Уточнить: максимум две копии, не ровно две.</aside>
-</section>
-<section>
-<h2 style="font-size:1.4em;">Практика: контейнер с водой</h2>
-<p class="fragment" style="font-size:.8em;text-align:center;"><a href="https://leetcode.com/problems/container-with-most-water/" target="_blank" rel="noopener">LC 11 · Container With Most Water</a></p><p class="fragment" style="font-size:.8em;text-align:center;">Даны высоты вертикальных стенок. Выбрать две с максимальной площадью воды между ними.</p><p class="fragment" style="font-size:.8em;text-align:center;"><code>[2, 1, 4, 3]</code> → <mark>6</mark>.</p><div class="fragment opinion" style="font-size:.75em;margin-top:.7em;">Площадь: (R − L) · min(height[L], height[R]).<br>Здесь нельзя сортировать: позиции определяют ширину.</div>
-<aside class="notes">54–55 минут. Задача по желанию повышенной сложности, hw_3_max_area.py. Ответ 6 даёт пара 0,3: ширина 3, высота 2. Нужна собственная причина движения указателей, не правило суммы. Доказательство и полное решение оставить следующему уроку, условие и критерии проверки в руководстве.</aside>
-</section>
-<section>
-<h2 style="font-size:1.4em;">Ещё сложнее: одно удаление</h2>
-<p class="fragment" style="font-size:.8em;text-align:center;"><a href="https://leetcode.com/problems/valid-palindrome-ii/" target="_blank" rel="noopener">LC 680 · Valid Palindrome II</a></p><p class="fragment" style="font-size:.8em;text-align:center;">Строка из строчных латинских букв. Можно удалить не больше одного символа. Можно ли получить палиндром?</p><p class="fragment" style="font-size:.8em;text-align:center;"><code>"abca"</code> → True; <code>"abc"</code> → False.</p><div class="fragment opinion" style="font-size:.75em;margin-top:.7em;">Дополнительно: учесть оба варианта при первом несовпадении. O(n) времени, O(1) памяти.</div>
-<aside class="notes">55–56 минут. Дополнительная практика, hw_4_valid_palindrome_ii.py. Не путать с Valid Palindrome из раннего ДЗ: здесь нет очистки знаков или регистра, а есть право одного удаления. Текущие решения ДЗ не раскрывать; на следующем занятии разобрать обе ветви при первом несовпадении.</aside>
-</section>
-<section>
-<h2 style="font-size:1.4em;">Маршрут самостоятельной практики</h2>
-<ul><li class="fragment">Закрепить read/write: LC 283 → LC 80.</li><li class="fragment">Если уверенно: LC 11 — обосновать, какую стенку можно отбросить.</li><li class="fragment">Дополнительно: LC 680 — рассмотреть два возможных удаления.</li></ul>
-<aside class="notes">56–57 минут. Не задавать всё как обязательное: 283 и 80 обязательны, 11 и 680 по желанию. Если LC 15 не дописали на уроке, оставить на следующий совместный разбор, а не добавлять ещё обязательное ДЗ. Заготовки и тесты доступны в practice/41-two-pointers/.</aside>
-</section>
-</section>
-<section>
-<div class="lesson-time">57</div><h2 style="font-size:1.4em;">Перед тем как двигать указатель</h2>
-<ul><li class="fragment">Какую часть данных он обозначает?</li><li class="fragment">Почему отброшенные варианты точно не нужны?</li><li class="fragment">Что уже построено или проверено?</li><li class="fragment">Сколько раз каждый указатель может пройти по данным?</li></ul>
-<aside class="notes">57–60 минут. Спросить различие L&lt;R у пары и L&lt;=R у квадратов; что возвращает LC26; почему сортировка ломает контейнер. Ответы: пара требует разные индексы; квадрат нужен для каждого элемента; LC26 возвращает k и меняет вход; контейнер зависит от исходных позиций. Урок без номера и длительности на видимых слайдах.</aside>
-</section>
+            <section>
+                <div class="lesson-time">0</div>
+                <h2 style="font-size:1.4em;">Два указателя</h2>
+                <p class="fragment" style="font-size:.8em;text-align:center;">От перебора пар — к одному проходу</p>
+                <aside class="notes">Код на занятии пишет преподаватель; ученик прогнозирует движение указателей и
+                    объясняет, какие варианты можно исключить. Основной маршрут — 167, 26, 977 и разбор идеи 15; полная
+                    реализация 15 — резерв, если первые задачи идут быстро.</aside>
+            </section>
+            <section>
+                <section>
+                    <div class="lesson-time">0</div>
+                    <h2 style="font-size:1.4em;">Пары мы уже перебирали</h2>
+                    <p class="fragment" style="font-size:.8em;text-align:center;">В задаче про покупки выбирали два
+                        разных товара и проверяли их суммарную цену.</p>
+                    <p class="fragment" style="font-size:.8em;text-align:center;">Теперь ищем <mark>одну пару с заданной
+                            суммой</mark>. Что изменится, если цены уже отсортированы?</p>
+                    <div class="fragment opinion" style="font-size:.75em;margin-top:.7em;">Хотим исключать сразу много
+                        неподходящих пар.</div>
+                    <aside class="notes">0–3 минуты. Подводка от занятия 39 про combinations. Это мотивация, не
+                        повторное ДЗ. Изменён контракт: там все пары в пределах бюджета, здесь одна пара с точной
+                        суммой. Спросить про O(n²) перебор и про уже знакомый Two Sum со словарём. Здесь используем
+                        сортировку и O(1) дополнительной памяти.</aside>
+                </section>
+                <section>
+                    <h2 style="font-size:1.4em;">Задача: найти пару</h2>
+                    <p class="fragment" style="font-size:.8em;text-align:center;"><a
+                            href="https://leetcode.com/problems/two-sum-ii-input-array-is-sorted/" target="_blank"
+                            rel="noopener">LC 167 · Two Sum II</a></p>
+                    <p class="fragment" style="font-size:.8em;text-align:center;">Дан список по неубыванию. Найти два
+                        разных элемента с суммой target. Ответ ровно один.</p>
+                    <p class="fragment" style="font-size:.8em;text-align:center;">
+                        <code>[2, 7, 11, 15], target = 9</code> → <mark>[1, 2]</mark>.</p>
+                    <div class="fragment opinion" style="font-size:.75em;margin-top:.7em;">В ответе LeetCode индексы
+                        <mark>с единицы</mark>. Дополнительная память O(1).</div>
+                    <aside class="notes">3–5 минут. Файл 1_two_sum_ii.py. Список уже отсортирован, менять его не
+                        требуется. Никаких реализаций на слайде. Объяснить контракт: возвращаем позиции, не значения;
+                        один элемент нельзя использовать дважды. 167 на LeetCode — Medium.</aside>
+                </section>
+                <section>
+                    <h2 style="font-size:1.4em;">Начнём с двух краёв</h2>
+                    <div class="fragment" style="display:flex;justify-content:center;gap:10px;margin:.7em 0;">
+                        <div style="min-width:64px;border:2px solid #6ecbff;border-radius:8px;padding:8px;">
+                            <div style="font-size:.4em;opacity:.6;">0</div>
+                            <div>2</div>
+                            <div style="font-size:.5em;color:#6ecbff;">L</div>
+                        </div>
+                        <div style="min-width:64px;border:2px solid #555;border-radius:8px;padding:8px;">
+                            <div style="font-size:.4em;opacity:.6;">1</div>
+                            <div>7</div>
+                            <div style="font-size:.5em;color:#555;">·</div>
+                        </div>
+                        <div style="min-width:64px;border:2px solid #555;border-radius:8px;padding:8px;">
+                            <div style="font-size:.4em;opacity:.6;">2</div>
+                            <div>11</div>
+                            <div style="font-size:.5em;color:#555;">·</div>
+                        </div>
+                        <div style="min-width:64px;border:2px solid #ffc857;border-radius:8px;padding:8px;">
+                            <div style="font-size:.4em;opacity:.6;">3</div>
+                            <div>15</div>
+                            <div style="font-size:.5em;color:#ffc857;">R</div>
+                        </div>
+                    </div>
+                    <p class="fragment" style="font-size:.8em;text-align:center;">2 + 15 = 17 &gt; 9. Можно ли оставить
+                        15 и найти ему меньшую пару?</p>
+                    <div class="fragment opinion" style="font-size:.75em;margin-top:.7em;">Даже минимальный элемент
+                        слишком велик в паре с 15.<br>Значит, <mark>15 исключаем целиком</mark>.</div>
+                    <aside class="notes">5–7 минут. Не давать правило без причины. Спросить, что будет с суммой, если
+                        оставить R и увеличить L: сумма не уменьшится. Следовательно, ни одна пара с текущим R не
+                        подойдёт. Уменьшаем R.</aside>
+                </section>
+                <section>
+                    <h2 style="font-size:1.4em;">Это метод двух указателей</h2>
+                    <p class="fragment" style="font-size:.8em;text-align:center;">Храним две позиции в данных —
+                        <mark>два указателя</mark>.<br>В нашей задаче это индексы L и R по краям списка.</p>
+                    <p class="fragment" style="font-size:.8em;text-align:center;">Смотрим на текущую пару и двигаем
+                        указатель так, чтобы исключить заведомо неподходящие варианты.</p>
+                    <div class="fragment opinion" style="font-size:.75em;margin-top:.7em;">Здесь указатели идут
+                        навстречу друг другу.<br>В других задачах они могут двигаться в одну сторону.</div>
+                    <aside class="notes">После первого примера называем приём: метод двух указателей, two pointers.
+                        Указатель здесь — обычный индекс списка, а не специальный тип Python. Важны роли двух позиций и
+                        обоснование каждого движения. Не обещать O(n) для любой задачи с двумя индексами: оценку выведем
+                        отдельно. На следующем слайде формализуем правило движения для поиска пары.</aside>
+                </section>
+                <section>
+                    <h2 style="font-size:1.4em;">Почему можно двигать границу?</h2>
+                    <table style="font-size:.65em;margin:.6em auto;">
+                        <thead>
+                            <tr>
+                                <th>Текущая сумма s</th>
+                                <th>Что исключаем</th>
+                                <th>Движение</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="fragment">
+                                <td>s &lt; target</td>
+                                <td>L: даже с самым большим мало</td>
+                                <td>L вправо</td>
+                            </tr>
+                            <tr class="fragment">
+                                <td>s &gt; target</td>
+                                <td>R: даже с самым маленьким много</td>
+                                <td>R влево</td>
+                            </tr>
+                            <tr class="fragment">
+                                <td>s = target</td>
+                                <td>Пара найдена</td>
+                                <td>Вернуть позиции</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="fragment opinion" style="font-size:.75em;margin-top:.7em;">Среди оставшихся кандидатов
+                        ответ ищем только внутри <mark>[L, R]</mark>.</div>
+                    <aside class="notes">7–10 минут. Инвариант: если ответ ещё не найден, он среди пар в оставшемся
+                        диапазоне. При малой сумме фиксированный nums[L] ни с одним j&lt;=R не даст target; при большой
+                        — фиксированный nums[R] ни с одним i&gt;=L. Отрицательные числа не мешают: нужен порядок, не
+                        положительность. Здесь и далее границы включены, в отличие от [l,r) в префиксных суммах.</aside>
+                </section>
+                <section>
+                    <h2 style="font-size:1.4em;">Пройдём оба направления</h2>
+                    <p class="fragment" style="font-size:.8em;text-align:center;">
+                        <code>[1, 2, 4, 6, 10], target = 8</code></p>
+                    <table style="font-size:.65em;margin:.6em auto;">
+                        <thead>
+                            <tr>
+                                <th>L, R</th>
+                                <th>Сумма</th>
+                                <th>Следующий шаг</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="fragment">
+                                <td>0, 4</td>
+                                <td>1 + 10 = 11</td>
+                                <td>R → 3</td>
+                            </tr>
+                            <tr class="fragment">
+                                <td>0, 3</td>
+                                <td>1 + 6 = 7</td>
+                                <td>L → 1</td>
+                            </tr>
+                            <tr class="fragment">
+                                <td>1, 3</td>
+                                <td>2 + 6 = 8</td>
+                                <td>Ответ [2, 4]</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <aside class="notes">10–12 минут. Ученик до каждого клика называет следующий ход и обосновывает
+                        исключение. Указатели в таблице с нуля; ответ LC с единицы. Все значения отсортированы,
+                        единственная пара для 8 — 2 и 6.</aside>
+                </section>
+                <section>
+                    <h2 style="font-size:1.4em;">Лайвкодинг: Two Sum II</h2>
+                    <p class="fragment" style="font-size:.8em;text-align:center;">Пишем поиск пары. До запуска называем
+                        ответы для каждого примера.</p>
+                    <table style="font-size:.65em;margin:.6em auto;">
+                        <thead>
+                            <tr>
+                                <th>Вход</th>
+                                <th>Ответ</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="fragment">
+                                <td>[-3, 0, 2, 4], target = 1</td>
+                                <td>[1, 4]</td>
+                            </tr>
+                            <tr class="fragment">
+                                <td>[1, 1], target = 2</td>
+                                <td>[1, 2]</td>
+                            </tr>
+                            <tr class="fragment">
+                                <td>[2, 3, 4], target = 6</td>
+                                <td>[1, 3]</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="fragment opinion" style="font-size:.75em;margin-top:.7em;">Остановка: L &lt; R. Один
+                        индекс нельзя взять дважды.</div>
+                    <aside class="notes">12–17 минут. Преподаватель реализует 1_two_sum_ii.py в редакторе и запускает
+                        тесты. Для [-3,0,2,4] и target=1 единственный ответ — [1,4]. Сумма пересчитывается после каждого
+                        сдвига. Ученик объясняет крайний случай [1,1].</aside>
+                </section>
+                <section>
+                    <h2 style="font-size:1.4em;">Один цикл — не главный аргумент</h2>
+                    <p class="fragment" style="font-size:.8em;text-align:center;">На каждом шаге L растёт или R
+                        уменьшается. Указатели не возвращаются назад.</p>
+                    <div class="fragment opinion" style="font-size:.75em;margin-top:.7em;">Не более n − 1 сдвигов:
+                        <mark>O(n)</mark> времени и <mark>O(1)</mark> памяти.</div>
+                    <p class="fragment" style="font-size:.8em;text-align:center;">Без сортировки это правило неверно.
+                        Если сортируем сами — добавляется стоимость сортировки.</p>
+                    <aside class="notes">17–18 минут. Спросить, почему нельзя применять правило к [3,2,4], target=6:
+                        начальная сумма 7, исключим 4 и потеряем ответ 2+4. Если сортируем ради исходных индексов, надо
+                        сохранять соответствие; LC 167 уже даёт сортированный вход. Отдельной задачи на произвольный
+                        массив не вводим.</aside>
+                </section>
+            </section>
+            <section>
+                <section>
+                    <div class="lesson-time">18</div>
+                    <h2 style="font-size:1.4em;">Указатели могут идти в одну сторону</h2>
+                    <p class="fragment" style="font-size:.8em;text-align:center;"><a
+                            href="https://leetcode.com/problems/remove-duplicates-from-sorted-array/" target="_blank"
+                            rel="noopener">LC 26 · Remove Duplicates</a></p>
+                    <p class="fragment" style="font-size:.8em;text-align:center;">Из отсортированного списка убрать
+                        повторы <mark>на месте</mark>. Вернуть k; первые k ячеек содержат разные значения.</p>
+                    <p class="fragment" style="font-size:.8em;text-align:center;"><code>[1, 1, 2, 2, 3]</code> → k = 3,
+                        начало <code>[1, 2, 3]</code>.</p>
+                    <div class="fragment opinion" style="font-size:.75em;margin-top:.7em;">Хвост после k не важен.
+                        Дополнительная память O(1).</div>
+                    <aside class="notes">18–20 минут. Файл 2_remove_duplicates.py. Сравнить с 167: теперь не ищем пару,
+                        а строим готовую часть списка. Возвращаем число k, а не новый список. Физически удалять хвост не
+                        нужно.</aside>
+                </section>
+                <section>
+                    <h2 style="font-size:1.4em;">Читаем всё, записываем нужное</h2>
+                    <div class="compare">
+                        <div class="compare-block fragment">
+                            <h4>read</h4>
+                            <p>Следующий элемент<br>для проверки</p>
+                        </div>
+                        <div class="compare-block fragment">
+                            <h4>write</h4>
+                            <p>Следующая свободная<br>ячейка результата</p>
+                        </div>
+                    </div>
+                    <div class="fragment opinion" style="font-size:.75em;margin-top:.7em;">Перед read готовая часть
+                        <mark>nums[:write]</mark> уже содержит разные значения в порядке возрастания.</div>
+                    <aside class="notes">20–22 минуты. Состояние nums[:write] — все уникальные значения обработанного
+                        префикса. read перебирает весь вход; если значение отличается от последнего записанного —
+                        записать и увеличить write. write&lt;=read, поэтому не затираем непрочитанные элементы. Пустой
+                        вход в локальной заготовке допускается как расширение, хотя LC задаёт минимум один элемент.
+                    </aside>
+                </section>
+                <section>
+                    <h2 style="font-size:1.4em;">Готовая часть растёт</h2>
+                    <table style="font-size:.65em;margin:.6em auto;">
+                        <thead>
+                            <tr>
+                                <th>Прочитали</th>
+                                <th>Готовая часть</th>
+                                <th>write</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="fragment">
+                                <td>1</td>
+                                <td>[1]</td>
+                                <td>1</td>
+                            </tr>
+                            <tr class="fragment">
+                                <td>ещё 1</td>
+                                <td>[1]</td>
+                                <td>1</td>
+                            </tr>
+                            <tr class="fragment">
+                                <td>2</td>
+                                <td>[1, 2]</td>
+                                <td>2</td>
+                            </tr>
+                            <tr class="fragment">
+                                <td>ещё 2, затем 3</td>
+                                <td>[1, 2, 3]</td>
+                                <td>3</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="fragment opinion" style="font-size:.75em;margin-top:.7em;">Повтор читаем, но не
+                        записываем. Длина исходного списка не меняется.</div>
+                    <aside class="notes">22–24 минуты. Трассировка [1,1,2,2,3]. На последней строке устно отдельно
+                        обсудить повтор 2 и новый 3. Ученик должен отличать значение write от индекса read. list.pop
+                        внутри прохода не нужен: сдвиги хвоста могут дать квадратичное время.</aside>
+                </section>
+                <section>
+                    <h2 style="font-size:1.4em;">Лайвкодинг: сжать повторы</h2>
+                    <p class="fragment" style="font-size:.8em;text-align:center;">Пишем функцию для LC 26 и проверяем
+                        <mark>оба результата</mark>: k и первые k элементов.</p>
+                    <table style="font-size:.65em;margin:.6em auto;">
+                        <thead>
+                            <tr>
+                                <th>Вход</th>
+                                <th>k и начало</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="fragment">
+                                <td>[5, 5, 5]</td>
+                                <td>1, [5]</td>
+                            </tr>
+                            <tr class="fragment">
+                                <td>[-2, -2, 0, 3, 3]</td>
+                                <td>3, [-2, 0, 3]</td>
+                            </tr>
+                            <tr class="fragment">
+                                <td>[1, 2, 3]</td>
+                                <td>3, [1, 2, 3]</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <aside class="notes">24–30 минут. Код пишет преподаватель, файл 2_remove_duplicates.py. Проверить
+                        []→0 как расширение, одиночный элемент, все одинаковые. Вызов с новым списком в каждом тесте.
+                        Связать read/write с сохранением обработанного результата. Усложнения 283 и 80 будут в практике,
+                        их условия есть в конце.</aside>
+                </section>
+            </section>
+            <section>
+                <section>
+                    <div class="lesson-time">30</div>
+                    <h2 style="font-size:1.4em;">Квадраты ломают сортировку</h2>
+                    <p class="fragment" style="font-size:.8em;text-align:center;"><a
+                            href="https://leetcode.com/problems/squares-of-a-sorted-array/" target="_blank"
+                            rel="noopener">LC 977 · Squares of a Sorted Array</a></p>
+                    <p class="fragment" style="font-size:.8em;text-align:center;">Возвести числа отсортированного списка
+                        в квадрат. Вернуть результат по неубыванию за <mark>O(n)</mark>.</p>
+                    <p class="fragment" style="font-size:.8em;text-align:center;"><code>[-4, -1, 0, 3, 10]</code> →
+                        <code>[0, 1, 9, 16, 100]</code>.</p>
+                    <aside class="notes">30–32 минуты. Файл 3_sorted_squares.py. Спросить, почему нельзя просто возвести
+                        в квадрат: получится [16,1,0,9,100]. Сортировка квадратов допустима как базовое решение, но даёт
+                        O(n log n), цель задачи — линейный проход. Здесь новый массив ответа разрешён.</aside>
+                </section>
+                <section>
+                    <h2 style="font-size:1.4em;">Где самый большой квадрат?</h2>
+                    <div class="fragment" style="display:flex;justify-content:center;gap:10px;margin:.7em 0;">
+                        <div style="min-width:64px;border:2px solid #6ecbff;border-radius:8px;padding:8px;">
+                            <div style="font-size:.4em;opacity:.6;">0</div>
+                            <div>-4</div>
+                            <div style="font-size:.5em;color:#6ecbff;">L</div>
+                        </div>
+                        <div style="min-width:64px;border:2px solid #555;border-radius:8px;padding:8px;">
+                            <div style="font-size:.4em;opacity:.6;">1</div>
+                            <div>-1</div>
+                            <div style="font-size:.5em;color:#555;">·</div>
+                        </div>
+                        <div style="min-width:64px;border:2px solid #555;border-radius:8px;padding:8px;">
+                            <div style="font-size:.4em;opacity:.6;">2</div>
+                            <div>0</div>
+                            <div style="font-size:.5em;color:#555;">·</div>
+                        </div>
+                        <div style="min-width:64px;border:2px solid #555;border-radius:8px;padding:8px;">
+                            <div style="font-size:.4em;opacity:.6;">3</div>
+                            <div>3</div>
+                            <div style="font-size:.5em;color:#555;">·</div>
+                        </div>
+                        <div style="min-width:64px;border:2px solid #ffc857;border-radius:8px;padding:8px;">
+                            <div style="font-size:.4em;opacity:.6;">4</div>
+                            <div>10</div>
+                            <div style="font-size:.5em;color:#ffc857;">R</div>
+                        </div>
+                    </div>
+                    <p class="fragment" style="font-size:.8em;text-align:center;">Наибольший модуль среди оставшихся
+                        чисел — на одном из краёв.</p>
+                    <div class="fragment opinion" style="font-size:.75em;margin-top:.7em;">Берём больший квадрат и
+                        ставим в <mark>последнюю свободную ячейку</mark> ответа.</div>
+                    <aside class="notes">32–34 минуты. Почему максимум модуля на краю? Любое внутреннее число лежит
+                        между крайними, его модуль не больше максимума крайних. Сравниваем квадраты или abs, не исходные
+                        значения. Заполнение справа налево избавляет от вставок в начало.</aside>
+                </section>
+                <section>
+                    <h2 style="font-size:1.4em;">Сначала большие, потом маленькие</h2>
+                    <table style="font-size:.65em;margin:.6em auto;">
+                        <thead>
+                            <tr>
+                                <th>Кандидаты с краёв</th>
+                                <th>Куда записываем</th>
+                                <th>Готовый хвост</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="fragment">
+                                <td>-4 и 10</td>
+                                <td>индекс 4</td>
+                                <td>[100]</td>
+                            </tr>
+                            <tr class="fragment">
+                                <td>-4 и 3</td>
+                                <td>индекс 3</td>
+                                <td>[16, 100]</td>
+                            </tr>
+                            <tr class="fragment">
+                                <td>-1 и 3</td>
+                                <td>индекс 2</td>
+                                <td>[9, 16, 100]</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="fragment opinion" style="font-size:.75em;margin-top:.7em;">Остались −1 и 0: итог
+                        <mark>[0, 1, 9, 16, 100]</mark>.</div>
+                    <aside class="notes">34–36 минуты. Трассировать L=0,R=4, затем 0,3, затем 1,3. Спросить, какой
+                        указатель двигается после каждого выбора. Три индекса: L и R по входу, write по результату. Это
+                        всё ещё метод двух указателей по данным.</aside>
+                </section>
+                <section>
+                    <h2 style="font-size:1.4em;">Лайвкодинг: линейные квадраты</h2>
+                    <table style="font-size:.65em;margin:.6em auto;">
+                        <thead>
+                            <tr>
+                                <th>Вход</th>
+                                <th>Ответ</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="fragment">
+                                <td>[-5, -3, -1]</td>
+                                <td>[1, 9, 25]</td>
+                            </tr>
+                            <tr class="fragment">
+                                <td>[-2, 0, 2]</td>
+                                <td>[0, 4, 4]</td>
+                            </tr>
+                            <tr class="fragment">
+                                <td>[0]</td>
+                                <td>[0]</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="fragment opinion" style="font-size:.75em;margin-top:.7em;">Пока L ≤ R: центральный
+                        элемент тоже должен попасть в ответ.</div>
+                    <aside class="notes">36–40 минут. Преподаватель пишет 3_sorted_squares.py. Не пропустить
+                        единственный оставшийся элемент; сравнить случай равных модулей. Время O(n), память O(n) под
+                        результат и O(1) сверх него. Если времени мало, остановиться после объяснения инварианта и
+                        одного теста; практика не превращается в самостоятельное написание кода на время.</aside>
+                </section>
+            </section>
+            <section>
+                <section>
+                    <div class="lesson-time">40</div>
+                    <h2 style="font-size:1.4em;">Ещё один элемент</h2>
+                    <p class="fragment" style="font-size:.8em;text-align:center;"><a
+                            href="https://leetcode.com/problems/3sum/" target="_blank" rel="noopener">LC 15 · 3Sum</a>
+                    </p>
+                    <p class="fragment" style="font-size:.8em;text-align:center;">В неотсортированном списке найти все
+                        тройки разных индексов с суммой 0. Вернуть значения, без одинаковых троек.</p>
+                    <p class="fragment" style="font-size:.8em;text-align:center;"><code>[-2, 0, 1, 1, 2]</code> →
+                        <code>[[-2, 0, 2], [-2, 1, 1]]</code>.</p>
+                    <aside class="notes">40–42 минуты. Файл 4_three_sum.py. Это развитие задачи о паре, а не три
+                        независимо движущихся указателя. Повторяющиеся значения допустимы, индексы должны различаться.
+                        Источник LC 15, Medium. Порядок троек и элементов внутри не важен.</aside>
+                </section>
+                <section>
+                    <h2 style="font-size:1.4em;">Зафиксируем одно число</h2>
+                    <p class="fragment" style="font-size:.8em;text-align:center;">После сортировки фиксируем nums[i].
+                        Для оставшейся пары нужна сумма <mark>−nums[i]</mark>.</p>
+                    <div class="fragment" style="display:flex;justify-content:center;gap:10px;margin:.7em 0;">
+                        <div style="min-width:64px;border:2px solid #555;border-radius:8px;padding:8px;">
+                            <div style="font-size:.4em;opacity:.6;">0</div>
+                            <div>-2</div>
+                            <div style="font-size:.5em;color:#555;">·</div>
+                        </div>
+                        <div style="min-width:64px;border:2px solid #6ecbff;border-radius:8px;padding:8px;">
+                            <div style="font-size:.4em;opacity:.6;">1</div>
+                            <div>0</div>
+                            <div style="font-size:.5em;color:#6ecbff;">L</div>
+                        </div>
+                        <div style="min-width:64px;border:2px solid #555;border-radius:8px;padding:8px;">
+                            <div style="font-size:.4em;opacity:.6;">2</div>
+                            <div>1</div>
+                            <div style="font-size:.5em;color:#555;">·</div>
+                        </div>
+                        <div style="min-width:64px;border:2px solid #555;border-radius:8px;padding:8px;">
+                            <div style="font-size:.4em;opacity:.6;">3</div>
+                            <div>1</div>
+                            <div style="font-size:.5em;color:#555;">·</div>
+                        </div>
+                        <div style="min-width:64px;border:2px solid #ffc857;border-radius:8px;padding:8px;">
+                            <div style="font-size:.4em;opacity:.6;">4</div>
+                            <div>2</div>
+                            <div style="font-size:.5em;color:#ffc857;">R</div>
+                        </div>
+                    </div>
+                    <div class="fragment opinion" style="font-size:.75em;margin-top:.7em;">При nums[i] = −2 ищем пару с
+                        суммой 2.<br>Оба указателя находятся <mark>правее i</mark>.</div>
+                    <aside class="notes">42–44 минуты. Ученик связывает с Two Sum II. Для фиксированного -2 варианты 0+2
+                        и 1+1. Индексы i&lt;L&lt;R гарантируют три разных вхождения. Нельзя заново искать по всему
+                        списку и брать тот же индекс. Отдельный проход для каждого i, итого O(n²) после сортировки.
+                    </aside>
+                </section>
+                <section>
+                    <h2 style="font-size:1.4em;">Найти все — сложнее, чем одну</h2>
+                    <p class="fragment" style="font-size:.8em;text-align:center;">После [-2, 0, 2] поиск не
+                        заканчивается: есть ещё [-2, 1, 1].</p>
+                    <p class="fragment" style="font-size:.8em;text-align:center;">Одинаковое фиксированное значение
+                        обрабатываем один раз. После совпадения пропускаем повторы значений у указателей.</p>
+                    <div class="fragment opinion" style="font-size:.75em;margin-top:.7em;"><code>[0, 0, 0, 0]</code> →
+                        ровно <mark>[[0, 0, 0]]</mark>.</div>
+                    <aside class="notes">44–46 минут. Объяснить два уровня дублей: фиксированный i и значения L/R после
+                        найденной пары. Разные индексы с одинаковыми значениями не должны давать повторные тройки. После
+                        совпадения сдвинуть оба указателя, затем пропустить повторы. Обязательно сохранить границу
+                        L&lt;R.</aside>
+                </section>
+                <section>
+                    <h2 style="font-size:1.4em;">Совместный разбор: 3Sum</h2>
+                    <table style="font-size:.65em;margin:.6em auto;">
+                        <thead>
+                            <tr>
+                                <th>Вход</th>
+                                <th>Ответ</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="fragment">
+                                <td>[0, 1, 1]</td>
+                                <td>[]</td>
+                            </tr>
+                            <tr class="fragment">
+                                <td>[-2, 0, 0, 2, 2]</td>
+                                <td>[[-2, 0, 2]]</td>
+                            </tr>
+                            <tr class="fragment">
+                                <td>[0, 0, 0, 0]</td>
+                                <td>[[0, 0, 0]]</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="fragment opinion" style="font-size:.75em;margin-top:.7em;">O(n) поиска пары для каждого
+                        i → <mark>O(n²)</mark> времени.</div>
+                    <aside class="notes">46–50 минут. Ученик прогнозирует ответы; преподаватель трассирует
+                        4_three_sum.py. Полное написание и отладка кода — резерв: если предыдущие задачи заняли больше
+                        времени, достаточно разобрать редукцию, дубли и тесты; готовые решения доступны преподавателю
+                        отдельно. Python sorted создаёт O(n) памяти, плюс ответ; не заявлять O(1) для всей реализации.
+                    </aside>
+                </section>
+            </section>
+            <section>
+                <section>
+                    <div class="lesson-time">50</div>
+                    <h2 style="font-size:1.4em;">Одна техника — разные причины движения</h2>
+                    <table style="font-size:.65em;margin:.6em auto;">
+                        <thead>
+                            <tr>
+                                <th>Задача</th>
+                                <th>Роли указателей</th>
+                                <th>Почему двигаемся</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="fragment">
+                                <td>167: пара</td>
+                                <td>левый / правый</td>
+                                <td>исключаем невозможные суммы</td>
+                            </tr>
+                            <tr class="fragment">
+                                <td>26: повторы</td>
+                                <td>чтение / запись</td>
+                                <td>наращиваем готовый префикс</td>
+                            </tr>
+                            <tr class="fragment">
+                                <td>977: квадраты</td>
+                                <td>края + место ответа</td>
+                                <td>максимум модуля на краю</td>
+                            </tr>
+                            <tr class="fragment">
+                                <td>15: тройки</td>
+                                <td>фиксированный i + пара</td>
+                                <td>сводим к знакомой сумме</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <aside class="notes">50–52 минуты. Ученик для каждой строки сначала называет роли и условие
+                        движения. Два индекса сами по себе не доказывают линейность и корректность. Следующие четыре
+                        задачи — самостоятельная практика после урока; на занятии только выбрать маршрут и проговорить
+                        условия.</aside>
+                </section>
+                <section>
+                    <h2 style="font-size:1.4em;">Практика: сохранить порядок</h2>
+                    <p class="fragment" style="font-size:.8em;text-align:center;"><a
+                            href="https://leetcode.com/problems/move-zeroes/" target="_blank" rel="noopener">LC 283 ·
+                            Move Zeroes</a></p>
+                    <p class="fragment" style="font-size:.8em;text-align:center;">Переместить нули в конец того же
+                        списка. Относительный порядок остальных чисел сохранить.</p>
+                    <p class="fragment" style="font-size:.8em;text-align:center;"><code>[0, 4, 0, -2, 3]</code> →
+                        <code>[4, -2, 3, 0, 0]</code>.</p>
+                    <div class="fragment opinion" style="font-size:.75em;margin-top:.7em;">Самостоятельно: O(n) времени,
+                        O(1) памяти. Новый список не создавать.</div>
+                    <aside class="notes">52–53 минуты. Обязательное ДЗ, hw_1_move_zeroes.py. LeetCode изменяет вход и
+                        ничего не возвращает (None). Это развитие read/write, но саму реализацию не показывать.
+                        Спросить, почему сортировка не подходит: разрушает порядок ненулевых.</aside>
+                </section>
+                <section>
+                    <h2 style="font-size:1.4em;">Практика: оставить по два</h2>
+                    <p class="fragment" style="font-size:.8em;text-align:center;"><a
+                            href="https://leetcode.com/problems/remove-duplicates-from-sorted-array-ii/" target="_blank"
+                            rel="noopener">LC 80 · Remove Duplicates II</a></p>
+                    <p class="fragment" style="font-size:.8em;text-align:center;">В отсортированном списке оставить не
+                        больше двух копий каждого значения. Изменить на месте, вернуть k.</p>
+                    <p class="fragment" style="font-size:.8em;text-align:center;"><code>[1, 1, 1, 2, 2, 3]</code> → k =
+                        5, начало <code>[1, 1, 2, 2, 3]</code>.</p>
+                    <div class="fragment opinion" style="font-size:.75em;margin-top:.7em;">Усложнение LC 26: O(n)
+                        времени и O(1) памяти.</div>
+                    <aside class="notes">53–54 минуты. Обязательное ДЗ после 283: hw_2_remove_duplicates_ii.py.
+                        Проверять k и начало, хвост не важен. На слайде не выдавать условие сравнения с nums[write-2],
+                        это ученик выводит дома. Уточнить: максимум две копии, не ровно две.</aside>
+                </section>
+                <section>
+                    <h2 style="font-size:1.4em;">Практика: контейнер с водой</h2>
+                    <p class="fragment" style="font-size:.8em;text-align:center;"><a
+                            href="https://leetcode.com/problems/container-with-most-water/" target="_blank"
+                            rel="noopener">LC 11 · Container With Most Water</a></p>
+                    <p class="fragment" style="font-size:.8em;text-align:center;">Даны высоты вертикальных стенок.
+                        Выбрать две с максимальной площадью воды между ними.</p>
+                    <p class="fragment" style="font-size:.8em;text-align:center;"><code>[2, 1, 4, 3]</code> →
+                        <mark>6</mark>.</p>
+                    <div class="fragment opinion" style="font-size:.75em;margin-top:.7em;">Площадь: (R − L) ·
+                        min(height[L], height[R]).<br>Здесь нельзя сортировать: позиции определяют ширину.</div>
+                    <aside class="notes">54–55 минут. Задача по желанию повышенной сложности, hw_3_max_area.py. Ответ 6
+                        даёт пара 0,3: ширина 3, высота 2. Нужна собственная причина движения указателей, не правило
+                        суммы. Доказательство и полное решение оставить следующему уроку, условие и критерии проверки в
+                        руководстве.</aside>
+                </section>
+                <section>
+                    <h2 style="font-size:1.4em;">Ещё сложнее: одно удаление</h2>
+                    <p class="fragment" style="font-size:.8em;text-align:center;"><a
+                            href="https://leetcode.com/problems/valid-palindrome-ii/" target="_blank" rel="noopener">LC
+                            680 · Valid Palindrome II</a></p>
+                    <p class="fragment" style="font-size:.8em;text-align:center;">Строка из строчных латинских букв.
+                        Можно удалить не больше одного символа. Можно ли получить палиндром?</p>
+                    <p class="fragment" style="font-size:.8em;text-align:center;"><code>"abca"</code> → True;
+                        <code>"abc"</code> → False.</p>
+                    <div class="fragment opinion" style="font-size:.75em;margin-top:.7em;">Дополнительно: учесть оба
+                        варианта при первом несовпадении. O(n) времени, O(1) памяти.</div>
+                    <aside class="notes">55–56 минут. Дополнительная практика, hw_4_valid_palindrome_ii.py. Не путать с
+                        Valid Palindrome из раннего ДЗ: здесь нет очистки знаков или регистра, а есть право одного
+                        удаления. Текущие решения ДЗ не раскрывать; на следующем занятии разобрать обе ветви при первом
+                        несовпадении.</aside>
+                </section>
+                <section>
+                    <h2 style="font-size:1.4em;">Маршрут самостоятельной практики</h2>
+                    <ul>
+                        <li class="fragment">Закрепить read/write: LC 283 → LC 80.</li>
+                        <li class="fragment">Если уверенно: LC 11 — обосновать, какую стенку можно отбросить.</li>
+                        <li class="fragment">Дополнительно: LC 680 — рассмотреть два возможных удаления.</li>
+                    </ul>
+                    <aside class="notes">56–57 минут. Не задавать всё как обязательное: 283 и 80 обязательны, 11 и 680
+                        по желанию. Если LC 15 не дописали на уроке, оставить на следующий совместный разбор, а не
+                        добавлять ещё обязательное ДЗ. Заготовки и тесты доступны в practice/41-two-pointers/.</aside>
+                </section>
+            </section>
+            <section>
+                <div class="lesson-time">57</div>
+                <h2 style="font-size:1.4em;">Перед тем как двигать указатель</h2>
+                <ul>
+                    <li class="fragment">Какую часть данных он обозначает?</li>
+                    <li class="fragment">Почему отброшенные варианты точно не нужны?</li>
+                    <li class="fragment">Что уже построено или проверено?</li>
+                    <li class="fragment">Сколько раз каждый указатель может пройти по данным?</li>
+                </ul>
+                <aside class="notes">57–60 минут. Спросить различие L&lt;R у пары и L&lt;=R у квадратов; что возвращает
+                    LC26; почему сортировка ломает контейнер. Ответы: пара требует разные индексы; квадрат нужен для
+                    каждого элемента; LC26 возвращает k и меняет вход; контейнер зависит от исходных позиций. Урок без
+                    номера и длительности на видимых слайдах.</aside>
+            </section>
         </div>
     </div>
 
@@ -206,5 +705,3 @@
 </body>
 
 </html>
-
-
