@@ -96,6 +96,14 @@ img {
     padding: 0;
 }
 
+/* Вложенные акценты должны сохранять контраст на фоне выделения. */
+.reveal mark code,
+.reveal mark strong,
+.reveal mark b {
+    color: inherit;
+    background: none;
+}
+
 /* --- Компонент: плюсы/минусы --- */
 
 ul.opinion {

@@ -1,0 +1,7 @@
+/* Только схема соседних окон; типографика из общей темы. */
+.windows { margin: .6em auto; font-size: .7em; }
+.windows > div { display: flex; justify-content: center; gap: .35em; margin: .25em 0; }
+.windows span { width: 3.4em; padding: .2em; border: 1px solid #777; border-radius: .2em; color: #aaa; }
+.windows span.active { background: #f3ab35; color: #111; border-color: #f3ab35; }
+/* Ссылки на источники: светлый акцент той же темы на тёмном фоне. */
+.reveal .slides a { color: #e7ad52; text-decoration: underline; }

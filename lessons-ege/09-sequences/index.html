@@ -1,0 +1,338 @@
+<!doctype html>
+<html lang="ru">
+
+<head>
+    <meta charset="utf-8">
+    <title>Задание 17 — обработка последовательностей</title>
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+
+    <link rel="stylesheet" href="/utils/css/reveal.css">
+    <link rel="stylesheet" href="/utils/lib/css/animate.css">
+    <link rel="stylesheet" href="/utils/css/theme/night.css" id="theme">
+    <link rel="stylesheet" href="/utils/lib/css/zenburn.css">
+    <link rel="stylesheet" href="/utils/css/custom-base.css">
+    <link rel="stylesheet" href="css-custom/custom.css">
+
+    <script>
+        var link = document.createElement('link');
+        link.rel = 'stylesheet'; link.type = 'text/css';
+        link.href = window.location.search.match(/print-pdf/gi)
+            ? '/utils/css/print/pdf.css'
+            : '/utils/css/print/paper.css';
+        document.getElementsByTagName('head')[0].appendChild(link);
+    </script>
+</head>
+
+<body>
+    <div class="reveal">
+        <div class="slides">
+<section>
+<section><div class="fragment"><h1>Задание 17</h1><p>Соседние пары и тройки · условия · два прохода по файлу</p></div></section>
+</section>
+<section>
+<section><div class="fragment"><h1>Разбор ДЗ</h1><p>Перебор слов и чисел</p></div></section>
+
+
+                <section>
+                    <h2>ДЗ: гласных больше</h2>
+                    <p class=" " style="font-size:.65em;">Коды длины 6 из букв <strong>ВЕРОНИКА</strong>.<br>Буквы
+                        повторяются. Гласных должно быть больше согласных.</p>
+                    <p class=" fragment" style="font-size:.65em;">Гласных 4, согласных 4. Сколько мест займут гласные?
+                    </p>
+                    <p class=" fragment" style="font-size:.65em;">Подходят только 4, 5 или 6 мест.</p>
+                    <p class="fragment" style="font-size:.75em;text-align:center;"><mark>(C(6, 4) + C(6, 5) + C(6, 6)) ·
+                            4⁶ = 90 112</mark></p>
+                    <p class="source " style="font-size:.45em;"><a href="https://inf-ege.sdamgia.ru/problem?id=51977"
+                            target="_blank" rel="noopener">Решу ЕГЭ №51977</a></p>
+                    <p class="file-link " style="font-size:.45em;"><a
+                            href="/practice-ege/09-sequences/0_1_veronika.py">0_1_veronika.py</a></p>
+                </section>
+
+                <section>
+                    <h2>ДЗ: восьмеричные числа</h2>
+                    <p class=" " style="font-size:.65em;">Пять разных цифр, без 1. Соседние цифры разной чётности.
+                        Первая цифра не равна нулю.</p>
+                    <table style="width:100%;font-size:.65em;">
+                        <thead>
+                            <tr>
+                                <th>Порядок чётностей</th>
+                                <th>Число вариантов</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="fragment">
+                                <td>Ч Н Ч Н Ч</td>
+                                <td>3 · 3 · 3 · 2 · 2 = 108</td>
+                            </tr>
+                            <tr class="fragment">
+                                <td>Н Ч Н Ч Н</td>
+                                <td>3 · 4 · 2 · 3 · 1 = 72</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <p class="fragment" style="font-size:.75em;text-align:center;"><mark>108 + 72 = 180 чисел</mark></p>
+                    <p class="source " style="font-size:.45em;"><a href="https://inf-ege.sdamgia.ru/problem?id=60250"
+                            target="_blank" rel="noopener">Решу ЕГЭ №60250</a></p>
+                    <p class="file-link " style="font-size:.45em;"><a
+                            href="/practice-ege/09-sequences/0_2_octals.py">0_2_octals.py</a></p>
+                </section>
+
+                <section>
+                    <h2>ДЗ: первое слово на Р</h2>
+                    <p class=" " style="font-size:.65em;">Трёхбуквенные слова из П, А, Р, У, С.<br>Алфавитный порядок;
+                        нумерация начинается с 1.</p>
+                    <p class=" fragment" style="font-size:.65em;"><strong>А, П, Р, С, У</strong> — сначала упорядочим
+                        буквы.</p>
+                    <table style="width:100%;font-size:.65em;">
+                        <thead>
+                            <tr>
+                                <th>До первого слова на Р</th>
+                                <th>Сколько слов</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="fragment">
+                                <td>Все слова на А</td>
+                                <td>5² = 25</td>
+                            </tr>
+                            <tr class="fragment">
+                                <td>Все слова на П</td>
+                                <td>5² = 25</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <p class="fragment" style="font-size:.75em;text-align:center;"><mark>Первое слово — РАА. Его номер:
+                            25 + 25 + 1 = 51.</mark></p>
+                    <p class="source " style="font-size:.45em;"><a href="https://inf-ege.sdamgia.ru/problem?id=15105"
+                            target="_blank" rel="noopener">Решу ЕГЭ №15105</a></p>
+                    <p class="file-link " style="font-size:.45em;"><a
+                            href="/practice-ege/09-sequences/0_3_first_r.py">0_3_first_r.py</a></p>
+                </section>
+
+            
+</section>
+<section>
+<section><div class="fragment"><h1>Соседние пары</h1><p>Сохраняем порядок и проверяем каждое окно</p></div></section>
+<section><h2>Остаток одного из чисел</h2>
+<p style="font-size:.65em;">Числа от 1 до 100 000. В соседней паре хотя бы один остаток от деления на 55 равен минимуму всего файла. Найти количество таких пар и минимальную сумму.</p>
+<p style="font-size:.45em"><a href="https://ege.fipi.ru/bank/questions.php?search=1&amp;proj=B9ACA5BBB2E19E434CD6BEC25284C67F&amp;qid=133D72" target="_blank" rel="noopener">ФИПИ 133D72 — оригинал условия</a> · <a href="/practice-ege/09-sequences/17_133D72.txt" download>Файл</a> · <a href="/practice-ege/09-sequences/1_133d72.py" download>Заготовка Python</a></p></section>
+<section><h2>Что здесь называют парой?</h2>
+<p style="font-size:.65em;">Учебная последовательность: <strong>2, 57, 10, 112, 5</strong>.</p>
+<div class="windows" aria-label="Четыре соседние пары"><div class="fragment"><span class="active">2</span><span class="active">57</span><span class="">10</span><span class="">112</span><span class="">5</span></div><div class="fragment"><span class="">2</span><span class="active">57</span><span class="active">10</span><span class="">112</span><span class="">5</span></div><div class="fragment"><span class="">2</span><span class="">57</span><span class="active">10</span><span class="active">112</span><span class="">5</span></div><div class="fragment"><span class="">2</span><span class="">57</span><span class="">10</span><span class="active">112</span><span class="active">5</span></div></div>
+<p class="fragment" style="font-size:.65em;">Число 57 входит в две пары. Каждую пару считаем отдельно.</p></section>
+<section><h2>Как перебрать соседние пары?</h2>
+<p style="font-size:.65em;">В каждой паре берём элементы с индексами <strong>i</strong> и <strong>i + 1</strong>.</p>
+<p class="fragment" style="font-size:.65em;">Последняя пара: <strong>N − 2</strong> и <strong>N − 1</strong>. Значит, первый индекс меняется от 0 до N − 2 включительно.</p>
+<p class="fragment" style="font-size:.65em;">Сдвигаемся на один элемент и сохраняем порядок чисел из файла.</p>
+<p class="fragment" style="font-size:.65em;"><mark>Из N чисел получаем N − 1 пару или N − 2 тройки.</mark></p></section>
+<section><h2>Сначала узнаём минимум</h2>
+<p style="font-size:.65em;">Для 2, 57, 10, 112, 5 минимум равен <strong>2</strong>.</p>
+<table style="font-size:.65em;width:100%;"><thead><tr><th>Число</th><th>Остаток при делении на 55</th></tr></thead><tbody><tr class="fragment"><td>2</td><td>2</td></tr><tr class="fragment"><td>57</td><td>2</td></tr><tr class="fragment"><td>10</td><td>10</td></tr><tr class="fragment"><td>112</td><td>2</td></tr><tr class="fragment"><td>5</td><td>5</td></tr></tbody></table></section>
+<section><h2>Теперь проверяем пары</h2>
+<table style="font-size:.65em;width:100%;"><thead><tr><th>Пара</th><th>Хотя бы один остаток = 2?</th><th>Сумма</th></tr></thead><tbody><tr class="fragment"><td>2, 57</td><td>Да: оба</td><td>59</td></tr><tr class="fragment"><td>57, 10</td><td>Да: первый</td><td>67</td></tr><tr class="fragment"><td>10, 112</td><td>Да: второй</td><td>122</td></tr><tr class="fragment"><td>112, 5</td><td>Да: первый</td><td>117</td></tr></tbody></table>
+<p class="fragment" style="font-size:.65em;"><mark>Четыре пары; минимальная сумма — 59.</mark></p></section>
+<section><h2>«Хотя бы один» и «ровно один»</h2>
+<p style="font-size:.65em;">Пусть P и Q — результаты проверки двух чисел.</p>
+<table style="font-size:.65em;width:100%;"><thead><tr><th>P</th><th>Q</th><th>Хотя бы один</th><th>Ровно один</th></tr></thead><tbody><tr class="fragment"><td>нет</td><td>нет</td><td>нет</td><td>нет</td></tr><tr class="fragment"><td>да</td><td>нет</td><td>да</td><td>да</td></tr><tr class="fragment"><td>нет</td><td>да</td><td>да</td><td>да</td></tr><tr class="fragment"><td>да</td><td>да</td><td>да</td><td>нет</td></tr></tbody></table>
+<p class="fragment" style="font-size:.65em;">Для «оба» подходит только последняя строка.</p></section>
+<section><h2>Два прохода по одним данным</h2>
+<p style="font-size:.65em;"><strong>Первый проход:</strong> находим общий минимум.</p>
+<p class="fragment" style="font-size:.65em;"><strong>Второй проход:</strong> проверяем соседние пары, считаем их и обновляем минимальную сумму.</p>
+<p class="fragment" style="font-size:.65em;">Если минимум встретится в конце файла, он всё равно должен участвовать в проверке первых пар.</p>
+<p class="fragment" style="font-size:.65em;"><mark>Два прохода дают O(N). Вложенный перебор всех пар не нужен.</mark></p></section>
+<section><h2>Решаем на Python</h2>
+<p style="font-size:.65em;">Реализуй условие ФИПИ 133D72. Сначала проверь короткую последовательность, затем запусти программу на файле.</p>
+<p class="fragment" style="font-size:.65em;"><strong>Учебный пример:</strong> 2, 57, 10, 112, 5</p>
+<p class="fragment" style="font-size:.65em;"><mark>Проверка: 4 59</mark></p>
+<p style="font-size:.45em"><a href="https://ege.fipi.ru/bank/questions.php?search=1&amp;proj=B9ACA5BBB2E19E434CD6BEC25284C67F&amp;qid=133D72" target="_blank" rel="noopener">ФИПИ 133D72 — оригинал условия</a> · <a href="/practice-ege/09-sequences/17_133D72.txt" download>Файл</a> · <a href="/practice-ege/09-sequences/1_133d72.py" download>Заготовка Python</a></p></section>
+</section>
+<section>
+<section><div class="fragment"><h1>Соседние тройки</h1><p>Свойства чисел и условие на всю группу</p></div></section>
+<section><h2>Ровно два трёхзначных</h2>
+<p style="font-size:.65em;">Целые числа от −100 000 до 100 000. В соседней тройке ровно два трёхзначных числа; сумма не больше максимума среди чисел файла, оканчивающихся на 21. Найти количество троек и максимальную сумму.</p>
+<p style="font-size:.45em"><a href="https://ege.fipi.ru/bank/questions.php?search=1&amp;proj=B9ACA5BBB2E19E434CD6BEC25284C67F&amp;qid=CF2AF3" target="_blank" rel="noopener">ФИПИ CF2AF3 — оригинал условия</a> · <a href="/practice-ege/09-sequences/17_CF2AF3.txt" download>Файл</a> · <a href="/practice-ege/09-sequences/2_cf2af3.py" download>Заготовка Python</a></p></section>
+<section><h2>Из условия получаем три проверки</h2>
+<table style="font-size:.65em;width:100%;"><thead><tr><th>Что проверяем</th><th>В задаче CF2AF3</th></tr></thead><tbody><tr class="fragment"><td>По всему файлу</td><td>Максимальное число, оканчивающееся на 21</td></tr><tr class="fragment"><td>Внутри тройки</td><td>Ровно два числа трёхзначные</td></tr><tr class="fragment"><td>Для всей тройки</td><td>Сумма ≤ найденного максимума</td></tr></tbody></table></section>
+<section><h2>Минус не является цифрой</h2>
+<table style="font-size:.65em;width:100%;"><thead><tr><th>Свойство</th><th>Примеры</th><th>Проверка</th></tr></thead><tbody><tr class="fragment"><td>Трёхзначное</td><td>−100, 121, 999</td><td>100 ≤ |x| ≤ 999</td></tr><tr class="fragment"><td>Оканчивается на 21</td><td>121, −221</td><td>|x| % 100 = 21</td></tr><tr class="fragment"><td>Положительное</td><td>121, но не −121</td><td>x > 0</td></tr></tbody></table>
+<p class="fragment" style="font-size:.65em;">В Python: <code>abs(-121) % 100 == 21</code>, но <code>-121 % 100 == 79</code>.</p></section>
+<section><h2>Максимум выбираем среди подходящих</h2>
+<p style="font-size:.65em;">В последовательности <strong>121, −100, 5, 200, 21</strong> на 21 оканчиваются только 121 и 21.</p>
+<p class="fragment" style="font-size:.65em;"><mark>Порог T = 121, хотя максимум всего файла равен 200.</mark></p>
+<p class="fragment" style="font-size:.65em;">Сначала отбираем числа с нужным окончанием. Затем ищем максимум среди них.</p></section>
+<section><h2>Три окна — три решения</h2>
+<table style="font-size:.65em;width:100%;"><thead><tr><th>Тройка</th><th>Трёхзначных</th><th>Сумма</th><th>Подходит?</th></tr></thead><tbody><tr class="fragment"><td>121, −100, 5</td><td>2</td><td>26</td><td>Да</td></tr><tr class="fragment"><td>−100, 5, 200</td><td>2</td><td>105</td><td>Да</td></tr><tr class="fragment"><td>5, 200, 21</td><td>1</td><td>226</td><td>Нет</td></tr></tbody></table>
+<p class="fragment" style="font-size:.65em;"><mark>Количество — 2; максимальная сумма — 105.</mark></p></section>
+<section><h2>Количество подходящих элементов</h2>
+<p style="font-size:.65em;">Обозначим через k, сколько чисел окна обладают нужным свойством.</p>
+<table style="font-size:.65em;width:100%;"><thead><tr><th>Фраза в условии</th><th>Требование к k</th></tr></thead><tbody><tr class="fragment"><td>Хотя бы одно</td><td>k ≥ 1</td></tr><tr class="fragment"><td>Ровно одно / только одно</td><td>k = 1</td></tr><tr class="fragment"><td>Ровно два</td><td>k = 2</td></tr><tr class="fragment"><td>Все три / ни одного</td><td>k = 3 / k = 0</td></tr></tbody></table></section>
+<section><h2>Решаем на Python</h2>
+<p style="font-size:.65em;">Реализуй условие ФИПИ CF2AF3. Сначала проверь короткую последовательность, затем запусти программу на файле.</p>
+<p class="fragment" style="font-size:.65em;"><strong>Учебный пример:</strong> 121, -100, 5, 200, 21</p>
+<p class="fragment" style="font-size:.65em;"><mark>Проверка: 2 105</mark></p>
+<p style="font-size:.45em"><a href="https://ege.fipi.ru/bank/questions.php?search=1&amp;proj=B9ACA5BBB2E19E434CD6BEC25284C67F&amp;qid=CF2AF3" target="_blank" rel="noopener">ФИПИ CF2AF3 — оригинал условия</a> · <a href="/practice-ege/09-sequences/17_CF2AF3.txt" download>Файл</a> · <a href="/practice-ege/09-sequences/2_cf2af3.py" download>Заготовка Python</a></p></section>
+</section>
+<section>
+<section><h2>Перед запуском на большом файле</h2>
+<table style="font-size:.65em;width:100%;"><thead><tr><th>Проверка</th><th>Что она обнаружит</th></tr></thead><tbody><tr class="fragment"><td>Окна перекрываются; последнее не потеряно</td><td>Неправильный шаг или граница цикла</td></tr><tr class="fragment"><td>Ровно два и все три подходящих числа</td><td>Подмена количества логическим or</td></tr><tr class="fragment"><td>−100, 99, 100, 999, 1000</td><td>Ошибка на границах разрядности</td></tr><tr class="fragment"><td>Сумма ровно равна порогу</td><td>Путаница &lt; и ≤</td></tr></tbody></table></section>
+<section><h2>Один порядок решения для всех вариантов</h2>
+<p style="font-size:.65em;">1. Найти характеристику всего файла, если она нужна.</p>
+<p class="fragment" style="font-size:.65em;">2. Перебрать окна нужной длины в исходном порядке.</p>
+<p class="fragment" style="font-size:.65em;">3. Проверить свойства чисел и условие на всю группу.</p>
+<p class="fragment" style="font-size:.65em;">4. У подходящих групп посчитать количество и требуемый экстремум.</p></section>
+<section><h2>ДЗ: хотя бы одно трёхзначное</h2>
+<p style="font-size:.65em;">Числа от 1 до 100 000. В соседней паре хотя бы одно трёхзначное число; сумма кратна минимальному трёхзначному числу файла, оканчивающемуся на 5. Найти количество пар и максимальную сумму.</p>
+<p style="font-size:.45em"><a href="https://ege.fipi.ru/bank/questions.php?search=1&amp;proj=B9ACA5BBB2E19E434CD6BEC25284C67F&amp;qid=E1539C" target="_blank" rel="noopener">ФИПИ E1539C — оригинал условия</a> · <a href="/practice-ege/09-sequences/17_E1539C.txt" download>Файл</a> · <a href="/practice-ege/09-sequences/hw_e1539c.py" download>Заготовка Python</a></p></section>
+<section><h2>ДЗ: одно двузначное в тройке</h2>
+<p style="font-size:.65em;">Числа от 1 до 100 000. В соседней тройке ровно одно двузначное число; сумма не меньше максимума среди чисел файла, оканчивающихся на 13. Найти количество троек и максимальную сумму.</p>
+<p style="font-size:.45em"><a href="https://ege.fipi.ru/bank/questions.php?search=1&amp;proj=B9ACA5BBB2E19E434CD6BEC25284C67F&amp;qid=BCC52D" target="_blank" rel="noopener">ФИПИ BCC52D — оригинал условия</a> · <a href="/practice-ege/09-sequences/17_BCC52D.txt" download>Файл</a> · <a href="/practice-ege/09-sequences/hw_bcc52d.py" download>Заготовка Python</a></p></section>
+<section><h2>Что прислать по домашней работе</h2>
+<p style="font-size:.65em;">Для каждой задачи: программу и два числа ответа на исходном файле.</p>
+<p class="fragment" style="font-size:.65em;">Добавь короткий тест, который отличает «хотя бы одно» от «ровно одно».</p>
+<p class="fragment" style="font-size:.65em;">Объясни, какие данные находишь первым проходом и что обновляешь во втором.</p></section>
+</section>
+<section>
+<section><div class="fragment"><h1>Другие варианты №17</h1><p>Разбираем, что меняется в условии и в решении</p></div></section>
+<section><h2>Карта вариантов</h2>
+<table style="font-size:.65em;width:100%;"><thead><tr><th>Часть задачи</th><th>Что может меняться</th></tr></thead><tbody><tr class="fragment"><td>Группа</td><td>Соседняя пара или тройка</td></tr><tr class="fragment"><td>Свойство числа</td><td>Разрядность, окончание, знак, делимость, остаток</td></tr><tr class="fragment"><td>Количество таких чисел</td><td>Хотя бы одно, ровно одно/два, все, ни одного</td></tr><tr class="fragment"><td>Порог и результат</td><td>Характеристика файла; сумма, квадрат, произведение</td></tr></tbody></table>
+<p class="fragment" style="font-size:.65em;">Дальше — задачи из открытого банка ФИПИ и разбор отличий. Числа и сочетания условий могут меняться.</p></section>
+<section><h2>Если меняется число цифр</h2>
+<table style="font-size:.65em;width:100%;"><thead><tr><th>Свойство</th><th>Границы для |x|</th></tr></thead><tbody><tr class="fragment"><td>Двузначное</td><td>10 ≤ |x| ≤ 99</td></tr><tr class="fragment"><td>Трёхзначное</td><td>100 ≤ |x| ≤ 999</td></tr><tr class="fragment"><td>Четырёхзначное</td><td>1000 ≤ |x| ≤ 9999</td></tr><tr class="fragment"><td>Пятизначное</td><td>10000 ≤ |x| ≤ 99999</td></tr></tbody></table>
+<p class="fragment" style="font-size:.65em;">Для d цифр: <strong>10ᵈ⁻¹ ≤ |x| &lt; 10ᵈ</strong>. Знак не меняет число цифр.</p></section>
+<section><h2>Сколько чисел должны подходить?</h2>
+<table style="font-size:.65em;width:100%;"><thead><tr><th>Формулировка</th><th>Количество k</th></tr></thead><tbody><tr class="fragment"><td>Не менее двух</td><td>k ≥ 2</td></tr><tr class="fragment"><td>Не более одного</td><td>k ≤ 1</td></tr><tr class="fragment"><td>Ни одного</td><td>k = 0</td></tr><tr class="fragment"><td>Не все в тройке</td><td>k < 3</td></tr></tbody></table>
+<p class="fragment" style="font-size:.65em;">«Не все» допускает ноль, одно или два подходящих числа. «Ни одного» допускает только ноль.</p></section>
+<section><h2>Граница тоже часть условия</h2>
+<table style="font-size:.65em;width:100%;"><thead><tr><th>Фраза</th><th>Сравнение</th><th>Сумма равна порогу</th></tr></thead><tbody><tr class="fragment"><td>Меньше</td><td>s &lt; T</td><td>Не подходит</td></tr><tr class="fragment"><td>Не больше</td><td>s ≤ T</td><td>Подходит</td></tr><tr class="fragment"><td>Больше</td><td>s &gt; T</td><td>Не подходит</td></tr><tr class="fragment"><td>Не меньше</td><td>s ≥ T</td><td>Подходит</td></tr></tbody></table>
+<p class="fragment" style="font-size:.65em;">В CF2AF3 равенство разрешено. В F61272 и 1F0F94 — нет.</p></section>
+<section><h2>Сумма остатков</h2>
+<p style="font-size:.65em;">Числа от 1 до 100 000. В соседней паре сумма двух остатков от деления на 15 равна минимуму файла. Найти количество пар и минимальную сумму их элементов.</p>
+<p style="font-size:.45em"><a href="https://ege.fipi.ru/bank/questions.php?search=1&amp;proj=B9ACA5BBB2E19E434CD6BEC25284C67F&amp;qid=45744A" target="_blank" rel="noopener">ФИПИ 45744A — оригинал условия</a> · <a href="/practice-ege/09-sequences/17_45744A.txt" download>Файл</a> · <a href="/practice-ege/09-sequences/3_45744a.py" download>Заготовка Python</a></p></section>
+<section><h2>Сумма остатков ≠ остаток суммы</h2>
+<p style="font-size:.65em;">Пусть два числа равны 14 и 14, делитель равен 15.</p>
+<p class="fragment" style="font-size:.65em;">Сумма остатков: <strong>14 + 14 = 28</strong>.</p>
+<p class="fragment" style="font-size:.65em;">Остаток суммы: <strong>28 % 15 = 13</strong>.</p>
+<p class="fragment" style="font-size:.65em;"><mark>Скобки определяют, над чем выполняется операция.</mark></p></section>
+<section><h2>Проверим вариант с суммой остатков</h2>
+<p style="font-size:.65em;">Учебный пример: <strong>2, 15, 17, 30, 4</strong>. Минимум — 2.</p>
+<table style="font-size:.65em;width:100%;"><thead><tr><th>Пара</th><th>Сумма остатков на 15</th><th>Сумма чисел</th></tr></thead><tbody><tr class="fragment"><td>2, 15</td><td>2 — подходит</td><td>17</td></tr><tr class="fragment"><td>15, 17</td><td>2 — подходит</td><td>32</td></tr><tr class="fragment"><td>17, 30</td><td>2 — подходит</td><td>47</td></tr><tr class="fragment"><td>30, 4</td><td>4 — не подходит</td><td>34</td></tr></tbody></table>
+<p class="fragment" style="font-size:.65em;"><mark>Ответ: 3 17.</mark></p>
+<p style="font-size:.45em"><a href="https://ege.fipi.ru/bank/questions.php?search=1&amp;proj=B9ACA5BBB2E19E434CD6BEC25284C67F&amp;qid=45744A" target="_blank" rel="noopener">ФИПИ 45744A — оригинал условия</a> · <a href="/practice-ege/09-sequences/17_45744A.txt" download>Файл</a> · <a href="/practice-ege/09-sequences/3_45744a.py" download>Заготовка Python</a></p></section>
+<section><h2>Делитель из файла</h2>
+<p style="font-size:.65em;">Числа от 1 до 100 000. Найти минимум среди кратных 21. В соседней паре хотя бы одно число должно делиться на этот минимум. Вывести количество пар и максимальную сумму.</p>
+<p style="font-size:.45em"><a href="https://ege.fipi.ru/bank/questions.php?search=1&amp;proj=B9ACA5BBB2E19E434CD6BEC25284C67F&amp;qid=8FBD47" target="_blank" rel="noopener">ФИПИ 8FBD47 — оригинал условия</a> · <a href="/practice-ege/09-sequences/17_8FBD47.txt" download>Файл</a> · <a href="/practice-ege/09-sequences/4_8fbd47.py" download>Заготовка Python</a></p></section>
+<section><h2>На что именно делится число?</h2>
+<p style="font-size:.65em;">Учебный пример: <strong>21, 42, 5, 63, 8</strong>. Минимум среди кратных 21 равен 21.</p>
+<p class="fragment" style="font-size:.65em;">Суммы подходящих пар: <strong>63, 47, 68, 71</strong>. Ответ: <strong>4 71</strong>.</p>
+<p class="fragment" style="font-size:.65em;">Если минимум среди кратных 21 оказался равен 42, проверяем делимость на <strong>42</strong>, а не на 21.</p>
+<p style="font-size:.45em"><a href="https://ege.fipi.ru/bank/questions.php?search=1&amp;proj=B9ACA5BBB2E19E434CD6BEC25284C67F&amp;qid=8FBD47" target="_blank" rel="noopener">ФИПИ 8FBD47 — оригинал условия</a> · <a href="/practice-ege/09-sequences/17_8FBD47.txt" download>Файл</a> · <a href="/practice-ege/09-sequences/4_8fbd47.py" download>Заготовка Python</a></p></section>
+<section><h2>Только одно двузначное</h2>
+<p style="font-size:.65em;">Числа от 1 до 100 000. В соседней паре ровно одно двузначное число; сумма кратна максимальному двузначному числу файла. Найти количество пар и максимальную сумму.</p>
+<p style="font-size:.45em"><a href="https://ege.fipi.ru/bank/questions.php?search=1&amp;proj=B9ACA5BBB2E19E434CD6BEC25284C67F&amp;qid=FCE3BE" target="_blank" rel="noopener">ФИПИ FCE3BE — оригинал условия</a> · <a href="/practice-ege/09-sequences/17_FCE3BE.txt" download>Файл</a> · <a href="/practice-ege/09-sequences/5_fce3be.py" download>Заготовка Python</a></p></section>
+<section><h2>Ровно одно число и делимость суммы</h2>
+<p style="font-size:.65em;">Учебный пример: <strong>12, 100, 24, 120, 8</strong>. Максимальное двузначное — 24.</p>
+<table style="font-size:.65em;width:100%;"><thead><tr><th>Пара</th><th>Ровно одно двузначное?</th><th>Сумма кратна 24?</th></tr></thead><tbody><tr class="fragment"><td>12, 100</td><td>Да</td><td>Нет: 112</td></tr><tr class="fragment"><td>100, 24</td><td>Да</td><td>Нет: 124</td></tr><tr class="fragment"><td>24, 120</td><td>Да</td><td>Да: 144</td></tr><tr class="fragment"><td>120, 8</td><td>Нет</td><td>Не проходит первый фильтр</td></tr></tbody></table>
+<p class="fragment" style="font-size:.65em;"><mark>Ответ: 1 144.</mark></p>
+<p style="font-size:.45em"><a href="https://ege.fipi.ru/bank/questions.php?search=1&amp;proj=B9ACA5BBB2E19E434CD6BEC25284C67F&amp;qid=FCE3BE" target="_blank" rel="noopener">ФИПИ FCE3BE — оригинал условия</a> · <a href="/practice-ege/09-sequences/17_FCE3BE.txt" download>Файл</a> · <a href="/practice-ege/09-sequences/5_fce3be.py" download>Заготовка Python</a></p></section>
+<section><h2>Два условия на порог</h2>
+<p style="font-size:.65em;">Числа от 1 до 100 000. Порог — минимальное трёхзначное число файла с последней цифрой 5. В соседней паре ровно одно трёхзначное число, а сумма кратна порогу. Найти количество пар и минимальную сумму.</p>
+<p style="font-size:.45em"><a href="https://ege.fipi.ru/bank/questions.php?search=1&amp;proj=B9ACA5BBB2E19E434CD6BEC25284C67F&amp;qid=42698B" target="_blank" rel="noopener">ФИПИ 42698B — оригинал условия</a> · <a href="/practice-ege/09-sequences/17_42698B.txt" download>Файл</a> · <a href="/practice-ege/09-sequences/6_42698b.py" download>Заготовка Python</a></p></section>
+<section><h2>Сначала два фильтра, потом минимум</h2>
+<p style="font-size:.65em;">Учебный пример: <strong>105, 1050, 210, 5</strong>.</p>
+<p class="fragment" style="font-size:.65em;">На 5 оканчиваются 105 и 5. Трёхзначное среди них — <strong>105</strong>. Это порог.</p>
+<p class="fragment" style="font-size:.65em;">Подходят пары (105, 1050) и (1050, 210): суммы <strong>1155</strong> и <strong>1260</strong> кратны 105.</p>
+<p class="fragment" style="font-size:.65em;"><mark>Ответ: 2 1155. Число 5 не участвует в выборе порога.</mark></p>
+<p style="font-size:.45em"><a href="https://ege.fipi.ru/bank/questions.php?search=1&amp;proj=B9ACA5BBB2E19E434CD6BEC25284C67F&amp;qid=42698B" target="_blank" rel="noopener">ФИПИ 42698B — оригинал условия</a> · <a href="/practice-ege/09-sequences/17_42698B.txt" download>Файл</a> · <a href="/practice-ege/09-sequences/6_42698b.py" download>Заготовка Python</a></p></section>
+<section><h2>Порог — количество</h2>
+<p style="font-size:.65em;">Целые числа от −100 000 до 100 000. Соседняя пара содержит хотя бы одно отрицательное число; её сумма меньше количества чисел файла, кратных 32. Найти количество пар и максимальную сумму.</p>
+<p style="font-size:.45em"><a href="https://ege.fipi.ru/bank/questions.php?search=1&amp;proj=B9ACA5BBB2E19E434CD6BEC25284C67F&amp;qid=655816" target="_blank" rel="noopener">ФИПИ 655816 — оригинал условия</a> · <a href="/practice-ege/09-sequences/17_655816.txt" download>Файл</a> · <a href="/practice-ege/09-sequences/7_655816.py" download>Заготовка Python</a></p></section>
+<section><h2>Порог может быть количеством</h2>
+<p style="font-size:.65em;">Учебный пример: <strong>32, −31, 0, −2, 64</strong>. Кратных 32 три: 32, 0, 64.</p>
+<table style="font-size:.65em;width:100%;"><thead><tr><th>Пара</th><th>Есть отрицательное?</th><th>Сумма &lt; 3?</th></tr></thead><tbody><tr class="fragment"><td>32, −31</td><td>Да</td><td>1 — да</td></tr><tr class="fragment"><td>−31, 0</td><td>Да</td><td>−31 — да</td></tr><tr class="fragment"><td>0, −2</td><td>Да</td><td>−2 — да</td></tr><tr class="fragment"><td>−2, 64</td><td>Да</td><td>62 — нет</td></tr></tbody></table>
+<p class="fragment" style="font-size:.65em;"><mark>Ответ: 3 1. Ноль тоже кратен 32.</mark></p>
+<p style="font-size:.45em"><a href="https://ege.fipi.ru/bank/questions.php?search=1&amp;proj=B9ACA5BBB2E19E434CD6BEC25284C67F&amp;qid=655816" target="_blank" rel="noopener">ФИПИ 655816 — оригинал условия</a> · <a href="/practice-ege/09-sequences/17_655816.txt" download>Файл</a> · <a href="/practice-ege/09-sequences/7_655816.py" download>Заготовка Python</a></p></section>
+<section><h2>Если изменится общая характеристика</h2>
+<table style="font-size:.65em;width:100%;"><thead><tr><th>В формулировке про весь файл</th><th>Что вычислить до проверки окон</th></tr></thead><tbody><tr class="fragment"><td>Минимум / максимум среди подходящих</td><td>Фильтр, затем min / max</td></tr><tr class="fragment"><td>Количество подходящих чисел</td><td>Счётчик прошедших фильтр</td></tr><tr class="fragment"><td>Сумма подходящих чисел</td><td>Сумма их значений</td></tr><tr class="fragment"><td>Среднее подходящих чисел</td><td>Сумма, делённая на количество</td></tr></tbody></table>
+<p class="fragment" style="font-size:.65em;">Последние две строки — возможные изменения условия, а не дополнительные задачи ФИПИ в этой подборке.</p></section>
+<section><h2>Модуль после максимума</h2>
+<p style="font-size:.65em;">Целые числа от −100 000 до 100 000. Сумма соседней пары меньше минимального положительного числа файла, кратного 21. Найти количество пар и модуль максимальной из подходящих сумм.</p>
+<p style="font-size:.45em"><a href="https://ege.fipi.ru/bank/questions.php?search=1&amp;proj=B9ACA5BBB2E19E434CD6BEC25284C67F&amp;qid=A84AF3" target="_blank" rel="noopener">ФИПИ A84AF3 — оригинал условия</a> · <a href="/practice-ege/09-sequences/17_A84AF3.txt" download>Файл</a> · <a href="/practice-ege/09-sequences/8_a84af3.py" download>Заготовка Python</a></p></section>
+<section><h2>Когда брать модуль?</h2>
+<p style="font-size:.65em;">Учебный пример: <strong>21, −30, 5, −10</strong>. Порог — 21.</p>
+<p class="fragment" style="font-size:.65em;">Все три суммы меньше порога: <strong>−9, −25, −5</strong>.</p>
+<p class="fragment" style="font-size:.65em;">Сначала максимальная сумма: <strong>−5</strong>. Затем её модуль: <strong>5</strong>.</p>
+<p class="fragment" style="font-size:.65em;"><mark>Ответ: 3 5. Максимальный модуль 25 был бы другим ответом.</mark></p>
+<p style="font-size:.45em"><a href="https://ege.fipi.ru/bank/questions.php?search=1&amp;proj=B9ACA5BBB2E19E434CD6BEC25284C67F&amp;qid=A84AF3" target="_blank" rel="noopener">ФИПИ A84AF3 — оригинал условия</a> · <a href="/practice-ege/09-sequences/17_A84AF3.txt" download>Файл</a> · <a href="/practice-ege/09-sequences/8_a84af3.py" download>Заготовка Python</a></p></section>
+<section><h2>Хотя бы одно двузначное</h2>
+<p style="font-size:.65em;">Целые числа от −100 000 до 100 000. В соседней тройке хотя бы одно двузначное число; сумма меньше максимума среди чисел файла, оканчивающихся на 19. Найти количество троек и максимальную сумму.</p>
+<p style="font-size:.45em"><a href="https://ege.fipi.ru/bank/questions.php?search=1&amp;proj=B9ACA5BBB2E19E434CD6BEC25284C67F&amp;qid=F61272" target="_blank" rel="noopener">ФИПИ F61272 — оригинал условия</a> · <a href="/practice-ege/09-sequences/17_F61272.txt" download>Файл</a> · <a href="/practice-ege/09-sequences/9_f61272.py" download>Заготовка Python</a></p></section>
+<section><h2>Хотя бы одно и строгая граница</h2>
+<p style="font-size:.65em;">Учебный пример: <strong>119, −20, 5, 300</strong>. Порог — 119.</p>
+<table style="font-size:.65em;width:100%;"><thead><tr><th>Тройка</th><th>Есть двузначное?</th><th>Сумма &lt; 119?</th></tr></thead><tbody><tr class="fragment"><td>119, −20, 5</td><td>Да: −20</td><td>104 — да</td></tr><tr class="fragment"><td>−20, 5, 300</td><td>Да: −20</td><td>285 — нет</td></tr></tbody></table>
+<p class="fragment" style="font-size:.65em;"><mark>Ответ: 1 104.</mark></p>
+<p class="fragment" style="font-size:.65em;">Если сумма равна 119, тройка не подходит. Для «не больше» она подошла бы.</p>
+<p style="font-size:.45em"><a href="https://ege.fipi.ru/bank/questions.php?search=1&amp;proj=B9ACA5BBB2E19E434CD6BEC25284C67F&amp;qid=F61272" target="_blank" rel="noopener">ФИПИ F61272 — оригинал условия</a> · <a href="/practice-ege/09-sequences/17_F61272.txt" download>Файл</a> · <a href="/practice-ege/09-sequences/9_f61272.py" download>Заготовка Python</a></p></section>
+<section><h2>Квадрат суммы</h2>
+<p style="font-size:.65em;">Целые числа от −100 000 до 100 000. В соседней тройке ровно два двузначных числа; квадрат суммы меньше максимума среди чисел файла, оканчивающихся на 33. Найти количество троек и максимальную сумму.</p>
+<p style="font-size:.45em"><a href="https://ege.fipi.ru/bank/questions.php?search=1&amp;proj=B9ACA5BBB2E19E434CD6BEC25284C67F&amp;qid=1F0F94" target="_blank" rel="noopener">ФИПИ 1F0F94 — оригинал условия</a> · <a href="/practice-ege/09-sequences/17_1F0F94.txt" download>Файл</a> · <a href="/practice-ege/09-sequences/10_1f0f94.py" download>Заготовка Python</a></p></section>
+<section><h2>Что именно возводим в квадрат?</h2>
+<p style="font-size:.65em;">Для тройки <strong>10, −20, 5</strong> сумма равна −5.</p>
+<p class="fragment" style="font-size:.65em;">Квадрат суммы: <strong>(10 − 20 + 5)² = 25</strong>.</p>
+<p class="fragment" style="font-size:.65em;">Сумма квадратов: <strong>10² + (−20)² + 5² = 525</strong>.</p>
+<p class="fragment" style="font-size:.65em;"><mark>В 1F0F94 сравниваем с порогом квадрат суммы.</mark></p></section>
+<section><h2>Проверяем квадрат, сохраняем сумму</h2>
+<p style="font-size:.65em;">Учебный пример: <strong>133, 10, −20, 5, 30</strong>. Порог — 133.</p>
+<table style="font-size:.65em;width:100%;"><thead><tr><th>Тройка</th><th>Квадрат суммы</th><th>Результат</th></tr></thead><tbody><tr class="fragment"><td>133, 10, −20</td><td>123² = 15 129</td><td>Не подходит</td></tr><tr class="fragment"><td>10, −20, 5</td><td>(−5)² = 25</td><td>Подходит; сумма −5</td></tr><tr class="fragment"><td>−20, 5, 30</td><td>15² = 225</td><td>Не подходит</td></tr></tbody></table>
+<p class="fragment" style="font-size:.65em;"><mark>Ответ: 1 −5.</mark></p>
+<p style="font-size:.45em"><a href="https://ege.fipi.ru/bank/questions.php?search=1&amp;proj=B9ACA5BBB2E19E434CD6BEC25284C67F&amp;qid=1F0F94" target="_blank" rel="noopener">ФИПИ 1F0F94 — оригинал условия</a> · <a href="/practice-ege/09-sequences/17_1F0F94.txt" download>Файл</a> · <a href="/practice-ege/09-sequences/10_1f0f94.py" download>Заготовка Python</a></p></section>
+<section><h2>Знак и произведение</h2>
+<p style="font-size:.65em;">Целые числа от −100 000 до 100 000. Все числа соседней тройки одного знака. Произведение её минимума и максимума больше квадрата минимального трёхзначного числа файла, оканчивающегося на 15. Найти количество троек и минимальное из этих произведений.</p>
+<p style="font-size:.45em"><a href="https://ege.fipi.ru/bank/questions.php?search=1&amp;proj=B9ACA5BBB2E19E434CD6BEC25284C67F&amp;qid=8C5A88" target="_blank" rel="noopener">ФИПИ 8C5A88 — оригинал условия</a> · <a href="/practice-ege/09-sequences/17_8C5A88.txt" download>Файл</a> · <a href="/practice-ege/09-sequences/11_8c5a88.py" download>Заготовка Python</a></p></section>
+<section><h2>Все числа одного знака</h2>
+<table style="font-size:.65em;width:100%;"><thead><tr><th>Тройка</th><th>Один знак?</th><th>Почему</th></tr></thead><tbody><tr class="fragment"><td>−300, −200, −100</td><td>Да</td><td>Все отрицательные</td></tr><tr class="fragment"><td>100, 200, 300</td><td>Да</td><td>Все положительные</td></tr><tr class="fragment"><td>−100, −200, 300</td><td>Нет</td><td>Два отрицательных и положительное</td></tr><tr class="fragment"><td>0, 200, 300</td><td>Нет</td><td>Ноль не положительный</td></tr></tbody></table>
+<p class="fragment" style="font-size:.65em;">Положительное произведение трёх чисел не доказывает, что они одного знака.</p></section>
+<section><h2>Минимум числа и минимум модуля</h2>
+<p style="font-size:.65em;">Числа <strong>−915, −115, 215</strong> трёхзначные и оканчиваются на 15.</p>
+<p class="fragment" style="font-size:.65em;">Их минимум — <strong>−915</strong>. Его квадрат равен <strong>837 225</strong>.</p>
+<p class="fragment" style="font-size:.65em;">Минимальный модуль равен 115, но в условии не просят искать минимальный модуль.</p>
+<p class="fragment" style="font-size:.65em;"><mark>Модуль помогает проверить цифры. Сравниваем сами числа.</mark></p></section>
+<section><h2>Произведение минимума и максимума</h2>
+<p style="font-size:.65em;">Учебный пример: <strong>115, 200, 300, 400</strong>. Порог: 115² = 13 225.</p>
+<table style="font-size:.65em;width:100%;"><thead><tr><th>Тройка</th><th>min · max</th><th>Больше порога?</th></tr></thead><tbody><tr class="fragment"><td>115, 200, 300</td><td>115 · 300 = 34 500</td><td>Да</td></tr><tr class="fragment"><td>200, 300, 400</td><td>200 · 400 = 80 000</td><td>Да</td></tr></tbody></table>
+<p class="fragment" style="font-size:.65em;"><mark>Ответ: 2 34500.</mark></p>
+<p style="font-size:.45em"><a href="https://ege.fipi.ru/bank/questions.php?search=1&amp;proj=B9ACA5BBB2E19E434CD6BEC25284C67F&amp;qid=8C5A88" target="_blank" rel="noopener">ФИПИ 8C5A88 — оригинал условия</a> · <a href="/practice-ege/09-sequences/17_8C5A88.txt" download>Файл</a> · <a href="/practice-ege/09-sequences/11_8c5a88.py" download>Заготовка Python</a></p></section>
+<section><h2>Что меняется в ответе?</h2>
+<table style="font-size:.65em;width:100%;"><thead><tr><th>Фраза в условии</th><th>Что сохраняем</th></tr></thead><tbody><tr class="fragment"><td>Максимальная / минимальная сумма</td><td>max / min среди сумм подходящих окон</td></tr><tr class="fragment"><td>Максимальная сумма квадратов</td><td>Экстремум x² + y², если именно это сказано</td></tr><tr class="fragment"><td>Минимальное произведение min и max</td><td>Экстремум произведений внутри окон</td></tr><tr class="fragment"><td>Модуль максимальной суммы</td><td>Сначала max сумм, затем abs</td></tr></tbody></table>
+<p class="fragment" style="font-size:.65em;">Счётчик увеличивается один раз на подходящее окно. При отсутствии подходящих окон следуем оговорке условия.</p></section>
+<section><h2>Пять вопросов к любой формулировке</h2>
+<p style="font-size:.65em;">Какие элементы составляют группу и обязаны ли они быть соседними?</p>
+<p class="fragment" style="font-size:.65em;">Что известно только после просмотра всего файла?</p>
+<p class="fragment" style="font-size:.65em;">Какие свойства проверяем у чисел и сколько чисел должны им обладать?</p>
+<p class="fragment" style="font-size:.65em;">Какое условие связывает всю группу с порогом?</p>
+<p class="fragment" style="font-size:.65em;">Какую величину нужно максимизировать или минимизировать?</p></section>
+</section>
+</div></div>
+    <script src="/utils/lib/js/head.min.js"></script>
+    <script src="/utils/js/reveal.js"></script>
+    <script>
+        Reveal.initialize({
+            controls: true,
+            progress: true,
+            history: true,
+            center: true,
+            transition: 'fade',
+            transitionSpeed: 'fast',
+            dependencies: [
+                { src: '/utils/lib/js/classList.js', condition: function () { return !document.body.classList; } },
+                { src: '/utils/plugin/markdown/marked.js', condition: function () { return !!document.querySelector('[data-markdown]'); } },
+                { src: '/utils/plugin/markdown/markdown.js', condition: function () { return !!document.querySelector('[data-markdown]'); } },
+                { src: '/utils/plugin/highlight/highlight.js', async: true, callback: function () { hljs.initHighlightingOnLoad(); } },
+                { src: '/utils/plugin/zoom-js/zoom.js', async: true }
+            ]
+        });
+        Reveal.configure({ slideNumber: 'c/t' });
+    </script>
+</body>
+
+</html>

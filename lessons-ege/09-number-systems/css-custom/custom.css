@@ -1,0 +1,6 @@
+/* Place-value diagram only; typography and colors use the shared course theme. */
+.reveal sub { font-size: .65em; vertical-align: sub; line-height: 0; }
+.place-row { display: flex; justify-content: center; gap: 18px; margin: 24px auto; }
+.place { display: flex; flex-direction: column; align-items: center; gap: 12px; width: 150px; }
+.place span { font-size: 20px; opacity: .7; }
+.place strong { display: block; width: 100%; border: 2px solid #8ab; border-radius: 6px; padding: 12px 0; background: rgba(136,170,187,.12); font-size: 44px; }
